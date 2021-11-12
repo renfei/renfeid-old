@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.renfei.repositories.LeafAllocMapper">
+    <resultMap id="BaseResultMap" type="net.renfei.repositories.model.LeafAlloc">
+        <id column="biz_tag" jdbcType="VARCHAR" property="bizTag"/>
+        <result column="max_id" jdbcType="BIGINT" property="maxId"/>
+        <result column="step" jdbcType="INTEGER" property="step"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        `biz_tag`
+        , `max_id`, `step`, `description`, `update_time`
+    </sql>
+    <select id="selectByExample" parameterType="net.renfei.repositories.model.LeafAllocExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from leaf_alloc
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from leaf_alloc
+        where `biz_tag` = #{bizTag,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from leaf_alloc
+        where `biz_tag` = #{bizTag,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByExample" parameterType="net.renfei.repositories.model.LeafAllocExample">
+        delete from leaf_alloc
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="net.renfei.repositories.model.LeafAlloc">
+        insert into leaf_alloc (`biz_tag`, `max_id`, `step`,
+                                `description`, `update_time`)
+        values (#{bizTag,jdbcType=VARCHAR}, #{maxId,jdbcType=BIGINT}, #{step,jdbcType=INTEGER},
+                #{description,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="net.renfei.repositories.model.LeafAlloc">
+        insert into leaf_alloc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bizTag != null">
+                `biz_tag`,
+            </if>
+            <if test="maxId != null">
+                `max_id`,
+            </if>
+            <if test="step != null">
+                `step`,
+            </if>
+            <if test="description != null">
+                `description`,
+            </if>
+            <if test="updateTime != null">
+                `update_time`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bizTag != null">
+                #{bizTag,jdbcType=VARCHAR},
+            </if>
+            <if test="maxId != null">
+                #{maxId,jdbcType=BIGINT},
+            </if>
+            <if test="step != null">
+                #{step,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="net.renfei.repositories.model.LeafAllocExample"
+            resultType="java.lang.Long">
+        select count(*) from leaf_alloc
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update leaf_alloc
+        <set>
+            <if test="record.bizTag != null">
+                `biz_tag` = #{record.bizTag,jdbcType=VARCHAR},
+            </if>
+            <if test="record.maxId != null">
+                `max_id` = #{record.maxId,jdbcType=BIGINT},
+            </if>
+            <if test="record.step != null">
+                `step` = #{record.step,jdbcType=INTEGER},
+            </if>
+            <if test="record.description != null">
+                `description` = #{record.description,jdbcType=VARCHAR},
+            </if>
+            <if test="record.updateTime != null">
+                `update_time` = #{record.updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update leaf_alloc
+        set `biz_tag` = #{record.bizTag,jdbcType=VARCHAR},
+        `max_id` = #{record.maxId,jdbcType=BIGINT},
+        `step` = #{record.step,jdbcType=INTEGER},
+        `description` = #{record.description,jdbcType=VARCHAR},
+        `update_time` = #{record.updateTime,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="net.renfei.repositories.model.LeafAlloc">
+        update leaf_alloc
+        <set>
+            <if test="maxId != null">
+                `max_id` = #{maxId,jdbcType=BIGINT},
+            </if>
+            <if test="step != null">
+                `step` = #{step,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                `description` = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where `biz_tag` = #{bizTag,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.LeafAlloc">
+        update leaf_alloc
+        set `max_id`      = #{maxId,jdbcType=BIGINT},
+            `step`        = #{step,jdbcType=INTEGER},
+            `description` = #{description,jdbcType=VARCHAR},
+            `update_time` = #{updateTime,jdbcType=TIMESTAMP}
+        where `biz_tag` = #{bizTag,jdbcType=VARCHAR}
+    </update>
+</mapper>
