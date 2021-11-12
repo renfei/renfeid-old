@@ -60,6 +60,7 @@
         <perf4j.version>0.9.16</perf4j.version>
         <commons-io.version>2.4</commons-io.version>
         <curator.version>2.6.0</curator.version>
+        <openfeign.version>3.0.5</openfeign.version>
         <jackson-databind.version>2.12.5</jackson-databind.version>
         <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
     </properties>
@@ -116,6 +117,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${openfeign.version}</version>
         </dependency>
         <dependency>
             <groupId>org.perf4j</groupId>
@@ -174,17 +176,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <finalName>renfeid</finalName>
