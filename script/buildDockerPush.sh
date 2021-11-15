@@ -25,6 +25,7 @@ echo "#########################################"
 echo "# Docker 构建开始 >>>>"
 echo "#########################################"
 #docker build -t $REPOSITORIES:"$PROJECT_VERSION" .
+echo "docker build -t $REGISTRY/$NAMESPACES/$REPOSITORIES:$PROJECT_VERSION ."
 docker build -t $REGISTRY/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION" .
 IMAGEID=$(docker images -q --filter reference=$REPOSITORIES:"$PROJECT_VERSION")
 echo "构建完成 >>>> IMAGE ID:$IMAGEID"
@@ -40,7 +41,8 @@ docker push $REGISTRY/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION"
 echo "#########################################"
 echo "# 删除本地 Docker 镜像到仓库 >>>>"
 echo "#########################################"
-docker rmi "$IMAGEID"
+#docker rmi "$IMAGEID"
+docker rmi "$REGISTRY/$NAMESPACES/$REPOSITORIES:$PROJECT_VERSION"
 echo "#########################################"
 echo "# 全部构建完成！ Version: $REPOSITORIES:$PROJECT_VERSION"
 echo "# 镜像地址: $REGISTRY/$NAMESPACES/$REPOSITORIES:$PROJECT_VERSION"
