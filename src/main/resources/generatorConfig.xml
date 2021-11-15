@@ -31,17 +31,18 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!--自动生成定义位置-->
-        <javaModelGenerator targetPackage="net.renfei.startd.inf.model" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="net.renfei.repositories.model" targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="false"/>
         </javaModelGenerator>
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
-        <javaClientGenerator type="XMLMAPPER" targetPackage="net.renfei.startd.inf.dao"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="net.renfei.repositories"
                              targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
-        <table schema="renfeid" delimitAllColumns="true" tableName="leaf_alloc"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="leaf_alloc"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="sys_region"/>
     </context>
 </generatorConfiguration>
