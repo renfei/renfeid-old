@@ -28,3 +28,5 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+sentry:
+  dsn: https://glet_235c2f661df873577b7aac0f77fe99ab@gitlab.cn/api/v4/error_tracking/collector/12801
