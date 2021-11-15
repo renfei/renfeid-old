@@ -58,4 +58,6 @@ jobs:
           cp ./config.renfei.net/application-prod.yml ./src/main/resources/
 
       - name: Build And Push Docker Image
-        run: ./script/buildDockerPush.sh "${{ secrets.docker_registry_password }}"
+        run: |
+          chmod +x ./script/buildDockerPush.sh
+          ./script/buildDockerPush.sh "${{ secrets.docker_registry_password }}"
