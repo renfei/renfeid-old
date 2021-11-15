@@ -5,12 +5,14 @@ import net.renfei.utils.ApplicationContextUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * 程序启动入口类
  *
  * @author renfei
  */
+@EnableFeignClients
 @SpringBootApplication
 public class Application {
 

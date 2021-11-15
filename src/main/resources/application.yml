@@ -17,6 +17,31 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: quartzScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: false
+            clusterCheckinInterval: 10000
+            useProperties: false
+            dataSource: quartzDs
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    #数据库方式
+    job-store-type: JDBC
+    #初始化表结构
+    jdbc:
+      initialize-schema: NEVER
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
