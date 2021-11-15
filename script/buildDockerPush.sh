@@ -24,14 +24,15 @@ mvn clean package -Dmaven.test.skip=true -P prod
 echo "#########################################"
 echo "# Docker 构建开始 >>>>"
 echo "#########################################"
-docker build -t $REPOSITORIES:"$PROJECT_VERSION" .
+#docker build -t $REPOSITORIES:"$PROJECT_VERSION" .
+docker build -t $REGISTRY/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION" .
 IMAGEID=$(docker images -q --filter reference=$REPOSITORIES:"$PROJECT_VERSION")
 echo "构建完成 >>>> IMAGE ID:$IMAGEID"
 echo "#########################################"
 echo "# 登陆 Docker 仓库 >>>>"
 echo "#########################################"
 docker login --username=i@renfei.net --password="$PASSWORD" $REGISTRY
-docker tag "$IMAGEID" $REGISTRY/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION"
+#docker tag "$IMAGEID" $REGISTRY/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION"
 echo "#########################################"
 echo "# 开始推送 Docker 镜像到仓库 >>>>"
 echo "#########################################"
