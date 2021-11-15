@@ -43,6 +43,7 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="leaf_alloc"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="sys_region"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_region"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="sys_comments"/>
     </context>
 </generatorConfiguration>

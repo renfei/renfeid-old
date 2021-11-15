@@ -6,7 +6,7 @@ package net.renfei.domain;
  *
  * @author renfei
  */
-public class BlogDomain {
+public final class BlogDomain {
     public static BlogDomain getBlogById(Long id) {
         return null;
     }
