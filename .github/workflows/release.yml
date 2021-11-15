@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: building
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: renfeid
+          MYSQL_ROOT_PASSWORD: root
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+      redis:
+        image: redis:6.0.1
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Verify MariaDB Connection and Load Data
+        env:
+          PORT: ${{ job.services.mysql.ports[3306] }}
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+            sleep 1
+          done
+
+      - name: Loading Database
+        env:
+          PORT: ${{ job.services.mysql.ports[3306] }}
+        run: mysql -h 127.0.0.1 -P $PORT -uroot -proot --default-character-set=utf8 renfei < environment/db/renfeid.sql
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Pull Production Config(application-prod.yml)
+        run: |
+          git clone https://cd-robot:${{ secrets.cd_robot_token }}@github.com/renfei/config.renfei.net.git && \
+          cp ./config.renfei.net/application-prod.yml ./src/main/resources/
+
+      - name: Build And Push Docker Image
+        run: ./script/buildDockerPush.sh "${{ secrets.docker_registry_password }}"
