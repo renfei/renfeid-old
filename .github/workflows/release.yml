@@ -43,7 +43,7 @@ jobs:
       - name: Loading Database
         env:
           PORT: ${{ job.services.mysql.ports[3306] }}
-        run: mysql -h 127.0.0.1 -P $PORT -uroot -proot --default-character-set=utf8 renfei < environment/db/renfeid.sql
+        run: mysql -h 127.0.0.1 -P $PORT -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
 
       - name: Cache Maven packages
         uses: actions/cache@v2
