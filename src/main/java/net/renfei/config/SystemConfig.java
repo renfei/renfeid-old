@@ -5,12 +5,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
+ * 自定义配置
+ * 来自 application.yml 配置文件
+ *
  * @author renfei
  */
 @Data
 @Component
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
+    private String active;
+    private String version;
+    private String buildTime;
+    private String globalAesKey;
     private Leaf leaf;
 
     @Data

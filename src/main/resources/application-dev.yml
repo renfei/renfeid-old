@@ -60,6 +60,7 @@ system:
   active: dev
   version: @project.version@
   buildTime: @buildtimestamp@
+  globalAesKey: globalAesKey
   leaf:
     segment:
       enable: true
