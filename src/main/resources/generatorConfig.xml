@@ -44,6 +44,9 @@
         </javaClientGenerator>
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="leaf_alloc"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_region"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="sys_comments"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_comments"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_posts"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_postmeta"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="blog_category"/>
     </context>
 </generatorConfiguration>
