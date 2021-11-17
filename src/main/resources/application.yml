@@ -42,6 +42,12 @@ spring:
     #初始化表结构
     jdbc:
       initialize-schema: NEVER
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
