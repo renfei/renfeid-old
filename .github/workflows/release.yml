@@ -59,5 +59,5 @@ jobs:
 
       - name: Build And Push Docker Image
         run: |
-          chmod +x ./script/buildDockerPush.sh
-          ./script/buildDockerPush.sh "${{ secrets.docker_registry_password }}"
+          chmod +x ./environment/shell/buildDockerPush.sh
+          ./environment/shell/buildDockerPush.sh "${{ secrets.docker_registry_password }}"
