@@ -1,6 +1,8 @@
 FROM ubuntu:18.04
 MAINTAINER RenFei <i@renfei.net>
 
+RUN adduser --system --group --home /opt/renfeid renfei
+
 RUN set -ex; \
 	apt-get update; \
 	if ! which openjdk-8-jdk; then \
@@ -20,12 +22,35 @@ RUN set -ex; \
     fi; \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /opt/renfeid/log;
+ARG JAR_FILE=target/*.jar
 
-COPY target/renfeid.jar /app/
+COPY --chown=renfei:renfei ${JAR_FILE} /opt/renfeid/renfeid.jar
 
-HEALTHCHECK --interval=5s --timeout=5s CMD curl -f http://localhost:8099/HealthCheck || exit 1
+USER renfei
 
-ENTRYPOINT ["java","-Xms128M","-Xmx1024M","-XX:+UseCompressedOops","-XX:+UseConcMarkSweepGC","-XX:SoftRefLRUPolicyMSPerMB=50","-Dfile.encoding=UTF-8","-Xverify:none","-Ddruid.mysql.usePingMethod=false","-jar","/app/renfeid.jar"]
+WORKDIR /opt/renfeid
+
+ENTRYPOINT ["java",
+"-Xms128M",
+"-Xmx1024M",
+"-XX:+PrintGCDetails",
+"-XX:GCLogFileSize=100M",
+"-XX:+UseGCLogFileRotation",
+"-Xloggc:/opt/renfeid/log/gc.log",
+"-XX:+HeapDumpOnOutOfMemoryError",
+"-XX:HeapDumpPath=/opt/renfeid/log/java_heapdump.hprof",
+"-XX:+UseCompressedOops",
+"-XX:+UseG1GC",
+"-XX:+UseStringDeduplication",
+"-XX:+PrintTenuringDistribution",
+"-Dfile.encoding=UTF-8",
+"-Xverify:none",
+"-jar",
+"/opt/renfeid/renfeid.jar"]
+
+HEALTHCHECK --start-period=30s --interval=30s --timeout=3s --retries=3 \
+            CMD curl --silent --fail --request GET http://localhost:8099/actuator/health \
+                | jq --exit-status '.status == "UP"' || exit 1
+                | jq --exit-status -n 'inputs | if has("status") then .status=="UP" else false end' > /dev/null || exit 1
 
 EXPOSE 8099
