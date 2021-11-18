@@ -69,3 +69,6 @@ system:
       zk:
         address: xxx
       port: 1111
+sentry:
+  dsn: https://d2e45b4218254b46aaee9b23924561e5@o1071939.ingest.sentry.io/6069850
+  traces-sample-rate: 1.0
