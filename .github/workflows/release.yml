@@ -54,8 +54,8 @@ jobs:
 
       - name: Pull Production Config(application-prod.yml)
         run: |
-          git clone https://cd-robot:${{ secrets.cd_robot_token }}@github.com/renfei/config.renfei.net.git && \
-          cp ./config.renfei.net/application-prod.yml ./src/main/resources/
+          git clone https://cd-robot:${{ secrets.cd_robot_token }}@github.com/renfei/config.git && \
+          cp ./config/renfeid/application-prod.yml ./src/main/resources/
 
       - name: Build And Push Docker Image
         run: |
