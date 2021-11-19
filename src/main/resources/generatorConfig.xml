@@ -47,6 +47,11 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_comments"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_posts"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_postmeta"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="blog_category"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_category"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_keyword_tag"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_keyword_object"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_account_keep_name"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_pages"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="sys_secret_key"/>
     </context>
 </generatorConfiguration>

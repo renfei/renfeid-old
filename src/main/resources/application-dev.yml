@@ -61,10 +61,10 @@ system:
   version: @project.version@
   buildTime: @buildtimestamp@
   globalAesKey: globalAesKey
-  leafKey: renfei
+  leafKey: leaf-segment-global
   ownerUserName: renfei
   siteName: 任霏的博客
-  # git clone https://github.com/renfei/ip2location.git
+  # git clone https://gitlab.com/renfei/ip2location.git
   ip2LocationBinFile: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.BIN
   ip2LocationBinFileV6: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
   leaf:
