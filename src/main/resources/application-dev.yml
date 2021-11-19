@@ -61,6 +61,9 @@ system:
   version: @project.version@
   buildTime: @buildtimestamp@
   globalAesKey: globalAesKey
+  # git clone https://github.com/renfei/ip2location.git
+  ip2LocationBinFile: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.BIN
+  ip2LocationBinFileV6: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
   leaf:
     segment:
       enable: true

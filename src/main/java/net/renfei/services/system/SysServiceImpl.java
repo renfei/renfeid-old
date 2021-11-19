@@ -1,5 +1,6 @@
 package net.renfei.services.system;
 
+import lombok.extern.slf4j.Slf4j;
 import net.renfei.model.system.RegionVO;
 import net.renfei.repositories.SysRegionMapper;
 import net.renfei.repositories.model.SysRegion;
@@ -8,6 +9,7 @@ import net.renfei.services.BaseService;
 import net.renfei.services.SysService;
 import net.renfei.utils.CommonUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -19,6 +21,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author renfei
  */
+@Lazy
+@Slf4j
 @Service
 public class SysServiceImpl extends BaseService implements SysService {
     private final SysRegionMapper regionMapper;

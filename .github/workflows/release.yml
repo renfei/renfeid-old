@@ -57,6 +57,9 @@ jobs:
           git clone https://cd-robot:${{ secrets.cd_robot_token }}@github.com/renfei/config.git && \
           cp ./config/renfeid/application-prod.yml ./src/main/resources/
 
+      - name: Pull IP2Location Database BinFile
+        run: git clone https://github.com/renfei/ip2location.git
+
       - name: Build And Push Docker Image
         run: |
           chmod +x ./environment/shell/buildDockerPush.sh

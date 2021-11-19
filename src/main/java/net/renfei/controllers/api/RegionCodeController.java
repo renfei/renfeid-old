@@ -4,6 +4,7 @@ import net.renfei.controllers.BaseController;
 import net.renfei.model.APIResult;
 import net.renfei.model.system.RegionVO;
 import net.renfei.services.SysService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.List;
  *
  * @author renfei
  */
+@Lazy
 @RestController
 @RequestMapping("/api")
 public class RegionCodeController extends BaseController {

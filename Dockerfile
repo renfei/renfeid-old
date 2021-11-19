@@ -23,8 +23,13 @@ RUN set -ex; \
     rm -rf /var/lib/apt/lists/*
 
 ARG JAR_FILE=target/*.jar
+# git clone https://github.com/renfei/ip2location.git
+ARG IP2LocationBinFile=ip2location/*.BIN
 
-COPY --chown=renfei:renfei ${JAR_FILE} /opt/renfeid/renfeid.jar
+RUN mkdir /opt/renfeid/ip2location
+
+COPY --chown=renfei:renfei ${JAR_FILE} /opt/renfeid/
+COPY --chown=renfei:renfei ${IP2LocationBinFile} /opt/renfeid/ip2location/
 
 USER renfei
 
@@ -52,5 +57,7 @@ HEALTHCHECK --start-period=30s --interval=30s --timeout=3s --retries=3 \
             CMD curl --silent --fail --request GET http://localhost:8099/actuator/health \
                 | jq --exit-status '.status == "UP"' || exit 1
                 | jq --exit-status -n 'inputs | if has("status") then .status=="UP" else false end' > /dev/null || exit 1
+
+VOLUME ["/opt/renfeid"]
 
 EXPOSE 8099

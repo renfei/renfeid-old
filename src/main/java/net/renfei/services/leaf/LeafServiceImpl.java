@@ -9,6 +9,7 @@ import net.renfei.services.leaf.common.Result;
 import net.renfei.services.leaf.common.ZeroIDGen;
 import net.renfei.services.leaf.segment.SegmentIDGenImpl;
 import net.renfei.services.leaf.snowflake.SnowflakeIDGenImpl;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
  *
  * @author renfei
  */
+@Lazy
 @Slf4j
 @Service
 public class LeafServiceImpl extends BaseService implements LeafService {
