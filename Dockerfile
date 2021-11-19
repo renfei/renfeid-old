@@ -35,23 +35,25 @@ USER renfei
 
 WORKDIR /opt/renfeid
 
-ENTRYPOINT ["java",
-"-Xms128M",
-"-Xmx1024M",
-"-XX:+PrintGCDetails",
-"-XX:GCLogFileSize=100M",
-"-XX:+UseGCLogFileRotation",
-"-Xloggc:/opt/renfeid/log/gc.log",
-"-XX:+HeapDumpOnOutOfMemoryError",
-"-XX:HeapDumpPath=/opt/renfeid/log/java_heapdump.hprof",
-"-XX:+UseCompressedOops",
-"-XX:+UseG1GC",
-"-XX:+UseStringDeduplication",
-"-XX:+PrintTenuringDistribution",
-"-Dfile.encoding=UTF-8",
-"-Xverify:none",
-"-jar",
-"/opt/renfeid/renfeid.jar"]
+ENTRYPOINT [
+"java", \
+"-Xms128M", \
+"-Xmx1024M", \
+"-XX:+PrintGCDetails", \
+"-XX:GCLogFileSize=100M", \
+"-XX:+UseGCLogFileRotation", \
+"-Xloggc:/opt/renfeid/log/gc.log", \
+"-XX:+HeapDumpOnOutOfMemoryError", \
+"-XX:HeapDumpPath=/opt/renfeid/log/java_heapdump.hprof", \
+"-XX:+UseCompressedOops", \
+"-XX:+UseG1GC", \
+"-XX:+UseStringDeduplication", \
+"-XX:+PrintTenuringDistribution", \
+"-Dfile.encoding=UTF-8", \
+"-Xverify:none", \
+"-jar", \
+"/opt/renfeid/renfeid.jar"
+]
 
 HEALTHCHECK --start-period=30s --interval=30s --timeout=3s --retries=3 \
             CMD curl --silent --fail --request GET http://localhost:8099/actuator/health \
