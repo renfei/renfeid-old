@@ -24,7 +24,7 @@ public class SysPages implements Serializable {
 
     private Long thumbsDown;
 
-    private String secretLevel;
+    private Integer secretLevel;
 
     private static final long serialVersionUID = 1L;
 
@@ -108,11 +108,11 @@ public class SysPages implements Serializable {
         this.thumbsDown = thumbsDown;
     }
 
-    public String getSecretLevel() {
+    public Integer getSecretLevel() {
         return secretLevel;
     }
 
-    public void setSecretLevel(String secretLevel) {
+    public void setSecretLevel(Integer secretLevel) {
         this.secretLevel = secretLevel;
     }
 

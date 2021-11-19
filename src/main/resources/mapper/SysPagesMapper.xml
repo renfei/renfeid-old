@@ -12,7 +12,7 @@
     <result column="page_parent" jdbcType="BIGINT" property="pageParent" />
     <result column="thumbs_up" jdbcType="BIGINT" property="thumbsUp" />
     <result column="thumbs_down" jdbcType="BIGINT" property="thumbsDown" />
-    <result column="secret_level" jdbcType="VARCHAR" property="secretLevel" />
+    <result column="secret_level" jdbcType="INTEGER" property="secretLevel" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="net.renfei.repositories.model.SysPagesWithBLOBs">
     <result column="featured_image" jdbcType="LONGVARCHAR" property="featuredImage" />
@@ -144,7 +144,7 @@
     values (#{id,jdbcType=BIGINT}, #{pageAuthor,jdbcType=BIGINT}, #{pageDate,jdbcType=TIMESTAMP}, 
       #{pageStatus,jdbcType=VARCHAR}, #{pageViews,jdbcType=BIGINT}, #{pagePassword,jdbcType=VARCHAR}, 
       #{pageModified,jdbcType=TIMESTAMP}, #{pageParent,jdbcType=BIGINT}, #{thumbsUp,jdbcType=BIGINT}, 
-      #{thumbsDown,jdbcType=BIGINT}, #{secretLevel,jdbcType=VARCHAR}, #{featuredImage,jdbcType=LONGVARCHAR}, 
+      #{thumbsDown,jdbcType=BIGINT}, #{secretLevel,jdbcType=INTEGER}, #{featuredImage,jdbcType=LONGVARCHAR}, 
       #{pageTitle,jdbcType=LONGVARCHAR}, #{pageKeyword,jdbcType=LONGVARCHAR}, #{pageExcerpt,jdbcType=LONGVARCHAR}, 
       #{pageContent,jdbcType=LONGVARCHAR})
   </insert>
@@ -232,7 +232,7 @@
         #{thumbsDown,jdbcType=BIGINT},
       </if>
       <if test="secretLevel != null">
-        #{secretLevel,jdbcType=VARCHAR},
+        #{secretLevel,jdbcType=INTEGER},
       </if>
       <if test="featuredImage != null">
         #{featuredImage,jdbcType=LONGVARCHAR},
@@ -291,7 +291,7 @@
         `thumbs_down` = #{record.thumbsDown,jdbcType=BIGINT},
       </if>
       <if test="record.secretLevel != null">
-        `secret_level` = #{record.secretLevel,jdbcType=VARCHAR},
+        `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
       </if>
       <if test="record.featuredImage != null">
         `featured_image` = #{record.featuredImage,jdbcType=LONGVARCHAR},
@@ -325,7 +325,7 @@
       `page_parent` = #{record.pageParent,jdbcType=BIGINT},
       `thumbs_up` = #{record.thumbsUp,jdbcType=BIGINT},
       `thumbs_down` = #{record.thumbsDown,jdbcType=BIGINT},
-      `secret_level` = #{record.secretLevel,jdbcType=VARCHAR},
+      `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
       `featured_image` = #{record.featuredImage,jdbcType=LONGVARCHAR},
       `page_title` = #{record.pageTitle,jdbcType=LONGVARCHAR},
       `page_keyword` = #{record.pageKeyword,jdbcType=LONGVARCHAR},
@@ -347,7 +347,7 @@
       `page_parent` = #{record.pageParent,jdbcType=BIGINT},
       `thumbs_up` = #{record.thumbsUp,jdbcType=BIGINT},
       `thumbs_down` = #{record.thumbsDown,jdbcType=BIGINT},
-      `secret_level` = #{record.secretLevel,jdbcType=VARCHAR}
+      `secret_level` = #{record.secretLevel,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -383,7 +383,7 @@
         `thumbs_down` = #{thumbsDown,jdbcType=BIGINT},
       </if>
       <if test="secretLevel != null">
-        `secret_level` = #{secretLevel,jdbcType=VARCHAR},
+        `secret_level` = #{secretLevel,jdbcType=INTEGER},
       </if>
       <if test="featuredImage != null">
         `featured_image` = #{featuredImage,jdbcType=LONGVARCHAR},
@@ -414,7 +414,7 @@
       `page_parent` = #{pageParent,jdbcType=BIGINT},
       `thumbs_up` = #{thumbsUp,jdbcType=BIGINT},
       `thumbs_down` = #{thumbsDown,jdbcType=BIGINT},
-      `secret_level` = #{secretLevel,jdbcType=VARCHAR},
+      `secret_level` = #{secretLevel,jdbcType=INTEGER},
       `featured_image` = #{featuredImage,jdbcType=LONGVARCHAR},
       `page_title` = #{pageTitle,jdbcType=LONGVARCHAR},
       `page_keyword` = #{pageKeyword,jdbcType=LONGVARCHAR},
@@ -433,7 +433,7 @@
       `page_parent` = #{pageParent,jdbcType=BIGINT},
       `thumbs_up` = #{thumbsUp,jdbcType=BIGINT},
       `thumbs_down` = #{thumbsDown,jdbcType=BIGINT},
-      `secret_level` = #{secretLevel,jdbcType=VARCHAR}
+      `secret_level` = #{secretLevel,jdbcType=INTEGER}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

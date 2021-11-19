@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="en_name" jdbcType="VARCHAR" property="enName" />
     <result column="zh_name" jdbcType="VARCHAR" property="zhName" />
-    <result column="secret_level" jdbcType="VARCHAR" property="secretLevel" />
+    <result column="secret_level" jdbcType="INTEGER" property="secretLevel" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -102,7 +102,7 @@
     insert into blog_category (`id`, `en_name`, `zh_name`, 
       `secret_level`)
     values (#{id,jdbcType=BIGINT}, #{enName,jdbcType=VARCHAR}, #{zhName,jdbcType=VARCHAR}, 
-      #{secretLevel,jdbcType=VARCHAR})
+      #{secretLevel,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.repositories.model.BlogCategory">
     insert into blog_category
@@ -131,7 +131,7 @@
         #{zhName,jdbcType=VARCHAR},
       </if>
       <if test="secretLevel != null">
-        #{secretLevel,jdbcType=VARCHAR},
+        #{secretLevel,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -154,7 +154,7 @@
         `zh_name` = #{record.zhName,jdbcType=VARCHAR},
       </if>
       <if test="record.secretLevel != null">
-        `secret_level` = #{record.secretLevel,jdbcType=VARCHAR},
+        `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -166,7 +166,7 @@
     set `id` = #{record.id,jdbcType=BIGINT},
       `en_name` = #{record.enName,jdbcType=VARCHAR},
       `zh_name` = #{record.zhName,jdbcType=VARCHAR},
-      `secret_level` = #{record.secretLevel,jdbcType=VARCHAR}
+      `secret_level` = #{record.secretLevel,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -181,7 +181,7 @@
         `zh_name` = #{zhName,jdbcType=VARCHAR},
       </if>
       <if test="secretLevel != null">
-        `secret_level` = #{secretLevel,jdbcType=VARCHAR},
+        `secret_level` = #{secretLevel,jdbcType=INTEGER},
       </if>
     </set>
     where `id` = #{id,jdbcType=BIGINT}
@@ -190,7 +190,7 @@
     update blog_category
     set `en_name` = #{enName,jdbcType=VARCHAR},
       `zh_name` = #{zhName,jdbcType=VARCHAR},
-      `secret_level` = #{secretLevel,jdbcType=VARCHAR}
+      `secret_level` = #{secretLevel,jdbcType=INTEGER}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

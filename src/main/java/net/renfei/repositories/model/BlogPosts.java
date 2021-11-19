@@ -6,6 +6,8 @@ import java.util.Date;
 public class BlogPosts implements Serializable {
     private Long id;
 
+    private Long categoryId;
+
     private Long postAuthor;
 
     private Date postDate;
@@ -32,7 +34,7 @@ public class BlogPosts implements Serializable {
 
     private Double pageRank;
 
-    private String secretLevel;
+    private Integer secretLevel;
 
     private static final long serialVersionUID = 1L;
 
@@ -42,6 +44,14 @@ public class BlogPosts implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Long getPostAuthor() {
@@ -148,11 +158,11 @@ public class BlogPosts implements Serializable {
         this.pageRank = pageRank;
     }
 
-    public String getSecretLevel() {
+    public Integer getSecretLevel() {
         return secretLevel;
     }
 
-    public void setSecretLevel(String secretLevel) {
+    public void setSecretLevel(Integer secretLevel) {
         this.secretLevel = secretLevel;
     }
 
@@ -163,6 +173,7 @@ public class BlogPosts implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", categoryId=").append(categoryId);
         sb.append(", postAuthor=").append(postAuthor);
         sb.append(", postDate=").append(postDate);
         sb.append(", postStatus=").append(postStatus);
