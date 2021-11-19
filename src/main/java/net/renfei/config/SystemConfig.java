@@ -18,6 +18,7 @@ public class SystemConfig {
     private String version;
     private String buildTime;
     private String globalAesKey;
+    private String siteName;
     private String ip2LocationBinFile;
     private String ip2LocationBinFileV6;
     private Leaf leaf;
