@@ -61,6 +61,8 @@ system:
   version: @project.version@
   buildTime: @buildtimestamp@
   globalAesKey: globalAesKey
+  leafKey: renfei
+  ownerUserName: renfei
   siteName: 任霏的博客
   # git clone https://github.com/renfei/ip2location.git
   ip2LocationBinFile: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.BIN

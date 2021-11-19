@@ -1,5 +1,6 @@
 package net.renfei.domain.comment;
 
+import lombok.Builder;
 import lombok.Data;
 import net.renfei.domain.user.User;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @author renfei
  */
 @Data
+@Builder
 public final class Comment {
     private Long id;
     private Long reply;
@@ -21,6 +23,7 @@ public final class Comment {
     private String content;
     private Date datetime;
     private String address;
+    private String ip;
     private Boolean isOwner;
     private User user;
     private List<Comment> child;

@@ -9,4 +9,14 @@ import lombok.Data;
  */
 @Data
 public final class User {
+    private Long id;
+    private String userName;
+    private String email;
+    private String webSite;
+
+    private User() {
+    }
+
+    public User(Long id) {
+    }
 }

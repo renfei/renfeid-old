@@ -37,6 +37,12 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
     }
 
     @Override
+    public String ipQueryAddress(String ip) throws IP2LocationException {
+        IPResult result = this.ipQuery(ip);
+        return result.getCity() + ", " + result.getRegion() + ", " + result.getCountryLong();
+    }
+
+    @Override
     public IPResult ipQuery(String ip) throws IP2LocationException {
         IPResult rec;
         try {

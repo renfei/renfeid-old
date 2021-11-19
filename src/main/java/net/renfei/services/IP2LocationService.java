@@ -9,5 +9,6 @@ import net.renfei.exception.IP2LocationException;
  * @author renfei
  */
 public interface IP2LocationService {
+    String ipQueryAddress(String ip) throws IP2LocationException;
     IPResult ipQuery(String ip) throws IP2LocationException;
 }

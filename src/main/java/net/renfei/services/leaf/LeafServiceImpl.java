@@ -53,6 +53,16 @@ public class LeafServiceImpl extends BaseService implements LeafService {
     /**
      * 发号服务
      *
+     * @return
+     */
+    @Override
+    public Result getId() {
+        return idGen.get(SYSTEM_CONFIG.getLeafKey());
+    }
+
+    /**
+     * 发号服务
+     *
      * @param key
      * @return
      */
