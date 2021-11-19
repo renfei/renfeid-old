@@ -57,8 +57,11 @@ jobs:
           git clone https://cd-robot:${{ secrets.cd_robot_token }}@github.com/renfei/config.git && \
           cp ./config/renfeid/application-prod.yml ./src/main/resources/
 
+      # Dockerfile 里会复制 ip2location 中的 BIN 文件
       - name: Pull IP2Location Database BinFile
-        run: git clone https://github.com/renfei/ip2location.git
+        run: |
+          git clone https://gitlab.com/renfei/ip2location.git
+          ls -l ./ip2location
 
       - name: Build And Push Docker Image
         run: |
