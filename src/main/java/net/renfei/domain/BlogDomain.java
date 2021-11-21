@@ -16,7 +16,6 @@ import net.renfei.repositories.model.BlogCategory;
 import net.renfei.repositories.model.BlogPostsWithBLOBs;
 import net.renfei.utils.ApplicationContextUtil;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,6 +55,15 @@ public final class BlogDomain {
         author = new User(post.getPostAuthor());
         category = initCategory(post.getCategoryId());
         commentList = new CommentDomain(SystemTypeEnum.BLOG, id).getCommentList();
+    }
+
+    /**
+     * 博文增加浏览量
+     */
+    public void view() {
+        BlogPostsWithBLOBs blogPost = blogPostsMapper.selectByPrimaryKey(post.getId());
+        blogPost.setPostViews(blogPost.getPostViews() + 1);
+        blogPostsMapper.updateByPrimaryKeyWithBLOBs(blogPost);
     }
 
     private Post initPost(Long id) throws BlogPostNotExistException {
