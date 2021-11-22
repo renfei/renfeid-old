@@ -13,6 +13,7 @@
     <version>0.0.9</version>
     <name>renfeid</name>
     <description>The RenFei Blog</description>
+    <url>https://www.renfei.net</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -32,6 +33,8 @@
         <url>https://www.renfei.net/</url>
     </organization>
     <scm>
+        <connection>scm:git:git://github.com/renfei/renfeid.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/renfei/renfeid.git</developerConnection>
         <url>https://github.com/renfei/renfeid</url>
     </scm>
     <profiles>
@@ -103,7 +106,7 @@
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
+            <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
         <dependency>

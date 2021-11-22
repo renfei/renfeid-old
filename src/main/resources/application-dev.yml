@@ -11,25 +11,14 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
-      initial-size: 3
-      min-idle: 3
-      max-active: 10
-      max-wait: 60000
       stat-view-servlet:
         login-username: admin
         login-password: admin
-      filter:
-        stat:
-          log-slow-sql: true
-          slow-sql-millis: 1000
   devtools:
     restart:
-      enabled: true  #设置开启热部署
-      additional-paths: src/main/java #重启目录
+      enabled: true
+      additional-paths: src/main/java
       exclude: WEB-INF/**
-  elasticsearch:
-    rest:
-      uris: http://localhost:9200
   redis:
     ## Redis数据库索引（默认为0）
     database: 0
@@ -64,6 +53,8 @@ spring:
     cache: false
     settings:
       template_update_delay: 0
+  elasticsearch:
+    uris: http://localhost:9200
 # 自定义配置
 system:
   active: dev
