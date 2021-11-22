@@ -53,17 +53,15 @@
     </profiles>
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>2020.0.4</spring-cloud.version>
         <druid.version>1.2.8</druid.version>
         <mybatis.version>2.2.0</mybatis.version>
         <pagehelper.version>1.4.0</pagehelper.version>
         <perf4j.version>0.9.16</perf4j.version>
-        <commons-io.version>2.7</commons-io.version>
         <curator.version>2.6.0</curator.version>
         <openfeign.version>3.0.5</openfeign.version>
-        <jackson-databind.version>2.12.5</jackson-databind.version>
         <sentry.version>5.4.0</sentry.version>
         <email.version>2.5.6</email.version>
+        <springdoc.version>1.5.12</springdoc.version>
         <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
     </properties>
     <dependencies>
@@ -117,16 +115,6 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>${pagehelper.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis-spring-boot-starter</artifactId>
-                    <groupId>org.mybatis.spring.boot</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>mybatis-spring-boot-starter</artifactId>
-                    <groupId>org.mybatis.spring.boot</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -139,9 +127,9 @@
             <version>${perf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <!--zk-->
         <dependency>
@@ -155,12 +143,6 @@
                     <groupId>log4j</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
-<!--            <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>io.sentry</groupId>
