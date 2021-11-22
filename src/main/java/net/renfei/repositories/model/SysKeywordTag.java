@@ -2,14 +2,12 @@ package net.renfei.repositories.model;
 
 import java.io.Serializable;
 
-public class BlogCategory implements Serializable {
+public class SysKeywordTag implements Serializable {
     private Long id;
 
     private String enName;
 
     private String zhName;
-
-    private Integer secretLevel;
 
     private static final long serialVersionUID = 1L;
 
@@ -37,14 +35,6 @@ public class BlogCategory implements Serializable {
         this.zhName = zhName;
     }
 
-    public Integer getSecretLevel() {
-        return secretLevel;
-    }
-
-    public void setSecretLevel(Integer secretLevel) {
-        this.secretLevel = secretLevel;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -54,7 +44,6 @@ public class BlogCategory implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", enName=").append(enName);
         sb.append(", zhName=").append(zhName);
-        sb.append(", secretLevel=").append(secretLevel);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

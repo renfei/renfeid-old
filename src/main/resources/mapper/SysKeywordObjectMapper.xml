@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.renfei.repositories.BlogCategoryMapper">
-  <resultMap id="BaseResultMap" type="net.renfei.repositories.model.BlogCategory">
+<mapper namespace="net.renfei.repositories.SysKeywordObjectMapper">
+  <resultMap id="BaseResultMap" type="net.renfei.repositories.model.SysKeywordObject">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="en_name" jdbcType="VARCHAR" property="enName" />
-    <result column="zh_name" jdbcType="VARCHAR" property="zhName" />
-    <result column="secret_level" jdbcType="INTEGER" property="secretLevel" />
+    <result column="tag_id" jdbcType="BIGINT" property="tagId" />
+    <result column="object_type" jdbcType="VARCHAR" property="objectType" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,15 +66,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    `id`, `en_name`, `zh_name`, `secret_level`
+    `id`, `tag_id`, `object_type`, `object_id`
   </sql>
-  <select id="selectByExample" parameterType="net.renfei.repositories.model.BlogCategoryExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="net.renfei.repositories.model.SysKeywordObjectExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from blog_category
+    from sys_keyword_object
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -85,76 +85,76 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from blog_category
+    from sys_keyword_object
     where `id` = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from blog_category
+    delete from sys_keyword_object
     where `id` = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="net.renfei.repositories.model.BlogCategoryExample">
-    delete from blog_category
+  <delete id="deleteByExample" parameterType="net.renfei.repositories.model.SysKeywordObjectExample">
+    delete from sys_keyword_object
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="net.renfei.repositories.model.BlogCategory">
-    insert into blog_category (`id`, `en_name`, `zh_name`, 
-      `secret_level`)
-    values (#{id,jdbcType=BIGINT}, #{enName,jdbcType=VARCHAR}, #{zhName,jdbcType=VARCHAR}, 
-      #{secretLevel,jdbcType=INTEGER})
+  <insert id="insert" parameterType="net.renfei.repositories.model.SysKeywordObject">
+    insert into sys_keyword_object (`id`, `tag_id`, `object_type`, 
+      `object_id`)
+    values (#{id,jdbcType=BIGINT}, #{tagId,jdbcType=BIGINT}, #{objectType,jdbcType=VARCHAR}, 
+      #{objectId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="net.renfei.repositories.model.BlogCategory">
-    insert into blog_category
+  <insert id="insertSelective" parameterType="net.renfei.repositories.model.SysKeywordObject">
+    insert into sys_keyword_object
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         `id`,
       </if>
-      <if test="enName != null">
-        `en_name`,
+      <if test="tagId != null">
+        `tag_id`,
       </if>
-      <if test="zhName != null">
-        `zh_name`,
+      <if test="objectType != null">
+        `object_type`,
       </if>
-      <if test="secretLevel != null">
-        `secret_level`,
+      <if test="objectId != null">
+        `object_id`,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="enName != null">
-        #{enName,jdbcType=VARCHAR},
+      <if test="tagId != null">
+        #{tagId,jdbcType=BIGINT},
       </if>
-      <if test="zhName != null">
-        #{zhName,jdbcType=VARCHAR},
+      <if test="objectType != null">
+        #{objectType,jdbcType=VARCHAR},
       </if>
-      <if test="secretLevel != null">
-        #{secretLevel,jdbcType=INTEGER},
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="net.renfei.repositories.model.BlogCategoryExample" resultType="java.lang.Long">
-    select count(*) from blog_category
+  <select id="countByExample" parameterType="net.renfei.repositories.model.SysKeywordObjectExample" resultType="java.lang.Long">
+    select count(*) from sys_keyword_object
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update blog_category
+    update sys_keyword_object
     <set>
       <if test="record.id != null">
         `id` = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.enName != null">
-        `en_name` = #{record.enName,jdbcType=VARCHAR},
+      <if test="record.tagId != null">
+        `tag_id` = #{record.tagId,jdbcType=BIGINT},
       </if>
-      <if test="record.zhName != null">
-        `zh_name` = #{record.zhName,jdbcType=VARCHAR},
+      <if test="record.objectType != null">
+        `object_type` = #{record.objectType,jdbcType=VARCHAR},
       </if>
-      <if test="record.secretLevel != null">
-        `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
+      <if test="record.objectId != null">
+        `object_id` = #{record.objectId,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -162,35 +162,35 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update blog_category
+    update sys_keyword_object
     set `id` = #{record.id,jdbcType=BIGINT},
-      `en_name` = #{record.enName,jdbcType=VARCHAR},
-      `zh_name` = #{record.zhName,jdbcType=VARCHAR},
-      `secret_level` = #{record.secretLevel,jdbcType=INTEGER}
+      `tag_id` = #{record.tagId,jdbcType=BIGINT},
+      `object_type` = #{record.objectType,jdbcType=VARCHAR},
+      `object_id` = #{record.objectId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.repositories.model.BlogCategory">
-    update blog_category
+  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.repositories.model.SysKeywordObject">
+    update sys_keyword_object
     <set>
-      <if test="enName != null">
-        `en_name` = #{enName,jdbcType=VARCHAR},
+      <if test="tagId != null">
+        `tag_id` = #{tagId,jdbcType=BIGINT},
       </if>
-      <if test="zhName != null">
-        `zh_name` = #{zhName,jdbcType=VARCHAR},
+      <if test="objectType != null">
+        `object_type` = #{objectType,jdbcType=VARCHAR},
       </if>
-      <if test="secretLevel != null">
-        `secret_level` = #{secretLevel,jdbcType=INTEGER},
+      <if test="objectId != null">
+        `object_id` = #{objectId,jdbcType=BIGINT},
       </if>
     </set>
     where `id` = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.BlogCategory">
-    update blog_category
-    set `en_name` = #{enName,jdbcType=VARCHAR},
-      `zh_name` = #{zhName,jdbcType=VARCHAR},
-      `secret_level` = #{secretLevel,jdbcType=INTEGER}
+  <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.SysKeywordObject">
+    update sys_keyword_object
+    set `tag_id` = #{tagId,jdbcType=BIGINT},
+      `object_type` = #{objectType,jdbcType=VARCHAR},
+      `object_id` = #{objectId,jdbcType=BIGINT}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

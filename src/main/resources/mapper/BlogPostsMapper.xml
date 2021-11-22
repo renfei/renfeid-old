@@ -3,6 +3,7 @@
 <mapper namespace="net.renfei.repositories.BlogPostsMapper">
   <resultMap id="BaseResultMap" type="net.renfei.repositories.model.BlogPosts">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
     <result column="post_author" jdbcType="BIGINT" property="postAuthor" />
     <result column="post_date" jdbcType="TIMESTAMP" property="postDate" />
     <result column="post_status" jdbcType="VARCHAR" property="postStatus" />
@@ -16,7 +17,7 @@
     <result column="avg_views" jdbcType="DOUBLE" property="avgViews" />
     <result column="avg_comment" jdbcType="DOUBLE" property="avgComment" />
     <result column="page_rank" jdbcType="DOUBLE" property="pageRank" />
-    <result column="secret_level" jdbcType="VARCHAR" property="secretLevel" />
+    <result column="secret_level" jdbcType="INTEGER" property="secretLevel" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="net.renfei.repositories.model.BlogPostsWithBLOBs">
     <result column="featured_image" jdbcType="LONGVARCHAR" property="featuredImage" />
@@ -86,7 +87,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    `id`, `post_author`, `post_date`, `post_status`, `post_views`, `comment_status`, 
+    `id`, `category_id`, `post_author`, `post_date`, `post_status`, `post_views`, `comment_status`, 
     `post_password`, `post_modified`, `post_parent`, `thumbs_up`, `thumbs_down`, `avg_views`, 
     `avg_comment`, `page_rank`, `secret_level`
   </sql>
@@ -143,28 +144,31 @@
     </if>
   </delete>
   <insert id="insert" parameterType="net.renfei.repositories.model.BlogPostsWithBLOBs">
-    insert into blog_posts (`id`, `post_author`, `post_date`, 
-      `post_status`, `post_views`, `comment_status`, 
-      `post_password`, `post_modified`, `post_parent`, 
-      `thumbs_up`, `thumbs_down`, `avg_views`, 
-      `avg_comment`, `page_rank`, `secret_level`, 
-      `featured_image`, `post_title`, `post_keyword`, 
-      `post_excerpt`, `post_content`, `source_name`, 
-      `source_url`)
-    values (#{id,jdbcType=BIGINT}, #{postAuthor,jdbcType=BIGINT}, #{postDate,jdbcType=TIMESTAMP}, 
-      #{postStatus,jdbcType=VARCHAR}, #{postViews,jdbcType=BIGINT}, #{commentStatus,jdbcType=VARCHAR}, 
-      #{postPassword,jdbcType=VARCHAR}, #{postModified,jdbcType=TIMESTAMP}, #{postParent,jdbcType=BIGINT}, 
-      #{thumbsUp,jdbcType=BIGINT}, #{thumbsDown,jdbcType=BIGINT}, #{avgViews,jdbcType=DOUBLE}, 
-      #{avgComment,jdbcType=DOUBLE}, #{pageRank,jdbcType=DOUBLE}, #{secretLevel,jdbcType=VARCHAR}, 
-      #{featuredImage,jdbcType=LONGVARCHAR}, #{postTitle,jdbcType=LONGVARCHAR}, #{postKeyword,jdbcType=LONGVARCHAR}, 
-      #{postExcerpt,jdbcType=LONGVARCHAR}, #{postContent,jdbcType=LONGVARCHAR}, #{sourceName,jdbcType=LONGVARCHAR}, 
-      #{sourceUrl,jdbcType=LONGVARCHAR})
+    insert into blog_posts (`id`, `category_id`, `post_author`, 
+      `post_date`, `post_status`, `post_views`, 
+      `comment_status`, `post_password`, `post_modified`, 
+      `post_parent`, `thumbs_up`, `thumbs_down`, 
+      `avg_views`, `avg_comment`, `page_rank`, 
+      `secret_level`, `featured_image`, `post_title`, 
+      `post_keyword`, `post_excerpt`, `post_content`, 
+      `source_name`, `source_url`)
+    values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{postAuthor,jdbcType=BIGINT}, 
+      #{postDate,jdbcType=TIMESTAMP}, #{postStatus,jdbcType=VARCHAR}, #{postViews,jdbcType=BIGINT}, 
+      #{commentStatus,jdbcType=VARCHAR}, #{postPassword,jdbcType=VARCHAR}, #{postModified,jdbcType=TIMESTAMP}, 
+      #{postParent,jdbcType=BIGINT}, #{thumbsUp,jdbcType=BIGINT}, #{thumbsDown,jdbcType=BIGINT}, 
+      #{avgViews,jdbcType=DOUBLE}, #{avgComment,jdbcType=DOUBLE}, #{pageRank,jdbcType=DOUBLE}, 
+      #{secretLevel,jdbcType=INTEGER}, #{featuredImage,jdbcType=LONGVARCHAR}, #{postTitle,jdbcType=LONGVARCHAR}, 
+      #{postKeyword,jdbcType=LONGVARCHAR}, #{postExcerpt,jdbcType=LONGVARCHAR}, #{postContent,jdbcType=LONGVARCHAR}, 
+      #{sourceName,jdbcType=LONGVARCHAR}, #{sourceUrl,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.repositories.model.BlogPostsWithBLOBs">
     insert into blog_posts
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         `id`,
+      </if>
+      <if test="categoryId != null">
+        `category_id`,
       </if>
       <if test="postAuthor != null">
         `post_author`,
@@ -234,6 +238,9 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=BIGINT},
+      </if>
       <if test="postAuthor != null">
         #{postAuthor,jdbcType=BIGINT},
       </if>
@@ -274,7 +281,7 @@
         #{pageRank,jdbcType=DOUBLE},
       </if>
       <if test="secretLevel != null">
-        #{secretLevel,jdbcType=VARCHAR},
+        #{secretLevel,jdbcType=INTEGER},
       </if>
       <if test="featuredImage != null">
         #{featuredImage,jdbcType=LONGVARCHAR},
@@ -310,6 +317,9 @@
     <set>
       <if test="record.id != null">
         `id` = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.categoryId != null">
+        `category_id` = #{record.categoryId,jdbcType=BIGINT},
       </if>
       <if test="record.postAuthor != null">
         `post_author` = #{record.postAuthor,jdbcType=BIGINT},
@@ -351,7 +361,7 @@
         `page_rank` = #{record.pageRank,jdbcType=DOUBLE},
       </if>
       <if test="record.secretLevel != null">
-        `secret_level` = #{record.secretLevel,jdbcType=VARCHAR},
+        `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
       </if>
       <if test="record.featuredImage != null">
         `featured_image` = #{record.featuredImage,jdbcType=LONGVARCHAR},
@@ -382,6 +392,7 @@
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update blog_posts
     set `id` = #{record.id,jdbcType=BIGINT},
+      `category_id` = #{record.categoryId,jdbcType=BIGINT},
       `post_author` = #{record.postAuthor,jdbcType=BIGINT},
       `post_date` = #{record.postDate,jdbcType=TIMESTAMP},
       `post_status` = #{record.postStatus,jdbcType=VARCHAR},
@@ -395,7 +406,7 @@
       `avg_views` = #{record.avgViews,jdbcType=DOUBLE},
       `avg_comment` = #{record.avgComment,jdbcType=DOUBLE},
       `page_rank` = #{record.pageRank,jdbcType=DOUBLE},
-      `secret_level` = #{record.secretLevel,jdbcType=VARCHAR},
+      `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
       `featured_image` = #{record.featuredImage,jdbcType=LONGVARCHAR},
       `post_title` = #{record.postTitle,jdbcType=LONGVARCHAR},
       `post_keyword` = #{record.postKeyword,jdbcType=LONGVARCHAR},
@@ -410,6 +421,7 @@
   <update id="updateByExample" parameterType="map">
     update blog_posts
     set `id` = #{record.id,jdbcType=BIGINT},
+      `category_id` = #{record.categoryId,jdbcType=BIGINT},
       `post_author` = #{record.postAuthor,jdbcType=BIGINT},
       `post_date` = #{record.postDate,jdbcType=TIMESTAMP},
       `post_status` = #{record.postStatus,jdbcType=VARCHAR},
@@ -423,7 +435,7 @@
       `avg_views` = #{record.avgViews,jdbcType=DOUBLE},
       `avg_comment` = #{record.avgComment,jdbcType=DOUBLE},
       `page_rank` = #{record.pageRank,jdbcType=DOUBLE},
-      `secret_level` = #{record.secretLevel,jdbcType=VARCHAR}
+      `secret_level` = #{record.secretLevel,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -431,6 +443,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="net.renfei.repositories.model.BlogPostsWithBLOBs">
     update blog_posts
     <set>
+      <if test="categoryId != null">
+        `category_id` = #{categoryId,jdbcType=BIGINT},
+      </if>
       <if test="postAuthor != null">
         `post_author` = #{postAuthor,jdbcType=BIGINT},
       </if>
@@ -471,7 +486,7 @@
         `page_rank` = #{pageRank,jdbcType=DOUBLE},
       </if>
       <if test="secretLevel != null">
-        `secret_level` = #{secretLevel,jdbcType=VARCHAR},
+        `secret_level` = #{secretLevel,jdbcType=INTEGER},
       </if>
       <if test="featuredImage != null">
         `featured_image` = #{featuredImage,jdbcType=LONGVARCHAR},
@@ -499,7 +514,8 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="net.renfei.repositories.model.BlogPostsWithBLOBs">
     update blog_posts
-    set `post_author` = #{postAuthor,jdbcType=BIGINT},
+    set `category_id` = #{categoryId,jdbcType=BIGINT},
+      `post_author` = #{postAuthor,jdbcType=BIGINT},
       `post_date` = #{postDate,jdbcType=TIMESTAMP},
       `post_status` = #{postStatus,jdbcType=VARCHAR},
       `post_views` = #{postViews,jdbcType=BIGINT},
@@ -512,7 +528,7 @@
       `avg_views` = #{avgViews,jdbcType=DOUBLE},
       `avg_comment` = #{avgComment,jdbcType=DOUBLE},
       `page_rank` = #{pageRank,jdbcType=DOUBLE},
-      `secret_level` = #{secretLevel,jdbcType=VARCHAR},
+      `secret_level` = #{secretLevel,jdbcType=INTEGER},
       `featured_image` = #{featuredImage,jdbcType=LONGVARCHAR},
       `post_title` = #{postTitle,jdbcType=LONGVARCHAR},
       `post_keyword` = #{postKeyword,jdbcType=LONGVARCHAR},
@@ -524,7 +540,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.BlogPosts">
     update blog_posts
-    set `post_author` = #{postAuthor,jdbcType=BIGINT},
+    set `category_id` = #{categoryId,jdbcType=BIGINT},
+      `post_author` = #{postAuthor,jdbcType=BIGINT},
       `post_date` = #{postDate,jdbcType=TIMESTAMP},
       `post_status` = #{postStatus,jdbcType=VARCHAR},
       `post_views` = #{postViews,jdbcType=BIGINT},
@@ -537,7 +554,7 @@
       `avg_views` = #{avgViews,jdbcType=DOUBLE},
       `avg_comment` = #{avgComment,jdbcType=DOUBLE},
       `page_rank` = #{pageRank,jdbcType=DOUBLE},
-      `secret_level` = #{secretLevel,jdbcType=VARCHAR}
+      `secret_level` = #{secretLevel,jdbcType=INTEGER}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

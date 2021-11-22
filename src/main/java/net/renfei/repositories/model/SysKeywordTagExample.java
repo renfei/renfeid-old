@@ -3,14 +3,14 @@ package net.renfei.repositories.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlogCategoryExample {
+public class SysKeywordTagExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public BlogCategoryExample() {
+    public SysKeywordTagExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -301,66 +301,6 @@ public class BlogCategoryExample {
 
         public Criteria andZhNameNotBetween(String value1, String value2) {
             addCriterion("`zh_name` not between", value1, value2, "zhName");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelIsNull() {
-            addCriterion("`secret_level` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelIsNotNull() {
-            addCriterion("`secret_level` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelEqualTo(Integer value) {
-            addCriterion("`secret_level` =", value, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelNotEqualTo(Integer value) {
-            addCriterion("`secret_level` <>", value, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelGreaterThan(Integer value) {
-            addCriterion("`secret_level` >", value, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`secret_level` >=", value, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelLessThan(Integer value) {
-            addCriterion("`secret_level` <", value, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelLessThanOrEqualTo(Integer value) {
-            addCriterion("`secret_level` <=", value, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelIn(List<Integer> values) {
-            addCriterion("`secret_level` in", values, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelNotIn(List<Integer> values) {
-            addCriterion("`secret_level` not in", values, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelBetween(Integer value1, Integer value2) {
-            addCriterion("`secret_level` between", value1, value2, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelNotBetween(Integer value1, Integer value2) {
-            addCriterion("`secret_level` not between", value1, value2, "secretLevel");
             return (Criteria) this;
         }
     }

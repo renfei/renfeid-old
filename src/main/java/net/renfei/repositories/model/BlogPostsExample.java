@@ -165,6 +165,66 @@ public class BlogPostsExample {
             return (Criteria) this;
         }
 
+        public Criteria andCategoryIdIsNull() {
+            addCriterion("`category_id` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdIsNotNull() {
+            addCriterion("`category_id` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdEqualTo(Long value) {
+            addCriterion("`category_id` =", value, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdNotEqualTo(Long value) {
+            addCriterion("`category_id` <>", value, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdGreaterThan(Long value) {
+            addCriterion("`category_id` >", value, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("`category_id` >=", value, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdLessThan(Long value) {
+            addCriterion("`category_id` <", value, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdLessThanOrEqualTo(Long value) {
+            addCriterion("`category_id` <=", value, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdIn(List<Long> values) {
+            addCriterion("`category_id` in", values, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdNotIn(List<Long> values) {
+            addCriterion("`category_id` not in", values, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdBetween(Long value1, Long value2) {
+            addCriterion("`category_id` between", value1, value2, "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdNotBetween(Long value1, Long value2) {
+            addCriterion("`category_id` not between", value1, value2, "categoryId");
+            return (Criteria) this;
+        }
+
         public Criteria andPostAuthorIsNull() {
             addCriterion("`post_author` is null");
             return (Criteria) this;
@@ -985,62 +1045,52 @@ public class BlogPostsExample {
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelEqualTo(String value) {
+        public Criteria andSecretLevelEqualTo(Integer value) {
             addCriterion("`secret_level` =", value, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelNotEqualTo(String value) {
+        public Criteria andSecretLevelNotEqualTo(Integer value) {
             addCriterion("`secret_level` <>", value, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelGreaterThan(String value) {
+        public Criteria andSecretLevelGreaterThan(Integer value) {
             addCriterion("`secret_level` >", value, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelGreaterThanOrEqualTo(String value) {
+        public Criteria andSecretLevelGreaterThanOrEqualTo(Integer value) {
             addCriterion("`secret_level` >=", value, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelLessThan(String value) {
+        public Criteria andSecretLevelLessThan(Integer value) {
             addCriterion("`secret_level` <", value, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelLessThanOrEqualTo(String value) {
+        public Criteria andSecretLevelLessThanOrEqualTo(Integer value) {
             addCriterion("`secret_level` <=", value, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelLike(String value) {
-            addCriterion("`secret_level` like", value, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelNotLike(String value) {
-            addCriterion("`secret_level` not like", value, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelIn(List<String> values) {
+        public Criteria andSecretLevelIn(List<Integer> values) {
             addCriterion("`secret_level` in", values, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelNotIn(List<String> values) {
+        public Criteria andSecretLevelNotIn(List<Integer> values) {
             addCriterion("`secret_level` not in", values, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelBetween(String value1, String value2) {
+        public Criteria andSecretLevelBetween(Integer value1, Integer value2) {
             addCriterion("`secret_level` between", value1, value2, "secretLevel");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelNotBetween(String value1, String value2) {
+        public Criteria andSecretLevelNotBetween(Integer value1, Integer value2) {
             addCriterion("`secret_level` not between", value1, value2, "secretLevel");
             return (Criteria) this;
         }

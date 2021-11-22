@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.renfei.repositories.BlogCategoryMapper">
-  <resultMap id="BaseResultMap" type="net.renfei.repositories.model.BlogCategory">
+<mapper namespace="net.renfei.repositories.SysAccountKeepNameMapper">
+  <resultMap id="BaseResultMap" type="net.renfei.repositories.model.SysAccountKeepName">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="en_name" jdbcType="VARCHAR" property="enName" />
-    <result column="zh_name" jdbcType="VARCHAR" property="zhName" />
-    <result column="secret_level" jdbcType="INTEGER" property="secretLevel" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,15 +64,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    `id`, `en_name`, `zh_name`, `secret_level`
+    `id`, `user_name`
   </sql>
-  <select id="selectByExample" parameterType="net.renfei.repositories.model.BlogCategoryExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="net.renfei.repositories.model.SysAccountKeepNameExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from blog_category
+    from sys_account_keep_name
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -85,76 +83,56 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from blog_category
+    from sys_account_keep_name
     where `id` = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from blog_category
+    delete from sys_account_keep_name
     where `id` = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="net.renfei.repositories.model.BlogCategoryExample">
-    delete from blog_category
+  <delete id="deleteByExample" parameterType="net.renfei.repositories.model.SysAccountKeepNameExample">
+    delete from sys_account_keep_name
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="net.renfei.repositories.model.BlogCategory">
-    insert into blog_category (`id`, `en_name`, `zh_name`, 
-      `secret_level`)
-    values (#{id,jdbcType=BIGINT}, #{enName,jdbcType=VARCHAR}, #{zhName,jdbcType=VARCHAR}, 
-      #{secretLevel,jdbcType=INTEGER})
+  <insert id="insert" parameterType="net.renfei.repositories.model.SysAccountKeepName">
+    insert into sys_account_keep_name (`id`, `user_name`)
+    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="net.renfei.repositories.model.BlogCategory">
-    insert into blog_category
+  <insert id="insertSelective" parameterType="net.renfei.repositories.model.SysAccountKeepName">
+    insert into sys_account_keep_name
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         `id`,
       </if>
-      <if test="enName != null">
-        `en_name`,
-      </if>
-      <if test="zhName != null">
-        `zh_name`,
-      </if>
-      <if test="secretLevel != null">
-        `secret_level`,
+      <if test="userName != null">
+        `user_name`,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="enName != null">
-        #{enName,jdbcType=VARCHAR},
-      </if>
-      <if test="zhName != null">
-        #{zhName,jdbcType=VARCHAR},
-      </if>
-      <if test="secretLevel != null">
-        #{secretLevel,jdbcType=INTEGER},
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="net.renfei.repositories.model.BlogCategoryExample" resultType="java.lang.Long">
-    select count(*) from blog_category
+  <select id="countByExample" parameterType="net.renfei.repositories.model.SysAccountKeepNameExample" resultType="java.lang.Long">
+    select count(*) from sys_account_keep_name
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update blog_category
+    update sys_account_keep_name
     <set>
       <if test="record.id != null">
         `id` = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.enName != null">
-        `en_name` = #{record.enName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.zhName != null">
-        `zh_name` = #{record.zhName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.secretLevel != null">
-        `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
+      <if test="record.userName != null">
+        `user_name` = #{record.userName,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -162,35 +140,25 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update blog_category
+    update sys_account_keep_name
     set `id` = #{record.id,jdbcType=BIGINT},
-      `en_name` = #{record.enName,jdbcType=VARCHAR},
-      `zh_name` = #{record.zhName,jdbcType=VARCHAR},
-      `secret_level` = #{record.secretLevel,jdbcType=INTEGER}
+      `user_name` = #{record.userName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.repositories.model.BlogCategory">
-    update blog_category
+  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.repositories.model.SysAccountKeepName">
+    update sys_account_keep_name
     <set>
-      <if test="enName != null">
-        `en_name` = #{enName,jdbcType=VARCHAR},
-      </if>
-      <if test="zhName != null">
-        `zh_name` = #{zhName,jdbcType=VARCHAR},
-      </if>
-      <if test="secretLevel != null">
-        `secret_level` = #{secretLevel,jdbcType=INTEGER},
+      <if test="userName != null">
+        `user_name` = #{userName,jdbcType=VARCHAR},
       </if>
     </set>
     where `id` = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.BlogCategory">
-    update blog_category
-    set `en_name` = #{enName,jdbcType=VARCHAR},
-      `zh_name` = #{zhName,jdbcType=VARCHAR},
-      `secret_level` = #{secretLevel,jdbcType=INTEGER}
+  <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.SysAccountKeepName">
+    update sys_account_keep_name
+    set `user_name` = #{userName,jdbcType=VARCHAR}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

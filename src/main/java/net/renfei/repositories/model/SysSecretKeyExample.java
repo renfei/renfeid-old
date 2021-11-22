@@ -1,16 +1,17 @@
 package net.renfei.repositories.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class BlogCategoryExample {
+public class SysSecretKeyExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public BlogCategoryExample() {
+    public SysSecretKeyExample() {
         oredCriteria = new ArrayList<>();
     }
 
@@ -164,203 +165,193 @@ public class BlogCategoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andEnNameIsNull() {
-            addCriterion("`en_name` is null");
+        public Criteria andUuidIsNull() {
+            addCriterion("`uuid` is null");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameIsNotNull() {
-            addCriterion("`en_name` is not null");
+        public Criteria andUuidIsNotNull() {
+            addCriterion("`uuid` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameEqualTo(String value) {
-            addCriterion("`en_name` =", value, "enName");
+        public Criteria andUuidEqualTo(String value) {
+            addCriterion("`uuid` =", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameNotEqualTo(String value) {
-            addCriterion("`en_name` <>", value, "enName");
+        public Criteria andUuidNotEqualTo(String value) {
+            addCriterion("`uuid` <>", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameGreaterThan(String value) {
-            addCriterion("`en_name` >", value, "enName");
+        public Criteria andUuidGreaterThan(String value) {
+            addCriterion("`uuid` >", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameGreaterThanOrEqualTo(String value) {
-            addCriterion("`en_name` >=", value, "enName");
+        public Criteria andUuidGreaterThanOrEqualTo(String value) {
+            addCriterion("`uuid` >=", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameLessThan(String value) {
-            addCriterion("`en_name` <", value, "enName");
+        public Criteria andUuidLessThan(String value) {
+            addCriterion("`uuid` <", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameLessThanOrEqualTo(String value) {
-            addCriterion("`en_name` <=", value, "enName");
+        public Criteria andUuidLessThanOrEqualTo(String value) {
+            addCriterion("`uuid` <=", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameLike(String value) {
-            addCriterion("`en_name` like", value, "enName");
+        public Criteria andUuidLike(String value) {
+            addCriterion("`uuid` like", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameNotLike(String value) {
-            addCriterion("`en_name` not like", value, "enName");
+        public Criteria andUuidNotLike(String value) {
+            addCriterion("`uuid` not like", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameIn(List<String> values) {
-            addCriterion("`en_name` in", values, "enName");
+        public Criteria andUuidIn(List<String> values) {
+            addCriterion("`uuid` in", values, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameNotIn(List<String> values) {
-            addCriterion("`en_name` not in", values, "enName");
+        public Criteria andUuidNotIn(List<String> values) {
+            addCriterion("`uuid` not in", values, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameBetween(String value1, String value2) {
-            addCriterion("`en_name` between", value1, value2, "enName");
+        public Criteria andUuidBetween(String value1, String value2) {
+            addCriterion("`uuid` between", value1, value2, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andEnNameNotBetween(String value1, String value2) {
-            addCriterion("`en_name` not between", value1, value2, "enName");
+        public Criteria andUuidNotBetween(String value1, String value2) {
+            addCriterion("`uuid` not between", value1, value2, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameIsNull() {
-            addCriterion("`zh_name` is null");
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("`create_time` is null");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameIsNotNull() {
-            addCriterion("`zh_name` is not null");
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("`create_time` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameEqualTo(String value) {
-            addCriterion("`zh_name` =", value, "zhName");
+        public Criteria andCreateTimeEqualTo(Date value) {
+            addCriterion("`create_time` =", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameNotEqualTo(String value) {
-            addCriterion("`zh_name` <>", value, "zhName");
+        public Criteria andCreateTimeNotEqualTo(Date value) {
+            addCriterion("`create_time` <>", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameGreaterThan(String value) {
-            addCriterion("`zh_name` >", value, "zhName");
+        public Criteria andCreateTimeGreaterThan(Date value) {
+            addCriterion("`create_time` >", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameGreaterThanOrEqualTo(String value) {
-            addCriterion("`zh_name` >=", value, "zhName");
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("`create_time` >=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameLessThan(String value) {
-            addCriterion("`zh_name` <", value, "zhName");
+        public Criteria andCreateTimeLessThan(Date value) {
+            addCriterion("`create_time` <", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameLessThanOrEqualTo(String value) {
-            addCriterion("`zh_name` <=", value, "zhName");
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("`create_time` <=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameLike(String value) {
-            addCriterion("`zh_name` like", value, "zhName");
+        public Criteria andCreateTimeIn(List<Date> values) {
+            addCriterion("`create_time` in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameNotLike(String value) {
-            addCriterion("`zh_name` not like", value, "zhName");
+        public Criteria andCreateTimeNotIn(List<Date> values) {
+            addCriterion("`create_time` not in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameIn(List<String> values) {
-            addCriterion("`zh_name` in", values, "zhName");
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
+            addCriterion("`create_time` between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameNotIn(List<String> values) {
-            addCriterion("`zh_name` not in", values, "zhName");
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("`create_time` not between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameBetween(String value1, String value2) {
-            addCriterion("`zh_name` between", value1, value2, "zhName");
+        public Criteria andUpdateTimeIsNull() {
+            addCriterion("`update_time` is null");
             return (Criteria) this;
         }
 
-        public Criteria andZhNameNotBetween(String value1, String value2) {
-            addCriterion("`zh_name` not between", value1, value2, "zhName");
+        public Criteria andUpdateTimeIsNotNull() {
+            addCriterion("`update_time` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelIsNull() {
-            addCriterion("`secret_level` is null");
+        public Criteria andUpdateTimeEqualTo(Date value) {
+            addCriterion("`update_time` =", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelIsNotNull() {
-            addCriterion("`secret_level` is not null");
+        public Criteria andUpdateTimeNotEqualTo(Date value) {
+            addCriterion("`update_time` <>", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelEqualTo(Integer value) {
-            addCriterion("`secret_level` =", value, "secretLevel");
+        public Criteria andUpdateTimeGreaterThan(Date value) {
+            addCriterion("`update_time` >", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelNotEqualTo(Integer value) {
-            addCriterion("`secret_level` <>", value, "secretLevel");
+        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("`update_time` >=", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelGreaterThan(Integer value) {
-            addCriterion("`secret_level` >", value, "secretLevel");
+        public Criteria andUpdateTimeLessThan(Date value) {
+            addCriterion("`update_time` <", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`secret_level` >=", value, "secretLevel");
+        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("`update_time` <=", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelLessThan(Integer value) {
-            addCriterion("`secret_level` <", value, "secretLevel");
+        public Criteria andUpdateTimeIn(List<Date> values) {
+            addCriterion("`update_time` in", values, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelLessThanOrEqualTo(Integer value) {
-            addCriterion("`secret_level` <=", value, "secretLevel");
+        public Criteria andUpdateTimeNotIn(List<Date> values) {
+            addCriterion("`update_time` not in", values, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelIn(List<Integer> values) {
-            addCriterion("`secret_level` in", values, "secretLevel");
+        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
+            addCriterion("`update_time` between", value1, value2, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andSecretLevelNotIn(List<Integer> values) {
-            addCriterion("`secret_level` not in", values, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelBetween(Integer value1, Integer value2) {
-            addCriterion("`secret_level` between", value1, value2, "secretLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andSecretLevelNotBetween(Integer value1, Integer value2) {
-            addCriterion("`secret_level` not between", value1, value2, "secretLevel");
+        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("`update_time` not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
     }
