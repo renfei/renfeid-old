@@ -1,12 +1,15 @@
 package net.renfei.controllers;
 
 import net.renfei.config.SystemConfig;
+import net.renfei.domain.user.User;
 import net.renfei.utils.ApplicationContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,5 +38,15 @@ public abstract class BaseController {
 
     @ModelAttribute
     public void modelAttribute(ModelAndView mv){
+    }
+
+    protected void noHandlerFoundException() throws NoHandlerFoundException {
+        HttpHeaders headers = new HttpHeaders();
+        throw new NoHandlerFoundException(request.getMethod(), request.getRequestURL().toString(), headers);
+    }
+
+    protected User getSignUser(){
+        // TODO
+        return null;
     }
 }

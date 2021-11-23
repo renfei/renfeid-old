@@ -75,6 +75,11 @@ system:
       zk:
         address: xxx
       port: 1111
+  threadPool:
+    corePoolSize: 10
+    maxPoolSize: 20
+    keepAliveSeconds: 300
+    queueCapacity: 100
 sentry:
   dsn: https://8843a97fdea6415bae0f696f3749eaf6@o1071939.ingest.sentry.io/6069834
   environment: development

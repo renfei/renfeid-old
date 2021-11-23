@@ -9,6 +9,7 @@ import net.renfei.utils.ApplicationContextUtil;
  * @author renfei
  */
 public abstract class BaseService {
+    protected static final String REDIS_KEY = "renfeid:";
     protected final SystemConfig SYSTEM_CONFIG;
 
     {
