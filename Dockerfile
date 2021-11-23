@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 MAINTAINER RenFei <i@renfei.net>
 
 RUN adduser --system --group --home /opt/renfeid renfei
@@ -61,4 +61,4 @@ HEALTHCHECK --start-period=30s --interval=30s --timeout=3s --retries=3 \
 
 VOLUME ["/opt/renfeid"]
 
-EXPOSE 8099
+EXPOSE 9595
