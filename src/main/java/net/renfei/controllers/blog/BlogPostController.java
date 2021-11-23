@@ -6,7 +6,9 @@ import net.renfei.domain.BlogDomain;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.BlogPostNotExistException;
 import net.renfei.exception.SecretLevelException;
+import net.renfei.model.blog.PostPageView;
 import net.renfei.services.BlogService;
+import net.renfei.services.RedisService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,10 +26,13 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/posts")
 public class BlogPostController extends BaseController {
+    private static final String REDIS_KEY_PAGE_BLOG = "renfeid:page:blog:";
     private final BlogService blogService;
+    private final RedisService redisService;
 
-    public BlogPostController(BlogService blogService) {
+    public BlogPostController(BlogService blogService, RedisService redisService) {
         this.blogService = blogService;
+        this.redisService = redisService;
     }
 
     /**
@@ -40,17 +45,33 @@ public class BlogPostController extends BaseController {
      */
     @RequestMapping("{id}")
     public ModelAndView getPostInfo(ModelAndView mv, @PathVariable("id") Long id) throws NoHandlerFoundException {
+        PostPageView postPageView = null;
         BlogDomain blogDomain = null;
-        try {
-            blogDomain = blogService.getBlogById(id, getSignUser());
-        } catch (BlogPostNotExistException e) {
-            noHandlerFoundException();
-        } catch (BlogPostNeedPasswordException e) {
-            // TODO 文章需要密码才能查看
-        } catch (SecretLevelException e) {
-            // TODO 保密等级无权查看此文章内容
+        String redisKey = REDIS_KEY_PAGE_BLOG + id;
+        // 查询是否曾经缓存过对象，有缓存直接吐出去
+        if (redisService.hasKey(redisKey)) {
+            Object object = redisService.get(redisKey);
+            if (object instanceof PostPageView) {
+                postPageView = (PostPageView) object;
+            }
         }
-        mv.addObject("blogDomain", blogDomain);
+        if (postPageView == null) {
+            // 页面没查到缓存，去数据库查询
+            try {
+                blogDomain = blogService.getBlogById(id, getSignUser());
+            } catch (BlogPostNotExistException e) {
+                noHandlerFoundException();
+            } catch (BlogPostNeedPasswordException e) {
+                // TODO 文章需要密码才能查看
+            } catch (SecretLevelException e) {
+                // TODO 保密等级无权查看此文章内容
+            }
+            postPageView = new PostPageView(blogDomain);
+            redisService.set(redisKey, postPageView, SYSTEM_CONFIG.getDefaultCacheSeconds());
+        } else {
+            blogDomain = postPageView.getObject();
+        }
+        mv.addObject("postPageView", postPageView);
         mv.setViewName("blog/post");
         blogService.view(blogDomain);
         return mv;

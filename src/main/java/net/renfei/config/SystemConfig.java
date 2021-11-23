@@ -21,6 +21,7 @@ public class SystemConfig {
     private String leafKey;
     private String ownerUserName;
     private String siteName;
+    private Long defaultCacheSeconds;
     private String ip2LocationBinFile;
     private String ip2LocationBinFileV6;
     private Leaf leaf;

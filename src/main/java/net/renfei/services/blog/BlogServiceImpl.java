@@ -45,15 +45,19 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     @Override
     public BlogDomain getBlogById(Long id, User user) throws BlogPostNotExistException,
             BlogPostNeedPasswordException, SecretLevelException {
-        BlogDomain blogDomain;
+        BlogDomain blogDomain = null;
         String redisKey = REDIS_KEY_BLOG + "post:" + id;
+        // 查询是否曾经缓存过对象，有缓存直接吐出去
         if (redisService.hasKey(redisKey)) {
             Object object = redisService.get(redisKey);
             if (object instanceof BlogDomain) {
-                return (BlogDomain) object;
+                blogDomain = (BlogDomain) object;
             }
         }
-        blogDomain = new BlogDomain(id);
+        if (blogDomain == null) {
+            blogDomain = new BlogDomain(id);
+            redisService.set(redisKey, blogDomain, SYSTEM_CONFIG.getDefaultCacheSeconds());
+        }
         // 判断文章状态和保密等级权限
         if (!PostStatus.PUBLISH.equals(blogDomain.getPost().getPostStatus())) {
             throw new BlogPostNotExistException("文章当前状态不可被阅读。");

@@ -64,6 +64,7 @@ system:
   leafKey: leaf-segment-global
   ownerUserName: renfei
   siteName: 任霏的博客
+  defaultCacheSeconds: 7200
   # git clone https://gitlab.com/renfei/ip2location.git
   ip2LocationBinFile: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.BIN
   ip2LocationBinFileV6: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
