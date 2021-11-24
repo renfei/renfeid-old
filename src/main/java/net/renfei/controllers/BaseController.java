@@ -78,43 +78,8 @@ public abstract class BaseController {
             Sentry.captureException(e);
             return null;
         }
-        result.setPageHead(buildPageHead());
-        result.setPageFooter(buildPageFooter());
+        result.setPageHead(new PageHead());
+        result.setPageFooter(new PageFooter());
         return result;
-    }
-
-    /**
-     * 构建默认的全局页面头对象
-     *
-     * @return
-     */
-    private PageHead buildPageHead() {
-        assert SYSTEM_CONFIG != null;
-        return PageHead.builder()
-                .title("")
-                .description("")
-                .keywords("")
-                .author(SYSTEM_CONFIG.getPageHead().getAuthor())
-                .copyright(SYSTEM_CONFIG.getPageHead().getCopyright())
-                .dnsPrefetch(SYSTEM_CONFIG.getPageHead().getDnsPrefetch())
-                .ogProtocol(null)
-                .favicon(SYSTEM_CONFIG.getPageHead().getFavicon())
-                .fbAppId(SYSTEM_CONFIG.getPageHead().getFbAppId())
-                .fbPages(SYSTEM_CONFIG.getPageHead().getFbPages())
-                .appleTouchIcon(SYSTEM_CONFIG.getPageHead().getAppleTouchIcon())
-                .css(SYSTEM_CONFIG.getPageHead().getCss())
-                .cssText("")
-                .jsText("")
-                .build();
-    }
-
-    /**
-     * 构建默认的全局页脚对象
-     *
-     * @return
-     */
-    private PageFooter buildPageFooter() {
-        PageFooter pageFooter = new PageFooter();
-        return pageFooter;
     }
 }

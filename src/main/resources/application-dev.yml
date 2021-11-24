@@ -64,6 +64,7 @@ system:
   ownerUserName: renfei
   siteName: 任霏的博客
   defaultCacheSeconds: 7200
+  showFriendlyLink: true
   pageHead:
     author: 任霏,i@renfei.net
     copyright: CopyRight RENFEI.NET, All Rights Reserved.
@@ -79,8 +80,26 @@ system:
     favicon: https://cdn.renfei.net/favicon.ico
     appleTouchIcon: https://cdn.renfei.net/Logo/logo_192.png
     css:
-      - xxx
-      - xxx
+      - https://cdn.renfei.net/font/font-awesome/4.7.0/css/font-awesome.min.css
+      - https://cdn.renfei.net/font/jBox/jBox.css
+      - https://cdn.renfei.net/font/jBox/plugins/Notice/jBox.Notice.css
+      - https://cdn.renfei.net/font/jBox/themes/NoticeFancy.css
+      - https://cdn.renfei.net/css/bootstrap.min.css
+      - https://cdn.renfei.net/css/animate.min.css
+      - https://cdn.renfei.net/css/lightbox.css
+      - https://cdn.renfei.net/css/main.min.css
+      - https://cdn.renfei.net/css/responsive.css
+  pageFooter:
+    jss:
+      - https://cdn.renfei.net/font/jquery/jquery-3.4.1.min.js
+      - https://cdn.renfei.net/js/ads.js
+      - https://cdn.renfei.net/font/jBox/jBox.js
+      - https://cdn.renfei.net/font/jBox/plugins/Notice/jBox.Notice.js
+      - https://cdn.renfei.net/js/bootstrap.min.js
+      - https://cdn.renfei.net/js/lightbox.min.js
+      - https://cdn.renfei.net/js/wow.min.js
+      - https://cdn.renfei.net/js/bootstrap-treeview.min.js
+      - https://cdn.renfei.net/js/main.min.js
   # git clone https://gitlab.com/renfei/ip2location.git
   ip2LocationBinFile: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.BIN
   ip2LocationBinFileV6: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN

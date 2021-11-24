@@ -27,6 +27,8 @@ public class SystemConfig {
     private String ownerUserName;
     private String siteName;
     private PageHead pageHead;
+    private PageFooter pageFooter;
+    private boolean showFriendlyLink;
     private Long defaultCacheSeconds;
     private String ip2LocationBinFile;
     private String ip2LocationBinFileV6;
@@ -43,6 +45,11 @@ public class SystemConfig {
         private String favicon;
         private String appleTouchIcon;
         private List<String> css;
+    }
+
+    @Data
+    public static class PageFooter{
+        private List<String> jss;
     }
 
     @Data
