@@ -10,11 +10,13 @@ import lombok.Data;
 @Data
 public abstract class PageView<T> {
     private PageHead pageHead;
+    private PageHeader pageHeader;
     private PageFooter pageFooter;
     private T object;
 
     protected PageView(T object) {
         this.pageHead = null;
+        this.pageHeader = null;
         this.pageFooter = null;
         this.object = object;
     }

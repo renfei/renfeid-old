@@ -12,6 +12,7 @@ import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
 import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.utils.PasswordUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -38,8 +39,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     /**
      * 根据ID获取公开的博客文章
      *
-     * @param id   文章ID
-     * @param user 当前查看的用户
+     * @param id       文章ID
+     * @param user     当前查看的用户
      * @return BlogDomain
      * @throws BlogPostNotExistException     文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
@@ -48,6 +49,23 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     @Override
     public BlogDomain getBlogById(Long id, User user) throws BlogPostNotExistException,
             BlogPostNeedPasswordException, SecretLevelException {
+        return getBlogById(id, user, null);
+    }
+
+    /**
+     * 根据ID、密码获取公开的博客文章
+     *
+     * @param id       文章ID
+     * @param user     当前查看的用户
+     * @param password 查看文章的密码
+     * @return BlogDomain
+     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws BlogPostNeedPasswordException 文章需要密码异常
+     * @throws SecretLevelException          保密等级异常
+     */
+    @Override
+    public BlogDomain getBlogById(Long id, User user, String password)
+            throws BlogPostNotExistException, BlogPostNeedPasswordException, SecretLevelException {
         BlogDomain blogDomain = null;
         String redisKey = REDIS_KEY_BLOG + "post:" + id;
         assert SYSTEM_CONFIG != null;
@@ -71,7 +89,14 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             throw new BlogPostNotExistException("文章当前状态不可被阅读。");
         }
         if (!ObjectUtils.isEmpty(blogDomain.getPost().getPostPassword())) {
-            throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
+            if (ObjectUtils.isEmpty(password)) {
+                throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
+            } else {
+                // 判断密码是否正确
+                if (!PasswordUtils.verifyPassword(password, blogDomain.getPost().getPostPassword())) {
+                    throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
+                }
+            }
         }
         if (user != null) {
             if (user.getSecretLevel().getLevel() < blogDomain.getPost().getSecretLevel().getLevel()) {

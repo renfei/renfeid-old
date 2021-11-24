@@ -59,7 +59,7 @@
         </head>
     </@compress>
 </#macro>
-<#macro header headerVO>
+<#macro header pageView>
     <@compress single_line=true>
         <nav class="navbar navbar-expand-lg navbar-dark nav">
             <div class="container-xl">
@@ -75,8 +75,8 @@
 
                 <div class="collapse navbar-collapse" id="navbarsExample07XL">
                     <ul class="navbar-nav mr-auto">
-                        <#if headerVO.menus??>
-                            <#list headerVO.menus as menu>
+                        <#if pageView.pageHeader.menus??>
+                            <#list pageView.pageHeader.menus as menu>
                                 <#if menu.subLink?? && (menu.subLink?size > 0)>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="${menu.href!}"
@@ -132,12 +132,12 @@
                 </div>
             </div>
         </nav>
-        <#if headerVO.notice??>
+        <#if pageView.pageHeader.notice??>
             <div style="background-color: #0071E3;color:#FFFFFF;text-align: center;padding: 12px 0;font-size: 12px;">
                 ${headerVO.notice!}
             </div>
         </#if>
-        <#if headerVO.account??>
+        <#if pageView.pageHeader.user??>
             <nav class="navbar navbar-expand-lg navbar-light bg-light nav" style="z-index: 1;">
                 <div class="container-xl">
                     <div class="navbar-collapse"
@@ -147,7 +147,7 @@
                                 <a class="nav-link dropdown-toggle" href="" style=""
                                    data-toggle="dropdown"
                                    style="font-size: 14px;padding-right: .5rem;padding-left: .5rem;"
-                                   aria-expanded="false">${headerVO.account.userName!}</a>
+                                   aria-expanded="false">${pageView.pageHeader.user.userName!}</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="/account/manage" style="">
                                         管理账户
@@ -184,12 +184,12 @@
         <input type="hidden" id="_paste" value="">
     </@compress>
 </#macro>
-<#macro footer footerVO execTimeTotal execCountTotal>
+<#macro footer pageView execTimeTotal execCountTotal>
     <@compress single_line=true>
         <div class="footer" style="margin-top: 20px;padding-top: 30px;">
             <div class="container">
                 <div class="row">
-                    <#list footerVO.footerMenus! as footerMenus>
+                    <#list pageView.pageFooter.footerMenuLinks! as footerMenus>
                         <div class="col-lg-3 col-md-6 col-12 footerMenus">
                             <h3>${footerMenus.title!}</h3>
                             <ul>
@@ -205,7 +205,7 @@
                         </div>
                     </#list>
                 </div>
-                <#if footerVO.showFriendlyLink??>
+                <#if pageView.pageFooter.showFriendlyLink??>
                     <div class="row" style="margin-top: 20px;">
                         <div class="col-12 text-left">
                             <ul class="footer-menu-ul">
@@ -214,7 +214,7 @@
                                         <small class="text-muted small">友情链接：</small>
                                     </a>
                                 </li>
-                                <#list footerVO.friendlyLink! as friendlyLink>
+                                <#list pageView.pageFooter.friendlyLink! as friendlyLink>
                                     <li class="float-left">
                                         <a href="${friendlyLink.href!}" target="${friendlyLink.target!}"
                                            rel="noopener" style="${friendlyLink.style!}">
@@ -229,7 +229,7 @@
                 <div class="row" style="margin-top: 10px;">
                     <div class="col-12 text-right">
                         <ul class="footer-menu-ul">
-                            <#list footerVO.smallMenu! as smallMenu>
+                            <#list pageView.pageFooter.smallMenu! as smallMenu>
                                 <li class="float-right">
                                     <a href="${smallMenu.href!}" target="${smallMenu.target!}" rel="nofollow noopener"
                                        style="${smallMenu.style!}">
@@ -269,16 +269,16 @@
                 <div class="row">
                     <div class="col-12">
                         <ul class="float-right footer-menu-ul">
-                            <#if footerVO.buildTime??>
+                            <#if pageView.pageFooter.buildTime??>
                                 <li class="float-right">
                                     <small class="text-muted small float-right" style="color: #86868b;">
-                                        Build: ${footerVO.buildTime!}</small>
+                                        Build: ${pageView.pageFooter.buildTime!}</small>
                                 </li>
                             </#if>
-                            <#if footerVO.version??>
+                            <#if pageView.pageFooter.version??>
                                 <li class="float-right">
                                     <small class="text-muted small float-right" style="color: #86868b;">
-                                        Ver: ${footerVO.version!}</small>
+                                        Ver: ${pageView.pageFooter.version!}</small>
                                 </li>
                             </#if>
                         </ul>
@@ -307,11 +307,11 @@
                 </div>
             </div>
         </div>
-        <#list footerVO.jss! as js>
+        <#list pageView.pageFooter.jss! as js>
             <script src="${js}" type='text/javascript' charset="UTF-8"></script>
         </#list>
         <script>
-            ${footerVO.jsText!}
+            ${pageView.pageFooter.jsText!}
         </script>
         <#nested>
     </@compress>
