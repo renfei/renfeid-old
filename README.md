@@ -1,5 +1,7 @@
 # renfeid
 
+[![Actions Status](https://github.com/renfei/renfeid/workflows/CI/badge.svg)](https://github.com/renfei/renfeid/actions)
+[![Actions Status](https://github.com/renfei/renfeid/workflows/Release/badge.svg)](https://github.com/renfei/renfeid/actions)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frenfei%2Frenfeid.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frenfei%2Frenfeid?ref=badge_shield)
 
 ## 简介
