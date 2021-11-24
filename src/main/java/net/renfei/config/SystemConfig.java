@@ -2,7 +2,10 @@ package net.renfei.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+
+import java.util.List;
 
 /**
  * 自定义配置
@@ -11,21 +14,36 @@ import org.springframework.stereotype.Component;
  * @author renfei
  */
 @Data
-@Component
+@Order(0)
+@Configuration
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
     private String active;
     private String version;
     private String buildTime;
+    private boolean enableRedis;
     private String globalAesKey;
     private String leafKey;
     private String ownerUserName;
     private String siteName;
+    private PageHead pageHead;
     private Long defaultCacheSeconds;
     private String ip2LocationBinFile;
     private String ip2LocationBinFileV6;
     private Leaf leaf;
     private ThreadPool threadPool;
+
+    @Data
+    public static class PageHead{
+        private String author;
+        private String copyright;
+        private List<String> dnsPrefetch;
+        private String fbAppId;
+        private String fbPages;
+        private String favicon;
+        private String appleTouchIcon;
+        private List<String> css;
+    }
 
     @Data
     public static class Leaf {
@@ -71,5 +89,9 @@ public class SystemConfig {
          * 任务队列容量（阻塞队列）
          */
         private int queueCapacity;
+    }
+
+    public void done(){
+        System.out.println("SystemConfig is load done.");
     }
 }

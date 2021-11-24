@@ -9,20 +9,13 @@ import lombok.Data;
  */
 @Data
 public abstract class PageView<T> {
-    private final PageHead pageHead;
-    private final PageFooter pageFooter;
-    private final T object;
+    private PageHead pageHead;
+    private PageFooter pageFooter;
+    private T object;
 
     protected PageView(T object) {
-        // TODO 加载默认的对象
         this.pageHead = null;
         this.pageFooter = null;
-        this.object = object;
-    }
-
-    protected PageView(PageHead pageHead, PageFooter pageFooter, T object) {
-        this.pageHead = pageHead;
-        this.pageFooter = pageFooter;
         this.object = object;
     }
 }

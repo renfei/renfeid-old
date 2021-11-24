@@ -18,13 +18,13 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @author renfei
  */
 @Slf4j
-@EnableAsync
 @Configuration
 public class ThreadPoolConfig implements AsyncConfigurer {
     private final SystemConfig systemConfig;
 
-    {
-        systemConfig = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
+    public ThreadPoolConfig(SystemConfig systemConfig) {
+        this.systemConfig = systemConfig;
+        ApplicationContextUtil.setSystemConfig(systemConfig);
     }
 
     @Override

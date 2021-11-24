@@ -9,6 +9,8 @@ import net.renfei.exception.SecretLevelException;
 import net.renfei.model.blog.PostPageView;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
+import net.renfei.utils.ApplicationContextUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,17 +24,20 @@ import org.springframework.web.servlet.view.RedirectView;
  *
  * @author renfei
  */
+@Lazy
 @Slf4j
 @Controller
 @RequestMapping("/posts")
 public class BlogPostController extends BaseController {
     private static final String REDIS_KEY_PAGE_BLOG = "renfeid:page:blog:";
     private final BlogService blogService;
-    private final RedisService redisService;
+    private RedisService redisService;
 
-    public BlogPostController(BlogService blogService, RedisService redisService) {
-        this.blogService = blogService;
-        this.redisService = redisService;
+    {
+        blogService = (BlogService) ApplicationContextUtil.getBean("blogServiceImpl");
+        if (SYSTEM_CONFIG.isEnableRedis()) {
+            redisService = (RedisService) ApplicationContextUtil.getBean("redisServiceImpl");
+        }
     }
 
     /**
@@ -48,11 +53,14 @@ public class BlogPostController extends BaseController {
         PostPageView postPageView = null;
         BlogDomain blogDomain = null;
         String redisKey = REDIS_KEY_PAGE_BLOG + id;
-        // 查询是否曾经缓存过对象，有缓存直接吐出去
-        if (redisService.hasKey(redisKey)) {
-            Object object = redisService.get(redisKey);
-            if (object instanceof PostPageView) {
-                postPageView = (PostPageView) object;
+        assert SYSTEM_CONFIG != null;
+        if (SYSTEM_CONFIG.isEnableRedis()){
+            // 查询是否曾经缓存过对象，有缓存直接吐出去
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof PostPageView) {
+                    postPageView = (PostPageView) object;
+                }
             }
         }
         if (postPageView == null) {
@@ -66,10 +74,12 @@ public class BlogPostController extends BaseController {
             } catch (SecretLevelException e) {
                 // TODO 保密等级无权查看此文章内容
             }
-            postPageView = new PostPageView(blogDomain);
-            redisService.set(redisKey, postPageView, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            postPageView = buildPageView(PostPageView.class, blogDomain);
+            if (SYSTEM_CONFIG.isEnableRedis()){
+                redisService.set(redisKey, postPageView, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            }
         } else {
-            blogDomain = postPageView.getObject();
+            blogDomain = (BlogDomain) postPageView.getObject();
         }
         mv.addObject("postPageView", postPageView);
         mv.setViewName("blog/post");

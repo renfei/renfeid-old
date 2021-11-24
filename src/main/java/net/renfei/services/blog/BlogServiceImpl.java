@@ -11,6 +11,7 @@ import net.renfei.model.SecretLevel;
 import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
+import net.renfei.utils.ApplicationContextUtil;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,12 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class BlogServiceImpl extends BaseService implements BlogService {
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "blog:";
-    private final RedisService redisService;
+    private RedisService redisService;
 
-    public BlogServiceImpl(RedisService redisService) {
-        this.redisService = redisService;
+    {
+        if (SYSTEM_CONFIG.isEnableRedis()) {
+            redisService = (RedisService) ApplicationContextUtil.getBean("redisServiceImpl");
+        }
     }
 
     /**
@@ -47,16 +50,21 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             BlogPostNeedPasswordException, SecretLevelException {
         BlogDomain blogDomain = null;
         String redisKey = REDIS_KEY_BLOG + "post:" + id;
-        // 查询是否曾经缓存过对象，有缓存直接吐出去
-        if (redisService.hasKey(redisKey)) {
-            Object object = redisService.get(redisKey);
-            if (object instanceof BlogDomain) {
-                blogDomain = (BlogDomain) object;
+        assert SYSTEM_CONFIG != null;
+        if (SYSTEM_CONFIG.isEnableRedis()) {
+            // 查询是否曾经缓存过对象，有缓存直接吐出去
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof BlogDomain) {
+                    blogDomain = (BlogDomain) object;
+                }
             }
         }
         if (blogDomain == null) {
             blogDomain = new BlogDomain(id);
-            redisService.set(redisKey, blogDomain, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                redisService.set(redisKey, blogDomain, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            }
         }
         // 判断文章状态和保密等级权限
         if (!PostStatus.PUBLISH.equals(blogDomain.getPost().getPostStatus())) {

@@ -1,5 +1,6 @@
 package net.renfei.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * @author renfei
  */
 @Data
+@Builder
 public class PageHead {
     private String title;
     private String description;

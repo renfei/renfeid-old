@@ -10,12 +10,14 @@ import net.renfei.model.PageView;
  *
  * @author renfei
  */
-public class PostPageView extends PageView<BlogDomain> {
-    public PostPageView(BlogDomain object) {
+public class PostPageView<T> extends PageView<T> {
+    public PostPageView(T object) {
         super(object);
     }
 
-    public PostPageView(PageHead pageHead, PageFooter pageFooter, BlogDomain object) {
-        super(pageHead, pageFooter, object);
+    public PostPageView(PageHead pageHead, PageFooter pageFooter, T object) {
+        super(object);
+        this.setPageHead(pageHead);
+        this.setPageFooter(pageFooter);
     }
 }

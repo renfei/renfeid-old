@@ -39,7 +39,7 @@ public final class CommentDomain {
         leafService = (LeafService) ApplicationContextUtil.getBean("leafServiceImpl");
         systemConfig = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
         commentsMapper = (SysCommentsMapper) ApplicationContextUtil.getBean("sysCommentsMapper");
-        ip2LocationService = (IP2LocationService) ApplicationContextUtil.getBean("ip2LocationServiceImpl");
+        ip2LocationService = (IP2LocationService) ApplicationContextUtil.getBean("IP2LocationServiceImpl");
     }
 
     /**
