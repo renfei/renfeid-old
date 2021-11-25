@@ -4,6 +4,7 @@
 [![Actions Status](https://github.com/renfei/renfeid/workflows/CI/badge.svg)](https://github.com/renfei/renfeid/actions)
 [![Actions Status](https://github.com/renfei/renfeid/workflows/Release/badge.svg)](https://github.com/renfei/renfeid/actions)
 [![codecov](https://codecov.io/gh/renfei/renfeid/branch/master/graph/badge.svg?token=2Hd5NL3fnV)](https://codecov.io/gh/renfei/renfeid)
+[![Coverage Status](https://coveralls.io/repos/github/renfei/renfeid/badge.svg?branch=master)](https://coveralls.io/github/renfei/renfeid?branch=master)
 [![License](https://img.shields.io/github/license/renfei/renfeid)](https://github.com/renfei/renfeid/blob/master/LICENSE)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frenfei%2Frenfeid.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frenfei%2Frenfeid?ref=badge_shield)
 
