@@ -66,4 +66,6 @@ jobs:
         run: bash <(curl -s https://codecov.io/bash)
 
       - name: Upload coverage to Coveralls
-        run: mvn coveralls:report -DrepoToken=${{ secrets.COVERALLS_TOKEN }}
+        run: |
+          sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
+          mvn coveralls:report
