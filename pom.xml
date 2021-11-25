@@ -43,6 +43,12 @@
             <properties>
                 <activatedProperties>dev</activatedProperties>
             </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <activatedProperties>test</activatedProperties>
+            </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -182,6 +188,18 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.6.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
