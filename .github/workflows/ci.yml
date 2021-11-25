@@ -59,15 +59,11 @@ jobs:
           wget -P ./src/main/resources/ip2location https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN
           wget -P ./src/main/resources/ip2location https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN
 
-      - name: Build with Maven
-        run: mvn -B clean package --file pom.xml
+      - name: Tests
+        run: mvn clean test jacoco:report --file pom.xml
 
       - name: Upload coverage to Codecov
-        run: |
-          mvn cobertura:cobertura
-          bash <(curl -s https://codecov.io/bash)
+        run: bash <(curl -s https://codecov.io/bash)
 
       - name: Upload coverage to Coveralls
-        run: |
-          sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
-          mvn coveralls:report
+        run: mvn coveralls:report -DrepoToken=${{ secrets.COVERALLS_TOKEN }}

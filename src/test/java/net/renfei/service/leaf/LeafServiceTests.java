@@ -1,16 +1,15 @@
 package net.renfei.service.leaf;
 
+import net.renfei.ApplicationTests;
 import net.renfei.config.SystemConfig;
 import net.renfei.services.LeafService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * @author renfei
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LeafServiceTests {
+public class LeafServiceTests extends ApplicationTests {
     @Autowired
     private LeafService leafService;
     @Autowired

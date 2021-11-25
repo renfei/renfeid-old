@@ -1,11 +1,8 @@
 package net.renfei.api;
 
+import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -16,12 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author renfei
  */
-@AutoConfigureMockMvc
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IP2LocationControllerTests {
-    @Autowired
-    private MockMvc mockMvc;
-
+public class IP2LocationControllerTests extends ApplicationTests {
     @Test
     public void queryIpInfo() throws Exception {
         this.mockMvc.perform(get("/api/ip/114.114.114.114"))
