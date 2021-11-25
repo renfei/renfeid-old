@@ -2,6 +2,7 @@ package net.renfei.controllers.test;
 
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.controllers.BaseController;
+import net.renfei.model.APIResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class TestController extends BaseController {
 
-    @GetMapping("do")
-    public String test() {
-        return "ok.";
+    @GetMapping("active")
+    public APIResult<String> getActive() {
+        assert SYSTEM_CONFIG != null;
+        return new APIResult<>(SYSTEM_CONFIG.getActive());
     }
 }
