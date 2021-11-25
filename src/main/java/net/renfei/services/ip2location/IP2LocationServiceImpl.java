@@ -8,6 +8,7 @@ import net.renfei.exception.IP2LocationException;
 import net.renfei.services.BaseService;
 import net.renfei.services.IP2LocationService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,13 +24,24 @@ import java.io.IOException;
 public class IP2LocationServiceImpl extends BaseService implements IP2LocationService {
     private final IP2Location location;
     private final IP2Location locationV6;
+    private static final String CLASS_PATH_RESOURCE = "classpath:/";
 
     {
         location = new IP2Location();
         locationV6 = new IP2Location();
         try {
-            location.Open(SYSTEM_CONFIG.getIp2LocationBinFile(), true);
-            locationV6.Open(SYSTEM_CONFIG.getIp2LocationBinFileV6(), true);
+            if (SYSTEM_CONFIG.getIp2LocationBinFile().startsWith(CLASS_PATH_RESOURCE)) {
+                location.Open(new ClassPathResource(
+                        SYSTEM_CONFIG.getIp2LocationBinFile().split(CLASS_PATH_RESOURCE)[1]).getFile().getPath(), true);
+            } else {
+                location.Open(SYSTEM_CONFIG.getIp2LocationBinFile(), true);
+            }
+            if (SYSTEM_CONFIG.getIp2LocationBinFileV6().startsWith(CLASS_PATH_RESOURCE)) {
+                locationV6.Open(new ClassPathResource(
+                        SYSTEM_CONFIG.getIp2LocationBinFileV6().split(CLASS_PATH_RESOURCE)[1]).getFile().getPath(), true);
+            } else {
+                locationV6.Open(SYSTEM_CONFIG.getIp2LocationBinFileV6(), true);
+            }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             Sentry.captureException(e);

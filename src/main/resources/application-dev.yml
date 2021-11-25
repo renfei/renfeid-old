@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://10.10.1.2:3306/renfeid?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/renfeid?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -101,8 +101,10 @@ system:
       - https://cdn.renfei.net/js/bootstrap-treeview.min.js
       - https://cdn.renfei.net/js/main.min.js
   # git clone https://gitlab.com/renfei/ip2location.git
-  ip2LocationBinFile: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.BIN
-  ip2LocationBinFileV6: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
+  ip2LocationBinFile: classpath:/ip2location/IP2LOCATION-LITE-DB11.BIN
+  ip2LocationBinFileV6: classpath:/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
+#  ip2LocationBinFile: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.BIN
+#  ip2LocationBinFileV6: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
   leaf:
     segment:
       enable: true

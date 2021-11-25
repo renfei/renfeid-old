@@ -33,3 +33,5 @@ build/
 .vscode/
 
 application-prod.yml
+src/main/resources/ip2location/IP2LOCATION-LITE-DB11.BIN
+src/main/resources/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN

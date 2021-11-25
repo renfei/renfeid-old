@@ -54,6 +54,11 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Download IP2Location BIN File
+        run: |
+          wget -P ./src/main/resources/ip2location https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN
+          wget -P ./src/main/resources/ip2location https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN
+
       - name: Build with Maven
         run: mvn -B clean package --file pom.xml
 
