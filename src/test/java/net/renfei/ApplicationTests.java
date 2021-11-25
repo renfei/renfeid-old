@@ -23,7 +23,7 @@ public class ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.data").value("test"));
+                .andExpect(jsonPath("$.data").value("dev"));
     }
 
 }
