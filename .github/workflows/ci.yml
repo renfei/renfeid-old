@@ -64,9 +64,5 @@ jobs:
 
       - name: Upload coverage to Coveralls
         run: |
-          mvn coveralls:report \
-          --no-transfer-progress \
-          -DrepoToken=${{ secrets.COVERALLS_TOKEN }} \
-          -DserviceName=github \
-          -DserviceBuildUrl=https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks \
-          -Dbranch=$BRANCH_NAME
+          sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
+          mvn coveralls:report
