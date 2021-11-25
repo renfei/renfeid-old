@@ -1,38 +1,38 @@
 ---
-name: Bug reports
-about: Create a report to help us improve
+name: Bug 报告
+about: 创建一份报告以帮助我们改进
 title: ''
-labels: ''
-assignees: ''
+labels: 'bug'
+assignees: 'renfei'
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Bug描述**
+对bug的清晰而简洁的描述。
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**重现步骤**
+重现Bug的步骤：
+1. 先到 '...'
+2. 点击 '....'
+3. 向下滚动到 '....'
+4. 看到错误
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**预期的结果**
+对你期望发生的事情的清晰而简洁的描述。
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**截图**
+如果适用，添加屏幕截图以帮助解释您的问题。
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**PC客户端请填写以下环境信息**
+ - 操作系统: [e.g. iOS]
+ - 浏览器 [e.g. chrome, safari]
+ - 版本 [e.g. 22]
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**移动端设备请填写以下环境信息**
+ - 设备: [e.g. iPhone6]
+ - 操作系统: [e.g. iOS8.1]
+ - 浏览器 [e.g. stock browser, safari]
+ - 版本 [e.g. 22]
 
-**Additional context**
-Add any other context about the problem here.
+**附加上下文**
+在此处添加有关此问题的任何其他上下文。
