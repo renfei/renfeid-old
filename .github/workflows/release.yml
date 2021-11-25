@@ -44,13 +44,6 @@ jobs:
             sleep 1
           done
 
-      - name: Seting MySQL
-        run: |
-          echo "[mysqld]" | sudo tee -a /etc/mysql/my.cnf
-          echo "lower_case_table_names = 0" | sudo tee -a /etc/mysql/my.cnf
-          sudo systemctl restart mysql
-          mysql -u root -proot -e "show variables where Variable_name like 'lower%';"
-
       - name: Loading Database
         env:
           PORT: ${{ job.services.mysql.ports[3306] }}
