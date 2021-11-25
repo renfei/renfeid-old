@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload coverage to Coveralls
         run: |
-          mvn cobertura:cobertura coveralls:report \
+          mvn coveralls:report \
           --no-transfer-progress \
           -D repoToken=${{ secrets.COVERALLS_TOKEN }} \
           -D serviceName=github \
