@@ -58,15 +58,9 @@ jobs:
         run: mvn -B clean package --file pom.xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage/reports/
-          files: ./coverage1.xml,./coverage2.xml
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: true
-          verbose: true
+        run: |
+          mvn cobertura:cobertura
+          bash <(curl -s https://codecov.io/bash)
 
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@master
