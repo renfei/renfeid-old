@@ -12,7 +12,7 @@ public class PasswordUtils {
     private static final String PBKDF2_SHA_512_ALGORITHM = "PBKDF2WithHmacSHA512";
     private static final int SALT_BYTE_SIZE = 24;
     private static final int HASH_BYTE_SIZE = 18;
-    private static final int PBKDF2_ITERATIONS = 64000;
+    private static final int PBKDF2_ITERATIONS = 18;
     private static final int HASH_SECTIONS = 5;
     private static final int HASH_ALGORITHM_INDEX = 0;
     private static final int ITERATION_INDEX = 1;
@@ -29,11 +29,11 @@ public class PasswordUtils {
 
     public static String createHash(char[] password) throws PasswordUtils.CannotPerformOperationException {
         SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[24];
+        byte[] salt = new byte[SALT_BYTE_SIZE];
         random.nextBytes(salt);
-        byte[] hash = pbkdf2(password, salt, 64000, "PBKDF2WithHmacSHA512", 18);
+        byte[] hash = pbkdf2(password, salt, PBKDF2_ITERATIONS, "PBKDF2WithHmacSHA512", HASH_BYTE_SIZE);
         int hashSize = hash.length;
-        String parts = "sha256:64000:" + hashSize + ":" + toBase64(salt) + ":" + toBase64(hash);
+        String parts = "sha256:" + PBKDF2_ITERATIONS + ":" + hashSize + ":" + toBase64(salt) + ":" + toBase64(hash);
         return parts;
     }
 
@@ -112,7 +112,7 @@ public class PasswordUtils {
     private static boolean slowEquals(byte[] a, byte[] b) {
         int diff = a.length ^ b.length;
 
-        for(int i = 0; i < a.length && i < b.length; ++i) {
+        for (int i = 0; i < a.length && i < b.length; ++i) {
             diff |= a[i] ^ b[i];
         }
 
