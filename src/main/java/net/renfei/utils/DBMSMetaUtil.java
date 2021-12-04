@@ -21,7 +21,7 @@ public class DBMSMetaUtil {
      * 数据库类型,枚举
      */
     public enum DATABASETYPE {
-        ORACLE, MYSQL, SQLSERVER, SQLSERVER2005, DB2, INFORMIX, SYBASE, OTHER, EMPTY
+        ORACLE, MYSQL, SQLSERVER, SQLSERVER2005, DB2, INFORMIX, SYBASE, OTHER, EMPTY, DAMENG
     }
 
     /**
@@ -86,6 +86,11 @@ public class DBMSMetaUtil {
             return DATABASETYPE.SYBASE;
         }
 
+        // 达梦数据库
+        if (databaseType.contains("DAMENG")) {
+            //
+            return DATABASETYPE.DAMENG;
+        }
         // 默认,返回其他
         return DATABASETYPE.OTHER;
     }
@@ -154,6 +159,13 @@ public class DBMSMetaUtil {
             } else if (DATABASETYPE.SYBASE.equals(dbtype)) {
                 // SqlServer
                 tableNamePattern = "%";
+                rs = meta.getTables(catalog, schemaPattern, tableNamePattern, types);
+            } else if (DATABASETYPE.DAMENG.equals(dbtype)) {
+                // 达梦数据库
+                schemaPattern = username;
+                if (null != schemaPattern) {
+                    schemaPattern = schemaPattern.toUpperCase();
+                }
                 rs = meta.getTables(catalog, schemaPattern, tableNamePattern, types);
             } else {
                 throw new RuntimeException("不认识的数据库类型!");
@@ -294,6 +306,11 @@ public class DBMSMetaUtil {
             // +":INFORMIXSERVER=myserver;user="+bean.getDatabaseuser()+";password="+bean.getDatabasepassword()
         } else if (DATABASETYPE.SYBASE.equals(dbtype)) {
             url += "jdbc:sybase:Tds:";
+            url += ip.trim();
+            url += ":" + port.trim();
+            url += "/" + dbname;
+        } else if (DATABASETYPE.DAMENG.equals(dbtype)) {
+            url += "jdbc:dm://";
             url += ip.trim();
             url += ":" + port.trim();
             url += "/" + dbname;

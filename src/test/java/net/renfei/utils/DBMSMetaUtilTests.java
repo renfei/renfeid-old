@@ -16,6 +16,7 @@ public class DBMSMetaUtilTests extends ApplicationTests {
     @Test
     public void test() throws JsonProcessingException {
         testMySQL();
+//        testDaMengSQL();
     }
 
     private void testMySQL() throws JsonProcessingException {
@@ -27,6 +28,36 @@ public class DBMSMetaUtilTests extends ApplicationTests {
         String password = "root";
         //
         String databasetype = "mysql";
+        //
+        String tableName = "sys_region";
+
+        List<Map<String, Object>> tables = listTables(databasetype, ip, port, dbname, username, password);
+        List<Map<String, Object>> columns = listColumns(databasetype, ip, port, dbname, username, password, tableName);
+        //
+        tables = MapUtil.convertKeyList2LowerCase(tables);
+        columns = MapUtil.convertKeyList2LowerCase(columns);
+        //
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonT = objectMapper.writeValueAsString(tables);
+        System.out.println(jsonT);
+        System.out.println("tables.size()=" + tables.size());
+        //
+        System.out.println("-----------------------------------------" + "-----------------------------------------");
+        System.out.println("-----------------------------------------" + "-----------------------------------------");
+        //
+        String jsonC = objectMapper.writeValueAsString(columns);
+        System.out.println(jsonC);
+        System.out.println("columns.size()=" + columns.size());
+    }
+
+    private void testDaMengSQL() throws JsonProcessingException {
+        String ip = "127.0.0.1";
+        String port = "5236";
+        String dbname = "PROD";
+        String username = "SYSDBA";
+        String password = "SYSDBA";
+        //
+        String databasetype = "DAMENG";
         //
         String tableName = "sys_region";
 

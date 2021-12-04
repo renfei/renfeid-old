@@ -169,6 +169,15 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!--达梦数据库驱动包-->
+        <dependency>
+            <groupId>dm</groupId>
+            <artifactId>dm-connector-java</artifactId>
+            <version>1.1.144</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/environment/driver/dameng/DmJdbcDriver18.jar</systemPath>
+        </dependency>
+        <!--达梦数据库驱动包-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
