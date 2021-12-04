@@ -5,9 +5,6 @@ spring:
     multipart:
       max-file-size: 32MB
       max-request-size: 64MB
-  cloud:
-    compatibility-verifier:
-      enabled: false
   datasource:
     druid:
       initial-size: 5
