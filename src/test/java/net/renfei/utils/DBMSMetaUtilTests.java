@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Map;
 
-import static net.renfei.utils.DBMSMetaUtil.listColumns;
-import static net.renfei.utils.DBMSMetaUtil.listTables;
+import static net.renfei.utils.DBMSMetaUtil.*;
 
 public class DBMSMetaUtilTests extends ApplicationTests {
 
@@ -30,6 +30,8 @@ public class DBMSMetaUtilTests extends ApplicationTests {
         String databasetype = "mysql";
         //
         String tableName = "sys_region";
+
+        Assert.isTrue(TryLink(databasetype, ip, port, dbname, username, password), "");
 
         List<Map<String, Object>> tables = listTables(databasetype, ip, port, dbname, username, password);
         List<Map<String, Object>> columns = listColumns(databasetype, ip, port, dbname, username, password, tableName);
