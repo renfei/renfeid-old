@@ -64,7 +64,9 @@ jobs:
       # Dockerfile 里会复制 ip2location 中的 BIN 文件
       - name: Pull IP2Location Database BinFile
         run: |
-          git clone https://gitlab.com/renfei/ip2location.git
+          mkdir ip2location
+          wget -P ./ip2location https://github.com/renfei/ip2location/releases/download/2021.12.05/IP2LOCATION-LITE-DB11.BIN
+          wget -P ./ip2location https://github.com/renfei/ip2location/releases/download/2021.12.05/IP2LOCATION-LITE-DB11.IPV6.BIN
           ls -l ./ip2location
 
       - name: Build And Push Docker Image
