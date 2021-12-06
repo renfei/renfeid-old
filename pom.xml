@@ -60,7 +60,7 @@
         <mybatis.version>2.2.0</mybatis.version>
         <pagehelper.version>1.4.1</pagehelper.version>
         <perf4j.version>0.9.16</perf4j.version>
-        <curator.version>2.6.0</curator.version>
+        <curator.version>5.2.0</curator.version>
         <openfeign.version>3.1.0</openfeign.version>
         <sentry.version>5.4.0</sentry.version>
         <email.version>2.5.6</email.version>
