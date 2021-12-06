@@ -63,7 +63,7 @@
         <curator.version>2.6.0</curator.version>
         <openfeign.version>3.1.0</openfeign.version>
         <sentry.version>5.4.3</sentry.version>
-        <email.version>2.5.6</email.version>
+        <email.version>2.6.1</email.version>
         <springdoc.version>1.5.13</springdoc.version>
         <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
     </properties>
