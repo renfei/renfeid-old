@@ -1,7 +1,7 @@
 package net.renfei.services;
 
-import net.renfei.domain.ip2location.IPResult;
 import net.renfei.exception.IP2LocationException;
+import net.renfei.ip2location.IPResult;
 
 /**
  * IP2Location 服务

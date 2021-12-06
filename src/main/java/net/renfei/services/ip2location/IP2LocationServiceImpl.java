@@ -2,9 +2,9 @@ package net.renfei.services.ip2location;
 
 import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
-import net.renfei.domain.ip2location.IP2Location;
-import net.renfei.domain.ip2location.IPResult;
 import net.renfei.exception.IP2LocationException;
+import net.renfei.ip2location.IP2Location;
+import net.renfei.ip2location.IPResult;
 import net.renfei.services.BaseService;
 import net.renfei.services.IP2LocationService;
 import org.springframework.context.annotation.Lazy;

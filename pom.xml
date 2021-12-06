@@ -205,6 +205,12 @@
             <version>2.6.0</version>
             <scope>test</scope>
         </dependency>
+        <!--https://github.com/renfei/ip2location-->
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>ip2location</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
