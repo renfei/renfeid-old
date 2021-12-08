@@ -34,18 +34,13 @@ public class PerformanceAspect {
 
     @Around("logPointcut()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
-
-
         //初始化 一次
         if (execCount.get() == null) {
             execCount.set(new HashMap<>());
-
         }
-
         if (execTime.get() == null) {
             execTime.set(new HashMap<>());
         }
-
         long start = System.nanoTime();
         try {
             Object result = joinPoint.proceed();
@@ -54,17 +49,16 @@ public class PerformanceAspect {
                 return null;
             }
             long end = System.nanoTime();
-
             log.debug("===================");
-            String tragetClassName = joinPoint.getSignature().getDeclaringTypeName();
+            String targetClassName = joinPoint.getSignature().getDeclaringTypeName();
             String MethodName = joinPoint.getSignature().getName();
 
             Object[] args = joinPoint.getArgs();
             int argsSize = args.length;
-            String argsTypes = "";
+            StringBuilder argsTypes = new StringBuilder();
             String typeStr = joinPoint.getSignature().getDeclaringType().toString().split(" ")[0];
             String returnType = joinPoint.getSignature().toString().split(" ")[0];
-            log.debug("类/接口:" + tragetClassName + "(" + typeStr + ")");
+            log.debug("类/接口:" + targetClassName + "(" + typeStr + ")");
             log.debug("方法:" + MethodName);
             log.debug("参数个数:" + argsSize);
             log.debug("返回类型:" + returnType);
@@ -72,19 +66,17 @@ public class PerformanceAspect {
                 // 拿到参数的类型
                 for (Object object : args) {
                     if (object == null) {
-                        argsTypes += "NULL";
+                        argsTypes.append("NULL");
                     } else {
-                        argsTypes += object.getClass().getTypeName().toString() + " ";
+                        argsTypes.append(object.getClass().getTypeName()).append(" ");
                     }
                 }
                 log.debug("参数类型：" + argsTypes);
             }
-
             Long total = end - start;
             double timed = total / 1000000D;
             DecimalFormat df = new DecimalFormat("######0.000000");
             log.debug("耗时: " + df.format(timed) + " ms!");
-
             if (execCount.get().containsKey(MethodName)) {
                 Long count = execCount.get().get(MethodName);
                 //先移除，在增加
@@ -95,25 +87,22 @@ public class PerformanceAspect {
                 execTime.get().remove(MethodName);
                 execTime.get().put(MethodName, count + total);
             } else {
-
                 execCount.get().put(MethodName, 1L);
                 execTime.get().put(MethodName, total);
             }
-            if (tragetClassName.startsWith("net.renfei.controller.")) {
+            if (targetClassName.startsWith("net.renfei.controllers.")) {
                 // 到了 controller 基本就结束了，清空 ThreadLocal
                 execCount.remove();
                 execTime.remove();
                 startTime.remove();
             }
             return result;
-
         } catch (Throwable e) {
             long end = System.nanoTime();
             log.debug("====around " + joinPoint + "\tUse time : " + (end - start) + " ms with exception : "
                     + e.getMessage());
             throw e;
         }
-
     }
 
     /**
@@ -122,7 +111,7 @@ public class PerformanceAspect {
      * @param jp
      */
     @Before(value = "execution(* net.renfei.controllers.*.*(..))")
-    public void beforMehhod(JoinPoint jp) {
+    public void beforeMethod(JoinPoint jp) {
         startTime.set(System.nanoTime());
     }
 
@@ -133,7 +122,7 @@ public class PerformanceAspect {
      * @param jp
      */
     @AfterReturning(returning = "obj", value = "execution(* net.renfei.controllers.*.*(..))")
-    public void afterMehhod(JoinPoint jp, Object obj) {
+    public void afterMethod(JoinPoint jp, Object obj) {
         long end = System.nanoTime();
         long execTimeTotal = end - startTime.get();
         long execCountTotal = 0;
