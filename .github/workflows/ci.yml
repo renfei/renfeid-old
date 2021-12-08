@@ -56,8 +56,8 @@ jobs:
 
       - name: Download IP2Location BIN File
         run: |
-          wget -P ./src/main/resources/ip2location https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN
-          wget -P ./src/main/resources/ip2location https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN
+          wget -P ./src/main/resources/ip2location https://github.com/renfei/ip2location/releases/download/2021.12.05/IP2LOCATION-LITE-DB11.BIN
+          wget -P ./src/main/resources/ip2location https://github.com/renfei/ip2location/releases/download/2021.12.05/IP2LOCATION-LITE-DB11.IPV6.BIN
 
       - name: Tests
         run: mvn clean test jacoco:report --file pom.xml
