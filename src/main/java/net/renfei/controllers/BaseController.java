@@ -6,6 +6,7 @@ import net.renfei.config.SystemConfig;
 import net.renfei.domain.user.User;
 import net.renfei.model.PageFooter;
 import net.renfei.model.PageHead;
+import net.renfei.model.PageHeader;
 import net.renfei.model.PageView;
 import net.renfei.utils.ApplicationContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,7 @@ public abstract class BaseController {
             return null;
         }
         result.setPageHead(new PageHead());
+        result.setPageHeader(new PageHeader());
         result.setPageFooter(new PageFooter());
         return result;
     }

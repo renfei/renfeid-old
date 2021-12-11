@@ -1,5 +1,5 @@
 <#macro head pageView>
-    <@compress single_line=true>
+    <@compress single_line=false>
         <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -60,7 +60,7 @@
     </@compress>
 </#macro>
 <#macro header pageView>
-    <@compress single_line=true>
+    <@compress single_line=false>
         <nav class="navbar navbar-expand-lg navbar-dark nav">
             <div class="container-xl">
                 <a class="navbar-brand site-logo-name" href="/">
@@ -184,8 +184,8 @@
         <input type="hidden" id="_paste" value="">
     </@compress>
 </#macro>
-<#macro footer pageView execTimeTotal execCountTotal>
-    <@compress single_line=true>
+<#macro footer pageView>
+    <@compress single_line=false>
         <div class="footer" style="margin-top: 20px;padding-top: 30px;">
             <div class="container">
                 <div class="row">
@@ -247,18 +247,6 @@
                             © ${.now?string["yyyy"]} RENFEI.NET All rights
                             reserved.</small>
                         <ul class="float-right footer-menu-ul">
-                            <#if execCountTotal??>
-                                <li class="float-right">
-                                    <small class="text-muted small float-right" style="color: #86868b;">
-                                        calls ${execCountTotal} methods.</small>
-                                </li>
-                            </#if>
-                            <#if execTimeTotal??>
-                                <li class="float-right">
-                                    <small class="text-muted small float-right" style="color: #86868b;">
-                                        Processed in ${execTimeTotal} second(s),</small>
-                                </li>
-                            </#if>
                             <li class="float-right">
                                 <small class="text-muted small float-right"
                                        style="color: #86868b;">GMT+8, ${.now?string["yyyy-MM-dd HH:mm:ss"]},</small>

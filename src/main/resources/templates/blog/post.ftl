@@ -8,7 +8,10 @@
     </#if>
 </@head>
 <body>
-<@footer pageView performance_execTimeTotal performance_execCountTotal>
+<@header pageView>
+
+</@header>
+<@footer pageView>
     <script type="application/ld+json">
             ${jsonld!}
     </script>
