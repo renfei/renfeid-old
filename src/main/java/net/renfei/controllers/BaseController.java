@@ -80,7 +80,7 @@ public abstract class BaseController {
             return null;
         }
         result.setPageHead(new PageHead());
-        result.setPageHeader(new PageHeader());
+        result.setPageHeader(new PageHeader(null));
         result.setPageFooter(new PageFooter());
         return result;
     }
