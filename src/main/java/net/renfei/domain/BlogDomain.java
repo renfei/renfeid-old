@@ -13,6 +13,7 @@ import net.renfei.model.SecretLevel;
 import net.renfei.repositories.BlogCategoryMapper;
 import net.renfei.repositories.BlogPostsMapper;
 import net.renfei.repositories.model.BlogCategory;
+import net.renfei.repositories.model.BlogCategoryExample;
 import net.renfei.repositories.model.BlogPostsExample;
 import net.renfei.repositories.model.BlogPostsWithBLOBs;
 import net.renfei.utils.ApplicationContextUtil;
@@ -68,6 +69,12 @@ public final class BlogDomain {
         BlogPostsWithBLOBs blogPost = ListUtils.getOne(blogPostsMapper.selectByExampleWithBLOBs(example));
         blogPost.setPostViews(blogPost.getPostViews() + 1);
         blogPostsMapper.updateByExampleWithBLOBs(blogPost, example);
+    }
+
+    public List<BlogCategory> getAllBlogCategory() {
+        BlogCategoryExample example = new BlogCategoryExample();
+        example.createCriteria();
+        return categoryMapper.selectByExample(example);
     }
 
     private Post initPost(Long id) throws BlogPostNotExistException {
