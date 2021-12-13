@@ -8,6 +8,7 @@ import net.renfei.exception.BlogPostNotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.PostStatus;
 import net.renfei.model.SecretLevel;
+import net.renfei.model.blog.PostSidebarVO;
 import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
@@ -39,8 +40,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     /**
      * 根据ID获取公开的博客文章
      *
-     * @param id       文章ID
-     * @param user     当前查看的用户
+     * @param id   文章ID
+     * @param user 当前查看的用户
      * @return BlogDomain
      * @throws BlogPostNotExistException     文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
@@ -117,5 +118,16 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     @Async
     public void view(BlogDomain blogDomain) {
         blogDomain.view();
+    }
+
+    /**
+     * 构建博客侧边栏内容
+     *
+     * @param blogDomain 博文领域对象
+     * @return
+     */
+    @Override
+    public PostSidebarVO buildPostSidebar(BlogDomain blogDomain) {
+        return null;
     }
 }

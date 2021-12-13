@@ -1,6 +1,5 @@
 package net.renfei.model.blog;
 
-import net.renfei.domain.BlogDomain;
 import net.renfei.model.PageFooter;
 import net.renfei.model.PageHead;
 import net.renfei.model.PageView;

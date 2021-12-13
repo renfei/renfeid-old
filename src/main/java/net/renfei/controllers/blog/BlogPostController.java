@@ -67,6 +67,7 @@ public class BlogPostController extends BaseController {
         SocialSharing socialSharing = new SocialSharing(blogDomain);
         mv.addObject("pageView", postPageView);
         mv.addObject("socialSharing", socialSharing);
+        mv.addObject("PostSidebar", blogService.buildPostSidebar(blogDomain));
         mv.setViewName("blog/post");
         blogService.view(blogDomain);
         return mv;

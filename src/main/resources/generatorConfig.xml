@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
     <!--驱动jar-->
-    <classPathEntry location="/Users/renfei/Downloads/mysql-connector-java-5.1.45.jar"/>
+    <classPathEntry location="C:\Users\renfei\WorkSpace\bbs\target\bbs-5.4\WEB-INF\lib/mysql-connector-java-8.0.11.jar"/>
 
     <context id="default" targetRuntime="MyBatis3">
         <property name="javaFileEncoding" value="UTF-8"/>
@@ -24,7 +24,7 @@
         </commentGenerator>
         <jdbcConnection
                 driverClass="com.mysql.jdbc.Driver"
-                connectionURL="jdbc:mysql://localhost/renfeid?characterEncoding=utf-8&amp;useSSL=false"
+                connectionURL="jdbc:mysql://10.10.1.2/renfeid?characterEncoding=utf-8&amp;useSSL=false"
                 userId="root"
                 password="root">
         </jdbcConnection>
@@ -46,7 +46,7 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="leaf_alloc"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_region"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_comments"/>-->
-<!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_posts"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="blog_posts"/>
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_postmeta"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_category"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_keyword_tag"/>-->

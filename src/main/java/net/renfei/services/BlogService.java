@@ -5,6 +5,7 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.BlogPostNotExistException;
 import net.renfei.exception.SecretLevelException;
+import net.renfei.model.blog.PostSidebarVO;
 
 /**
  * 博客服务
@@ -45,4 +46,12 @@ public interface BlogService {
      * @param blogDomain 博文领域对象
      */
     void view(BlogDomain blogDomain);
+
+    /**
+     * 构建博客侧边栏内容
+     *
+     * @param blogDomain 博文领域对象
+     * @return
+     */
+    PostSidebarVO buildPostSidebar(BlogDomain blogDomain);
 }
