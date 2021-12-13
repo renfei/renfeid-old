@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <@comments commentsVO account!"null"></@comments>
+            <@comments pageView.object.commentList account!"null" "BLOG" pageView.object.post.id></@comments>
         </div>
         <div class="col-xl-3 col-lg-3 col-md-4">
             <@sidebar PostSidebar></@sidebar>

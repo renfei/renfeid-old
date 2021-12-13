@@ -48,6 +48,7 @@ public abstract class BaseController {
     @ModelAttribute
     public void modelAttribute(ModelAndView mv) {
         mv.addObject("active", SYSTEM_CONFIG.getActive());
+        mv.addObject("account", getSignUser());
     }
 
     protected void noHandlerFoundException() throws NoHandlerFoundException {

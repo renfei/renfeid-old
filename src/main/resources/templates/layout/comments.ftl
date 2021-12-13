@@ -1,4 +1,4 @@
-<#macro comments commentsVO account>
+<#macro comments commentsVO account commentsTypeId commentsObjId>
     <div class="row py-2">
         <div class="col-12">
             <div class="card" style="width: 100%;">
@@ -56,7 +56,7 @@
                             <div class="form-group row">
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-10">
-                                    <button type="button" onclick="comment(${commentsTypeId?c},${commentsObjId?c})"
+                                    <button type="button" onclick="comment(${commentsTypeId},${commentsObjId})"
                                             class="btn btn-primary btn-lg btn-block">
                                         提 交
                                     </button>
