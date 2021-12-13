@@ -64,7 +64,7 @@
         <openfeign.version>3.1.0</openfeign.version>
         <sentry.version>5.4.3</sentry.version>
         <email.version>2.6.1</email.version>
-        <springdoc.version>1.5.13</springdoc.version>
+        <springdoc.version>1.6.0</springdoc.version>
         <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
     </properties>
     <dependencies>
