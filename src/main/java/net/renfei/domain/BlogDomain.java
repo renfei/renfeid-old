@@ -13,8 +13,10 @@ import net.renfei.model.SecretLevel;
 import net.renfei.repositories.BlogCategoryMapper;
 import net.renfei.repositories.BlogPostsMapper;
 import net.renfei.repositories.model.BlogCategory;
+import net.renfei.repositories.model.BlogPostsExample;
 import net.renfei.repositories.model.BlogPostsWithBLOBs;
 import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.utils.ListUtils;
 
 import java.util.List;
 
@@ -61,18 +63,30 @@ public final class BlogDomain {
      * 博文增加浏览量
      */
     public void view() {
-        BlogPostsWithBLOBs blogPost = blogPostsMapper.selectByPrimaryKey(post.getId());
+        BlogPostsExample example = new BlogPostsExample();
+        example.createCriteria().andIdEqualTo(post.getId());
+        BlogPostsWithBLOBs blogPost = ListUtils.getOne(blogPostsMapper.selectByExampleWithBLOBs(example));
         blogPost.setPostViews(blogPost.getPostViews() + 1);
-        blogPostsMapper.updateByPrimaryKeyWithBLOBs(blogPost);
+        blogPostsMapper.updateByExampleWithBLOBs(blogPost, example);
     }
 
     private Post initPost(Long id) throws BlogPostNotExistException {
-        BlogPostsWithBLOBs blogPost = blogPostsMapper.selectByPrimaryKey(id);
+        BlogPostsExample example = new BlogPostsExample();
+        example.createCriteria().andIdEqualTo(id);
+        BlogPostsWithBLOBs blogPost = ListUtils.getOne(blogPostsMapper.selectByExampleWithBLOBs(example));
         if (blogPost == null || PostStatus.DELETED.toString().equals(blogPost.getPostStatus())) {
             throw new BlogPostNotExistException("博客文章不存在");
         }
         return Post.builder()
                 .id(id)
+                .title(blogPost.getPostTitle())
+                .keyword(blogPost.getPostKeyword())
+                .excerpt(blogPost.getPostExcerpt())
+                .content(blogPost.getPostContent())
+                .featuredImage(blogPost.getFeaturedImage())
+                .isOriginal(blogPost.getIsOriginal())
+                .sourceName(blogPost.getSourceName())
+                .sourceUrl(blogPost.getSourceUrl())
                 .postDate(blogPost.getPostDate())
                 .postAuthor(blogPost.getPostAuthor())
                 .categoryId(blogPost.getCategoryId())

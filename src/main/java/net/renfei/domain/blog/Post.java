@@ -15,6 +15,14 @@ import java.util.Date;
 @Builder
 public class Post {
     private Long id;
+    private String title;
+    private String keyword;
+    private String excerpt;
+    private String content;
+    private String featuredImage;
+    private Boolean isOriginal;
+    private String sourceName;
+    private String sourceUrl;
     private Date postDate;
     private Long postAuthor;
     private Long categoryId;

@@ -58,6 +58,7 @@ system:
   active: dev
   version: @project.version@
   buildTime: @buildtimestamp@
+  siteDomainName: http://localhost:9595
   enableRedis: false
   globalAesKey: globalAesKey
   leafKey: leaf-segment-global
@@ -80,26 +81,18 @@ system:
     favicon: https://cdn.renfei.net/favicon.ico
     appleTouchIcon: https://cdn.renfei.net/Logo/logo_192.png
     css:
-      - https://cdn.renfei.net/font/font-awesome/4.7.0/css/font-awesome.min.css
-      - https://cdn.renfei.net/font/jBox/jBox.css
-      - https://cdn.renfei.net/font/jBox/plugins/Notice/jBox.Notice.css
-      - https://cdn.renfei.net/font/jBox/themes/NoticeFancy.css
-      - https://cdn.renfei.net/css/bootstrap.min.css
-      - https://cdn.renfei.net/css/animate.min.css
-      - https://cdn.renfei.net/css/lightbox.css
-      - https://cdn.renfei.net/css/main.min.css
-      - https://cdn.renfei.net/css/responsive.css
+      - https://cdn.renfei.net/thunder/bootstrap/css/bootstrap.min.css
+      - https://cdn.renfei.net/thunder/fontawesome/css/all.min.css
+      - https://cdn.renfei.net/thunder/css/bs4.pop.css
+      - https://cdn.renfei.net/thunder/css/style.css
   pageFooter:
     jss:
-      - https://cdn.renfei.net/font/jquery/jquery-3.4.1.min.js
-      - https://cdn.renfei.net/js/ads.js
-      - https://cdn.renfei.net/font/jBox/jBox.js
-      - https://cdn.renfei.net/font/jBox/plugins/Notice/jBox.Notice.js
-      - https://cdn.renfei.net/js/bootstrap.min.js
-      - https://cdn.renfei.net/js/lightbox.min.js
-      - https://cdn.renfei.net/js/wow.min.js
-      - https://cdn.renfei.net/js/bootstrap-treeview.min.js
-      - https://cdn.renfei.net/js/main.min.js
+      - https://cdn.renfei.net/thunder/js/jquery-3.5.1.min.js
+      - https://cdn.renfei.net/thunder/js/popper.min.js
+      - https://cdn.renfei.net/thunder/bootstrap/js/bootstrap.min.js
+      - https://cdn.renfei.net/thunder/js/clipboard.min.js
+      - https://cdn.renfei.net/thunder/js/bs4.pop.js
+      - https://cdn.renfei.net/thunder/js/main.js
   # https://github.com/renfei/ip2location/releases
   ip2LocationBinFile: classpath:/ip2location/IP2LOCATION-LITE-DB11.BIN
   ip2LocationBinFileV6: classpath:/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
@@ -118,6 +111,10 @@ system:
     maxPoolSize: 20
     keepAliveSeconds: 300
     queueCapacity: 100
+  baidu:
+    tongji: 1
+  google:
+    analytics: 1
 sentry:
   dsn: https://8843a97fdea6415bae0f696f3749eaf6@o1071939.ingest.sentry.io/6069834
   environment: development

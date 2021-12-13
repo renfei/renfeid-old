@@ -36,6 +36,8 @@ public class BlogPosts implements Serializable {
 
     private Integer secretLevel;
 
+    private Boolean isOriginal;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -166,6 +168,14 @@ public class BlogPosts implements Serializable {
         this.secretLevel = secretLevel;
     }
 
+    public Boolean getIsOriginal() {
+        return isOriginal;
+    }
+
+    public void setIsOriginal(Boolean isOriginal) {
+        this.isOriginal = isOriginal;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -188,6 +198,7 @@ public class BlogPosts implements Serializable {
         sb.append(", avgComment=").append(avgComment);
         sb.append(", pageRank=").append(pageRank);
         sb.append(", secretLevel=").append(secretLevel);
+        sb.append(", isOriginal=").append(isOriginal);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -13,8 +13,6 @@ public interface BlogPostsMapper {
 
     int deleteByExample(BlogPostsExample example);
 
-    int deleteByPrimaryKey(Long id);
-
     int insert(BlogPostsWithBLOBs record);
 
     int insertSelective(BlogPostsWithBLOBs record);
@@ -23,17 +21,9 @@ public interface BlogPostsMapper {
 
     List<BlogPosts> selectByExample(BlogPostsExample example);
 
-    BlogPostsWithBLOBs selectByPrimaryKey(Long id);
-
     int updateByExampleSelective(@Param("record") BlogPostsWithBLOBs record, @Param("example") BlogPostsExample example);
 
     int updateByExampleWithBLOBs(@Param("record") BlogPostsWithBLOBs record, @Param("example") BlogPostsExample example);
 
     int updateByExample(@Param("record") BlogPosts record, @Param("example") BlogPostsExample example);
-
-    int updateByPrimaryKeySelective(BlogPostsWithBLOBs record);
-
-    int updateByPrimaryKeyWithBLOBs(BlogPostsWithBLOBs record);
-
-    int updateByPrimaryKey(BlogPosts record);
 }

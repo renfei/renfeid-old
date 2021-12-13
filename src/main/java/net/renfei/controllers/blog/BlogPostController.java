@@ -8,6 +8,7 @@ import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.BlogPostNotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.APIResult;
+import net.renfei.model.SocialSharing;
 import net.renfei.model.StateCode;
 import net.renfei.model.blog.PostPageView;
 import net.renfei.services.BlogService;
@@ -59,8 +60,13 @@ public class BlogPostController extends BaseController {
         } catch (SecretLevelException e) {
             // TODO 保密等级无权查看此文章内容
         }
+        if (blogDomain == null) {
+            noHandlerFoundException();
+        }
         PostPageView<BlogDomain> postPageView = buildPageView(PostPageView.class, blogDomain);
+        SocialSharing socialSharing = new SocialSharing(blogDomain);
         mv.addObject("pageView", postPageView);
+        mv.addObject("socialSharing", socialSharing);
         mv.setViewName("blog/post");
         blogService.view(blogDomain);
         return mv;

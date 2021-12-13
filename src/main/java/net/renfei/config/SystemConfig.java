@@ -21,6 +21,7 @@ public class SystemConfig {
     private String active;
     private String version;
     private String buildTime;
+    private String siteDomainName;
     private boolean enableRedis;
     private String globalAesKey;
     private String leafKey;
@@ -34,6 +35,8 @@ public class SystemConfig {
     private String ip2LocationBinFileV6;
     private Leaf leaf;
     private ThreadPool threadPool;
+    private Baidu baidu;
+    private Google google;
 
     @Data
     public static class PageHead{
@@ -98,7 +101,13 @@ public class SystemConfig {
         private int queueCapacity;
     }
 
-    public void done(){
-        System.out.println("SystemConfig is load done.");
+    @Data
+    public static class Baidu{
+        private String tongji;
+    }
+
+    @Data
+    public static class Google{
+        private String analytics;
     }
 }

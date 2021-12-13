@@ -5,6 +5,7 @@ import net.renfei.config.SystemConfig;
 import net.renfei.utils.ApplicationContextUtil;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Html页面中的Head头部分
@@ -46,7 +47,7 @@ public class PageHead {
         this.fbAppId = SYSTEM_CONFIG.getPageHead().getFbAppId();
         this.fbPages = SYSTEM_CONFIG.getPageHead().getFbPages();
         this.appleTouchIcon = SYSTEM_CONFIG.getPageHead().getAppleTouchIcon();
-        this.css = SYSTEM_CONFIG.getPageHead().getCss();
+        this.css = SYSTEM_CONFIG.getPageHead().getCss().stream().map(item -> item + "?ver=" + SYSTEM_CONFIG.getBuildTime()).collect(Collectors.toList());
         this.cssText = "";
         this.jsText = "";
     }

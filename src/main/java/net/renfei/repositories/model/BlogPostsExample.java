@@ -1094,6 +1094,66 @@ public class BlogPostsExample {
             addCriterion("`secret_level` not between", value1, value2, "secretLevel");
             return (Criteria) this;
         }
+
+        public Criteria andIsOriginalIsNull() {
+            addCriterion("`is_original` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalIsNotNull() {
+            addCriterion("`is_original` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalEqualTo(Boolean value) {
+            addCriterion("`is_original` =", value, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalNotEqualTo(Boolean value) {
+            addCriterion("`is_original` <>", value, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalGreaterThan(Boolean value) {
+            addCriterion("`is_original` >", value, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("`is_original` >=", value, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalLessThan(Boolean value) {
+            addCriterion("`is_original` <", value, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalLessThanOrEqualTo(Boolean value) {
+            addCriterion("`is_original` <=", value, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalIn(List<Boolean> values) {
+            addCriterion("`is_original` in", values, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalNotIn(List<Boolean> values) {
+            addCriterion("`is_original` not in", values, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalBetween(Boolean value1, Boolean value2) {
+            addCriterion("`is_original` between", value1, value2, "isOriginal");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsOriginalNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("`is_original` not between", value1, value2, "isOriginal");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
