@@ -47,14 +47,19 @@ management:
     health:
       enabled: true
 springdoc:
-  swagger-ui:
-    disable-swagger-default-url: true
-    displayRequestDuration: true
-    showExtensions: true
   api-docs:
     enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    use-root-path: true
+    path: /swagger-ui.html
+  show-actuator: false
   pathsToMatch: /api/**
-  writer-with-default-pretty-printer: true
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
