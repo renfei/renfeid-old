@@ -2,6 +2,9 @@ package net.renfei.services.blog;
 
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.domain.BlogDomain;
+import net.renfei.domain.CommentDomain;
+import net.renfei.domain.comment.Comment;
+import net.renfei.domain.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.BlogPostNotExistException;
@@ -155,6 +158,18 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 link.setText(blogCategory.getZhName());
                 blogCategoryLinks.add(link);
             });
+            // 最新评论
+            List<LinkVO> lastCommentList = new CopyOnWriteArrayList<>();
+            CommentDomain commentDomain = new CommentDomain();
+            List<Comment> commentList = commentDomain.lastCommentTop10(SystemTypeEnum.BLOG);
+            if(commentList!=null){
+                commentList.forEach(comment -> {
+                    LinkVO link = new LinkVO();
+                    link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + comment.getObjectId() + "#cmt" + comment.getId());
+                    link.setText(comment.getContent());
+                    lastCommentList.add(link);
+                });
+            }
             postSidebarVO = PostSidebarVO.builder()
                     .postSidebars(new ArrayList<PostSidebarVO.PostSidebar>() {{
                         this.add(PostSidebarVO.PostSidebar.builder()
@@ -167,7 +182,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                                 .build());
                         this.add(PostSidebarVO.PostSidebar.builder()
                                 .title("最新留言")
-                                .link(null)
+                                .link(lastCommentList)
                                 .build());
                         this.add(PostSidebarVO.PostSidebar.builder()
                                 .title("热文排行")

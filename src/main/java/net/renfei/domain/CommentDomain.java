@@ -1,5 +1,7 @@
 package net.renfei.domain;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
@@ -45,7 +47,7 @@ public final class CommentDomain {
     /**
      * 禁止直接实例化
      */
-    private CommentDomain() {
+    public CommentDomain() {
     }
 
     /**
@@ -54,7 +56,7 @@ public final class CommentDomain {
      * @param systemType 子系统类型
      * @param objectId   被评论对象的ID
      */
-    CommentDomain(SystemTypeEnum systemType, Long objectId) {
+    public CommentDomain(SystemTypeEnum systemType, Long objectId) {
         buildCommentList(systemType, objectId);
     }
 
@@ -81,6 +83,27 @@ public final class CommentDomain {
         this.commentList = buildCommentList(systemType, objectId, null);
     }
 
+    public List<Comment> lastCommentTop10(SystemTypeEnum systemType) {
+        SysCommentsExample example = new SysCommentsExample();
+        example.setOrderByClause("addtime DESC");
+        example.createCriteria()
+                .andSysTypeEqualTo(systemType.toString())
+                .andIsDeleteEqualTo(false);
+        Page<SysCommentsWithBLOBs> page = PageHelper.startPage(1, 10);
+        commentsMapper.selectByExampleWithBLOBs(example);
+        List<SysCommentsWithBLOBs> sysComments = page.getResult();
+        if (!ObjectUtils.isEmpty(sysComments)) {
+            List<Comment> commentList = new CopyOnWriteArrayList<>();
+            for (SysCommentsWithBLOBs sysComment : sysComments
+            ) {
+                Comment comment = convert(sysComment);
+                commentList.add(comment);
+            }
+            return commentList;
+        }
+        return null;
+    }
+
     /**
      * 递归构建评论列表树
      *
@@ -91,8 +114,10 @@ public final class CommentDomain {
      */
     private List<Comment> buildCommentList(SystemTypeEnum systemType, Long objectId, Comment reply) {
         SysCommentsExample example = new SysCommentsExample();
+        example.setOrderByClause("addtime DESC");
         SysCommentsExample.Criteria criteria = example.createCriteria();
-        criteria.andSysTypeEqualTo(systemType.name())
+        criteria.andIsDeleteEqualTo(false)
+                .andSysTypeEqualTo(systemType.name())
                 .andObjectIdEqualTo(objectId);
         if (reply == null) {
             criteria.andParentIdIsNull();
@@ -148,6 +173,7 @@ public final class CommentDomain {
         }
         Comment comment = Comment.builder()
                 .id(sysComment.getId())
+                .objectId(sysComment.getObjectId())
                 .reply(sysComment.getParentId())
                 .author(sysComment.getAuthor())
                 .email(sysComment.getAuthorEmail())

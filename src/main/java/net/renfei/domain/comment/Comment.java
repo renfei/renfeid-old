@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 public final class Comment {
     private Long id;
+    private Long objectId;
     private Long reply;
     private String author;
     private String email;
