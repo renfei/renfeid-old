@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.renfei.services.BaseService;
 import net.renfei.services.EmailService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -23,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Lazy
 @Slf4j
 @Service
 public class EmailServiceImpl extends BaseService implements EmailService {

@@ -7,7 +7,6 @@ import net.renfei.ip2location.IP2Location;
 import net.renfei.ip2location.IPResult;
 import net.renfei.services.BaseService;
 import net.renfei.services.IP2LocationService;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,6 @@ import java.io.IOException;
  *
  * @author renfei
  */
-@Lazy
 @Slf4j
 @Service
 public class IP2LocationServiceImpl extends BaseService implements IP2LocationService {

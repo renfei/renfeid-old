@@ -14,7 +14,6 @@ import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.PasswordUtils;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -24,7 +23,6 @@ import org.springframework.util.ObjectUtils;
  *
  * @author renfei
  */
-@Lazy
 @Slf4j
 @Service
 public class BlogServiceImpl extends BaseService implements BlogService {

@@ -2,7 +2,6 @@ package net.renfei.services.system;
 
 import net.renfei.services.BaseService;
 import net.renfei.services.RedisService;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,6 @@ import java.util.concurrent.TimeUnit;
  *
  * @author renfei
  */
-@Lazy
 @Service
 public class RedisServiceImpl extends BaseService implements RedisService {
     private final RedisTemplate<String, Object> redisTemplate;

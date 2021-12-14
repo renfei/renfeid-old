@@ -12,8 +12,6 @@ import net.renfei.model.SocialSharing;
 import net.renfei.model.StateCode;
 import net.renfei.model.blog.PostPageView;
 import net.renfei.services.BlogService;
-import net.renfei.utils.ApplicationContextUtil;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,6 @@ import org.springframework.web.servlet.view.RedirectView;
  *
  * @author renfei
  */
-@Lazy
 @Slf4j
 @Controller
 @RequestMapping("/posts")
@@ -34,9 +31,10 @@ public class BlogPostController extends BaseController {
     private static final String REDIS_KEY_PAGE_BLOG = "renfeid:page:blog:";
     private final BlogService blogService;
 
-    {
-        blogService = (BlogService) ApplicationContextUtil.getBean("blogServiceImpl");
+    public BlogPostController(BlogService blogService) {
+        this.blogService = blogService;
     }
+
 
     /**
      * 博客文章详情页面

@@ -9,7 +9,6 @@ import net.renfei.services.BaseService;
 import net.renfei.services.SysService;
 import net.renfei.utils.CommonUtil;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -21,7 +20,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author renfei
  */
-@Lazy
 @Slf4j
 @Service
 public class SysServiceImpl extends BaseService implements SysService {
