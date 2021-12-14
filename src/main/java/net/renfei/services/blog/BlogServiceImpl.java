@@ -6,9 +6,11 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.BlogPostNotExistException;
 import net.renfei.exception.SecretLevelException;
+import net.renfei.model.LinkVO;
 import net.renfei.model.PostStatus;
 import net.renfei.model.SecretLevel;
 import net.renfei.model.blog.PostSidebarVO;
+import net.renfei.repositories.model.BlogCategory;
 import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
@@ -17,6 +19,10 @@ import net.renfei.utils.PasswordUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 博客服务的实现
@@ -126,6 +132,53 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      */
     @Override
     public PostSidebarVO buildPostSidebar(BlogDomain blogDomain) {
-        return null;
+        PostSidebarVO postSidebarVO = null;
+        String redisKey = REDIS_KEY_BLOG + "post:sidebar";
+        assert SYSTEM_CONFIG != null;
+        if (SYSTEM_CONFIG.isEnableRedis()) {
+            // 查询是否曾经缓存过对象，有缓存直接吐出去
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof PostSidebarVO) {
+                    postSidebarVO = (PostSidebarVO) object;
+                }
+            }
+        }
+        if (postSidebarVO == null) {
+            // 缓存未命中，从数据库中组织数据
+            // 博客分类们
+            List<LinkVO> blogCategoryLinks = new CopyOnWriteArrayList<>();
+            List<BlogCategory> blogCategories = blogDomain.getAllBlogCategory();
+            blogCategories.forEach(blogCategory -> {
+                LinkVO link = new LinkVO();
+                link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/cat/posts/" + blogCategory.getEnName());
+                link.setText(blogCategory.getZhName());
+                blogCategoryLinks.add(link);
+            });
+            postSidebarVO = PostSidebarVO.builder()
+                    .postSidebars(new ArrayList<PostSidebarVO.PostSidebar>() {{
+                        this.add(PostSidebarVO.PostSidebar.builder()
+                                .title("文档分类")
+                                .link(blogCategoryLinks)
+                                .build());
+                        this.add(PostSidebarVO.PostSidebar.builder()
+                                .title("标签云")
+                                .link(null)
+                                .build());
+                        this.add(PostSidebarVO.PostSidebar.builder()
+                                .title("最新留言")
+                                .link(null)
+                                .build());
+                        this.add(PostSidebarVO.PostSidebar.builder()
+                                .title("热文排行")
+                                .link(null)
+                                .build());
+                    }})
+                    .build();
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                redisService.set(redisKey, postSidebarVO, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            }
+        }
+        return postSidebarVO;
     }
 }
