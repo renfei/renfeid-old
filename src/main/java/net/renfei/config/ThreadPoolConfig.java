@@ -1,12 +1,11 @@
 package net.renfei.config;
 
-import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.utils.SentryUtils;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
@@ -60,7 +59,7 @@ public class ThreadPoolConfig implements AsyncConfigurer {
         return (ex, method, params) -> {
             log.error("==========================" + ex.getMessage() + "=======================", ex);
             log.error("exception method:" + method.getName());
-            Sentry.captureException(ex);
+            SentryUtils.captureException(ex);
         };
     }
 }

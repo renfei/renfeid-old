@@ -1,12 +1,12 @@
 package net.renfei.services.ip2location;
 
-import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.exception.IP2LocationException;
 import net.renfei.ip2location.IP2Location;
 import net.renfei.ip2location.IPResult;
 import net.renfei.services.BaseService;
 import net.renfei.services.IP2LocationService;
+import net.renfei.utils.SentryUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
             }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            Sentry.captureException(e);
+            SentryUtils.captureException(e);
         }
     }
 
@@ -59,7 +59,7 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
             rec = location.IPQuery(ip);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            Sentry.captureException(e);
+            SentryUtils.captureException(e);
             throw new IP2LocationException("IP2Location 服务暂时不可用。");
         }
         assert rec != null;
@@ -85,7 +85,7 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
             rec = locationV6.IPQuery(ip);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            Sentry.captureException(e);
+            SentryUtils.captureException(e);
             throw new IP2LocationException("IP2Location 服务暂时不可用。");
         }
         assert rec != null;

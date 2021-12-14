@@ -9,6 +9,7 @@ import net.renfei.model.PageHead;
 import net.renfei.model.PageHeader;
 import net.renfei.model.PageView;
 import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.utils.SentryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.WebDataBinder;
@@ -77,7 +78,7 @@ public abstract class BaseController {
             result = constructor.newInstance(object);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             log.error("构建通用的页面返回对象时出错", e);
-            Sentry.captureException(e);
+            SentryUtils.captureException(e);
             return null;
         }
         result.setPageHead(new PageHead());

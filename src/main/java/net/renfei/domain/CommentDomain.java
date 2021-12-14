@@ -1,6 +1,5 @@
 package net.renfei.domain;
 
-import io.sentry.Sentry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
@@ -15,6 +14,7 @@ import net.renfei.repositories.model.SysCommentsWithBLOBs;
 import net.renfei.services.IP2LocationService;
 import net.renfei.services.LeafService;
 import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.utils.SentryUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
@@ -184,7 +184,7 @@ public final class CommentDomain {
             sysComment.setAuthorAddress(ip2LocationService.ipQueryAddress(comment.getIp()));
         } catch (IP2LocationException e) {
             log.error(e.getMessage(), e);
-            Sentry.captureException(e);
+            SentryUtils.captureException(e);
             sysComment.setAuthorAddress("-, -, -");
         }
         sysComment.setContent(comment.getContent());
