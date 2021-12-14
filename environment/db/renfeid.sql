@@ -5,378 +5,351 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for blog_category
 -- ----------------------------
 DROP TABLE IF EXISTS `blog_category`;
-CREATE TABLE `blog_category` (
-  `id` bigint(20) unsigned NOT NULL COMMENT '主键，非自增，使用统一发号器',
-  `en_name` varchar(255) NOT NULL COMMENT '英文分类，用于url',
-  `zh_name` varchar(255) NOT NULL COMMENT '中文分类，用于显示',
-  `secret_level` int(10) unsigned NOT NULL DEFAULT 1 COMMENT '保密等级（1:非密/2:秘密/3:机密）',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `en_name` (`en_name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='博客分类栏目';
+CREATE TABLE `blog_category`  (
+                                  `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键，非自增，使用统一发号器',
+                                  `en_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '英文分类，用于url',
+                                  `zh_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '中文分类，用于显示',
+                                  `secret_level` int(10) UNSIGNED NOT NULL DEFAULT 1 COMMENT '保密等级（1:非密/2:秘密/3:机密）',
+                                  PRIMARY KEY (`id`) USING BTREE,
+                                  UNIQUE INDEX `en_name`(`en_name`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '博客分类栏目' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of blog_category
 -- ----------------------------
-BEGIN;
-COMMIT;
+INSERT INTO `blog_category` VALUES (1, 'default', '默认分类', 1);
 
 -- ----------------------------
 -- Table structure for blog_postmeta
 -- ----------------------------
 DROP TABLE IF EXISTS `blog_postmeta`;
-CREATE TABLE `blog_postmeta` (
-  `id` bigint(20) unsigned NOT NULL COMMENT '主键，非自增，使用统一发号器',
-  `post_id` bigint(20) NOT NULL COMMENT '文章ID',
-  `meta_key` varchar(255) DEFAULT NULL COMMENT '信息的键',
-  `meta_value` longtext DEFAULT NULL COMMENT '信息的值',
-  PRIMARY KEY (`id`),
-  KEY `post_id` (`post_id`) USING BTREE,
-  KEY `meta_key` (`meta_key`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='博客文章扩展信息表';
+CREATE TABLE `blog_postmeta`  (
+                                  `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键，非自增，使用统一发号器',
+                                  `post_id` bigint(20) NOT NULL COMMENT '文章ID',
+                                  `meta_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '信息的键',
+                                  `meta_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '信息的值',
+                                  PRIMARY KEY (`id`) USING BTREE,
+                                  INDEX `post_id`(`post_id`) USING BTREE,
+                                  INDEX `meta_key`(`meta_key`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '博客文章扩展信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of blog_postmeta
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for blog_posts
 -- ----------------------------
 DROP TABLE IF EXISTS `blog_posts`;
-CREATE TABLE `blog_posts` (
-  `id` bigint(20) unsigned NOT NULL COMMENT '主键，非自增，使用统一发号器',
-  `category_id` bigint(20) unsigned NOT NULL COMMENT '分类栏目ID',
-  `featured_image` text NOT NULL COMMENT '特色图像',
-  `post_title` text NOT NULL COMMENT '标题',
-  `post_author` bigint(20) unsigned NOT NULL COMMENT '作者ID，来自用户表',
-  `post_keyword` text DEFAULT NULL COMMENT '关键字，SEO',
-  `post_excerpt` text DEFAULT NULL COMMENT '摘录，SEO',
-  `post_content` longtext NOT NULL COMMENT '正文，此处存储html，注意xss攻击',
-  `post_date` datetime NOT NULL COMMENT '发布时间',
-  `post_status` varchar(20) NOT NULL DEFAULT 'publish' COMMENT '文章状态（publish:发布/revision:修订版/deleted:删除/offline:下线/review:审核流程中）',
-  `post_views` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '文章浏览量',
-  `comment_status` varchar(20) NOT NULL DEFAULT 'open' COMMENT '评论状态（open:任意评论/closed:禁止评论/signed:登录后可评论）',
-  `post_password` varchar(20) DEFAULT NULL COMMENT '文章密码，输入密码可查看',
-  `post_modified` datetime DEFAULT NULL COMMENT '修改时间',
-  `post_parent` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '父级id，默认为0，编辑修改后为历史版本',
-  `source_name` text DEFAULT NULL COMMENT '来源名称',
-  `source_url` text DEFAULT NULL COMMENT '原文链接',
-  `thumbs_up` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '点赞量',
-  `thumbs_down` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '点踩量',
-  `avg_views` double NOT NULL DEFAULT 0 COMMENT '日均浏览量',
-  `avg_comment` double NOT NULL DEFAULT 0 COMMENT '日均评论量',
-  `page_rank` double NOT NULL DEFAULT 10000 COMMENT '权重排序',
-  `secret_level` int(255) unsigned NOT NULL DEFAULT 1 COMMENT '保密等级（1:非密/2:秘密/3:机密）',
-  PRIMARY KEY (`id`),
-  KEY `secret_level` (`secret_level`) USING BTREE,
-  KEY `post_date` (`post_date`) USING BTREE,
-  KEY `post_author` (`post_author`) USING BTREE,
-  KEY `post_status` (`post_status`) USING BTREE,
-  KEY `page_rank` (`page_rank`) USING BTREE,
-  KEY `category_id` (`category_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='博客文章';
+CREATE TABLE `blog_posts`  (
+                               `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键，非自增，使用统一发号器',
+                               `category_id` bigint(20) UNSIGNED NOT NULL COMMENT '分类栏目ID',
+                               `featured_image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '特色图像',
+                               `post_title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
+                               `post_author` bigint(20) UNSIGNED NOT NULL COMMENT '作者ID，来自用户表',
+                               `post_keyword` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关键字，SEO',
+                               `post_excerpt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '摘录，SEO',
+                               `post_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '正文，此处存储html，注意xss攻击',
+                               `post_date` datetime NOT NULL COMMENT '发布时间',
+                               `post_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'PUBLISH' COMMENT '文章状态（publish:发布/revision:修订版/deleted:删除/offline:下线/review:审核流程中）',
+                               `post_views` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '文章浏览量',
+                               `comment_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'OPEN' COMMENT '评论状态（open:任意评论/closed:禁止评论/signed:登录后可评论）',
+                               `post_password` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文章密码，输入密码可查看',
+                               `post_modified` datetime NULL DEFAULT NULL COMMENT '修改时间',
+                               `post_parent` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '父级id，默认为0，编辑修改后为历史版本',
+                               `source_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源名称',
+                               `source_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '原文链接',
+                               `thumbs_up` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '点赞量',
+                               `thumbs_down` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '点踩量',
+                               `avg_views` double NOT NULL DEFAULT 0 COMMENT '日均浏览量',
+                               `avg_comment` double NOT NULL DEFAULT 0 COMMENT '日均评论量',
+                               `page_rank` double NOT NULL DEFAULT 10000 COMMENT '权重排序',
+                               `secret_level` int(255) UNSIGNED NOT NULL DEFAULT 1 COMMENT '保密等级（1:非密/2:秘密/3:机密）',
+                               `is_original` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否原创',
+                               PRIMARY KEY (`id`) USING BTREE,
+                               INDEX `secret_level`(`secret_level`) USING BTREE,
+                               INDEX `post_date`(`post_date`) USING BTREE,
+                               INDEX `post_author`(`post_author`) USING BTREE,
+                               INDEX `post_status`(`post_status`) USING BTREE,
+                               INDEX `page_rank`(`page_rank`) USING BTREE,
+                               INDEX `category_id`(`category_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '博客文章' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of blog_posts
 -- ----------------------------
-BEGIN;
-COMMIT;
+INSERT INTO `blog_posts` VALUES (1, 1, 'https://cdn.renfei.net/images/default_posts.jpg', '你好，世界', 1, '你好,世界', '你好,世界', '你好，世界', '2021-12-07 16:27:43', 'PUBLISH', 0, 'OPEN', NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 10000, 1, 1);
 
 -- ----------------------------
 -- Table structure for leaf_alloc
 -- ----------------------------
 DROP TABLE IF EXISTS `leaf_alloc`;
-CREATE TABLE `leaf_alloc` (
-  `biz_tag` varchar(128) NOT NULL DEFAULT '',
-  `max_id` bigint(20) NOT NULL DEFAULT 1,
-  `step` int(11) NOT NULL,
-  `description` varchar(256) DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`biz_tag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='全局发号号段表';
+CREATE TABLE `leaf_alloc`  (
+                               `biz_tag` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+                               `max_id` bigint(20) NOT NULL DEFAULT 1,
+                               `step` int(11) NOT NULL,
+                               `description` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                               `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE CURRENT_TIMESTAMP,
+                               PRIMARY KEY (`biz_tag`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '全局发号号段表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of leaf_alloc
 -- ----------------------------
-BEGIN;
 INSERT INTO `leaf_alloc` VALUES ('leaf-segment-global', 1, 2000, 'Segment Mode Get Id', '2021-11-12 05:36:43');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_blob_triggers
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_BLOB_TRIGGERS`;
-CREATE TABLE `QRTZ_BLOB_TRIGGERS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `TRIGGER_NAME` varchar(190) NOT NULL,
-  `TRIGGER_GROUP` varchar(190) NOT NULL,
-  `BLOB_DATA` blob DEFAULT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  KEY `SCHED_NAME` (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  CONSTRAINT `QRTZ_BLOB_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_blob_triggers`;
+CREATE TABLE `qrtz_blob_triggers`  (
+                                       `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                       `TRIGGER_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                       `TRIGGER_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                       `BLOB_DATA` blob NULL DEFAULT NULL,
+                                       PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) USING BTREE,
+                                       INDEX `SCHED_NAME`(`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) USING BTREE,
+                                       CONSTRAINT `QRTZ_BLOB_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_blob_triggers
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_calendars
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_CALENDARS`;
-CREATE TABLE `QRTZ_CALENDARS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `CALENDAR_NAME` varchar(190) NOT NULL,
-  `CALENDAR` blob NOT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`CALENDAR_NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_calendars`;
+CREATE TABLE `qrtz_calendars`  (
+                                   `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                   `CALENDAR_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                   `CALENDAR` blob NOT NULL,
+                                   PRIMARY KEY (`SCHED_NAME`, `CALENDAR_NAME`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_calendars
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_cron_triggers
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_CRON_TRIGGERS`;
-CREATE TABLE `QRTZ_CRON_TRIGGERS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `TRIGGER_NAME` varchar(190) NOT NULL,
-  `TRIGGER_GROUP` varchar(190) NOT NULL,
-  `CRON_EXPRESSION` varchar(120) NOT NULL,
-  `TIME_ZONE_ID` varchar(80) DEFAULT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  CONSTRAINT `QRTZ_CRON_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_cron_triggers`;
+CREATE TABLE `qrtz_cron_triggers`  (
+                                       `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                       `TRIGGER_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                       `TRIGGER_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                       `CRON_EXPRESSION` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                       `TIME_ZONE_ID` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                       PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) USING BTREE,
+                                       CONSTRAINT `QRTZ_CRON_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_cron_triggers
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_fired_triggers
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_FIRED_TRIGGERS`;
-CREATE TABLE `QRTZ_FIRED_TRIGGERS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `ENTRY_ID` varchar(95) NOT NULL,
-  `TRIGGER_NAME` varchar(190) NOT NULL,
-  `TRIGGER_GROUP` varchar(190) NOT NULL,
-  `INSTANCE_NAME` varchar(190) NOT NULL,
-  `FIRED_TIME` bigint(13) NOT NULL,
-  `SCHED_TIME` bigint(13) NOT NULL,
-  `PRIORITY` int(11) NOT NULL,
-  `STATE` varchar(16) NOT NULL,
-  `JOB_NAME` varchar(190) DEFAULT NULL,
-  `JOB_GROUP` varchar(190) DEFAULT NULL,
-  `IS_NONCONCURRENT` varchar(1) DEFAULT NULL,
-  `REQUESTS_RECOVERY` varchar(1) DEFAULT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`ENTRY_ID`),
-  KEY `IDX_QRTZ_FT_TRIG_INST_NAME` (`SCHED_NAME`,`INSTANCE_NAME`),
-  KEY `IDX_QRTZ_FT_INST_JOB_REQ_RCVRY` (`SCHED_NAME`,`INSTANCE_NAME`,`REQUESTS_RECOVERY`),
-  KEY `IDX_QRTZ_FT_J_G` (`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`),
-  KEY `IDX_QRTZ_FT_JG` (`SCHED_NAME`,`JOB_GROUP`),
-  KEY `IDX_QRTZ_FT_T_G` (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  KEY `IDX_QRTZ_FT_TG` (`SCHED_NAME`,`TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_fired_triggers`;
+CREATE TABLE `qrtz_fired_triggers`  (
+                                        `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                        `ENTRY_ID` varchar(95) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                        `TRIGGER_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                        `TRIGGER_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                        `INSTANCE_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                        `FIRED_TIME` bigint(13) NOT NULL,
+                                        `SCHED_TIME` bigint(13) NOT NULL,
+                                        `PRIORITY` int(11) NOT NULL,
+                                        `STATE` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                        `JOB_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                        `JOB_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                        `IS_NONCONCURRENT` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                        `REQUESTS_RECOVERY` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                        PRIMARY KEY (`SCHED_NAME`, `ENTRY_ID`) USING BTREE,
+                                        INDEX `IDX_QRTZ_FT_TRIG_INST_NAME`(`SCHED_NAME`, `INSTANCE_NAME`) USING BTREE,
+                                        INDEX `IDX_QRTZ_FT_INST_JOB_REQ_RCVRY`(`SCHED_NAME`, `INSTANCE_NAME`, `REQUESTS_RECOVERY`) USING BTREE,
+                                        INDEX `IDX_QRTZ_FT_J_G`(`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) USING BTREE,
+                                        INDEX `IDX_QRTZ_FT_JG`(`SCHED_NAME`, `JOB_GROUP`) USING BTREE,
+                                        INDEX `IDX_QRTZ_FT_T_G`(`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) USING BTREE,
+                                        INDEX `IDX_QRTZ_FT_TG`(`SCHED_NAME`, `TRIGGER_GROUP`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_fired_triggers
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_job_details
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_JOB_DETAILS`;
-CREATE TABLE `QRTZ_JOB_DETAILS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `JOB_NAME` varchar(190) NOT NULL,
-  `JOB_GROUP` varchar(190) NOT NULL,
-  `DESCRIPTION` varchar(250) DEFAULT NULL,
-  `JOB_CLASS_NAME` varchar(250) NOT NULL,
-  `IS_DURABLE` varchar(1) NOT NULL,
-  `IS_NONCONCURRENT` varchar(1) NOT NULL,
-  `IS_UPDATE_DATA` varchar(1) NOT NULL,
-  `REQUESTS_RECOVERY` varchar(1) NOT NULL,
-  `JOB_DATA` blob DEFAULT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`),
-  KEY `IDX_QRTZ_J_REQ_RECOVERY` (`SCHED_NAME`,`REQUESTS_RECOVERY`),
-  KEY `IDX_QRTZ_J_GRP` (`SCHED_NAME`,`JOB_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_job_details`;
+CREATE TABLE `qrtz_job_details`  (
+                                     `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                     `JOB_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                     `JOB_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                     `DESCRIPTION` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                     `JOB_CLASS_NAME` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                     `IS_DURABLE` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                     `IS_NONCONCURRENT` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                     `IS_UPDATE_DATA` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                     `REQUESTS_RECOVERY` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                     `JOB_DATA` blob NULL DEFAULT NULL,
+                                     PRIMARY KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) USING BTREE,
+                                     INDEX `IDX_QRTZ_J_REQ_RECOVERY`(`SCHED_NAME`, `REQUESTS_RECOVERY`) USING BTREE,
+                                     INDEX `IDX_QRTZ_J_GRP`(`SCHED_NAME`, `JOB_GROUP`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_job_details
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_locks
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_LOCKS`;
-CREATE TABLE `QRTZ_LOCKS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `LOCK_NAME` varchar(40) NOT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`LOCK_NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_locks`;
+CREATE TABLE `qrtz_locks`  (
+                               `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                               `LOCK_NAME` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                               PRIMARY KEY (`SCHED_NAME`, `LOCK_NAME`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_locks
 -- ----------------------------
-BEGIN;
-COMMIT;
+INSERT INTO `qrtz_locks` VALUES ('quartzScheduler', 'TRIGGER_ACCESS');
 
 -- ----------------------------
 -- Table structure for qrtz_paused_trigger_grps
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_PAUSED_TRIGGER_GRPS`;
-CREATE TABLE `QRTZ_PAUSED_TRIGGER_GRPS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `TRIGGER_GROUP` varchar(190) NOT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_paused_trigger_grps`;
+CREATE TABLE `qrtz_paused_trigger_grps`  (
+                                             `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                             `TRIGGER_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                             PRIMARY KEY (`SCHED_NAME`, `TRIGGER_GROUP`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_paused_trigger_grps
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_scheduler_state
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_SCHEDULER_STATE`;
-CREATE TABLE `QRTZ_SCHEDULER_STATE` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `INSTANCE_NAME` varchar(190) NOT NULL,
-  `LAST_CHECKIN_TIME` bigint(13) NOT NULL,
-  `CHECKIN_INTERVAL` bigint(13) NOT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`INSTANCE_NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_scheduler_state`;
+CREATE TABLE `qrtz_scheduler_state`  (
+                                         `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                         `INSTANCE_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                         `LAST_CHECKIN_TIME` bigint(13) NOT NULL,
+                                         `CHECKIN_INTERVAL` bigint(13) NOT NULL,
+                                         PRIMARY KEY (`SCHED_NAME`, `INSTANCE_NAME`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_scheduler_state
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_simple_triggers
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_SIMPLE_TRIGGERS`;
-CREATE TABLE `QRTZ_SIMPLE_TRIGGERS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `TRIGGER_NAME` varchar(190) NOT NULL,
-  `TRIGGER_GROUP` varchar(190) NOT NULL,
-  `REPEAT_COUNT` bigint(7) NOT NULL,
-  `REPEAT_INTERVAL` bigint(12) NOT NULL,
-  `TIMES_TRIGGERED` bigint(10) NOT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  CONSTRAINT `QRTZ_SIMPLE_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_simple_triggers`;
+CREATE TABLE `qrtz_simple_triggers`  (
+                                         `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                         `TRIGGER_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                         `TRIGGER_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                         `REPEAT_COUNT` bigint(7) NOT NULL,
+                                         `REPEAT_INTERVAL` bigint(12) NOT NULL,
+                                         `TIMES_TRIGGERED` bigint(10) NOT NULL,
+                                         PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) USING BTREE,
+                                         CONSTRAINT `QRTZ_SIMPLE_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_simple_triggers
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_simprop_triggers
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_SIMPROP_TRIGGERS`;
-CREATE TABLE `QRTZ_SIMPROP_TRIGGERS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `TRIGGER_NAME` varchar(190) NOT NULL,
-  `TRIGGER_GROUP` varchar(190) NOT NULL,
-  `STR_PROP_1` varchar(512) DEFAULT NULL,
-  `STR_PROP_2` varchar(512) DEFAULT NULL,
-  `STR_PROP_3` varchar(512) DEFAULT NULL,
-  `INT_PROP_1` int(11) DEFAULT NULL,
-  `INT_PROP_2` int(11) DEFAULT NULL,
-  `LONG_PROP_1` bigint(20) DEFAULT NULL,
-  `LONG_PROP_2` bigint(20) DEFAULT NULL,
-  `DEC_PROP_1` decimal(13,4) DEFAULT NULL,
-  `DEC_PROP_2` decimal(13,4) DEFAULT NULL,
-  `BOOL_PROP_1` varchar(1) DEFAULT NULL,
-  `BOOL_PROP_2` varchar(1) DEFAULT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  CONSTRAINT `QRTZ_SIMPROP_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_simprop_triggers`;
+CREATE TABLE `qrtz_simprop_triggers`  (
+                                          `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                          `TRIGGER_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                          `TRIGGER_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                          `STR_PROP_1` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                          `STR_PROP_2` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                          `STR_PROP_3` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                          `INT_PROP_1` int(11) NULL DEFAULT NULL,
+                                          `INT_PROP_2` int(11) NULL DEFAULT NULL,
+                                          `LONG_PROP_1` bigint(20) NULL DEFAULT NULL,
+                                          `LONG_PROP_2` bigint(20) NULL DEFAULT NULL,
+                                          `DEC_PROP_1` decimal(13, 4) NULL DEFAULT NULL,
+                                          `DEC_PROP_2` decimal(13, 4) NULL DEFAULT NULL,
+                                          `BOOL_PROP_1` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                          `BOOL_PROP_2` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                          PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) USING BTREE,
+                                          CONSTRAINT `QRTZ_SIMPROP_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_simprop_triggers
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for qrtz_triggers
 -- ----------------------------
-DROP TABLE IF EXISTS `QRTZ_TRIGGERS`;
-CREATE TABLE `QRTZ_TRIGGERS` (
-  `SCHED_NAME` varchar(120) NOT NULL,
-  `TRIGGER_NAME` varchar(190) NOT NULL,
-  `TRIGGER_GROUP` varchar(190) NOT NULL,
-  `JOB_NAME` varchar(190) NOT NULL,
-  `JOB_GROUP` varchar(190) NOT NULL,
-  `DESCRIPTION` varchar(250) DEFAULT NULL,
-  `NEXT_FIRE_TIME` bigint(13) DEFAULT NULL,
-  `PREV_FIRE_TIME` bigint(13) DEFAULT NULL,
-  `PRIORITY` int(11) DEFAULT NULL,
-  `TRIGGER_STATE` varchar(16) NOT NULL,
-  `TRIGGER_TYPE` varchar(8) NOT NULL,
-  `START_TIME` bigint(13) NOT NULL,
-  `END_TIME` bigint(13) DEFAULT NULL,
-  `CALENDAR_NAME` varchar(190) DEFAULT NULL,
-  `MISFIRE_INSTR` smallint(2) DEFAULT NULL,
-  `JOB_DATA` blob DEFAULT NULL,
-  PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  KEY `IDX_QRTZ_T_J` (`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`),
-  KEY `IDX_QRTZ_T_JG` (`SCHED_NAME`,`JOB_GROUP`),
-  KEY `IDX_QRTZ_T_C` (`SCHED_NAME`,`CALENDAR_NAME`),
-  KEY `IDX_QRTZ_T_G` (`SCHED_NAME`,`TRIGGER_GROUP`),
-  KEY `IDX_QRTZ_T_STATE` (`SCHED_NAME`,`TRIGGER_STATE`),
-  KEY `IDX_QRTZ_T_N_STATE` (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`,`TRIGGER_STATE`),
-  KEY `IDX_QRTZ_T_N_G_STATE` (`SCHED_NAME`,`TRIGGER_GROUP`,`TRIGGER_STATE`),
-  KEY `IDX_QRTZ_T_NEXT_FIRE_TIME` (`SCHED_NAME`,`NEXT_FIRE_TIME`),
-  KEY `IDX_QRTZ_T_NFT_ST` (`SCHED_NAME`,`TRIGGER_STATE`,`NEXT_FIRE_TIME`),
-  KEY `IDX_QRTZ_T_NFT_MISFIRE` (`SCHED_NAME`,`MISFIRE_INSTR`,`NEXT_FIRE_TIME`),
-  KEY `IDX_QRTZ_T_NFT_ST_MISFIRE` (`SCHED_NAME`,`MISFIRE_INSTR`,`NEXT_FIRE_TIME`,`TRIGGER_STATE`),
-  KEY `IDX_QRTZ_T_NFT_ST_MISFIRE_GRP` (`SCHED_NAME`,`MISFIRE_INSTR`,`NEXT_FIRE_TIME`,`TRIGGER_GROUP`,`TRIGGER_STATE`),
-  CONSTRAINT `QRTZ_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) REFERENCES `QRTZ_JOB_DETAILS` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `qrtz_triggers`;
+CREATE TABLE `qrtz_triggers`  (
+                                  `SCHED_NAME` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                  `TRIGGER_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                  `TRIGGER_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                  `JOB_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                  `JOB_GROUP` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                  `DESCRIPTION` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                  `NEXT_FIRE_TIME` bigint(13) NULL DEFAULT NULL,
+                                  `PREV_FIRE_TIME` bigint(13) NULL DEFAULT NULL,
+                                  `PRIORITY` int(11) NULL DEFAULT NULL,
+                                  `TRIGGER_STATE` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                  `TRIGGER_TYPE` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                  `START_TIME` bigint(13) NOT NULL,
+                                  `END_TIME` bigint(13) NULL DEFAULT NULL,
+                                  `CALENDAR_NAME` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                                  `MISFIRE_INSTR` smallint(2) NULL DEFAULT NULL,
+                                  `JOB_DATA` blob NULL DEFAULT NULL,
+                                  PRIMARY KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_J`(`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_JG`(`SCHED_NAME`, `JOB_GROUP`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_C`(`SCHED_NAME`, `CALENDAR_NAME`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_G`(`SCHED_NAME`, `TRIGGER_GROUP`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_STATE`(`SCHED_NAME`, `TRIGGER_STATE`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_N_STATE`(`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`, `TRIGGER_STATE`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_N_G_STATE`(`SCHED_NAME`, `TRIGGER_GROUP`, `TRIGGER_STATE`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_NEXT_FIRE_TIME`(`SCHED_NAME`, `NEXT_FIRE_TIME`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_NFT_ST`(`SCHED_NAME`, `TRIGGER_STATE`, `NEXT_FIRE_TIME`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_NFT_MISFIRE`(`SCHED_NAME`, `MISFIRE_INSTR`, `NEXT_FIRE_TIME`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_NFT_ST_MISFIRE`(`SCHED_NAME`, `MISFIRE_INSTR`, `NEXT_FIRE_TIME`, `TRIGGER_STATE`) USING BTREE,
+                                  INDEX `IDX_QRTZ_T_NFT_ST_MISFIRE_GRP`(`SCHED_NAME`, `MISFIRE_INSTR`, `NEXT_FIRE_TIME`, `TRIGGER_GROUP`, `TRIGGER_STATE`) USING BTREE,
+                                  CONSTRAINT `QRTZ_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) REFERENCES `qrtz_job_details` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qrtz_triggers
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_account_keep_name
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_account_keep_name`;
-CREATE TABLE `sys_account_keep_name` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `user_name` (`user_name`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='保留用户名';
+CREATE TABLE `sys_account_keep_name`  (
+                                          `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                          `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+                                          PRIMARY KEY (`id`) USING BTREE,
+                                          UNIQUE INDEX `user_name`(`user_name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '保留用户名' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_account_keep_name
 -- ----------------------------
-BEGIN;
 INSERT INTO `sys_account_keep_name` VALUES (3, 'admin');
 INSERT INTO `sys_account_keep_name` VALUES (5, 'administrator');
 INSERT INTO `sys_account_keep_name` VALUES (30, 'alibaba');
@@ -412,127 +385,119 @@ INSERT INTO `sys_account_keep_name` VALUES (18, '认证管理员');
 INSERT INTO `sys_account_keep_name` VALUES (28, '阿里');
 INSERT INTO `sys_account_keep_name` VALUES (32, '阿里云');
 INSERT INTO `sys_account_keep_name` VALUES (29, '阿里巴巴');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_comments
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_comments`;
-CREATE TABLE `sys_comments` (
-  `id` bigint(20) unsigned NOT NULL,
-  `sys_type` varchar(255) NOT NULL COMMENT '给哪个子系统评论的',
-  `object_id` bigint(20) unsigned NOT NULL COMMENT '评论哪个对象',
-  `author_id` bigint(20) unsigned DEFAULT NULL COMMENT '如果是登录用户的话作者ID',
-  `author` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者名称',
-  `author_email` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者邮箱',
-  `author_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者链接',
-  `author_IP` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者IP',
-  `author_address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者物理地址',
-  `addtime` datetime NOT NULL COMMENT '评论时间',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
-  `is_delete` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除',
-  `parent_id` bigint(20) unsigned DEFAULT NULL COMMENT '父级评论ID',
-  `is_owner` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否是官方回复',
-  PRIMARY KEY (`id`),
-  KEY `type_object_id` (`sys_type`,`object_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='全局评论表';
+CREATE TABLE `sys_comments`  (
+                                 `id` bigint(20) UNSIGNED NOT NULL,
+                                 `sys_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '给哪个子系统评论的',
+                                 `object_id` bigint(20) UNSIGNED NOT NULL COMMENT '评论哪个对象',
+                                 `author_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '如果是登录用户的话作者ID',
+                                 `author` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '作者名称',
+                                 `author_email` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '作者邮箱',
+                                 `author_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '作者链接',
+                                 `author_IP` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '作者IP',
+                                 `author_address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '作者物理地址',
+                                 `addtime` datetime NOT NULL COMMENT '评论时间',
+                                 `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
+                                 `is_delete` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除',
+                                 `parent_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '父级评论ID',
+                                 `is_owner` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否是官方回复',
+                                 PRIMARY KEY (`id`) USING BTREE,
+                                 INDEX `type_object_id`(`sys_type`, `object_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '全局评论表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_comments
 -- ----------------------------
-BEGIN;
-COMMIT;
+INSERT INTO `sys_comments` VALUES (1, 'BLOG', 1, 1, '任霏', 'i@renfei.net', 'https://www.renfei.net', '10.10.10.10', 'Beijing', '2021-12-13 16:26:33', '这是一条测试评论', 0, NULL, 1);
+INSERT INTO `sys_comments` VALUES (2, 'BLOG', 1, 1, '任霏', 'i@renfei.net', 'https://www.renfei.net', '10.10.10.10', 'Beijing', '2021-12-13 16:27:24', '这是评论桥套测试', 0, 1, 1);
 
 -- ----------------------------
 -- Table structure for sys_keyword_object
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_keyword_object`;
-CREATE TABLE `sys_keyword_object` (
-  `id` bigint(20) unsigned NOT NULL COMMENT '主键，非自增，使用统一发号器',
-  `tag_id` bigint(20) unsigned NOT NULL COMMENT '关键字外键',
-  `object_type` varchar(255) NOT NULL COMMENT '属于哪个子系统的关系类型',
-  `object_id` bigint(20) unsigned NOT NULL COMMENT '关联对象',
-  PRIMARY KEY (`id`),
-  KEY `tag_id` (`tag_id`) USING BTREE,
-  KEY `object_type` (`object_type`) USING BTREE,
-  KEY `object_id` (`object_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='关键字关系表';
+CREATE TABLE `sys_keyword_object`  (
+                                       `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键，非自增，使用统一发号器',
+                                       `tag_id` bigint(20) UNSIGNED NOT NULL COMMENT '关键字外键',
+                                       `object_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '属于哪个子系统的关系类型',
+                                       `object_id` bigint(20) UNSIGNED NOT NULL COMMENT '关联对象',
+                                       PRIMARY KEY (`id`) USING BTREE,
+                                       INDEX `tag_id`(`tag_id`) USING BTREE,
+                                       INDEX `object_type`(`object_type`) USING BTREE,
+                                       INDEX `object_id`(`object_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '关键字关系表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_keyword_object
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_keyword_tag
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_keyword_tag`;
-CREATE TABLE `sys_keyword_tag` (
-  `id` bigint(20) unsigned NOT NULL COMMENT '主键，非自增，使用统一发号器',
-  `en_name` varchar(255) NOT NULL COMMENT '英文，用于url',
-  `zh_name` varchar(255) NOT NULL COMMENT '中文，用于显示',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `en_name` (`en_name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='全局关键字';
+CREATE TABLE `sys_keyword_tag`  (
+                                    `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键，非自增，使用统一发号器',
+                                    `en_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '英文，用于url',
+                                    `zh_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '中文，用于显示',
+                                    PRIMARY KEY (`id`) USING BTREE,
+                                    UNIQUE INDEX `en_name`(`en_name`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '全局关键字' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_keyword_tag
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_pages
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_pages`;
-CREATE TABLE `sys_pages` (
-  `id` bigint(20) unsigned NOT NULL COMMENT '主键，非自增，使用统一发号器',
-  `featured_image` text DEFAULT NULL COMMENT '特色图像',
-  `page_title` text NOT NULL COMMENT '标题',
-  `page_author` bigint(20) unsigned NOT NULL COMMENT '作者ID，来自用户表',
-  `page_keyword` text DEFAULT NULL COMMENT '关键字，SEO',
-  `page_excerpt` text DEFAULT NULL COMMENT '摘录，SEO',
-  `page_content` longtext NOT NULL COMMENT '正文，此处存储html，注意xss攻击',
-  `page_date` datetime NOT NULL COMMENT '发布时间',
-  `page_status` varchar(20) NOT NULL DEFAULT 'publish' COMMENT '页面状态（publish:发布/revision:修订版/deleted:删除/offline:下线）',
-  `page_views` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '页面浏览量',
-  `page_password` varchar(20) DEFAULT NULL COMMENT '页面密码，输入密码可查看',
-  `page_modified` datetime DEFAULT NULL COMMENT '修改时间',
-  `page_parent` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '父级id，默认为0，编辑修改后为历史版本',
-  `thumbs_up` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '点赞量',
-  `thumbs_down` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '点踩量',
-  `secret_level` int(10) unsigned NOT NULL DEFAULT 1 COMMENT '保密等级（1:非密/2:秘密/3:机密）',
-  PRIMARY KEY (`id`),
-  KEY `secret_level` (`secret_level`) USING BTREE,
-  KEY `page_author` (`page_author`) USING BTREE,
-  KEY `page_date` (`page_date`) USING BTREE,
-  KEY `page_status` (`page_status`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='站点页面';
+CREATE TABLE `sys_pages`  (
+                              `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键，非自增，使用统一发号器',
+                              `featured_image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '特色图像',
+                              `page_title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
+                              `page_author` bigint(20) UNSIGNED NOT NULL COMMENT '作者ID，来自用户表',
+                              `page_keyword` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关键字，SEO',
+                              `page_excerpt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '摘录，SEO',
+                              `page_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '正文，此处存储html，注意xss攻击',
+                              `page_date` datetime NOT NULL COMMENT '发布时间',
+                              `page_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'publish' COMMENT '页面状态（publish:发布/revision:修订版/deleted:删除/offline:下线）',
+                              `page_views` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '页面浏览量',
+                              `page_password` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '页面密码，输入密码可查看',
+                              `page_modified` datetime NULL DEFAULT NULL COMMENT '修改时间',
+                              `page_parent` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '父级id，默认为0，编辑修改后为历史版本',
+                              `thumbs_up` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '点赞量',
+                              `thumbs_down` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '点踩量',
+                              `secret_level` int(10) UNSIGNED NOT NULL DEFAULT 1 COMMENT '保密等级（1:非密/2:秘密/3:机密）',
+                              PRIMARY KEY (`id`) USING BTREE,
+                              INDEX `secret_level`(`secret_level`) USING BTREE,
+                              INDEX `page_author`(`page_author`) USING BTREE,
+                              INDEX `page_date`(`page_date`) USING BTREE,
+                              INDEX `page_status`(`page_status`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '站点页面' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_pages
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_region
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_region`;
-CREATE TABLE `sys_region` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(36) NOT NULL,
-  `region_code` char(6) NOT NULL COMMENT '行政编码',
-  `region_name` varchar(255) NOT NULL COMMENT '区划名称',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `region_code` (`region_code`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3439 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='行政区划，使用《中华人民共和国行政区划代码》国家标准(GB/T2260)';
+CREATE TABLE `sys_region`  (
+                               `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                               `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                               `region_code` char(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '行政编码',
+                               `region_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '区划名称',
+                               PRIMARY KEY (`id`) USING BTREE,
+                               INDEX `region_code`(`region_code`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3439 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '行政区划，使用《中华人民共和国行政区划代码》国家标准(GB/T2260)' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_region
 -- ----------------------------
-BEGIN;
 INSERT INTO `sys_region` VALUES (1, '9DECA852-0BBD-4DC6-959B-1A116784F87C', '110000', '北京市');
 INSERT INTO `sys_region` VALUES (2, '7279C4F2-6E46-47E3-B103-57CC1913B300', '110101', '东城区');
 INSERT INTO `sys_region` VALUES (3, '642817C3-7E23-47E2-9D6F-81CC4CA7611A', '110102', '西城区');
@@ -3970,67 +3935,93 @@ INSERT INTO `sys_region` VALUES (3434, 'BC10DB57-E4E0-4EC1-AF82-7B772A37E7C0', '
 INSERT INTO `sys_region` VALUES (3435, '082A7D27-D9CE-4C4B-923B-64644AC7579B', '839011', '澎湖县');
 INSERT INTO `sys_region` VALUES (3436, 'E5974B5F-62E5-4999-9446-728A7C949981', '839012', '金门县');
 INSERT INTO `sys_region` VALUES (3437, '6ED8EA95-BF61-429F-A8C7-DCEC2EFDDC23', '839013', '连江县');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_secret_key
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_secret_key`;
-CREATE TABLE `sys_secret_key` (
-  `id` bigint(20) unsigned NOT NULL,
-  `uuid` varchar(36) NOT NULL,
-  `public_key` text DEFAULT NULL COMMENT '公钥',
-  `private_key` text DEFAULT NULL COMMENT '私钥',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uuid` (`uuid`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统密钥交换表';
+CREATE TABLE `sys_secret_key`  (
+                                   `id` bigint(20) UNSIGNED NOT NULL,
+                                   `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                                   `public_key` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '公钥',
+                                   `private_key` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '私钥',
+                                   `create_time` datetime NOT NULL COMMENT '创建时间',
+                                   `update_time` datetime NULL DEFAULT NULL,
+                                   PRIMARY KEY (`id`) USING BTREE,
+                                   UNIQUE INDEX `uuid`(`uuid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统密钥交换表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_secret_key
 -- ----------------------------
-BEGIN;
-COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_site_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_site_menu`;
+CREATE TABLE `sys_site_menu`  (
+                                  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                  `pid` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '父级ID',
+                                  `menu_text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单名称',
+                                  `menu_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单链接',
+                                  `is_new_win` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否新页面打开',
+                                  `is_enable` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否启用',
+                                  `order_number` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
+                                  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_site_menu
+-- ----------------------------
+INSERT INTO `sys_site_menu` VALUES (1, NULL, '首页', '/', 0, 1, 0);
+INSERT INTO `sys_site_menu` VALUES (2, NULL, '文章', '/posts', 0, 1, 1);
+INSERT INTO `sys_site_menu` VALUES (3, NULL, '视频', '/video', 0, 1, 3);
+INSERT INTO `sys_site_menu` VALUES (4, NULL, '相册', '/photo', 0, 1, 4);
+INSERT INTO `sys_site_menu` VALUES (5, NULL, '工具箱', '/kitbox', 0, 1, 6);
+INSERT INTO `sys_site_menu` VALUES (6, NULL, '更多', 'JavaScript:void(0);', 0, 1, 9999);
+INSERT INTO `sys_site_menu` VALUES (7, 6, '关于', '/about', 0, 1, 0);
+INSERT INTO `sys_site_menu` VALUES (8, 6, 'NiFi Docs', 'https://www.renfei.net/docs/Apache/NiFi/1.13.0/zh', 1, 1, 2);
+INSERT INTO `sys_site_menu` VALUES (9, 6, 'OpenAPI', '/swagger-ui/index.html', 1, 1, 3);
+INSERT INTO `sys_site_menu` VALUES (10, 6, 'Maven Repository', '/maven', 0, 1, 4);
+INSERT INTO `sys_site_menu` VALUES (11, NULL, '微博', '/weibo', 0, 1, 2);
+INSERT INTO `sys_site_menu` VALUES (12, NULL, '论坛', 'https://bbs.renfei.net', 1, 1, 5);
+INSERT INTO `sys_site_menu` VALUES (13, NULL, '在线文档', '/docs', 0, 1, 0);
+INSERT INTO `sys_site_menu` VALUES (14, 6, '赞助', '/sponsors', 0, 1, 1);
 
 -- ----------------------------
 -- Table structure for weibo_postmeta
 -- ----------------------------
 DROP TABLE IF EXISTS `weibo_postmeta`;
-CREATE TABLE `weibo_postmeta` (
-  `id` bigint(20) unsigned NOT NULL COMMENT '主键，非自增，使用统一发号器',
-  `post_id` bigint(20) NOT NULL COMMENT '微博ID',
-  `meta_key` varchar(255) DEFAULT NULL COMMENT '信息的键',
-  `meta_value` longtext DEFAULT NULL COMMENT '信息的值',
-  PRIMARY KEY (`id`),
-  KEY `post_id` (`post_id`) USING BTREE,
-  KEY `meta_key` (`meta_key`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='微博扩展信息表';
+CREATE TABLE `weibo_postmeta`  (
+                                   `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键，非自增，使用统一发号器',
+                                   `post_id` bigint(20) NOT NULL COMMENT '微博ID',
+                                   `meta_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '信息的键',
+                                   `meta_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '信息的值',
+                                   PRIMARY KEY (`id`) USING BTREE,
+                                   INDEX `post_id`(`post_id`) USING BTREE,
+                                   INDEX `meta_key`(`meta_key`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微博扩展信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of weibo_postmeta
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for weibo_posts
 -- ----------------------------
 DROP TABLE IF EXISTS `weibo_posts`;
-CREATE TABLE `weibo_posts` (
-  `id` bigint(20) unsigned NOT NULL COMMENT '主键，非自增，使用统一发号器',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
-  `release_time` datetime NOT NULL COMMENT '发布时间',
-  `views` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '浏览量',
-  `thumbs_up` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '点赞量',
-  `thumbs_down` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '点踩量',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='微博内容';
+CREATE TABLE `weibo_posts`  (
+                                `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键，非自增，使用统一发号器',
+                                `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
+                                `release_time` datetime NOT NULL COMMENT '发布时间',
+                                `views` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '浏览量',
+                                `thumbs_up` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '点赞量',
+                                `thumbs_down` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '点踩量',
+                                PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微博内容' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of weibo_posts
 -- ----------------------------
-BEGIN;
-COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
