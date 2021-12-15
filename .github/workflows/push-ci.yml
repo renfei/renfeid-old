@@ -1,6 +1,6 @@
-name: CI
+name: PushCI
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
   build:
