@@ -62,7 +62,7 @@
         <perf4j.version>0.9.16</perf4j.version>
         <curator.version>2.6.0</curator.version>
         <openfeign.version>3.1.0</openfeign.version>
-        <sentry.version>5.4.3</sentry.version>
+        <sentry.version>5.5.0</sentry.version>
         <email.version>2.6.1</email.version>
         <springdoc.version>1.6.1</springdoc.version>
         <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
