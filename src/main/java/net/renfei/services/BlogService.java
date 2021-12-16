@@ -27,7 +27,7 @@ public interface BlogService {
             BlogPostNeedPasswordException, SecretLevelException;
 
     /**
-     * 根据ID、密码获取公开的博客文章
+     * 根据ID获取公开的博客文章
      *
      * @param id       文章ID
      * @param user     当前查看的用户
@@ -37,7 +37,22 @@ public interface BlogService {
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
-    BlogDomain getBlogById(Long id, User user, String password)
+    BlogDomain getBlogById(Long id, User user, String password) throws BlogPostNotExistException,
+            BlogPostNeedPasswordException, SecretLevelException;
+
+    /**
+     * 根据ID、密码获取公开的博客文章
+     *
+     * @param id       文章ID
+     * @param user     当前查看的用户
+     * @param password 查看文章的密码
+     * @param isAdmin  是否是管理员操作
+     * @return BlogDomain
+     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws BlogPostNeedPasswordException 文章需要密码异常
+     * @throws SecretLevelException          保密等级异常
+     */
+    BlogDomain getBlogById(Long id, User user, String password, boolean isAdmin)
             throws BlogPostNotExistException, BlogPostNeedPasswordException, SecretLevelException;
 
     /**

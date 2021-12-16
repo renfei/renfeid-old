@@ -1,5 +1,6 @@
 package net.renfei.domain;
 
+import com.github.pagehelper.PageHelper;
 import lombok.Getter;
 import net.renfei.domain.blog.Category;
 import net.renfei.domain.blog.Post;
@@ -23,6 +24,7 @@ import net.renfei.utils.ListUtils;
 import net.renfei.utils.PasswordUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -65,9 +67,10 @@ public final class BlogDomain {
      * @param id       博客文章ID
      * @param user     当前登陆用户
      * @param password 博客文章密码
+     * @param isAdmin  是否是管理员管理操作
      * @throws BlogPostNotExistException 文章不存在异常
      */
-    public BlogDomain(Long id, User user, String password)
+    public BlogDomain(Long id, User user, String password, boolean isAdmin)
             throws BlogPostNotExistException, BlogPostNeedPasswordException, SecretLevelException {
         if (id == null) {
             throw new BlogPostNotExistException("博客文章不存在");
@@ -76,20 +79,25 @@ public final class BlogDomain {
         author = new User(post.getPostAuthor());
         category = initCategory(post.getCategoryId());
         commentList = new CommentDomain(SystemTypeEnum.BLOG, id).getCommentList();
-        // 判断文章状态和保密等级权限
-        if (!PostStatus.PUBLISH.equals(post.getPostStatus())) {
-            throw new BlogPostNotExistException("文章当前状态不可被阅读。");
-        }
-        if (!ObjectUtils.isEmpty(post.getPostPassword())) {
-            if (ObjectUtils.isEmpty(password)) {
-                throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
-            } else {
-                // 判断密码是否正确
-                if (!PasswordUtils.verifyPassword(password, post.getPostPassword())) {
+        if (!isAdmin) {
+            // 如果不是管理员操作，需要更多限制判断
+            // 判断文章状态
+            if (!PostStatus.PUBLISH.equals(post.getPostStatus())) {
+                throw new BlogPostNotExistException("文章当前状态不可被阅读。");
+            }
+            // 判断密码正确性
+            if (!ObjectUtils.isEmpty(post.getPostPassword())) {
+                if (ObjectUtils.isEmpty(password)) {
                     throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
+                } else {
+                    // 判断密码是否正确
+                    if (!PasswordUtils.verifyPassword(password, post.getPostPassword())) {
+                        throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
+                    }
                 }
             }
         }
+        // 判断保密等级，管理员也需要判断
         if (user != null) {
             if (user.getSecretLevel().getLevel() < post.getSecretLevel().getLevel()) {
                 throw new SecretLevelException("您当前的保密等级无权查看此文章内容。");
@@ -133,11 +141,50 @@ public final class BlogDomain {
         if (user != null) {
             // 保密等级判断
             criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevel().getLevel());
+        } else {
+            criteria.andSecretLevelEqualTo(SecretLevel.UNCLASSIFIED.getLevel());
         }
         List<BlogCategory> blogCategories = categoryMapper.selectByExample(example);
         List<Category> categories = new CopyOnWriteArrayList<>();
         blogCategories.forEach(blogCategory -> categories.add(initCategory(blogCategory.getId())));
         return categories;
+    }
+
+    /**
+     * 最热文章Top10
+     *
+     * @param user 当前登陆用户
+     * @return
+     */
+    public static List<Post> hotPostTop10(User user) {
+        BlogDomain blogDomain = new BlogDomain();
+        return blogDomain.getHotPostTop10(user);
+    }
+
+    /**
+     * 最热文章Top10
+     *
+     * @param user 当前登陆用户
+     * @return
+     */
+    private List<Post> getHotPostTop10(User user) {
+        BlogPostsExample example = new BlogPostsExample();
+        BlogPostsExample.Criteria criteria = example.createCriteria();
+        if (user != null) {
+            // 保密等级判断
+            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevel().getLevel());
+        } else {
+            criteria.andSecretLevelEqualTo(SecretLevel.UNCLASSIFIED.getLevel());
+        }
+        criteria
+                .andPostStatusEqualTo(PostStatus.PUBLISH.toString())
+                .andPostDateLessThanOrEqualTo(new Date());
+        example.setOrderByClause("avg_views DESC,post_date DESC");
+        PageHelper.startPage(1, 10);
+        List<BlogPostsWithBLOBs> blogPostList = blogPostsMapper.selectByExampleWithBLOBs(example);
+        List<Post> postList = new CopyOnWriteArrayList<>();
+        blogPostList.forEach(blogPost -> postList.add(convert(blogPost)));
+        return postList;
     }
 
     private Post initPost(Long id) throws BlogPostNotExistException {
@@ -147,8 +194,25 @@ public final class BlogDomain {
         if (blogPost == null || PostStatus.DELETED.toString().equals(blogPost.getPostStatus())) {
             throw new BlogPostNotExistException("博客文章不存在");
         }
+        return convert(blogPost);
+    }
+
+    private Category initCategory(Long categoryId) {
+        BlogCategory blogCategory = categoryMapper.selectByPrimaryKey(categoryId);
+        if (blogCategory == null) {
+            return null;
+        }
+        return Category.builder()
+                .id(blogCategory.getId())
+                .enName(blogCategory.getEnName())
+                .zhName(blogCategory.getZhName())
+                .secretLevel(SecretLevel.valueOf(blogCategory.getSecretLevel()))
+                .build();
+    }
+
+    private Post convert(BlogPostsWithBLOBs blogPost) {
         return Post.builder()
-                .id(id)
+                .id(blogPost.getId())
                 .title(blogPost.getPostTitle())
                 .keyword(blogPost.getPostKeyword())
                 .excerpt(blogPost.getPostExcerpt())
@@ -171,19 +235,6 @@ public final class BlogDomain {
                 .avgComment(blogPost.getAvgComment())
                 .pageRank(blogPost.getPageRank())
                 .secretLevel(SecretLevel.valueOf(blogPost.getSecretLevel()))
-                .build();
-    }
-
-    private Category initCategory(Long categoryId) {
-        BlogCategory blogCategory = categoryMapper.selectByPrimaryKey(categoryId);
-        if (blogCategory == null) {
-            return null;
-        }
-        return Category.builder()
-                .id(blogCategory.getId())
-                .enName(blogCategory.getEnName())
-                .zhName(blogCategory.getZhName())
-                .secretLevel(SecretLevel.valueOf(blogCategory.getSecretLevel()))
                 .build();
     }
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.blog.Category;
+import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
@@ -58,11 +59,11 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     @Override
     public BlogDomain getBlogById(Long id, User user) throws BlogPostNotExistException,
             BlogPostNeedPasswordException, SecretLevelException {
-        return getBlogById(id, user, null);
+        return getBlogById(id, user, null, false);
     }
 
     /**
-     * 根据ID、密码获取公开的博客文章
+     * 根据ID获取公开的博客文章
      *
      * @param id       文章ID
      * @param user     当前查看的用户
@@ -73,7 +74,25 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @throws SecretLevelException          保密等级异常
      */
     @Override
-    public BlogDomain getBlogById(Long id, User user, String password)
+    public BlogDomain getBlogById(Long id, User user, String password) throws BlogPostNotExistException,
+            BlogPostNeedPasswordException, SecretLevelException {
+        return getBlogById(id, user, password, false);
+    }
+
+    /**
+     * 根据ID、密码获取公开的博客文章
+     *
+     * @param id       文章ID
+     * @param user     当前查看的用户
+     * @param password 查看文章的密码
+     * @param isAdmin  是否是管理员操作
+     * @return BlogDomain
+     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws BlogPostNeedPasswordException 文章需要密码异常
+     * @throws SecretLevelException          保密等级异常
+     */
+    @Override
+    public BlogDomain getBlogById(Long id, User user, String password, boolean isAdmin)
             throws BlogPostNotExistException, BlogPostNeedPasswordException, SecretLevelException {
         BlogDomain blogDomain = null;
         String redisKey = REDIS_KEY_BLOG + "post:" + id;
@@ -88,7 +107,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             }
         }
         if (blogDomain == null) {
-            blogDomain = new BlogDomain(id, user, password);
+            blogDomain = new BlogDomain(id, user, password, isAdmin);
             if (SYSTEM_CONFIG.isEnableRedis()) {
                 redisService.set(redisKey, blogDomain, SYSTEM_CONFIG.getDefaultCacheSeconds());
             }
@@ -149,6 +168,15 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                     lastCommentList.add(link);
                 });
             }
+            // 热文排行
+            List<LinkVO> hotPostList = new CopyOnWriteArrayList<>();
+            List<Post> postList = BlogDomain.hotPostTop10(user);
+            postList.forEach(post -> {
+                LinkVO link = new LinkVO();
+                link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + post.getId());
+                link.setText(post.getTitle());
+                hotPostList.add(link);
+            });
             postSidebarVO = PostSidebarVO.builder()
                     .postSidebars(new ArrayList<PostSidebarVO.PostSidebar>() {{
                         this.add(PostSidebarVO.PostSidebar.builder()
@@ -165,7 +193,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                                 .build());
                         this.add(PostSidebarVO.PostSidebar.builder()
                                 .title("热文排行")
-                                .link(null)
+                                .link(hotPostList)
                                 .build());
                     }})
                     .build();
