@@ -62,10 +62,11 @@ public class BlogPostController extends BaseController {
             noHandlerFoundException();
         }
         PostPageView<BlogDomain> postPageView = buildPageView(PostPageView.class, blogDomain);
+        assert blogDomain != null;
         SocialSharing socialSharing = new SocialSharing(blogDomain);
         mv.addObject("pageView", postPageView);
         mv.addObject("socialSharing", socialSharing);
-        mv.addObject("PostSidebar", blogService.buildPostSidebar(blogDomain));
+        mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
         mv.setViewName("blog/post");
         blogService.view(blogDomain);
         return mv;

@@ -3,6 +3,7 @@ package net.renfei.services.blog;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.CommentDomain;
+import net.renfei.domain.blog.Category;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
@@ -87,31 +88,10 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             }
         }
         if (blogDomain == null) {
-            blogDomain = new BlogDomain(id);
+            blogDomain = new BlogDomain(id, user, password);
             if (SYSTEM_CONFIG.isEnableRedis()) {
                 redisService.set(redisKey, blogDomain, SYSTEM_CONFIG.getDefaultCacheSeconds());
             }
-        }
-        // 判断文章状态和保密等级权限
-        if (!PostStatus.PUBLISH.equals(blogDomain.getPost().getPostStatus())) {
-            throw new BlogPostNotExistException("文章当前状态不可被阅读。");
-        }
-        if (!ObjectUtils.isEmpty(blogDomain.getPost().getPostPassword())) {
-            if (ObjectUtils.isEmpty(password)) {
-                throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
-            } else {
-                // 判断密码是否正确
-                if (!PasswordUtils.verifyPassword(password, blogDomain.getPost().getPostPassword())) {
-                    throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
-                }
-            }
-        }
-        if (user != null) {
-            if (user.getSecretLevel().getLevel() < blogDomain.getPost().getSecretLevel().getLevel()) {
-                throw new SecretLevelException("您当前的保密等级无权查看此文章内容。");
-            }
-        } else if (SecretLevel.UNCLASSIFIED.getLevel() < blogDomain.getPost().getSecretLevel().getLevel()) {
-            throw new SecretLevelException("当前文章内容受到保密系统保护，请先登陆后查看。");
         }
         return blogDomain;
     }
@@ -130,11 +110,10 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     /**
      * 构建博客侧边栏内容
      *
-     * @param blogDomain 博文领域对象
      * @return
      */
     @Override
-    public PostSidebarVO buildPostSidebar(BlogDomain blogDomain) {
+    public PostSidebarVO buildPostSidebar(User user) {
         PostSidebarVO postSidebarVO = null;
         String redisKey = REDIS_KEY_BLOG + "post:sidebar";
         assert SYSTEM_CONFIG != null;
@@ -151,8 +130,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             // 缓存未命中，从数据库中组织数据
             // 博客分类们
             List<LinkVO> blogCategoryLinks = new CopyOnWriteArrayList<>();
-            List<BlogCategory> blogCategories = blogDomain.getAllBlogCategory();
-            blogCategories.forEach(blogCategory -> {
+            List<Category> allCategoryList = BlogDomain.allBlogCategory(user);
+            allCategoryList.forEach(blogCategory -> {
                 LinkVO link = new LinkVO();
                 link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/cat/posts/" + blogCategory.getEnName());
                 link.setText(blogCategory.getZhName());
@@ -162,7 +141,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             List<LinkVO> lastCommentList = new CopyOnWriteArrayList<>();
             CommentDomain commentDomain = new CommentDomain();
             List<Comment> commentList = commentDomain.lastCommentTop10(SystemTypeEnum.BLOG);
-            if(commentList!=null){
+            if (commentList != null) {
                 commentList.forEach(comment -> {
                     LinkVO link = new LinkVO();
                     link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + comment.getObjectId() + "#cmt" + comment.getId());

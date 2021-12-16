@@ -50,8 +50,7 @@ public interface BlogService {
     /**
      * 构建博客侧边栏内容
      *
-     * @param blogDomain 博文领域对象
      * @return
      */
-    PostSidebarVO buildPostSidebar(BlogDomain blogDomain);
+    PostSidebarVO buildPostSidebar(User user);
 }
