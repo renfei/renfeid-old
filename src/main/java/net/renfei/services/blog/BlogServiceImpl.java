@@ -158,8 +158,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             });
             // 最新评论
             List<LinkVO> lastCommentList = new CopyOnWriteArrayList<>();
-            CommentDomain commentDomain = new CommentDomain();
-            List<Comment> commentList = commentDomain.lastCommentTop10(SystemTypeEnum.BLOG);
+            List<Comment> commentList = CommentDomain.lastCommentTop10(SystemTypeEnum.BLOG);
             if (commentList != null) {
                 commentList.forEach(comment -> {
                     LinkVO link = new LinkVO();

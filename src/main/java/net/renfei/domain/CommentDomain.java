@@ -83,7 +83,24 @@ public final class CommentDomain {
         this.commentList = buildCommentList(systemType, objectId, null);
     }
 
-    public List<Comment> lastCommentTop10(SystemTypeEnum systemType) {
+    /**
+     * 最新的10个评论
+     *
+     * @param systemType 子系统类型
+     * @return
+     */
+    public static List<Comment> lastCommentTop10(SystemTypeEnum systemType) {
+        CommentDomain commentDomain = new CommentDomain();
+        return commentDomain.getLastCommentTop10(systemType);
+    }
+
+    /**
+     * 最新的10个评论
+     *
+     * @param systemType 子系统类型
+     * @return
+     */
+    private List<Comment> getLastCommentTop10(SystemTypeEnum systemType) {
         SysCommentsExample example = new SysCommentsExample();
         example.setOrderByClause("addtime DESC");
         example.createCriteria()
