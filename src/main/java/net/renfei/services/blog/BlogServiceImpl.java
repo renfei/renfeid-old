@@ -6,6 +6,7 @@ import net.renfei.domain.CommentDomain;
 import net.renfei.domain.blog.Category;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
+import net.renfei.domain.system.SysKeywordTag;
 import net.renfei.domain.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
@@ -47,7 +48,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param id   文章ID
      * @param user 当前查看的用户
      * @return BlogDomain
-     * @throws NotExistException     文章不存在异常
+     * @throws NotExistException             文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
@@ -64,7 +65,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param user     当前查看的用户
      * @param password 查看文章的密码
      * @return BlogDomain
-     * @throws NotExistException     文章不存在异常
+     * @throws NotExistException             文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
@@ -82,7 +83,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param password 查看文章的密码
      * @param isAdmin  是否是管理员操作
      * @return BlogDomain
-     * @throws NotExistException     文章不存在异常
+     * @throws NotExistException             文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
@@ -151,6 +152,15 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 link.setText(blogCategory.getZhName());
                 blogCategoryLinks.add(link);
             });
+            // 标签云
+            List<LinkVO> allTagList = new CopyOnWriteArrayList<>();
+            List<SysKeywordTag> keywordTagList = SysKeywordTag.keywordTagList(SystemTypeEnum.BLOG);
+            keywordTagList.forEach(keywordTag -> {
+                LinkVO link = new LinkVO();
+                link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/posts/tag/" + keywordTag.getEnName());
+                link.setText(keywordTag.getZhName() + " (" + keywordTag.getCount() + ")");
+                allTagList.add(link);
+            });
             // 最新评论
             List<LinkVO> lastCommentList = new CopyOnWriteArrayList<>();
             List<Comment> commentList = CommentDomain.lastCommentTop10(SystemTypeEnum.BLOG);
@@ -179,7 +189,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                                 .build());
                         this.add(PostSidebarVO.PostSidebar.builder()
                                 .title("标签云")
-                                .link(null)
+                                .link(allTagList)
                                 .build());
                         this.add(PostSidebarVO.PostSidebar.builder()
                                 .title("最新留言")

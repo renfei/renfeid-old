@@ -108,10 +108,10 @@ public final class SysKeywordTag {
         for (Map<String, Object> data : dataList
         ) {
             SysKeywordTag sysKeywordTag = new SysKeywordTag();
-            sysKeywordTag.setId((Long) data.get("id"));
-            sysKeywordTag.setEnName((String) data.get("en_name"));
-            sysKeywordTag.setZhName((String) data.get("zh_name"));
-            sysKeywordTag.setCount((Long) data.get("CNT"));
+            sysKeywordTag.setId(Long.parseLong(data.get("id").toString()));
+            sysKeywordTag.setEnName(data.get("en_name").toString());
+            sysKeywordTag.setZhName(data.get("zh_name").toString());
+            sysKeywordTag.setCount(Long.parseLong(data.get("CNT").toString()));
             sysKeywordTagList.add(sysKeywordTag);
         }
         return sysKeywordTagList;
