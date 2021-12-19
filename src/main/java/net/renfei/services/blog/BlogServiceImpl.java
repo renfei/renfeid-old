@@ -9,21 +9,16 @@ import net.renfei.domain.comment.Comment;
 import net.renfei.domain.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
-import net.renfei.exception.BlogPostNotExistException;
+import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.LinkVO;
-import net.renfei.model.PostStatus;
-import net.renfei.model.SecretLevel;
 import net.renfei.model.blog.PostSidebarVO;
-import net.renfei.repositories.model.BlogCategory;
 import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
 import net.renfei.utils.ApplicationContextUtil;
-import net.renfei.utils.PasswordUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +47,12 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param id   文章ID
      * @param user 当前查看的用户
      * @return BlogDomain
-     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
     @Override
-    public BlogDomain getBlogById(Long id, User user) throws BlogPostNotExistException,
+    public BlogDomain getBlogById(Long id, User user) throws NotExistException,
             BlogPostNeedPasswordException, SecretLevelException {
         return getBlogById(id, user, null, false);
     }
@@ -69,12 +64,12 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param user     当前查看的用户
      * @param password 查看文章的密码
      * @return BlogDomain
-     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
     @Override
-    public BlogDomain getBlogById(Long id, User user, String password) throws BlogPostNotExistException,
+    public BlogDomain getBlogById(Long id, User user, String password) throws NotExistException,
             BlogPostNeedPasswordException, SecretLevelException {
         return getBlogById(id, user, password, false);
     }
@@ -87,13 +82,13 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param password 查看文章的密码
      * @param isAdmin  是否是管理员操作
      * @return BlogDomain
-     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
     @Override
     public BlogDomain getBlogById(Long id, User user, String password, boolean isAdmin)
-            throws BlogPostNotExistException, BlogPostNeedPasswordException, SecretLevelException {
+            throws NotExistException, BlogPostNeedPasswordException, SecretLevelException {
         BlogDomain blogDomain = null;
         String redisKey = REDIS_KEY_BLOG + "post:" + id;
         assert SYSTEM_CONFIG != null;
