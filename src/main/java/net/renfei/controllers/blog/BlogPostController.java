@@ -7,18 +7,19 @@ import net.renfei.domain.blog.Post;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
-import net.renfei.model.APIResult;
-import net.renfei.model.OGProtocol;
-import net.renfei.model.SocialSharing;
-import net.renfei.model.StateCode;
+import net.renfei.model.*;
 import net.renfei.model.blog.PostPageView;
 import net.renfei.services.BlogService;
+import net.renfei.services.PaginationService;
+import net.renfei.utils.NumberUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.List;
 
 /**
  * 博客栏目
@@ -29,11 +30,40 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/posts")
 public class BlogPostController extends BaseController {
-    private static final String REDIS_KEY_PAGE_BLOG = "renfeid:page:blog:";
     private final BlogService blogService;
+    private final PaginationService paginationService;
 
-    public BlogPostController(BlogService blogService) {
+    public BlogPostController(BlogService blogService,
+                              PaginationService paginationService) {
         this.blogService = blogService;
+        this.paginationService = paginationService;
+    }
+
+    @RequestMapping("")
+    public ModelAndView getPostList(ModelAndView mv,
+                                    @RequestParam(value = "page", required = false) String page) {
+        mv.addObject("catTitle", "全部文档");
+        ListData<BlogDomain> blogDomainListData = BlogDomain.allPostList(getSignUser(), false, NumberUtils.parseInt(page, 1), 15);
+        PostPageView<List<BlogDomain>> postPageView = buildPageView(PostPageView.class, blogDomainListData.getData());
+        assert SYSTEM_CONFIG != null;
+        postPageView.getPageHead().setTitle("任霏的博客文章 - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("pageView", postPageView);
+        mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
+        setPagination(paginationService, mv, page, blogDomainListData.getTotal(), "/posts?page=");
+        mv.setViewName("blog/list");
+        return mv;
+    }
+
+    /**
+     * 博客列表错误地址重定向
+     *
+     * @return
+     */
+    @RequestMapping({"index.html", "index.htm", "index.xhtml", "index.shtml"})
+    public RedirectView getPostListDir() {
+        RedirectView redirectView = new RedirectView("/posts/");
+        redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+        return redirectView;
     }
 
 
@@ -69,7 +99,7 @@ public class BlogPostController extends BaseController {
         mv.addObject("socialSharing", socialSharing);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
         assert SYSTEM_CONFIG != null;
-        mv.addObject("title", blogDomain.getPost().getTitle() + " - Posts - " + SYSTEM_CONFIG.getSiteName());
+        postPageView.getPageHead().setTitle(blogDomain.getPost().getTitle() + " - Posts - " + SYSTEM_CONFIG.getSiteName());
         mv.addObject("jsonld", blogService.getJsonld(blogDomain));
         postPageView.getPageHead().setOgProtocol(OGProtocol.builder()
                 .author(blogDomain.getPost().getSourceName())
@@ -129,7 +159,7 @@ public class BlogPostController extends BaseController {
      * @param id 文章ID
      * @return RedirectView
      */
-    @RequestMapping("{id}/index.html")
+    @RequestMapping({"{id}/index.html", "{id}/index.htm", "{id}/index.xhtml", "{id}/index.shtml"})
     public RedirectView getPostInfoDir(@PathVariable("id") String id) {
         RedirectView redirectView = new RedirectView("/posts/" + id);
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);

@@ -8,6 +8,7 @@ import net.renfei.model.PageFooter;
 import net.renfei.model.PageHead;
 import net.renfei.model.PageHeader;
 import net.renfei.model.PageView;
+import net.renfei.services.PaginationService;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,23 @@ public abstract class BaseController {
     protected void noHandlerFoundException() throws NoHandlerFoundException {
         HttpHeaders headers = new HttpHeaders();
         throw new NoHandlerFoundException(request.getMethod(), request.getRequestURL().toString(), headers);
+    }
+
+    protected void setPagination(PaginationService paginationService, ModelAndView mv, String page, Long count, String link) {
+        setPagination(paginationService, mv, page, count, 10, link);
+    }
+
+    protected void setPagination(PaginationService paginationService, ModelAndView mv, String page, Long count, int rows, String link) {
+        int totalPage = Integer.parseInt((count / rows) + "");
+        if (count % rows > 0) {
+            totalPage++;
+        }
+        if (totalPage <= 0) {
+            totalPage = 1;
+        }
+        assert SYSTEM_CONFIG != null;
+        assert paginationService != null;
+        mv.addObject("paginationList", paginationService.getPagination(page, totalPage, SYSTEM_CONFIG.getSiteDomainName() + link));
     }
 
     protected User getSignUser() {

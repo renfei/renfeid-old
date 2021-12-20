@@ -1,5 +1,6 @@
 package net.renfei.domain;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.Getter;
 import net.renfei.domain.blog.Category;
@@ -11,6 +12,7 @@ import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.CommentStatus;
+import net.renfei.model.ListData;
 import net.renfei.model.PostStatus;
 import net.renfei.model.SecretLevel;
 import net.renfei.repositories.BlogCategoryMapper;
@@ -22,6 +24,7 @@ import net.renfei.repositories.model.BlogPostsWithBLOBs;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.ListUtils;
 import net.renfei.utils.PasswordUtils;
+import net.renfei.utils.SentryUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
@@ -91,7 +94,7 @@ public final class BlogDomain {
                     throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
                 } else {
                     // 判断密码是否正确
-                    if (!PasswordUtils.verifyPassword(password, post.getPostPassword())) {
+                    if (!password.equals(post.getPostPassword())) {
                         throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
                     }
                 }
@@ -116,6 +119,80 @@ public final class BlogDomain {
         BlogPostsWithBLOBs blogPost = ListUtils.getOne(blogPostsMapper.selectByExampleWithBLOBs(example));
         blogPost.setPostViews(blogPost.getPostViews() + 1);
         blogPostsMapper.updateByExampleWithBLOBs(blogPost, example);
+    }
+
+    /**
+     * 获取全部文章列表
+     *
+     * @param user    登录用户
+     * @param isAdmin 是否是管理员操作
+     * @param pages   页码
+     * @param rows    每页容量
+     * @return
+     */
+    public static ListData<BlogDomain> allPostList(User user, boolean isAdmin, int pages, int rows) {
+        BlogDomain blogDomain = new BlogDomain();
+        return blogDomain.getAllPostList(user, isAdmin, pages, rows);
+    }
+
+    /**
+     * 获取全部文章列表
+     *
+     * @param user    登录用户
+     * @param isAdmin 是否是管理员操作
+     * @param pages   页码
+     * @param rows    每页容量
+     * @return
+     */
+    public ListData<BlogDomain> getAllPostList(User user, boolean isAdmin, int pages, int rows) {
+        BlogPostsExample example = new BlogPostsExample();
+        example.setOrderByClause("post_date DESC");
+        BlogPostsExample.Criteria criteria = example.createCriteria();
+        if (user != null) {
+            // 登录用户，判断保密等级
+            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevel().getLevel());
+            if (isAdmin) {
+                // 管理员，除了被删除和修订版本，其他都显示
+                criteria
+                        .andPostStatusNotEqualTo(PostStatus.DELETED.toString())
+                        .andPostStatusNotEqualTo(PostStatus.REVISION.toString());
+            } else {
+                // 其他用户，只能查看已经发布的内容
+                criteria
+                        .andPostDateLessThanOrEqualTo(new Date())
+                        .andPostStatusEqualTo(PostStatus.PUBLISH.toString());
+            }
+        } else {
+            // 未登录用户，只能查看非密内容、已经发布的内容
+            criteria
+                    .andSecretLevelLessThanOrEqualTo(SecretLevel.UNCLASSIFIED.getLevel())
+                    .andPostDateLessThanOrEqualTo(new Date())
+                    .andPostStatusEqualTo(PostStatus.PUBLISH.toString());
+        }
+        Page<BlogPostsWithBLOBs> page = PageHelper.startPage(pages, rows);
+        blogPostsMapper.selectByExampleWithBLOBs(example);
+        ListData<BlogDomain> blogDomainListData = new ListData<>(page);
+        List<BlogDomain> data = new CopyOnWriteArrayList<>();
+        for (BlogPostsWithBLOBs blogPostsWithBLOBs : page.getResult()
+        ) {
+            BlogDomain blogDomain;
+            try {
+                blogDomain = new BlogDomain(blogPostsWithBLOBs.getId(), user, blogPostsWithBLOBs.getPostPassword(), isAdmin);
+            } catch (BlogPostNotExistException | SecretLevelException | BlogPostNeedPasswordException exception) {
+                SentryUtils.captureException(exception);
+                continue;
+            }
+            if (user == null || !isAdmin) {
+                // 未登录或者不是管理员，需要密码的文章隐藏内容和概述
+                if (!ObjectUtils.isEmpty(blogPostsWithBLOBs.getPostPassword())) {
+                    blogDomain.getPost().setContent("");
+                    blogDomain.getPost().setExcerpt("");
+                }
+            }
+            data.add(blogDomain);
+        }
+        blogDomainListData.setData(data);
+        return blogDomainListData;
     }
 
     /**
