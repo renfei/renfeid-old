@@ -8,7 +8,7 @@ import net.renfei.domain.comment.Comment;
 import net.renfei.domain.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
-import net.renfei.exception.BlogPostNotExistException;
+import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.CommentStatus;
 import net.renfei.model.PostStatus;
@@ -68,12 +68,12 @@ public final class BlogDomain {
      * @param user     当前登陆用户
      * @param password 博客文章密码
      * @param isAdmin  是否是管理员管理操作
-     * @throws BlogPostNotExistException 文章不存在异常
+     * @throws NotExistException 文章不存在异常
      */
     public BlogDomain(Long id, User user, String password, boolean isAdmin)
-            throws BlogPostNotExistException, BlogPostNeedPasswordException, SecretLevelException {
+            throws NotExistException, BlogPostNeedPasswordException, SecretLevelException {
         if (id == null) {
-            throw new BlogPostNotExistException("博客文章不存在");
+            throw new NotExistException("博客文章不存在");
         }
         post = initPost(id);
         author = new User(post.getPostAuthor());
@@ -83,7 +83,7 @@ public final class BlogDomain {
             // 如果不是管理员操作，需要更多限制判断
             // 判断文章状态
             if (!PostStatus.PUBLISH.equals(post.getPostStatus())) {
-                throw new BlogPostNotExistException("文章当前状态不可被阅读。");
+                throw new NotExistException("文章当前状态不可被阅读。");
             }
             // 判断密码正确性
             if (!ObjectUtils.isEmpty(post.getPostPassword())) {
@@ -187,12 +187,12 @@ public final class BlogDomain {
         return postList;
     }
 
-    private Post initPost(Long id) throws BlogPostNotExistException {
+    private Post initPost(Long id) throws NotExistException {
         BlogPostsExample example = new BlogPostsExample();
         example.createCriteria().andIdEqualTo(id);
         BlogPostsWithBLOBs blogPost = ListUtils.getOne(blogPostsMapper.selectByExampleWithBLOBs(example));
         if (blogPost == null || PostStatus.DELETED.toString().equals(blogPost.getPostStatus())) {
-            throw new BlogPostNotExistException("博客文章不存在");
+            throw new NotExistException("博客文章不存在");
         }
         return convert(blogPost);
     }

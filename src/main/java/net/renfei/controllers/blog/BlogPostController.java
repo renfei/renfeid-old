@@ -5,7 +5,7 @@ import net.renfei.controllers.BaseController;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.blog.Post;
 import net.renfei.exception.BlogPostNeedPasswordException;
-import net.renfei.exception.BlogPostNotExistException;
+import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.APIResult;
 import net.renfei.model.OGProtocol;
@@ -52,7 +52,7 @@ public class BlogPostController extends BaseController {
         // 页面没查到缓存，去数据库查询
         try {
             blogDomain = blogService.getBlogById(id, getSignUser());
-        } catch (BlogPostNotExistException e) {
+        } catch (NotExistException e) {
             noHandlerFoundException();
         } catch (BlogPostNeedPasswordException e) {
             // TODO 文章需要密码才能查看
@@ -103,7 +103,7 @@ public class BlogPostController extends BaseController {
         // 页面没查到缓存，去数据库查询
         try {
             blogDomain = blogService.getBlogById(id, getSignUser(), password);
-        } catch (BlogPostNotExistException e) {
+        } catch (NotExistException e) {
             return APIResult.builder()
                     .code(StateCode.Failure)
                     .message("文章不存在。")

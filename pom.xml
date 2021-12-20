@@ -62,9 +62,9 @@
         <perf4j.version>0.9.16</perf4j.version>
         <curator.version>2.6.0</curator.version>
         <openfeign.version>3.1.0</openfeign.version>
-        <sentry.version>5.5.0</sentry.version>
+        <sentry.version>5.5.1</sentry.version>
         <email.version>2.6.1</email.version>
-        <springdoc.version>1.6.1</springdoc.version>
+        <springdoc.version>1.6.2</springdoc.version>
         <sonar.organization>renfei</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.16.0</version>
+            <version>2.17.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

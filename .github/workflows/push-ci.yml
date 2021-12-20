@@ -7,6 +7,8 @@ jobs:
     name: building
     runs-on: ubuntu-latest
 
+    if: github.event.repository.owner.id == github.event.sender.id
+
     services:
       mysql:
         image: mysql:5.7

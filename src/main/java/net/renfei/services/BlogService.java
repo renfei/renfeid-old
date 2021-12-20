@@ -3,7 +3,7 @@ package net.renfei.services;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
-import net.renfei.exception.BlogPostNotExistException;
+import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.blog.PostSidebarVO;
 
@@ -19,11 +19,11 @@ public interface BlogService {
      * @param id   文章ID
      * @param user 当前查看的用户
      * @return BlogDomain
-     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
-    BlogDomain getBlogById(Long id, User user) throws BlogPostNotExistException,
+    BlogDomain getBlogById(Long id, User user) throws NotExistException,
             BlogPostNeedPasswordException, SecretLevelException;
 
     /**
@@ -33,11 +33,11 @@ public interface BlogService {
      * @param user     当前查看的用户
      * @param password 查看文章的密码
      * @return BlogDomain
-     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
-    BlogDomain getBlogById(Long id, User user, String password) throws BlogPostNotExistException,
+    BlogDomain getBlogById(Long id, User user, String password) throws NotExistException,
             BlogPostNeedPasswordException, SecretLevelException;
 
     /**
@@ -48,12 +48,12 @@ public interface BlogService {
      * @param password 查看文章的密码
      * @param isAdmin  是否是管理员操作
      * @return BlogDomain
-     * @throws BlogPostNotExistException     文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws BlogPostNeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
     BlogDomain getBlogById(Long id, User user, String password, boolean isAdmin)
-            throws BlogPostNotExistException, BlogPostNeedPasswordException, SecretLevelException;
+            throws NotExistException, BlogPostNeedPasswordException, SecretLevelException;
 
     /**
      * 增加博客文章的阅读量，交给线程池异步执行
