@@ -69,6 +69,8 @@ public class BlogPostController extends BaseController {
         mv.addObject("socialSharing", socialSharing);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
         assert SYSTEM_CONFIG != null;
+        mv.addObject("title", blogDomain.getPost().getTitle() + " - Posts - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("jsonld", blogService.getJsonld(blogDomain));
         postPageView.getPageHead().setOgProtocol(OGProtocol.builder()
                 .author(blogDomain.getPost().getSourceName())
                 .description(blogDomain.getPost().getExcerpt())

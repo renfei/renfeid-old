@@ -68,4 +68,6 @@ public interface BlogService {
      * @return
      */
     PostSidebarVO buildPostSidebar(User user);
+
+    String getJsonld(BlogDomain blogDomain);
 }

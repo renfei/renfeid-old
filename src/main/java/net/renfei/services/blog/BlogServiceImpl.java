@@ -25,6 +25,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -201,5 +202,76 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             }
         }
         return postSidebarVO;
+    }
+
+    @Override
+    public String getJsonld(BlogDomain blogDomain) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+08:00'");
+        assert SYSTEM_CONFIG != null;
+        return getCommonTop() +
+                "\"@type\": \"NewsArticle\"," +
+                "\"dateModified\":\"" + sdf.format(blogDomain.getPost().getPostDate()) + "\"," +
+                "\"datePublished\":\"" + sdf.format(blogDomain.getPost().getPostDate()) + "\"," +
+                "\"headline\":\"" + blogDomain.getPost().getTitle().replace("\"", "") + "\"," +
+                "\"image\":\"" + (blogDomain.getPost().getFeaturedImage() == null ? "https://cdn.renfei.net/Logo/ogimage.png" : blogDomain.getPost().getFeaturedImage()) + "\"," +
+                "\"author\":{" +
+                "\"@type\": \"Person\"," +
+                "\"name\": \"" + (blogDomain.getPost().getSourceName() == null ? "任霏" : blogDomain.getPost().getSourceName()) + "\"" +
+                "}," +
+                "\"publisher\":{" +
+                "\"@type\": \"Organization\"," +
+                "\"name\": \"" + SYSTEM_CONFIG.getSiteName() + "\"," +
+                "\"logo\": {" +
+                "\"@type\": \"ImageObject\"," +
+                "\"url\": \"https://cdn.renfei.net/Logo/logo_112.png\"" +
+                "}" +
+                "}," +
+                "\"description\": \"" + blogDomain.getPost().getExcerpt() + "\"," +
+                "\"mainEntityOfPage\": {" +
+                "\"@type\":\"WebPage\"," +
+                "\"@id\":\"" + SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogDomain.getPost().getId() + "\"" +
+                "}," +
+                "\"speakable\": {" +
+                "\"@type\": \"SpeakableSpecification\"," +
+                "\"xpath\": [" +
+                "\"/html/head/title\"," +
+                "\"/html/head/meta[@name='description']/@content\"" +
+                "]" +
+                "}" +
+                "}" +
+                "]" +
+                "}";
+    }
+
+    private String getCommonTop() {
+        return "{" +
+                "\"@context\": \"http://schema.org/\"," +
+                "\"@graph\": [" +
+                "{" +
+                "\"@type\": \"Organization\"," +
+                "\"logo\": \"https://cdn.renfei.net/Logo/logo_112.png\"," +
+                "\"url\": \"https://www.renfei.net\"" +
+                "}," +
+                "{" +
+                "\"@type\": \"WebSite\"," +
+                "\"url\": \"https://www.renfei.net\"," +
+                "\"potentialAction\": {" +
+                "\"@type\": \"SearchAction\"," +
+                "\"target\": \"https://www.renfei.net/search?type=all&w={search_term_string}\"," +
+                "\"query-input\": \"required name=search_term_string\"" +
+                "}" +
+                "}," +
+                "{" +
+                "\"@type\": \"Person\"," +
+                "\"name\": \"任霏\"," +
+                "\"url\": \"https://www.renfei.net\"," +
+                "\"sameAs\": [" +
+                "\"https://github.com/NeilRen\"," +
+                "\"https://www.facebook.com/renfeii\"," +
+                "\"https://twitter.com/renfeii\"," +
+                "\"https://www.youtube.com/channel/UCPsjiVvFMS7piLgC-RHBWxg\"" +
+                "]" +
+                "}," +
+                "{";
     }
 }
