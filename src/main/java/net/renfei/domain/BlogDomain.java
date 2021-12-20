@@ -23,7 +23,6 @@ import net.renfei.repositories.model.BlogPostsExample;
 import net.renfei.repositories.model.BlogPostsWithBLOBs;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.ListUtils;
-import net.renfei.utils.PasswordUtils;
 import net.renfei.utils.SentryUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -178,7 +177,7 @@ public final class BlogDomain {
             BlogDomain blogDomain;
             try {
                 blogDomain = new BlogDomain(blogPostsWithBLOBs.getId(), user, blogPostsWithBLOBs.getPostPassword(), isAdmin);
-            } catch (BlogPostNotExistException | SecretLevelException | BlogPostNeedPasswordException exception) {
+            } catch (NotExistException | SecretLevelException | BlogPostNeedPasswordException exception) {
                 SentryUtils.captureException(exception);
                 continue;
             }
