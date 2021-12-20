@@ -8,6 +8,7 @@ import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.BlogPostNotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.APIResult;
+import net.renfei.model.OGProtocol;
 import net.renfei.model.SocialSharing;
 import net.renfei.model.StateCode;
 import net.renfei.model.blog.PostPageView;
@@ -67,6 +68,19 @@ public class BlogPostController extends BaseController {
         mv.addObject("pageView", postPageView);
         mv.addObject("socialSharing", socialSharing);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
+        assert SYSTEM_CONFIG != null;
+        postPageView.getPageHead().setOgProtocol(OGProtocol.builder()
+                .author(blogDomain.getPost().getSourceName())
+                .description(blogDomain.getPost().getExcerpt())
+                .image(blogDomain.getPost().getFeaturedImage())
+                .locale("zh_CN")
+                .releaseDate(blogDomain.getPost().getPostDate())
+                .siteName("RenFei.Net")
+                .title(blogDomain.getPost().getTitle())
+                .type("article")
+                .url(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogDomain.getPost().getId())
+                .build());
+        // TODO 获取文章扩展信息
         mv.setViewName("blog/post");
         blogService.view(blogDomain);
         return mv;

@@ -37,7 +37,7 @@
                 <meta name="twitter:title" content="${pageView.pageHead.ogProtocol.title!}">
                 <meta name="twitter:description" content="${pageView.pageHead.ogProtocol.description!}">
                 <meta name="twitter:domain" content="www.renfei.net">
-                <meta name="twitter:image:src" content="${pageView.pageHead..ogProtocol.image!}">
+                <meta name="twitter:image:src" content="${pageView.pageHead.ogProtocol.image!}">
                 <meta name="og:image:alt" content="RenFei 任霏">
             </#if>
             <meta property="fb:app_id" content="${pageView.pageHead.fbAppId!}"/>
