@@ -10,15 +10,15 @@ services:
 
 variables:
   # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
-  MYSQL_DATABASE: renfeid
-  MYSQL_ROOT_PASSWORD: root
-  MYSQL_ALLOW_EMPTY_PASSWORD: yes
+  MYSQL_DATABASE: "renfeid"
+  MYSQL_ROOT_PASSWORD: "root"
+  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 
 connect:
   image: mysql
   script:
     - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
-    - mysql -h 127.0.0.1 -P $PORT -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
+    - mysql -h 127.0.0.1 -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
 
 cache:
   paths:
