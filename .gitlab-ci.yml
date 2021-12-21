@@ -1,0 +1,36 @@
+image: maven:latest
+
+stages:
+  - build
+  - test
+
+services:
+  - mysql:5.7
+  - redis:6.0.1
+
+variables:
+  # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: renfeid
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_ALLOW_EMPTY_PASSWORD: yes
+
+connect:
+  image: mysql
+  script:
+    - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
+    - mysql -h 127.0.0.1 -P $PORT -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+build:
+  stage: build
+  script:
+    - mvn compile
+
+test:
+  stage: test
+  script:
+    - mvn test
