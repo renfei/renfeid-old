@@ -101,7 +101,7 @@ public class DefaultController extends BaseController {
                 "\n" +
                 "User-agent: *\n" +
                 "\n" +
-                "Disallow: /private/\n" +
+                "Disallow: /_api/background/\n" +
                 "\n" +
                 "Sitemap: " + SYSTEM_CONFIG.getSiteDomainName() + "/sitemap.xml";
     }
