@@ -1,6 +1,5 @@
 package net.renfei.controllers;
 
-import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.user.User;
@@ -88,7 +87,7 @@ public abstract class BaseController {
      * @param <T>    子类泛型
      * @return
      */
-    protected <T extends PageView> T buildPageView(Class<T> clazz, Object object) {
+    protected <T extends PageView<T>> T buildPageView(Class<T> clazz, Object object) {
         Constructor<T> constructor;
         T result;
         try {

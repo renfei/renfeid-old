@@ -1,5 +1,7 @@
 package net.renfei.services;
 
+import net.renfei.model.FeedVO;
+import net.renfei.model.SiteMapXml;
 import net.renfei.model.system.RegionVO;
 
 import java.util.List;
@@ -17,4 +19,18 @@ public interface SysService {
      * @return 下一级行政代码列表
      */
     List<RegionVO> getRegion(String regionCode);
+
+    /**
+     * 获取站点地图
+     *
+     * @return
+     */
+    List<SiteMapXml> getSiteMaps();
+
+    /**
+     * Feed 订阅
+     *
+     * @return
+     */
+    FeedVO getFeed();
 }

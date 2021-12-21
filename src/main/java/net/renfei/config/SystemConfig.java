@@ -108,6 +108,7 @@ public class SystemConfig {
 
     @Data
     public static class Google{
+        private String ads;
         private String analytics;
     }
 }

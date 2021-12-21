@@ -1,6 +1,8 @@
 package net.renfei.services.system;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.model.FeedVO;
+import net.renfei.model.SiteMapXml;
 import net.renfei.model.system.RegionVO;
 import net.renfei.repositories.SysRegionMapper;
 import net.renfei.repositories.model.SysRegion;
@@ -159,5 +161,27 @@ public class SysServiceImpl extends BaseService implements SysService {
             regionVoList.add(regionVO);
         }
         return regionVoList;
+    }
+
+    /**
+     * 获取站点地图
+     *
+     * @return
+     */
+    @Override
+    public List<SiteMapXml> getSiteMaps() {
+        // TODO 待补充
+        return null;
+    }
+
+    /**
+     * Feed 订阅
+     *
+     * @return
+     */
+    @Override
+    public FeedVO getFeed() {
+        // TODO 待补充
+        return null;
     }
 }

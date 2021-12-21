@@ -59,7 +59,16 @@ public class BlogPostController extends BaseController {
      *
      * @return
      */
-    @RequestMapping({"index.html", "index.htm", "index.xhtml", "index.shtml"})
+    @RequestMapping({
+            "index.html", "index.htm", "index.xhtml", "index.shtml",
+            "index.php", "index.asp", "index.aspx", "index.do",
+            "index.jsp", "index.dll", "index.php3", "index.pl",
+            "index.cgi",
+            "default.html", "default.htm", "default.xhtml", "default.shtml",
+            "default.php", "default.asp", "default.aspx", "default.do",
+            "default.jsp", "default.dll", "default.php3", "default.pl",
+            "default.cgi"
+    })
     public RedirectView getPostListDir() {
         RedirectView redirectView = new RedirectView("/posts/");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
@@ -159,7 +168,16 @@ public class BlogPostController extends BaseController {
      * @param id 文章ID
      * @return RedirectView
      */
-    @RequestMapping({"{id}/index.html", "{id}/index.htm", "{id}/index.xhtml", "{id}/index.shtml"})
+    @RequestMapping({
+            "{id}/index.html", "{id}/index.htm", "{id}/index.xhtml", "{id}/index.shtml",
+            "{id}/index.php", "{id}/index.asp", "{id}/index.aspx", "{id}/index.do",
+            "{id}/index.jsp", "{id}/index.dll", "{id}/index.php3", "{id}/index.pl",
+            "{id}/index.cgi",
+            "{id}/default.html", "{id}/default.htm", "{id}/default.xhtml", "{id}/default.shtml",
+            "{id}/default.php", "{id}/default.asp", "{id}/default.aspx", "{id}/default.do",
+            "{id}/default.jsp", "{id}/default.dll", "{id}/default.php3", "{id}/default.pl",
+            "{id}/default.cgi"
+    })
     public RedirectView getPostInfoDir(@PathVariable("id") String id) {
         RedirectView redirectView = new RedirectView("/posts/" + id);
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
