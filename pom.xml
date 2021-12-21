@@ -62,7 +62,7 @@
         <perf4j.version>0.9.16</perf4j.version>
         <curator.version>2.6.0</curator.version>
         <openfeign.version>3.1.0</openfeign.version>
-        <sentry.version>5.5.1</sentry.version>
+        <sentry.version>5.5.2</sentry.version>
         <email.version>2.6.1</email.version>
         <springdoc.version>1.6.2</springdoc.version>
         <sonar.organization>renfei</sonar.organization>
