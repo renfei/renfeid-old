@@ -56,10 +56,9 @@ springdoc:
     groups-order: DESC
     operationsSorter: method
     disable-swagger-default-url: true
-    use-root-path: true
+    use-root-path: false
     path: /swagger-ui.html
   show-actuator: false
-  pathsToMatch: /api/**
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:

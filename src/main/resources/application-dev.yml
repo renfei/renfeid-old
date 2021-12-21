@@ -115,6 +115,7 @@ system:
     tongji: 1
   google:
     analytics: 1
+    ads: 1
 sentry:
   dsn: https://8843a97fdea6415bae0f696f3749eaf6@o1071939.ingest.sentry.io/6069834
   environment: development
