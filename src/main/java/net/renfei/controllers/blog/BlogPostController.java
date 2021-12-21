@@ -128,41 +128,6 @@ public class BlogPostController extends BaseController {
     }
 
     /**
-     * 使用密码请求博客文章详情
-     *
-     * @param id       文章ID
-     * @param password 文章密码
-     * @return
-     */
-    @ResponseBody
-    @PostMapping("{id}")
-    public APIResult<Post> getPostInfo(@PathVariable("id") Long id, @RequestBody String password) {
-        BlogDomain blogDomain;
-        assert blogService != null;
-        // 页面没查到缓存，去数据库查询
-        try {
-            blogDomain = blogService.getBlogById(id, getSignUser(), password);
-        } catch (NotExistException e) {
-            return APIResult.builder()
-                    .code(StateCode.Failure)
-                    .message("文章不存在。")
-                    .build();
-        } catch (BlogPostNeedPasswordException e) {
-            return APIResult.builder()
-                    .code(StateCode.Forbidden)
-                    .message("文章密码不正确。")
-                    .build();
-        } catch (SecretLevelException e) {
-            return APIResult.builder()
-                    .code(StateCode.Forbidden)
-                    .message("根据您的保密等级，您无权查看此内容。")
-                    .build();
-        }
-        blogService.view(blogDomain);
-        return new APIResult<>(blogDomain.getPost());
-    }
-
-    /**
      * 博客文章错误地址重定向
      *
      * @param id 文章ID
