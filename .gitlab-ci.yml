@@ -18,12 +18,11 @@ connect:
   image: mysql
   script:
     - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
-    - mysql -h 127.0.0.1 -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
+    - mysql -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
 
 cache:
   paths:
     - .m2/repository/
-    - target/
 
 build:
   stage: build
