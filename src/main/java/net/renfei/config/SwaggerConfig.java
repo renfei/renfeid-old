@@ -8,7 +8,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import net.renfei.utils.ApplicationContextUtil;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,21 +21,14 @@ import java.util.ArrayList;
  */
 @Configuration
 public class SwaggerConfig {
-    protected final SystemConfig SYSTEM_CONFIG;
-
-    {
-        SYSTEM_CONFIG = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
-    }
 
     @Bean
     public OpenAPI springShopOpenAPI() {
-        assert SYSTEM_CONFIG != null;
         return new OpenAPI()
                 .components(new Components().addSecuritySchemes("basicScheme",
                         new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").name("JWT").in(SecurityScheme.In.HEADER)))
                 .info(new Info().title("RENFEI.NET Free Open API")
                         .description("任霏的免费开放API程序接口")
-                        .version(SYSTEM_CONFIG.getVersion())
                         .license(new License().name("Apache 2.0").url("https://github.com/renfei/renfeid/blob/master/LICENSE"))
                         .contact(new Contact().name("RenFei").email("i@renfei.net").url("https://www.renfei.net")))
                 .security(new ArrayList<SecurityRequirement>() {{
