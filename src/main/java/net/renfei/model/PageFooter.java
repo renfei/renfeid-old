@@ -2,6 +2,7 @@ package net.renfei.model;
 
 import lombok.Data;
 import net.renfei.config.SystemConfig;
+import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
 
 import java.util.List;
@@ -17,22 +18,24 @@ public class PageFooter {
     private final SystemConfig SYSTEM_CONFIG;
     private List<FooterMenuLinks> footerMenuLinks;
     private boolean showFriendlyLink;
-    private List<LinkTree> friendlyLink;
+    private List<LinkVO> friendlyLink;
     private List<LinkTree> smallMenu;
     private String version;
     private String buildTime;
     private List<String> jss;
     private String jsText;
+    private final SysService sysService;
 
     {
         SYSTEM_CONFIG = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
+        sysService = (SysService) ApplicationContextUtil.getBean("sysServiceImpl");
     }
 
     public PageFooter() {
         assert SYSTEM_CONFIG != null;
-        this.footerMenuLinks = null;
+        assert sysService != null;
         this.showFriendlyLink = SYSTEM_CONFIG.isShowFriendlyLink();
-        this.friendlyLink = null;
+        this.friendlyLink = sysService.getSysSiteFriendlyLinkList();
         this.smallMenu = null;
         this.version = SYSTEM_CONFIG.getVersion();
         this.buildTime = SYSTEM_CONFIG.getBuildTime();

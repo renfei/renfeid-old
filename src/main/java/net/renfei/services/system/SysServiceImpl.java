@@ -2,11 +2,15 @@ package net.renfei.services.system;
 
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.model.FeedVO;
+import net.renfei.model.LinkVO;
 import net.renfei.model.SiteMapXml;
 import net.renfei.model.system.RegionVO;
 import net.renfei.repositories.SysRegionMapper;
+import net.renfei.repositories.SysSiteFriendlyLinkMapper;
 import net.renfei.repositories.model.SysRegion;
 import net.renfei.repositories.model.SysRegionExample;
+import net.renfei.repositories.model.SysSiteFriendlyLinkExample;
+import net.renfei.repositories.model.SysSiteFriendlyLinkWithBLOBs;
 import net.renfei.services.BaseService;
 import net.renfei.services.SysService;
 import net.renfei.utils.CommonUtil;
@@ -26,9 +30,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 public class SysServiceImpl extends BaseService implements SysService {
     private final SysRegionMapper regionMapper;
+    private final SysSiteFriendlyLinkMapper siteFriendlyLinkMapper;
 
-    public SysServiceImpl(SysRegionMapper regionMapper) {
+    public SysServiceImpl(SysRegionMapper regionMapper, SysSiteFriendlyLinkMapper siteFriendlyLinkMapper) {
         this.regionMapper = regionMapper;
+        this.siteFriendlyLinkMapper = siteFriendlyLinkMapper;
     }
 
     /**
@@ -183,5 +189,35 @@ public class SysServiceImpl extends BaseService implements SysService {
     public FeedVO getFeed() {
         // TODO 待补充
         return null;
+    }
+
+    /**
+     * 获取网站友情链接列表
+     *
+     * @return
+     */
+    @Override
+    public List<LinkVO> getSysSiteFriendlyLinkList() {
+        SysSiteFriendlyLinkExample example = new SysSiteFriendlyLinkExample();
+        example.setOrderByClause("order_id ASC");
+        example.createCriteria()
+                .andIsDeleteEqualTo(false)
+                .andAuditPassEqualTo(true)
+                .andLinkTypeEqualTo(1);
+        List<SysSiteFriendlyLinkWithBLOBs> siteFriendlyLinks =
+                siteFriendlyLinkMapper.selectByExampleWithBLOBs(example);
+        List<LinkVO> linkList = new CopyOnWriteArrayList<>();
+        if (!siteFriendlyLinks.isEmpty()) {
+            siteFriendlyLinks.forEach(linkDO -> {
+                LinkVO linkVO = new LinkVO();
+                linkVO.setHref(linkDO.getSitelink());
+                linkVO.setRel("noopener");
+                linkVO.setStyle("");
+                linkVO.setTarget("_blank");
+                linkVO.setText(linkDO.getSitename());
+                linkList.add(linkVO);
+            });
+        }
+        return linkList;
     }
 }

@@ -4000,6 +4000,34 @@ CREATE TABLE `sys_secret_key`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for sys_site_friendly_link
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_site_friendly_link`;
+CREATE TABLE `sys_site_friendly_link` (
+  `id` bigint(20) NOT NULL,
+  `sitename` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '站点名称',
+  `sitelink` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '站点链接',
+  `is_delete` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `addtime` datetime NOT NULL,
+  `audit_pass` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否审核通过',
+  `link_type` int(11) NOT NULL DEFAULT 1 COMMENT '交换类型：1对等交换，2交叉交换',
+  `in_site_link` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '在对方的链接位置',
+  `contact_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系人姓名',
+  `contact_email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系邮箱',
+  `contact_qq` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系QQ',
+  `remarks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `order_id` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT = '站点友情链接';
+
+-- ----------------------------
+-- Records of sys_site_friendly_link
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_site_friendly_link` VALUES (1, '任霏博客', 'https://www.renfei.net/', 0, '2019-09-25 09:40:36', 1, 1, NULL, '任霏', 'i@renfei.net', '16076276', NULL, 0);
+COMMIT;
+
+-- ----------------------------
 -- Table structure for sys_site_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_site_menu`;
@@ -4012,7 +4040,7 @@ CREATE TABLE `sys_site_menu`  (
   `is_enable` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否启用',
   `order_number` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='站点菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_site_menu

@@ -1,6 +1,7 @@
 package net.renfei.services;
 
 import net.renfei.model.FeedVO;
+import net.renfei.model.LinkVO;
 import net.renfei.model.SiteMapXml;
 import net.renfei.model.system.RegionVO;
 
@@ -33,4 +34,11 @@ public interface SysService {
      * @return
      */
     FeedVO getFeed();
+
+    /**
+     * 获取网站友情链接列表
+     *
+     * @return
+     */
+    List<LinkVO> getSysSiteFriendlyLinkList();
 }

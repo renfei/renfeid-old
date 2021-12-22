@@ -5,7 +5,8 @@
 
 <generatorConfiguration>
     <!--驱动jar-->
-    <classPathEntry location="C:\Users\renfei\WorkSpace\bbs\target\bbs-5.4\WEB-INF\lib/mysql-connector-java-8.0.11.jar"/>
+    <classPathEntry location="/Users/renfei/Downloads/mysql-connector-java-5.1.45.jar"/>
+<!--    <classPathEntry location="C:\Users\renfei\WorkSpace\bbs\target\bbs-5.4\WEB-INF\lib/mysql-connector-java-8.0.11.jar"/>-->
 
     <context id="default" targetRuntime="MyBatis3">
         <property name="javaFileEncoding" value="UTF-8"/>
@@ -46,7 +47,7 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="leaf_alloc"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_region"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_comments"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="blog_posts"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_posts"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_postmeta"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="blog_category"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_keyword_tag"/>-->
@@ -55,5 +56,6 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_pages"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_secret_key"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_site_menu"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="sys_site_friendly_link"/>
     </context>
 </generatorConfiguration>
