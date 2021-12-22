@@ -1,3 +1,5 @@
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
