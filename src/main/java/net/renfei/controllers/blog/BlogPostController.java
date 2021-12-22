@@ -3,7 +3,6 @@ package net.renfei.controllers.blog;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.BlogDomain;
-import net.renfei.domain.blog.Post;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;

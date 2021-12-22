@@ -1,9 +1,12 @@
 package net.renfei;
 
+import net.renfei.utils.ApplicationContextUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -16,6 +19,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationTests {
     @Autowired
     protected MockMvc mockMvc;
+    @Autowired
+    protected ApplicationContext applicationContext;
+
+    @BeforeEach
+    public void before() {
+        ApplicationContextUtil.setApplicationContext(applicationContext);
+    }
 
     @Test
     void getActive() throws Exception {
