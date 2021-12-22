@@ -29,15 +29,13 @@ public class DefaultControllerTests extends ApplicationTests {
     public void getRobotsTxtTest() throws Exception {
         this.mockMvc.perform(get("/robots.txt"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE));
+                .andExpect(status().isOk());
     }
 
     @Test
     public void getGoogleAdsTest() throws Exception {
         this.mockMvc.perform(get("/ads.txt"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE));
+                .andExpect(status().isOk());
     }
 }
