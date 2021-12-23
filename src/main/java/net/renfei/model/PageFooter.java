@@ -52,7 +52,7 @@ public class PageFooter {
         example.createCriteria()
                 .andPidIsNull();
         this.footerMenuLinks = convert(siteFooterMenuMapper.selectByExample(example));
-        this.smallMenu = getSmallMenu();
+        this.smallMenu = smallMenuList();
         this.jss = SYSTEM_CONFIG.getPageFooter().getJss().stream().map(item -> item + "?ver=" + SYSTEM_CONFIG.getBuildTime()).collect(Collectors.toList());
         this.jss.add("https://www.googletagmanager.com/gtag/js?id=" + SYSTEM_CONFIG.getGoogle().getAnalytics());
         this.jss.add("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
@@ -69,14 +69,14 @@ public class PageFooter {
                 + "})();\n";
     }
 
-    private List<LinkTree> getSmallMenu() {
+    private List<LinkTree> smallMenuList() {
         List<LinkTree> menus = new CopyOnWriteArrayList<>();
         String split = "@";
-        for (String menu : SYSTEM_CONFIG.getFooterSmallMenu()
-        ) {
+        // 前端是居右，这里需要倒序输出
+        for (int i = SYSTEM_CONFIG.getFooterSmallMenu().size() - 1; i >= 0; i--) {
             LinkTree linkTree = LinkTree.builder()
-                    .href(menu.split(split)[1])
-                    .text(menu.split(split)[0])
+                    .href(SYSTEM_CONFIG.getFooterSmallMenu().get(i).split(split)[1])
+                    .text(SYSTEM_CONFIG.getFooterSmallMenu().get(i).split(split)[0])
                     .target("_blank")
                     .build();
             menus.add(linkTree);
