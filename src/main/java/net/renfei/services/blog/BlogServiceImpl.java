@@ -12,7 +12,7 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
-import net.renfei.model.LinkVO;
+import net.renfei.model.LinkTree;
 import net.renfei.model.blog.PostSidebarVO;
 import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
@@ -145,41 +145,45 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         if (postSidebarVO == null) {
             // 缓存未命中，从数据库中组织数据
             // 博客分类们
-            List<LinkVO> blogCategoryLinks = new CopyOnWriteArrayList<>();
+            List<LinkTree> blogCategoryLinks = new CopyOnWriteArrayList<>();
             List<Category> allCategoryList = BlogDomain.allBlogCategory(user);
             allCategoryList.forEach(blogCategory -> {
-                LinkVO link = new LinkVO();
-                link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/cat/posts/" + blogCategory.getEnName());
-                link.setText(blogCategory.getZhName());
+                LinkTree link = LinkTree.builder()
+                        .href(SYSTEM_CONFIG.getSiteDomainName() + "/cat/posts/" + blogCategory.getEnName())
+                        .text(blogCategory.getZhName())
+                        .build();
                 blogCategoryLinks.add(link);
             });
             // 标签云
-            List<LinkVO> allTagList = new CopyOnWriteArrayList<>();
+            List<LinkTree> allTagList = new CopyOnWriteArrayList<>();
             List<SysKeywordTag> keywordTagList = SysKeywordTag.keywordTagList(SystemTypeEnum.BLOG);
             keywordTagList.forEach(keywordTag -> {
-                LinkVO link = new LinkVO();
-                link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/posts/tag/" + keywordTag.getEnName());
-                link.setText(keywordTag.getZhName() + " (" + keywordTag.getCount() + ")");
+                LinkTree link = LinkTree.builder()
+                        .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/tag/" + keywordTag.getEnName())
+                        .text(keywordTag.getZhName() + " (" + keywordTag.getCount() + ")")
+                        .build();
                 allTagList.add(link);
             });
             // 最新评论
-            List<LinkVO> lastCommentList = new CopyOnWriteArrayList<>();
+            List<LinkTree> lastCommentList = new CopyOnWriteArrayList<>();
             List<Comment> commentList = CommentDomain.lastCommentTop10(SystemTypeEnum.BLOG);
             if (commentList != null) {
                 commentList.forEach(comment -> {
-                    LinkVO link = new LinkVO();
-                    link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + comment.getObjectId() + "#cmt" + comment.getId());
-                    link.setText(comment.getContent());
+                    LinkTree link = LinkTree.builder()
+                            .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + comment.getObjectId() + "#cmt" + comment.getId())
+                            .text(comment.getContent())
+                            .build();
                     lastCommentList.add(link);
                 });
             }
             // 热文排行
-            List<LinkVO> hotPostList = new CopyOnWriteArrayList<>();
+            List<LinkTree> hotPostList = new CopyOnWriteArrayList<>();
             List<Post> postList = BlogDomain.hotPostTop10(user);
             postList.forEach(post -> {
-                LinkVO link = new LinkVO();
-                link.setHref(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + post.getId());
-                link.setText(post.getTitle());
+                LinkTree link = LinkTree.builder()
+                        .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + post.getId())
+                        .text(post.getTitle())
+                        .build();
                 hotPostList.add(link);
             });
             postSidebarVO = PostSidebarVO.builder()

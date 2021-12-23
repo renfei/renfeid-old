@@ -2,10 +2,16 @@ package net.renfei.model;
 
 import lombok.Data;
 import net.renfei.config.SystemConfig;
+import net.renfei.repositories.SysSiteFooterMenuMapper;
+import net.renfei.repositories.model.SysSiteFooterMenu;
+import net.renfei.repositories.model.SysSiteFooterMenuExample;
+import net.renfei.repositories.model.SysSiteMenu;
+import net.renfei.repositories.model.SysSiteMenuExample;
 import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -18,27 +24,35 @@ public class PageFooter {
     private final SystemConfig SYSTEM_CONFIG;
     private List<FooterMenuLinks> footerMenuLinks;
     private boolean showFriendlyLink;
-    private List<LinkVO> friendlyLink;
+    private List<LinkTree> friendlyLink;
     private List<LinkTree> smallMenu;
     private String version;
     private String buildTime;
     private List<String> jss;
     private String jsText;
     private final SysService sysService;
+    private final SysSiteFooterMenuMapper siteFooterMenuMapper;
 
     {
         SYSTEM_CONFIG = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
         sysService = (SysService) ApplicationContextUtil.getBean("sysServiceImpl");
+        siteFooterMenuMapper = (SysSiteFooterMenuMapper) ApplicationContextUtil.getBean("sysSiteFooterMenuMapper");
     }
 
     public PageFooter() {
         assert SYSTEM_CONFIG != null;
         assert sysService != null;
+        assert siteFooterMenuMapper != null;
         this.showFriendlyLink = SYSTEM_CONFIG.isShowFriendlyLink();
         this.friendlyLink = sysService.getSysSiteFriendlyLinkList();
-        this.smallMenu = null;
         this.version = SYSTEM_CONFIG.getVersion();
         this.buildTime = SYSTEM_CONFIG.getBuildTime();
+        SysSiteFooterMenuExample example = new SysSiteFooterMenuExample();
+        example.setOrderByClause("order_number");
+        example.createCriteria()
+                .andPidIsNull();
+        this.footerMenuLinks = convert(siteFooterMenuMapper.selectByExample(example));
+        this.smallMenu = getSmallMenu();
         this.jss = SYSTEM_CONFIG.getPageFooter().getJss().stream().map(item -> item + "?ver=" + SYSTEM_CONFIG.getBuildTime()).collect(Collectors.toList());
         this.jss.add("https://www.googletagmanager.com/gtag/js?id=" + SYSTEM_CONFIG.getGoogle().getAnalytics());
         this.jss.add("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
@@ -53,5 +67,56 @@ public class PageFooter {
                 + "  var s = document.getElementsByTagName(\"script\")[0]; \n"
                 + "  s.parentNode.insertBefore(hm, s);\n"
                 + "})();\n";
+    }
+
+    private List<LinkTree> getSmallMenu() {
+        List<LinkTree> menus = new CopyOnWriteArrayList<>();
+        String split = "@";
+        for (String menu : SYSTEM_CONFIG.getFooterSmallMenu()
+        ) {
+            LinkTree linkTree = LinkTree.builder()
+                    .href(menu.split(split)[1])
+                    .text(menu.split(split)[0])
+                    .target("_blank")
+                    .build();
+            menus.add(linkTree);
+        }
+        return menus;
+    }
+
+    private List<FooterMenuLinks> convert(List<SysSiteFooterMenu> sysSiteMenus) {
+        List<FooterMenuLinks> menus = new CopyOnWriteArrayList<>();
+        for (SysSiteFooterMenu sysSiteMenu : sysSiteMenus
+        ) {
+            FooterMenuLinks linkSubTree = FooterMenuLinks.builder()
+                    .title(sysSiteMenu.getMenuText())
+                    .links(setSubLink(sysSiteMenu.getId()))
+                    .build();
+            menus.add(linkSubTree);
+        }
+        return menus;
+    }
+
+    private List<LinkTree> setSubLink(Long pid) {
+        SysSiteFooterMenuExample example = new SysSiteFooterMenuExample();
+        example.setOrderByClause("order_number");
+        example.createCriteria()
+                .andPidEqualTo(pid);
+        assert siteFooterMenuMapper != null;
+        List<SysSiteFooterMenu> sysSiteMenus = siteFooterMenuMapper.selectByExample(example);
+        if (sysSiteMenus == null || sysSiteMenus.size() < 1) {
+            return null;
+        }
+        List<LinkTree> menus = new CopyOnWriteArrayList<>();
+        for (SysSiteFooterMenu sysSiteMenu : sysSiteMenus
+        ) {
+            LinkTree linkSubTree = LinkTree.builder()
+                    .href(sysSiteMenu.getMenuLink())
+                    .text(sysSiteMenu.getMenuText())
+                    .target(sysSiteMenu.getIsNewWin() ? "_blank" : "_self")
+                    .build();
+            menus.add(linkSubTree);
+        }
+        return menus;
     }
 }

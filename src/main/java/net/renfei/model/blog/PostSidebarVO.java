@@ -2,7 +2,7 @@ package net.renfei.model.blog;
 
 import lombok.Builder;
 import lombok.Data;
-import net.renfei.model.LinkVO;
+import net.renfei.model.LinkTree;
 
 import java.util.List;
 
@@ -21,6 +21,6 @@ public class PostSidebarVO {
     @Builder
     public static class PostSidebar {
         private String title;
-        private List<LinkVO> link;
+        private List<LinkTree> link;
     }
 }

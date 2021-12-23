@@ -2,7 +2,7 @@ package net.renfei.services.system;
 
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.model.FeedVO;
-import net.renfei.model.LinkVO;
+import net.renfei.model.LinkTree;
 import net.renfei.model.SiteMapXml;
 import net.renfei.model.system.RegionVO;
 import net.renfei.repositories.SysRegionMapper;
@@ -197,7 +197,7 @@ public class SysServiceImpl extends BaseService implements SysService {
      * @return
      */
     @Override
-    public List<LinkVO> getSysSiteFriendlyLinkList() {
+    public List<LinkTree> getSysSiteFriendlyLinkList() {
         SysSiteFriendlyLinkExample example = new SysSiteFriendlyLinkExample();
         example.setOrderByClause("order_id ASC");
         example.createCriteria()
@@ -206,16 +206,17 @@ public class SysServiceImpl extends BaseService implements SysService {
                 .andLinkTypeEqualTo(1);
         List<SysSiteFriendlyLinkWithBLOBs> siteFriendlyLinks =
                 siteFriendlyLinkMapper.selectByExampleWithBLOBs(example);
-        List<LinkVO> linkList = new CopyOnWriteArrayList<>();
+        List<LinkTree> linkList = new CopyOnWriteArrayList<>();
         if (!siteFriendlyLinks.isEmpty()) {
             siteFriendlyLinks.forEach(linkDO -> {
-                LinkVO linkVO = new LinkVO();
-                linkVO.setHref(linkDO.getSitelink());
-                linkVO.setRel("noopener");
-                linkVO.setStyle("");
-                linkVO.setTarget("_blank");
-                linkVO.setText(linkDO.getSitename());
-                linkList.add(linkVO);
+                LinkTree linkTree = LinkTree.builder()
+                        .href(linkDO.getSitelink())
+                        .rel("noopener")
+                        .style("")
+                        .target("_blank")
+                        .text(linkDO.getSitename())
+                        .build();
+                linkList.add(linkTree);
             });
         }
         return linkList;

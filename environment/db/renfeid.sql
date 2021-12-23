@@ -4000,6 +4000,43 @@ CREATE TABLE `sys_secret_key`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for sys_site_footer_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_site_footer_menu`;
+CREATE TABLE `sys_site_footer_menu`  (
+                                         `id` bigint(20) NOT NULL,
+                                         `pid` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '父级ID',
+                                         `menu_text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单名称',
+                                         `menu_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单链接',
+                                         `is_new_win` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否新页面打开',
+                                         `is_enable` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否启用',
+                                         `order_number` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
+                                         PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '站点页脚菜单' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_site_footer_menu
+-- ----------------------------
+INSERT INTO `sys_site_footer_menu` VALUES (1, NULL, '社会化互动', 'JavaScript:void(0)', 0, 1, 0);
+INSERT INTO `sys_site_footer_menu` VALUES (2, NULL, '公益与捐赠', 'JavaScript:void(0)', 0, 1, 1);
+INSERT INTO `sys_site_footer_menu` VALUES (3, NULL, '推荐厂商', 'JavaScript:void(0)', 0, 1, 3);
+INSERT INTO `sys_site_footer_menu` VALUES (4, NULL, '其他内容', 'JavaScript:void(0)', 0, 1, 4);
+INSERT INTO `sys_site_footer_menu` VALUES (5, 1, '开发者交流QQ群', 'https://shang.qq.com/wpa/qunwpa?idkey=bfbde7e5dec79fd3cdb23c7cf590ca698e3da8b48a71369139ed6aa52f9a7513', 1, 1, 0);
+INSERT INTO `sys_site_footer_menu` VALUES (6, 1, 'Github', 'https://github.com/renfei', 1, 1, 1);
+INSERT INTO `sys_site_footer_menu` VALUES (7, 3, '阿里云计算', 'https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=mqe0f1u0', 1, 1, 0);
+INSERT INTO `sys_site_footer_menu` VALUES (8, 3, '腾讯云计算', 'https://cloud.tencent.com/redirect.php?redirect=1005&cps_key=1e6697c30d61f2919ab51bce34ffd8dc', 1, 1, 1);
+INSERT INTO `sys_site_footer_menu` VALUES (9, 3, '东路互联', 'https://www.donglu.net/user/aff.php?aff=114', 1, 1, 2);
+INSERT INTO `sys_site_footer_menu` VALUES (10, 4, '关于任霏博客', '/about', 0, 1, 0);
+INSERT INTO `sys_site_footer_menu` VALUES (11, 4, '隐私与 Cookie', '/page/1', 0, 1, 1);
+INSERT INTO `sys_site_footer_menu` VALUES (12, 4, '使用条款', '/page/2', 0, 1, 2);
+INSERT INTO `sys_site_footer_menu` VALUES (13, 2, '我的公益404页面', '/error/404', 0, 1, 0);
+INSERT INTO `sys_site_footer_menu` VALUES (14, 2, '中国小动物保护协会', 'http://www.csapa.org/', 1, 1, 1);
+INSERT INTO `sys_site_footer_menu` VALUES (15, 2, '联合国儿童基金会', 'https://www.unicef.org/zh', 1, 1, 2);
+INSERT INTO `sys_site_footer_menu` VALUES (16, 3, '硅云-云计算', 'https://www.vpsor.cn/aff?affid=58227', 1, 1, 3);
+INSERT INTO `sys_site_footer_menu` VALUES (17, 1, 'GitLab', 'https://gitlab.com/renfei', 1, 1, 2);
+INSERT INTO `sys_site_footer_menu` VALUES (18, 1, 'GitLab-JH', 'https://gitlab.cn/renfei', 1, 1, 3);
+
+-- ----------------------------
 -- Table structure for sys_site_friendly_link
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_site_friendly_link`;

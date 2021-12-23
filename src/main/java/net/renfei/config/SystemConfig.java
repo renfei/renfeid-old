@@ -27,6 +27,7 @@ public class SystemConfig {
     private String leafKey;
     private String ownerUserName;
     private String siteName;
+    private List<String> footerSmallMenu;
     private PageHead pageHead;
     private PageFooter pageFooter;
     private boolean showFriendlyLink;
@@ -39,7 +40,7 @@ public class SystemConfig {
     private Google google;
 
     @Data
-    public static class PageHead{
+    public static class PageHead {
         private String author;
         private String copyright;
         private List<String> dnsPrefetch;
@@ -51,7 +52,7 @@ public class SystemConfig {
     }
 
     @Data
-    public static class PageFooter{
+    public static class PageFooter {
         private List<String> jss;
     }
 
@@ -102,12 +103,12 @@ public class SystemConfig {
     }
 
     @Data
-    public static class Baidu{
+    public static class Baidu {
         private String tongji;
     }
 
     @Data
-    public static class Google{
+    public static class Google {
         private String ads;
         private String analytics;
     }
