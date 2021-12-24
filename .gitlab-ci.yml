@@ -6,10 +6,9 @@ stages:
 initialize_environmen_jihu:
   stage: initialize
   script:
-    - sed -e 's|^mirrorlist=|#mirrorlist=|g' \
-      -e 's|^#baseurl=http://mirror.centos.org|baseurl=https://mirrors.tuna.tsinghua.edu.cn|g' \
-      -i.bak \
-      /etc/yum.repos.d/CentOS-*.repo
+    - sed -e 's|^mirrorlist=|#mirrorlist=|g'
+      -e 's|^#baseurl=http://mirror.centos.org|baseurl=https://mirrors.tuna.tsinghua.edu.cn|g'
+      -i.bak /etc/yum.repos.d/CentOS-*.repo
     - yum makecache
     - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
     - sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
