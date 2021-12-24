@@ -3,19 +3,22 @@ image: centos:centos7
 stages:
   - initialize
 
-initialize_job:
+initialize_environmen_jihu:
   stage: initialize
   script:
-    - sudo sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+    - sed -e 's|^mirrorlist=|#mirrorlist=|g' \
       -e 's|^#baseurl=http://mirror.centos.org|baseurl=https://mirrors.tuna.tsinghua.edu.cn|g' \
       -i.bak \
       /etc/yum.repos.d/CentOS-*.repo
-    - sudo yum makecache
-    - sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
-    - sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
-    - sudo yum install -y wget java-1.8.0-openjdk* maven
+    - yum makecache
+    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+    - sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+    - yum install -y wget java-1.8.0-openjdk* maven
     - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
     - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
     - unzip IP2LOCATION-LITE-DB11.BIN.ZIP
     - unzip IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
     - ls -l
+    - echo $CI_SERVER_URL
+#  rules:
+#    - if: '$CI_SERVER_URL = '
