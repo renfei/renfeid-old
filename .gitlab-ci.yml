@@ -60,7 +60,4 @@ test_job:
     - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
     - yum -y install apache-maven
   script:
-    - mvn -P gitlab --batch-mode test jacoco:report --file pom.xml
-    - bash <(curl -s https://codecov.io/bash)
-    - sed -i.bak 's/yourcoverallsprojectrepositorytoken/$COVERALLS_TOKEN/g' pom.xml
-    - mvn coveralls:report
+    - mvn -P gitlab --batch-mode test --file pom.xml
