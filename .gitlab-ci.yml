@@ -56,7 +56,7 @@ test_job:
     MYSQL_ROOT_PASSWORD: root
   before_script:
     - yum install -y mysql-client maven mysql
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --default-character-set=utf8
   script:
     - mvn -P gitlab --batch-mode test jacoco:report --file pom.xml
     - bash <(curl -s https://codecov.io/bash)
