@@ -9,6 +9,7 @@ stages:
 - initialize
 - compile
 - test
+- dast
 cache:
   paths:
   - ".m2/repository/"
@@ -68,3 +69,9 @@ sast:
 include:
 - template: Security/SAST.gitlab-ci.yml
 - template: Security/SAST-IaC.latest.gitlab-ci.yml
+- template: DAST.gitlab-ci.yml
+dast:
+  stage: dast
+  dast_configuration:
+    site_profile: "www.renfei.net"
+    scanner_profile: "Active"
