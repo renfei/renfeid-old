@@ -1,0 +1,130 @@
+server:
+  port: 9595
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://mysql:3306/renfeid?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      stat-view-servlet:
+        login-username: admin
+        login-password: admin
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: WEB-INF/**
+  redis:
+    ## Redis数据库索引（默认为0）
+    database: 0
+    host: redis
+    port: 6379
+#    password: password
+    timeout: 3000ms # 连接超时时间
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数
+        max-idle: 8 # 连接池最大空闲连接数
+        min-idle: 0 # 连接池最小空闲连接数
+        max-wait: -1ms # 连接池最大阻塞等待时间，负值表示没有限制
+  mail:
+    host: smtp.exmail.qq.com
+    port: 465
+    username: no-reply@renfei.net
+    password: <password>
+    protocol: smtp
+    default-encoding: UTF-8
+    reply-to: i@renfei.net
+    properties:
+      mail.smtp.localhost: renfei.net
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.socketFactory.port: 465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      mail.smtp.socketFactory.fallback: false
+    jndi-name: mail/Session
+  freemarker:
+    cache: false
+    settings:
+      template_update_delay: 0
+  elasticsearch:
+    uris: http://localhost:9200
+# 自定义配置
+system:
+  active: dev
+  version: @project.version@
+  buildTime: @buildtimestamp@
+  siteDomainName: http://localhost:9595
+  enableRedis: false
+  globalAesKey: globalAesKey
+  leafKey: leaf-segment-global
+  ownerUserName: renfei
+  siteName: 任霏的博客
+  defaultCacheSeconds: 7200
+  showFriendlyLink: true
+  footerSmallMenu:
+    - 冀公网安备 13070902000275号@http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13070902000275
+    - 冀ICP备12003293号-9@https://beian.miit.gov.cn/
+    - 任霏@https://www.renfei.net/
+    - 使用条款@https://www.renfei.net/page/2
+    - 隐私与 Cookie@https://www.renfei.net/page/1
+    - Status@https://status.renfei.net/
+  pageHead:
+    author: 任霏,i@renfei.net
+    copyright: CopyRight RENFEI.NET, All Rights Reserved.
+    dnsPrefetch:
+      - //www.renfei.net
+      - //cdn.renfei.net
+      - //hm.baidu.com
+      - //www.googletagmanager.com
+      - //www.google-analytics.com
+      - //cloudflareinsights.com
+    fbAppId: 205704373959112
+    fbPages: 108842630700746
+    favicon: https://cdn.renfei.net/favicon.ico
+    appleTouchIcon: https://cdn.renfei.net/Logo/logo_192.png
+    css:
+      - https://cdn.renfei.net/thunder/bootstrap/css/bootstrap.min.css
+      - https://cdn.renfei.net/thunder/fontawesome/css/all.min.css
+      - https://cdn.renfei.net/thunder/css/bs4.pop.css
+      - https://cdn.renfei.net/thunder/css/style.css
+  pageFooter:
+    jss:
+      - https://cdn.renfei.net/thunder/js/jquery-3.5.1.min.js
+      - https://cdn.renfei.net/thunder/js/popper.min.js
+      - https://cdn.renfei.net/thunder/bootstrap/js/bootstrap.min.js
+      - https://cdn.renfei.net/thunder/js/clipboard.min.js
+      - https://cdn.renfei.net/thunder/js/bs4.pop.js
+      - https://cdn.renfei.net/thunder/js/main.js
+  # https://github.com/renfei/ip2location/releases
+  ip2LocationBinFile: classpath:/ip2location/IP2LOCATION-LITE-DB11.BIN
+  ip2LocationBinFileV6: classpath:/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
+#  ip2LocationBinFile: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.BIN
+#  ip2LocationBinFileV6: /opt/renfeid/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
+  leaf:
+    segment:
+      enable: true
+    snowflake:
+      enable: false
+      zk:
+        address: xxx
+      port: 1111
+  threadPool:
+    corePoolSize: 10
+    maxPoolSize: 20
+    keepAliveSeconds: 300
+    queueCapacity: 100
+  baidu:
+    tongji: 1
+  google:
+    analytics: 1
+    ads: 1
+sentry:
+  dsn: https://8843a97fdea6415bae0f696f3749eaf6@o1071939.ingest.sentry.io/6069834
+  environment: development
+  release: @project.version@
+  traces-sample-rate: 0.3

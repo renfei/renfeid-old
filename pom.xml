@@ -48,6 +48,12 @@
             </activation>
         </profile>
         <profile>
+            <id>gitlab</id>
+            <properties>
+                <activatedProperties>gitlab</activatedProperties>
+            </properties>
+        </profile>
+        <profile>
             <id>prod</id>
             <properties>
                 <activatedProperties>prod</activatedProperties>

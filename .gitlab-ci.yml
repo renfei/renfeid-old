@@ -2,6 +2,22 @@ image: centos:centos7
 
 stages:
   - initialize
+  - test
+
+services:
+  - mysql:5.7
+  - redis:6.0.1
+
+variables:
+  MYSQL_DATABASE: renfeid
+  MYSQL_ROOT_PASSWORD: root
+
+connect:
+  stage: test
+  image: mysql:5.7
+  script:
+    - echo "SELECT 'OK';"
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE" --ssl-mode=REQUIRED
 
 initialize_environmen_jihu:
   stage: initialize
@@ -32,3 +48,13 @@ initialize_environmen_gitlab:
     - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   rules:
     - if: $CI_SERVER_URL =~ /gitlab.com/
+
+test_job:
+  stage: test
+  before_script:
+    - mysql --user=root --password=\"$MYSQL_ROOT_PASSWORD\" --host=mysql < environment/db/renfeid.sql
+  script:
+    - mvn -P gitlab clean test jacoco:report --file pom.xml
+    - bash <(curl -s https://codecov.io/bash)
+    - sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
+    - mvn coveralls:report
