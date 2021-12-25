@@ -6,6 +6,10 @@ stages:
   - connect
   - test
 
+services:
+  - mysql:5.7
+  - redis:6.0.1
+
 variables:
   MAVEN_CLI_OPTS: "--batch-mode"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -54,8 +58,8 @@ connect:
   stage: connect
   image: mysql:5.7
   script:
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" -e "CREATE DATABASE $MYSQL_DATABASE"
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" $MYSQL_DATABASE < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "CREATE DATABASE $MYSQL_DATABASE"
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
 
 test_job:
   stage: test
