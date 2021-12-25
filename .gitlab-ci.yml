@@ -5,16 +5,6 @@ stages:
   - compile
   - test
 
-services:
-  - mysql:5.7
-  - redis:6.0.1
-
-variables:
-  MAVEN_CLI_OPTS: "--batch-mode"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  MYSQL_DATABASE: renfeid
-  MYSQL_ROOT_PASSWORD: root
-
 cache:
   paths:
     - .m2/repository/
@@ -53,16 +43,22 @@ compile:
   stage: compile
   image: maven:latest
   script:
-    - mvn $MAVEN_CLI_OPTS clean compile
+    - mvn --batch-mode compile
 
 test_job:
   stage: test
-  image: maven:latest
+  image: centos:centos7
+  services:
+    - mysql:5.7
+    - redis:6.0.1
+  variables:
+    MYSQL_DATABASE: renfeid
+    MYSQL_ROOT_PASSWORD: root
   before_script:
-    - apt-get update -q && apt-get install -qqy --no-install-recommends mysql-client
+    - yum install mysql-client maven mysql
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
   script:
-    - mvn -P gitlab $MAVEN_CLI_OPTS test jacoco:report --file pom.xml
+    - mvn -P gitlab --batch-mode test jacoco:report --file pom.xml
     - bash <(curl -s https://codecov.io/bash)
-    - sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
+    - sed -i.bak 's/yourcoverallsprojectrepositorytoken/$COVERALLS_TOKEN/g' pom.xml
     - mvn coveralls:report
