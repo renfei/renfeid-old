@@ -21,7 +21,7 @@ public class DBMSMetaUtilTests extends ApplicationTests {
 
     private void testMySQL() throws JsonProcessingException {
         //
-        String ip = "127.0.0.1";
+        String ip = "mysql";
         String port = "3306";
         String dbname = "renfeid";
         String username = "root";
