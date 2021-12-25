@@ -15,7 +15,6 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MYSQL_DATABASE: renfeid
   MYSQL_ROOT_PASSWORD: root
-  MYSQL_DATABASE_SCHEMA: "$CI_PROJECT_DIR/environment/db/renfeid.sql"
 
 cache:
   paths:
@@ -54,12 +53,13 @@ connect:
   image: mysql:5.7
   script:
     - echo "create database $MYSQL_DATABASE_NAME;"
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE_NAME < $MYSQL_DATABASE_SCHEMA --ssl-mode=REQUIRED --default-character-set=utf8
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql renfeid < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
 
 test_job:
   stage: test
   image: maven:latest
   script:
+    - ls src/main/resources/ip2location/
     - mvn -P gitlab $MAVEN_CLI_OPTS test jacoco:report --file pom.xml
     - bash <(curl -s https://codecov.io/bash)
     - sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
