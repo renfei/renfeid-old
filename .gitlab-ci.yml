@@ -74,3 +74,5 @@ test_job:
     - bash <(curl -s https://codecov.io/bash)
     - sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
     - mvn coveralls:report
+  dependencies:
+    - connect
