@@ -27,9 +27,6 @@ initialize_environmen_jihu:
       -i.bak /etc/yum.repos.d/CentOS-*.repo
     - yum makecache
     - yum install -y wget java-1.8.0-openjdk* unzip
-    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
-    - rpm -ivh https://repo.mysql.com//mysql57-community-release-el7-11.noarch.rpm
-    - yum install -y apache-maven mysql-community-client.x86_64
     - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
     - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
@@ -41,9 +38,6 @@ initialize_environmen_gitlab:
   stage: initialize
   script:
     - yum install -y wget java-1.8.0-openjdk* unzip
-    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
-    - rpm -ivh https://repo.mysql.com//mysql57-community-release-el7-11.noarch.rpm
-    - yum install -y apache-maven mysql-community-client.x86_64
     - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
     - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP  -d src/main/resources/ip2location/
@@ -54,6 +48,9 @@ initialize_environmen_gitlab:
 test_job:
   stage: test
   before_script:
+    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+    - rpm -ivh https://repo.mysql.com//mysql57-community-release-el7-11.noarch.rpm
+    - yum install -y apache-maven mysql-community-client.x86_64
     - mysql --user=root --password=\"$MYSQL_ROOT_PASSWORD\" --host=mysql < environment/db/renfeid.sql
   script:
     - mvn -P gitlab clean test jacoco:report --file pom.xml
