@@ -32,8 +32,7 @@ public class ApplicationTests {
         this.mockMvc.perform(get("/test/active"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.data").value("dev"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
     }
 
 }
