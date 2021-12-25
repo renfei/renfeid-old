@@ -55,7 +55,7 @@ test_job:
     MYSQL_DATABASE: renfeid
     MYSQL_ROOT_PASSWORD: root
   before_script:
-    - yum install -y wget mysql
+    - yum install -y wget mysql java-1.8.0-openjdk*
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --default-character-set=utf8
     - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
     - yum -y install apache-maven
