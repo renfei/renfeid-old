@@ -3,7 +3,14 @@ image: centos:centos7
 stages:
   - initialize
   - build
+  - connect
   - test
+
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MYSQL_DATABASE: renfeid
+  MYSQL_ROOT_PASSWORD: root
 
 cache:
   paths:
@@ -37,11 +44,18 @@ initialize_environmen_gitlab:
   rules:
     - if: $CI_SERVER_URL =~ /gitlab.com/
 
-build_job:
+build:
   stage: build
   image: maven:latest
   script:
     - mvn $MAVEN_CLI_OPTS clean compile
+
+connect:
+  stage: connect
+  image: mysql:5.7
+  script:
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "CREATE DATABASE $MYSQL_DATABASE"
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
 
 test_job:
   stage: test
@@ -49,13 +63,7 @@ test_job:
   services:
     - mysql:5.7
     - redis:6.0.1
-  variables:
-    MAVEN_CLI_OPTS: "--batch-mode"
-    MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-    MYSQL_DATABASE: renfeid
-    MYSQL_ROOT_PASSWORD: root
   script:
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql renfeid < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
     - mvn -P gitlab $MAVEN_CLI_OPTS test jacoco:report --file pom.xml
     - bash <(curl -s https://codecov.io/bash)
     - sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
