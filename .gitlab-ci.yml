@@ -70,6 +70,7 @@ include:
 - template: Security/SAST.gitlab-ci.yml
 - template: Security/SAST-IaC.latest.gitlab-ci.yml
 - template: Security/Dependency-Scanning.gitlab-ci.yml
+- template: Security/Secret-Detection.gitlab-ci.yml
 - template: DAST.gitlab-ci.yml
 dast:
   stage: dast
