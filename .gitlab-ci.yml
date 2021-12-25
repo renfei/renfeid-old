@@ -71,9 +71,3 @@ include:
 - template: Security/SAST-IaC.latest.gitlab-ci.yml
 - template: Security/Dependency-Scanning.gitlab-ci.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
-- template: DAST.gitlab-ci.yml
-dast:
-  stage: dast
-  dast_configuration:
-    site_profile: "www.renfei.net"
-    scanner_profile: "Active"
