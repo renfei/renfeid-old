@@ -61,7 +61,6 @@ connect:
   image: mysql:5.7
   script:
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
-    - SOME DATABASE DUMPING
   artifacts:
     when: on_success
     paths:
