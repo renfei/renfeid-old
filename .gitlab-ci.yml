@@ -2,6 +2,8 @@ image: centos:centos7
 
 stages:
   - initialize
+  - build
+  - connect
   - test
 
 services:
@@ -9,33 +11,56 @@ services:
   - redis:6.0.1
 
 variables:
+  MAVEN_CLI_OPTS: "--batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MYSQL_DATABASE: renfeid
   MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE_SCHEMA: "$CI_PROJECT_DIR/environment/db/renfeid.sql"
 
-connect:
-  stage: test
-  image: mysql:5.7
-  script:
-    - echo "SELECT 'OK';"
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE" < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
+cache:
+  paths:
+    - .m2/repository/
 
-initialize_environmen:
+initialize_environmen_jihu:
   stage: initialize
   script:
     - yum install -y wget unzip
-    - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
-    - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
-    - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
-    - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
+      - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
+      - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
+      - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
+      - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
+  rules:
+    - if: $CI_SERVER_URL =~ /gitlab.cn/
+
+initialize_environmen_gitlab:
+  stage: initialize
+  script:
+    - yum install -y wget unzip
+      - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
+      - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
+      - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
+      - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
+  rules:
+    - if: $CI_SERVER_URL =~ /gitlab.com/
+
+build:
+  stage: build
+  image: maven:latest
+  script:
+    - mvn $MAVEN_CLI_OPTS clean compile
+
+connect:
+  stage: connect
+  image: mysql:5.7
+  script:
+    - echo "create database $MYSQL_DATABASE_NAME;"
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE_NAME < $MYSQL_DATABASE_SCHEMA --ssl-mode=REQUIRED --default-character-set=utf8
 
 test_job:
   stage: test
-  before_script:
-    - yum install -y wget
-    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
-    - yum install -y java-1.8.0-openjdk* apache-maven
+  image: maven:latest
   script:
-    - mvn -P gitlab clean test jacoco:report --file pom.xml
+    - mvn -P gitlab $MAVEN_CLI_OPTS test jacoco:report --file pom.xml
     - bash <(curl -s https://codecov.io/bash)
     - sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
     - mvn coveralls:report
