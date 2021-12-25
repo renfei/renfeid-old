@@ -3,7 +3,9 @@ package net.renfei.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.renfei.ApplicationTests;
+import net.renfei.config.SystemConfig;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Map;
 import static net.renfei.utils.DBMSMetaUtil.*;
 
 public class DBMSMetaUtilTests extends ApplicationTests {
+    @Autowired
+    private SystemConfig systemConfig;
 
     @Test
     public void test() throws JsonProcessingException {
@@ -21,7 +25,10 @@ public class DBMSMetaUtilTests extends ApplicationTests {
 
     private void testMySQL() throws JsonProcessingException {
         //
-        String ip = "mysql";
+        String ip = "127.0.0.1";
+        if (systemConfig.getActive().equals("gitlab")) {
+            ip = "mysql";
+        }
         String port = "3306";
         String dbname = "renfeid";
         String username = "root";
