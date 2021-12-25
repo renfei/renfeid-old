@@ -17,7 +17,7 @@ connect:
   image: mysql:5.7
   script:
     - echo "SELECT 'OK';"
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE" --ssl-mode=REQUIRED
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE" < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
 
 initialize_environmen:
   stage: initialize
@@ -33,9 +33,7 @@ test_job:
   before_script:
     - yum install -y wget
     - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
-    - rpm -ivh https://repo.mysql.com//mysql57-community-release-el7-11.noarch.rpm
-    - yum install -y java-1.8.0-openjdk* apache-maven mysql-community-client.x86_64
-    - mysql --user=root --password=\"$MYSQL_ROOT_PASSWORD\" --host=mysql < environment/db/renfeid.sql
+    - yum install -y java-1.8.0-openjdk* apache-maven
   script:
     - mvn -P gitlab clean test jacoco:report --file pom.xml
     - bash <(curl -s https://codecov.io/bash)
