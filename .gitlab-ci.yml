@@ -29,6 +29,7 @@ initialize_environmen_jihu:
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
     - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   artifacts:
+    when: on_success
     paths:
       - src/main/resources/ip2location/
   rules:
@@ -43,6 +44,7 @@ initialize_environmen_gitlab:
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
     - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   artifacts:
+    when: on_success
     paths:
       - src/main/resources/ip2location/
   rules:
@@ -59,7 +61,11 @@ connect:
   image: mysql:5.7
   script:
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "use $MYSQL_DATABASE; select * from renfeid.leaf_alloc;"
+    - SOME DATABASE DUMPING
+  artifacts:
+    when: on_success
+    paths:
+      - /var/lib/mysql/
 
 test_job:
   stage: test
