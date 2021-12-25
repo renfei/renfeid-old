@@ -58,8 +58,8 @@ connect:
   stage: connect
   image: mysql:5.7
   script:
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "CREATE DATABASE $MYSQL_DATABASE"
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql -e "use $MYSQL_DATABASE; show tables;"
 
 test_job:
   stage: test
