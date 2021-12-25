@@ -55,7 +55,7 @@ spring:
     uris: http://localhost:9200
 # 自定义配置
 system:
-  active: dev
+  active: gitlab
   version: @project.version@
   buildTime: @buildtimestamp@
   siteDomainName: http://localhost:9595
