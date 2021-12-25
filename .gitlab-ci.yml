@@ -58,7 +58,7 @@ connect:
   stage: connect
   image: mysql:5.7
   script:
-    - echo "create database $MYSQL_DATABASE_NAME;"
+    - echo "create database $MYSQL_DATABASE;"
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql renfeid < environment/db/renfeid.sql --ssl-mode=REQUIRED --default-character-set=utf8
 
 test_job:
