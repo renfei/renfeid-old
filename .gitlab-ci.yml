@@ -9,7 +9,7 @@ stages:
 - initialize
 - compile
 - test
-- dast
+- deploy
 cache:
   paths:
   - ".m2/repository/"
@@ -73,3 +73,13 @@ include:
 - template: Security/SAST-IaC.latest.gitlab-ci.yml
 - template: Security/Dependency-Scanning.gitlab-ci.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
+deploy_staging:
+  stage: deploy
+  script:
+    - echo "Deploy to staging server"
+  environment:
+    name: production
+    url: https://www.renfei.net/
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
