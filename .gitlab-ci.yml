@@ -1,78 +1,81 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: centos:centos7
+
 stages:
-- initialize
-- compile
-- test
-- deploy
+  - initialize
+  - compile
+  - test
+  - deploy
+
 cache:
   paths:
-  - ".m2/repository/"
+    - ".m2/repository/"
+
 initialize_environmen_jihu:
   stage: initialize
   script:
-  - yum install -y wget unzip
-  - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
-  - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
-  - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
-  - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
+    - yum install -y wget unzip
+    - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
+    - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
+    - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
+    - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   artifacts:
     expire_in: 1d
     when: on_success
     paths:
-    - src/main/resources/ip2location/
+      - src/main/resources/ip2location/
   rules:
-  - if: "$CI_SERVER_URL =~ /gitlab.cn/"
+    - if: "$CI_SERVER_URL =~ /gitlab.cn/"
+
 initialize_environmen_gitlab:
   stage: initialize
   script:
-  - yum install -y wget unzip
-  - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
-  - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
-  - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
-  - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
+    - yum install -y wget unzip
+    - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
+    - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
+    - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
+    - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   artifacts:
     expire_in: 1d
     when: on_success
     paths:
-    - src/main/resources/ip2location/
+      - src/main/resources/ip2location/
   rules:
-  - if: "$CI_SERVER_URL =~ /gitlab.com/"
+    - if: "$CI_SERVER_URL =~ /gitlab.com/"
+
 compile:
   stage: compile
   image: maven:latest
   script:
-  - mvn --batch-mode compile
+    - mvn --batch-mode compile
+
 test_job:
   stage: test
   image: centos:centos7
   services:
-  - mysql:5.7
-  - redis:6.0.1
+    - mysql:5.7
+    - redis:6.0.1
   variables:
     MYSQL_DATABASE: renfeid
     MYSQL_ROOT_PASSWORD: root
   before_script:
-  - yum install -y wget mysql java-1.8.0-openjdk* which
-  - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
-    < environment/db/renfeid.sql --default-character-set=utf8
-  - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
-    -O /etc/yum.repos.d/epel-apache-maven.repo
-  - yum -y install apache-maven
+    - yum install -y wget mysql java-1.8.0-openjdk* which
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
+      < environment/db/renfeid.sql --default-character-set=utf8
+    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
+      -O /etc/yum.repos.d/epel-apache-maven.repo
+    - yum -y install apache-maven
   script:
-  - mvn -P gitlab --batch-mode test --file pom.xml
+    - mvn -P gitlab --batch-mode test --file pom.xml
+
 sast:
   stage: test
+
 include:
-- template: Security/SAST.gitlab-ci.yml
-- template: Security/SAST-IaC.latest.gitlab-ci.yml
-- template: Security/Dependency-Scanning.gitlab-ci.yml
-- template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST-IaC.latest.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
 deploy_staging:
   stage: deploy
   script:
