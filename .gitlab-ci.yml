@@ -22,6 +22,7 @@ initialize_environmen_jihu:
   - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
   - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   artifacts:
+    expire_in: 1d
     when: on_success
     paths:
     - src/main/resources/ip2location/
@@ -36,6 +37,7 @@ initialize_environmen_gitlab:
   - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
   - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   artifacts:
+    expire_in: 1d
     when: on_success
     paths:
     - src/main/resources/ip2location/
