@@ -2,14 +2,14 @@ package net.renfei.services.leaf.common;
 
 public class Result {
     private long id;
-    private Status status;
+    private StatusEnum statusEnum;
 
     public Result() {
 
     }
-    public Result(long id, Status status) {
+    public Result(long id, StatusEnum statusEnum) {
         this.id = id;
-        this.status = status;
+        this.statusEnum = statusEnum;
     }
 
     public long getId() {
@@ -20,19 +20,19 @@ public class Result {
         this.id = id;
     }
 
-    public Status getStatus() {
-        return status;
+    public StatusEnum getStatus() {
+        return statusEnum;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(StatusEnum statusEnum) {
+        this.statusEnum = statusEnum;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Result{");
         sb.append("id=").append(id);
-        sb.append(", status=").append(status);
+        sb.append(", status=").append(statusEnum);
         sb.append('}');
         return sb.toString();
     }

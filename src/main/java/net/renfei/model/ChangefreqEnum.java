@@ -3,6 +3,6 @@ package net.renfei.model;
 /**
  * 更新频率
  */
-public enum Changefreq {
+public enum ChangefreqEnum {
     always, hourly, daily, weekly, monthly, yearly
 }

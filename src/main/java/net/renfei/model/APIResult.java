@@ -1,6 +1,5 @@
 package net.renfei.model;
 
-import lombok.Data;
 import net.renfei.utils.StringUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -10,7 +9,7 @@ import org.springframework.util.ObjectUtils;
  * @author renfei
  */
 public final class APIResult<T> {
-    private StateCode stateCode;
+    private StateCodeEnum stateCodeEnum;
     private Integer code;
     private String message;
     private Integer timestamp;
@@ -24,9 +23,9 @@ public final class APIResult<T> {
 
     public APIResult(T data) {
         this.data = data;
-        this.stateCode = StateCode.OK;
-        this.code = StateCode.OK.getCode();
-        this.message = StateCode.OK.getDescribe();
+        this.stateCodeEnum = StateCodeEnum.OK;
+        this.code = StateCodeEnum.OK.getCode();
+        this.message = StateCodeEnum.OK.getDescribe();
         this.signature();
     }
 
@@ -34,7 +33,7 @@ public final class APIResult<T> {
         this.code = builder.code;
         this.message = builder.message;
         this.data = builder.data;
-        this.stateCode = builder.stateCode;
+        this.stateCodeEnum = builder.stateCodeEnum;
         this.signature();
     }
 
@@ -44,9 +43,9 @@ public final class APIResult<T> {
 
     public static APIResult success() {
         APIResult apiResult = new APIResult();
-        apiResult.stateCode = StateCode.OK;
-        apiResult.code = StateCode.OK.getCode();
-        apiResult.message = StateCode.OK.getDescribe();
+        apiResult.stateCodeEnum = StateCodeEnum.OK;
+        apiResult.code = StateCodeEnum.OK.getCode();
+        apiResult.message = StateCodeEnum.OK.getDescribe();
         return apiResult;
     }
 
@@ -55,7 +54,7 @@ public final class APIResult<T> {
     }
 
     public String getMessage() {
-        return ObjectUtils.isEmpty(this.message) ? this.stateCode.getDescribe() : this.message;
+        return ObjectUtils.isEmpty(this.message) ? this.stateCodeEnum.getDescribe() : this.message;
     }
 
     public Integer getTimestamp() {
@@ -85,11 +84,11 @@ public final class APIResult<T> {
     }
 
     public String toString() {
-        return "APIResult{stateCode=" + (this.stateCode == null ? "null" : this.stateCode.toString()) + ", code=" + (this.code == null ? "null" : this.code) + ", message='" + (this.message == null ? "null" : this.message) + '\'' + ", timestamp=" + (this.timestamp == null ? "null" : this.timestamp) + ", signature='" + (this.signature == null ? "null" : this.signature) + '\'' + ", nonce='" + (this.nonce == null ? "null" : this.nonce) + '\'' + ", data=" + (this.data == null ? "null" : this.data.toString()) + '}';
+        return "APIResult{stateCode=" + (this.stateCodeEnum == null ? "null" : this.stateCodeEnum.toString()) + ", code=" + (this.code == null ? "null" : this.code) + ", message='" + (this.message == null ? "null" : this.message) + '\'' + ", timestamp=" + (this.timestamp == null ? "null" : this.timestamp) + ", signature='" + (this.signature == null ? "null" : this.signature) + '\'' + ", nonce='" + (this.nonce == null ? "null" : this.nonce) + '\'' + ", data=" + (this.data == null ? "null" : this.data.toString()) + '}';
     }
 
     public static class Builder<T> {
-        private StateCode stateCode;
+        private StateCodeEnum stateCodeEnum;
         private Integer code;
         private String message;
         private T data;
@@ -97,9 +96,9 @@ public final class APIResult<T> {
         public Builder() {
         }
 
-        public APIResult.Builder code(StateCode stateCode) {
-            this.stateCode = stateCode;
-            this.code = stateCode.getCode();
+        public APIResult.Builder code(StateCodeEnum stateCodeEnum) {
+            this.stateCodeEnum = stateCodeEnum;
+            this.code = stateCodeEnum.getCode();
             return this;
         }
 

@@ -2,7 +2,7 @@ package net.renfei.domain.blog;
 
 import lombok.Builder;
 import lombok.Data;
-import net.renfei.model.SecretLevel;
+import net.renfei.model.SecretLevelEnum;
 
 /**
  * @author renfei
@@ -13,5 +13,5 @@ public class Category {
     private Long id;
     private String enName;
     private String zhName;
-    private SecretLevel secretLevel;
+    private SecretLevelEnum secretLevelEnum;
 }

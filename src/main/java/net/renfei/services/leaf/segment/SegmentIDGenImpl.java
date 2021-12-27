@@ -5,7 +5,7 @@ import net.renfei.repositories.model.LeafAlloc;
 import net.renfei.repositories.model.LeafAllocExample;
 import net.renfei.services.leaf.IDGen;
 import net.renfei.services.leaf.common.Result;
-import net.renfei.services.leaf.common.Status;
+import net.renfei.services.leaf.common.StatusEnum;
 import net.renfei.services.leaf.segment.model.Segment;
 import net.renfei.services.leaf.segment.model.SegmentBuffer;
 import org.perf4j.StopWatch;
@@ -136,7 +136,7 @@ public class SegmentIDGenImpl implements IDGen {
     @Override
     public Result get(final String key) {
         if (!initOK) {
-            return new Result(EXCEPTION_ID_IDCACHE_INIT_FALSE, Status.EXCEPTION);
+            return new Result(EXCEPTION_ID_IDCACHE_INIT_FALSE, StatusEnum.EXCEPTION);
         }
         if (cache.containsKey(key)) {
             SegmentBuffer buffer = cache.get(key);
@@ -155,7 +155,7 @@ public class SegmentIDGenImpl implements IDGen {
             }
             return getIdFromSegmentBuffer(cache.get(key));
         }
-        return new Result(EXCEPTION_ID_KEY_NOT_EXISTS, Status.EXCEPTION);
+        return new Result(EXCEPTION_ID_KEY_NOT_EXISTS, StatusEnum.EXCEPTION);
     }
 
     public void updateSegmentFromDb(String key, Segment segment) {
@@ -234,7 +234,7 @@ public class SegmentIDGenImpl implements IDGen {
                 }
                 long value = segment.getValue().getAndIncrement();
                 if (value < segment.getMax()) {
-                    return new Result(value, Status.SUCCESS);
+                    return new Result(value, StatusEnum.SUCCESS);
                 }
             } finally {
                 buffer.rLock().unlock();
@@ -245,14 +245,14 @@ public class SegmentIDGenImpl implements IDGen {
                 final Segment segment = buffer.getCurrent();
                 long value = segment.getValue().getAndIncrement();
                 if (value < segment.getMax()) {
-                    return new Result(value, Status.SUCCESS);
+                    return new Result(value, StatusEnum.SUCCESS);
                 }
                 if (buffer.isNextReady()) {
                     buffer.switchPos();
                     buffer.setNextReady(false);
                 } else {
                     logger.error("Both two segments in {} are not ready!", buffer);
-                    return new Result(EXCEPTION_ID_TWO_SEGMENTS_ARE_NULL, Status.EXCEPTION);
+                    return new Result(EXCEPTION_ID_TWO_SEGMENTS_ARE_NULL, StatusEnum.EXCEPTION);
                 }
             } finally {
                 buffer.wLock().unlock();

@@ -3,7 +3,7 @@ package net.renfei.services.leaf.snowflake;
 import com.google.common.base.Preconditions;
 import net.renfei.services.leaf.IDGen;
 import net.renfei.services.leaf.common.Result;
-import net.renfei.services.leaf.common.Status;
+import net.renfei.services.leaf.common.StatusEnum;
 import net.renfei.services.leaf.common.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,14 +67,14 @@ public class SnowflakeIDGenImpl implements IDGen {
                     wait(offset << 1);
                     timestamp = timeGen();
                     if (timestamp < lastTimestamp) {
-                        return new Result(-1, Status.EXCEPTION);
+                        return new Result(-1, StatusEnum.EXCEPTION);
                     }
                 } catch (InterruptedException e) {
                     LOGGER.error("wait interrupted");
-                    return new Result(-2, Status.EXCEPTION);
+                    return new Result(-2, StatusEnum.EXCEPTION);
                 }
             } else {
-                return new Result(-3, Status.EXCEPTION);
+                return new Result(-3, StatusEnum.EXCEPTION);
             }
         }
         if (lastTimestamp == timestamp) {
@@ -90,7 +90,7 @@ public class SnowflakeIDGenImpl implements IDGen {
         }
         lastTimestamp = timestamp;
         long id = ((timestamp - twepoch) << timestampLeftShift) | (workerId << workerIdShift) | sequence;
-        return new Result(id, Status.SUCCESS);
+        return new Result(id, StatusEnum.SUCCESS);
 
     }
 

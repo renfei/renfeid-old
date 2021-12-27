@@ -5,7 +5,7 @@ package net.renfei.model;
  *
  * @author renfei
  */
-public enum StateCode {
+public enum StateCodeEnum {
     Failure(100, "失败"),
     /**
      * 完成请求
@@ -55,7 +55,7 @@ public enum StateCode {
     private Integer code;
     private String describe;
 
-    StateCode(int code, String describe) {
+    StateCodeEnum(int code, String describe) {
         this.code = code;
         this.describe = describe;
     }

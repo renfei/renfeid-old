@@ -5,7 +5,7 @@ import net.renfei.controllers.api.IP2LocationApi;
 import net.renfei.exception.IP2LocationException;
 import net.renfei.ip2location.IPResult;
 import net.renfei.model.APIResult;
-import net.renfei.model.StateCode;
+import net.renfei.model.StateCodeEnum;
 import net.renfei.services.IP2LocationService;
 import net.renfei.utils.IpUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +29,7 @@ public class IP2LocationApiController extends BaseController implements IP2Locat
             return new APIResult<>(ip2LocationService.ipQuery(IpUtils.getIpAddress(request)));
         } catch (IP2LocationException ip2LocationException) {
             return APIResult.builder()
-                    .code(StateCode.Failure)
+                    .code(StateCodeEnum.Failure)
                     .message(ip2LocationException.getMessage())
                     .build();
         }
@@ -40,7 +40,7 @@ public class IP2LocationApiController extends BaseController implements IP2Locat
             return new APIResult<>(ip2LocationService.ipQuery(ip));
         } catch (IP2LocationException ip2LocationException) {
             return APIResult.builder()
-                    .code(StateCode.Failure)
+                    .code(StateCodeEnum.Failure)
                     .message(ip2LocationException.getMessage())
                     .build();
         }

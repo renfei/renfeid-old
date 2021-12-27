@@ -1,7 +1,7 @@
 package net.renfei.domain.user;
 
 import lombok.Data;
-import net.renfei.model.SecretLevel;
+import net.renfei.model.SecretLevelEnum;
 
 /**
  * 用户域实体类
@@ -14,7 +14,7 @@ public final class User {
     private String userName;
     private String email;
     private String webSite;
-    private SecretLevel secretLevel;
+    private SecretLevelEnum secretLevelEnum;
 
     private User() {
     }

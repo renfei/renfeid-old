@@ -11,10 +11,10 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
-import net.renfei.model.CommentStatus;
+import net.renfei.model.CommentStatusEnum;
 import net.renfei.model.ListData;
-import net.renfei.model.PostStatus;
-import net.renfei.model.SecretLevel;
+import net.renfei.model.PostStatusEnum;
+import net.renfei.model.SecretLevelEnum;
 import net.renfei.repositories.BlogCategoryMapper;
 import net.renfei.repositories.BlogPostsMapper;
 import net.renfei.repositories.model.BlogCategory;
@@ -84,7 +84,7 @@ public final class BlogDomain {
         if (!isAdmin) {
             // 如果不是管理员操作，需要更多限制判断
             // 判断文章状态
-            if (!PostStatus.PUBLISH.equals(post.getPostStatus())) {
+            if (!PostStatusEnum.PUBLISH.equals(post.getPostStatus())) {
                 throw new NotExistException("文章当前状态不可被阅读。");
             }
             // 判断密码正确性
@@ -101,10 +101,10 @@ public final class BlogDomain {
         }
         // 判断保密等级，管理员也需要判断
         if (user != null) {
-            if (user.getSecretLevel().getLevel() < post.getSecretLevel().getLevel()) {
+            if (user.getSecretLevelEnum().getLevel() < post.getSecretLevelEnum().getLevel()) {
                 throw new SecretLevelException("您当前的保密等级无权查看此文章内容。");
             }
-        } else if (SecretLevel.UNCLASSIFIED.getLevel() < post.getSecretLevel().getLevel()) {
+        } else if (SecretLevelEnum.UNCLASSIFIED.getLevel() < post.getSecretLevelEnum().getLevel()) {
             throw new SecretLevelException("当前文章内容受到保密系统保护，请先登陆后查看。");
         }
     }
@@ -149,24 +149,24 @@ public final class BlogDomain {
         BlogPostsExample.Criteria criteria = example.createCriteria();
         if (user != null) {
             // 登录用户，判断保密等级
-            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevel().getLevel());
+            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevelEnum().getLevel());
             if (isAdmin) {
                 // 管理员，除了被删除和修订版本，其他都显示
                 criteria
-                        .andPostStatusNotEqualTo(PostStatus.DELETED.toString())
-                        .andPostStatusNotEqualTo(PostStatus.REVISION.toString());
+                        .andPostStatusNotEqualTo(PostStatusEnum.DELETED.toString())
+                        .andPostStatusNotEqualTo(PostStatusEnum.REVISION.toString());
             } else {
                 // 其他用户，只能查看已经发布的内容
                 criteria
                         .andPostDateLessThanOrEqualTo(new Date())
-                        .andPostStatusEqualTo(PostStatus.PUBLISH.toString());
+                        .andPostStatusEqualTo(PostStatusEnum.PUBLISH.toString());
             }
         } else {
             // 未登录用户，只能查看非密内容、已经发布的内容
             criteria
-                    .andSecretLevelLessThanOrEqualTo(SecretLevel.UNCLASSIFIED.getLevel())
+                    .andSecretLevelLessThanOrEqualTo(SecretLevelEnum.UNCLASSIFIED.getLevel())
                     .andPostDateLessThanOrEqualTo(new Date())
-                    .andPostStatusEqualTo(PostStatus.PUBLISH.toString());
+                    .andPostStatusEqualTo(PostStatusEnum.PUBLISH.toString());
         }
         Page<BlogPostsWithBLOBs> page = PageHelper.startPage(pages, rows);
         blogPostsMapper.selectByExampleWithBLOBs(example);
@@ -216,9 +216,9 @@ public final class BlogDomain {
         BlogCategoryExample.Criteria criteria = example.createCriteria();
         if (user != null) {
             // 保密等级判断
-            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevel().getLevel());
+            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevelEnum().getLevel());
         } else {
-            criteria.andSecretLevelEqualTo(SecretLevel.UNCLASSIFIED.getLevel());
+            criteria.andSecretLevelEqualTo(SecretLevelEnum.UNCLASSIFIED.getLevel());
         }
         List<BlogCategory> blogCategories = categoryMapper.selectByExample(example);
         List<Category> categories = new CopyOnWriteArrayList<>();
@@ -248,12 +248,12 @@ public final class BlogDomain {
         BlogPostsExample.Criteria criteria = example.createCriteria();
         if (user != null) {
             // 保密等级判断
-            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevel().getLevel());
+            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevelEnum().getLevel());
         } else {
-            criteria.andSecretLevelEqualTo(SecretLevel.UNCLASSIFIED.getLevel());
+            criteria.andSecretLevelEqualTo(SecretLevelEnum.UNCLASSIFIED.getLevel());
         }
         criteria
-                .andPostStatusEqualTo(PostStatus.PUBLISH.toString())
+                .andPostStatusEqualTo(PostStatusEnum.PUBLISH.toString())
                 .andPostDateLessThanOrEqualTo(new Date());
         example.setOrderByClause("avg_views DESC,post_date DESC");
         PageHelper.startPage(1, 10);
@@ -267,7 +267,7 @@ public final class BlogDomain {
         BlogPostsExample example = new BlogPostsExample();
         example.createCriteria().andIdEqualTo(id);
         BlogPostsWithBLOBs blogPost = ListUtils.getOne(blogPostsMapper.selectByExampleWithBLOBs(example));
-        if (blogPost == null || PostStatus.DELETED.toString().equals(blogPost.getPostStatus())) {
+        if (blogPost == null || PostStatusEnum.DELETED.toString().equals(blogPost.getPostStatus())) {
             throw new NotExistException("博客文章不存在");
         }
         return convert(blogPost);
@@ -282,7 +282,7 @@ public final class BlogDomain {
                 .id(blogCategory.getId())
                 .enName(blogCategory.getEnName())
                 .zhName(blogCategory.getZhName())
-                .secretLevel(SecretLevel.valueOf(blogCategory.getSecretLevel()))
+                .secretLevelEnum(SecretLevelEnum.valueOf(blogCategory.getSecretLevel()))
                 .build();
     }
 
@@ -300,8 +300,8 @@ public final class BlogDomain {
                 .postDate(blogPost.getPostDate())
                 .postAuthor(blogPost.getPostAuthor())
                 .categoryId(blogPost.getCategoryId())
-                .postStatus(PostStatus.valueOf(blogPost.getPostStatus()))
-                .commentStatus(CommentStatus.valueOf(blogPost.getCommentStatus()))
+                .postStatus(PostStatusEnum.valueOf(blogPost.getPostStatus()))
+                .commentStatusenum(CommentStatusEnum.valueOf(blogPost.getCommentStatus()))
                 .postPassword(blogPost.getPostPassword())
                 .postModified(blogPost.getPostModified())
                 .postParent(blogPost.getPostParent())
@@ -310,7 +310,7 @@ public final class BlogDomain {
                 .avgViews(blogPost.getAvgViews())
                 .avgComment(blogPost.getAvgComment())
                 .pageRank(blogPost.getPageRank())
-                .secretLevel(SecretLevel.valueOf(blogPost.getSecretLevel()))
+                .secretLevelEnum(SecretLevelEnum.valueOf(blogPost.getSecretLevel()))
                 .build();
     }
 }

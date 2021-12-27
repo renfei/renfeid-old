@@ -5,7 +5,7 @@ package net.renfei.model;
  *
  * @author renfei
  */
-public enum SecretLevel {
+public enum SecretLevelEnum {
     /**
      * 非密
      */
@@ -21,7 +21,7 @@ public enum SecretLevel {
 
     private final int LEVEL;
 
-    SecretLevel(int level) {
+    SecretLevelEnum(int level) {
         this.LEVEL = level;
     }
 
@@ -29,7 +29,7 @@ public enum SecretLevel {
         return LEVEL;
     }
 
-    public static SecretLevel valueOf(int level) {
+    public static SecretLevelEnum valueOf(int level) {
         switch (level) {
             case 2:
                 return SECRET;

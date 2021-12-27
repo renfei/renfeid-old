@@ -12,7 +12,7 @@ import java.util.Date;
 public class SiteMapXml implements Serializable {
     private static final long serialVersionUID = 1L;
     private String loc;
-    private Changefreq changefreq;
+    private ChangefreqEnum changefreqEnum;
     private float priority;
     private Date lastmod;
 
@@ -30,14 +30,14 @@ public class SiteMapXml implements Serializable {
         return "";
     }
 
-    public SiteMapXml(String loc, Changefreq changefre, String priority) {
-        this.setChangefreq(changefre);
+    public SiteMapXml(String loc, ChangefreqEnum changefre, String priority) {
+        this.setChangefreqEnum(changefre);
         this.setLoc(loc);
         this.setPriority(Float.parseFloat(priority));
     }
 
-    public SiteMapXml(String loc, Changefreq changefre, String priority, Date lastmod) {
-        this.setChangefreq(changefre);
+    public SiteMapXml(String loc, ChangefreqEnum changefre, String priority, Date lastmod) {
+        this.setChangefreqEnum(changefre);
         this.setLoc(loc);
         this.setPriority(Float.parseFloat(priority));
         this.setLastmod(lastmod);

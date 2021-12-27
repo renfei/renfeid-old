@@ -1,6 +1,6 @@
 package net.renfei.services.leaf.common;
 
-public enum  Status {
+public enum StatusEnum {
     SUCCESS,
     EXCEPTION
 }

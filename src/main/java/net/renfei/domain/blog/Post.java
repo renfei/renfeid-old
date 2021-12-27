@@ -2,9 +2,9 @@ package net.renfei.domain.blog;
 
 import lombok.Builder;
 import lombok.Data;
-import net.renfei.model.CommentStatus;
-import net.renfei.model.PostStatus;
-import net.renfei.model.SecretLevel;
+import net.renfei.model.CommentStatusEnum;
+import net.renfei.model.PostStatusEnum;
+import net.renfei.model.SecretLevelEnum;
 
 import java.util.Date;
 
@@ -26,9 +26,9 @@ public class Post {
     private Date postDate;
     private Long postAuthor;
     private Long categoryId;
-    private PostStatus postStatus;
+    private PostStatusEnum postStatus;
     private Long postViews;
-    private CommentStatus commentStatus;
+    private CommentStatusEnum commentStatusenum;
     private String postPassword;
     private Date postModified;
     private Long postParent;
@@ -37,5 +37,5 @@ public class Post {
     private Double avgViews;
     private Double avgComment;
     private Double pageRank;
-    private SecretLevel secretLevel;
+    private SecretLevelEnum secretLevelEnum;
 }

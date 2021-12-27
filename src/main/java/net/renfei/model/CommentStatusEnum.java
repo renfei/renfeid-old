@@ -5,7 +5,7 @@ package net.renfei.model;
  *
  * @author renfei
  */
-public enum CommentStatus {
+public enum CommentStatusEnum {
     /**
      * 任意评论
      */

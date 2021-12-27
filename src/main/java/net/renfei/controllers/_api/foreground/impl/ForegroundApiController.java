@@ -9,7 +9,7 @@ import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.APIResult;
-import net.renfei.model.StateCode;
+import net.renfei.model.StateCodeEnum;
 import net.renfei.services.BlogService;
 import net.renfei.utils.SentryUtils;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,17 +43,17 @@ public class ForegroundApiController extends BaseController implements Foregroun
             blogDomain = blogService.getBlogById(id, getSignUser(), password);
         } catch (NotExistException e) {
             return APIResult.builder()
-                    .code(StateCode.Failure)
+                    .code(StateCodeEnum.Failure)
                     .message("文章不存在。")
                     .build();
         } catch (BlogPostNeedPasswordException e) {
             return APIResult.builder()
-                    .code(StateCode.Forbidden)
+                    .code(StateCodeEnum.Forbidden)
                     .message("文章密码不正确。")
                     .build();
         } catch (SecretLevelException e) {
             return APIResult.builder()
-                    .code(StateCode.Forbidden)
+                    .code(StateCodeEnum.Forbidden)
                     .message("根据您的保密等级，您无权查看此内容。")
                     .build();
         }

@@ -5,7 +5,7 @@ package net.renfei.model;
  *
  * @author renfei
  */
-public enum PostStatus {
+public enum PostStatusEnum {
     /**
      * 发布
      */
