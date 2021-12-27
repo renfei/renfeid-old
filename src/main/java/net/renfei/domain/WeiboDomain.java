@@ -1,0 +1,125 @@
+package net.renfei.domain;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import lombok.Getter;
+import net.renfei.domain.comment.Comment;
+import net.renfei.domain.system.SystemTypeEnum;
+import net.renfei.domain.weibo.Weibo;
+import net.renfei.exception.NotExistException;
+import net.renfei.model.ListData;
+import net.renfei.repositories.WeiboPostmetaMapper;
+import net.renfei.repositories.WeiboPostsMapper;
+import net.renfei.repositories.model.WeiboPosts;
+import net.renfei.repositories.model.WeiboPostsExample;
+import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.utils.ListUtils;
+
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+/**
+ * 微博领域对象
+ *
+ * @author renfei
+ */
+public final class WeiboDomain {
+    @Getter
+    private final Weibo weibo;
+    @Getter
+    private final List<Comment> commentList;
+    private final WeiboPostsMapper weiboPostsMapper;
+    private final WeiboPostmetaMapper weiboPostmetaMapper;
+
+    {
+        weiboPostsMapper = (WeiboPostsMapper) ApplicationContextUtil.getBean("weiboPostsMapper");
+        weiboPostmetaMapper = (WeiboPostmetaMapper) ApplicationContextUtil.getBean("weiboPostmetaMapper");
+    }
+
+    private WeiboDomain() {
+        weibo = null;
+        commentList = null;
+    }
+
+    public WeiboDomain(Long id) throws NotExistException {
+        if (id == null) {
+            throw new NotExistException("微博文章不存在");
+        }
+        WeiboPostsExample weiboPostsExample = new WeiboPostsExample();
+        weiboPostsExample.createCriteria()
+                .andIdEqualTo(id)
+                .andReleaseTimeLessThanOrEqualTo(new Date());
+        assert weiboPostsMapper != null;
+        WeiboPosts weiboPosts = ListUtils.getOne(weiboPostsMapper.selectByExample(weiboPostsExample));
+        if (weiboPosts == null) {
+            throw new NotExistException("微博文章不存在");
+        }
+        // TODO 微博图像
+        String image = "";
+        Weibo weibo = convert(weiboPosts);
+        weibo.setImage(image);
+        this.weibo = weibo;
+        commentList = new CommentDomain(SystemTypeEnum.WEIBO, id).getCommentList();
+    }
+
+    public void view() {
+        WeiboPostsExample weiboPostsExample = new WeiboPostsExample();
+        weiboPostsExample.createCriteria()
+                .andIdEqualTo(weibo.getId());
+        WeiboPosts weiboPosts = ListUtils.getOne(weiboPostsMapper.selectByExample(weiboPostsExample));
+        weiboPosts.setViews(weiboPosts.getViews() + 1);
+        weiboPostsMapper.updateByExampleSelective(weiboPosts, weiboPostsExample);
+    }
+
+    public void thumbsUp() {
+        WeiboPostsExample weiboPostsExample = new WeiboPostsExample();
+        weiboPostsExample.createCriteria()
+                .andIdEqualTo(weibo.getId());
+        WeiboPosts weiboPosts = ListUtils.getOne(weiboPostsMapper.selectByExample(weiboPostsExample));
+        weiboPosts.setThumbsUp(weiboPosts.getThumbsUp() + 1);
+        weiboPostsMapper.updateByExampleSelective(weiboPosts, weiboPostsExample);
+    }
+
+    public void thumbsDown() {
+        WeiboPostsExample weiboPostsExample = new WeiboPostsExample();
+        weiboPostsExample.createCriteria()
+                .andIdEqualTo(weibo.getId());
+        WeiboPosts weiboPosts = ListUtils.getOne(weiboPostsMapper.selectByExample(weiboPostsExample));
+        weiboPosts.setThumbsDown(weiboPosts.getThumbsDown() + 1);
+        weiboPostsMapper.updateByExampleSelective(weiboPosts, weiboPostsExample);
+    }
+
+    public static ListData<Weibo> allWeiboList(int pages, int rows) {
+        WeiboDomain weiboDomain = new WeiboDomain();
+        return weiboDomain.getAllWeiboList(pages, rows);
+    }
+
+    private ListData<Weibo> getAllWeiboList(int pages, int rows) {
+        WeiboPostsExample weiboPostsExample = new WeiboPostsExample();
+        weiboPostsExample.setOrderByClause("release_time DESC");
+        weiboPostsExample.createCriteria()
+                .andReleaseTimeLessThanOrEqualTo(new Date());
+        Page<WeiboPosts> page = PageHelper.startPage(pages, rows);
+        weiboPostsMapper.selectByExample(weiboPostsExample);
+        List<Weibo> weiboList = new CopyOnWriteArrayList<>();
+        for (WeiboPosts weiboPosts : page.getResult()
+        ) {
+            weiboList.add(convert(weiboPosts));
+        }
+        ListData<Weibo> weiboListData = new ListData<>(page);
+        weiboListData.setData(weiboList);
+        return weiboListData;
+    }
+
+    private Weibo convert(WeiboPosts weiboPosts) {
+        return Weibo.builder()
+                .id(weiboPosts.getId())
+                .content(weiboPosts.getContent())
+                .releaseTime(weiboPosts.getReleaseTime())
+                .views(weiboPosts.getViews())
+                .thumbsUp(weiboPosts.getThumbsUp())
+                .thumbsDown(weiboPosts.getThumbsDown())
+                .build();
+    }
+}

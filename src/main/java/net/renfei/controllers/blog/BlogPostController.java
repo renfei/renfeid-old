@@ -69,7 +69,8 @@ public class BlogPostController extends BaseController {
             "default.cgi"
     })
     public RedirectView getPostListDir() {
-        RedirectView redirectView = new RedirectView("/posts/");
+        assert SYSTEM_CONFIG != null;
+        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts/");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }
@@ -143,7 +144,8 @@ public class BlogPostController extends BaseController {
             "{id}/default.cgi"
     })
     public RedirectView getPostInfoDir(@PathVariable("id") String id) {
-        RedirectView redirectView = new RedirectView("/posts/" + id);
+        assert SYSTEM_CONFIG != null;
+        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + id);
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

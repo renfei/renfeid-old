@@ -3,6 +3,7 @@ package net.renfei.controllers._api.foreground.impl;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers._api.foreground.ForegroundApi;
 import net.renfei.domain.BlogDomain;
+import net.renfei.domain.WeiboDomain;
 import net.renfei.domain.blog.Post;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.NotExistException;
@@ -10,6 +11,7 @@ import net.renfei.exception.SecretLevelException;
 import net.renfei.model.APIResult;
 import net.renfei.model.StateCode;
 import net.renfei.services.BlogService;
+import net.renfei.utils.SentryUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -57,5 +59,27 @@ public class ForegroundApiController extends BaseController implements Foregroun
         }
         blogService.view(blogDomain);
         return new APIResult<>(blogDomain.getPost());
+    }
+
+    @Override
+    public APIResult weiboThumbsUp(Long id) {
+        try {
+            WeiboDomain weiboDomain = new WeiboDomain(id);
+            weiboDomain.thumbsUp();
+        } catch (NotExistException e) {
+            SentryUtils.captureException(e);
+        }
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult weiboThumbsDown(Long id) {
+        try {
+            WeiboDomain weiboDomain = new WeiboDomain(id);
+            weiboDomain.thumbsDown();
+        } catch (NotExistException e) {
+            SentryUtils.captureException(e);
+        }
+        return APIResult.success();
     }
 }

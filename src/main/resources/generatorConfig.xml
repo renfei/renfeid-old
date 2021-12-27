@@ -57,6 +57,8 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_secret_key"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_site_menu"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_site_friendly_link"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="sys_site_footer_menu"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_site_footer_menu"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="weibo_posts"/>
+        <table schema="renfeid" delimitAllColumns="true" tableName="weibo_postmeta"/>
     </context>
 </generatorConfiguration>

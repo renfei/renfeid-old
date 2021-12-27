@@ -26,4 +26,24 @@ public class ForegroundApiTests extends ApplicationTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.code").value(200));
     }
+
+    @Test
+    public void weiboThumbsUpTest() throws Exception {
+        this.mockMvc.perform(post("/_api/foreground/weibo/1/thumbsUp")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+    }
+
+    @Test
+    public void weiboThumbsDownTest() throws Exception {
+        this.mockMvc.perform(post("/_api/foreground/weibo/1/thumbsDown")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+    }
 }

@@ -416,6 +416,7 @@ CREATE TABLE `sys_comments`  (
 -- ----------------------------
 INSERT INTO `sys_comments` VALUES (1, 'BLOG', 1, 1, '任霏', 'i@renfei.net', 'https://www.renfei.net', '10.10.10.10', 'Beijing', '2021-12-13 16:26:33', '这是一条测试评论', 0, NULL, 1);
 INSERT INTO `sys_comments` VALUES (2, 'BLOG', 1, 1, '任霏', 'i@renfei.net', 'https://www.renfei.net', '10.10.10.10', 'Beijing', '2021-12-13 16:27:24', '这是评论桥套测试', 0, 1, 1);
+INSERT INTO `sys_comments` VALUES (3, 'WEIBO', 1, 1, '任霏', 'i@renfei.net', 'https://www.renfei.net', '10.10.10.10', 'Beijing', '2021-12-13 16:26:33', '这是一条测试评论', 0, NULL, 1);
 
 -- ----------------------------
 -- Table structure for sys_keyword_object
@@ -4132,5 +4133,6 @@ CREATE TABLE `weibo_posts`  (
 -- ----------------------------
 -- Records of weibo_posts
 -- ----------------------------
+INSERT INTO `weibo_posts` VALUES (1, '第一条微博', '2021-12-27 08:24:21', 7, 1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

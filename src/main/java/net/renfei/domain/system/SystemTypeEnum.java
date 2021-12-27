@@ -9,5 +9,9 @@ public enum SystemTypeEnum {
     /**
      * 博客类
      */
-    BLOG
+    BLOG,
+    /**
+     * 微博类
+     */
+    WEIBO
 }
