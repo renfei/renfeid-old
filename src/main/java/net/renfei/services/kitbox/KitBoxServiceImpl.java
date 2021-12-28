@@ -1,6 +1,9 @@
 package net.renfei.services.kitbox;
 
+import net.renfei.domain.CommentDomain;
+import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
+import net.renfei.domain.system.SystemTypeEnum;
 import net.renfei.model.LinkTree;
 import net.renfei.model.kitbox.KitBoxMenus;
 import net.renfei.services.BaseService;
@@ -13,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * 工具箱服务
+ *
+ * @author renfei
+ */
 @Service
 public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     private static final String REDIS_KEY_KITBOX = REDIS_KEY + "kitbox:";
@@ -28,6 +36,11 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
         }
     }
 
+    /**
+     * 获取工具箱左侧菜单
+     *
+     * @return
+     */
     @Override
     public List<KitBoxMenus> getKitBoxMenus() {
         String redisKey = REDIS_KEY_KITBOX + "menus";
@@ -47,6 +60,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("网络工具")
                     .elementId(NETWORK_TOOL)
+                    .isOpen(false)
                     .links(new ArrayList<LinkTree>() {
                         {
                             this.add(LinkTree.builder()
@@ -80,6 +94,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("开发类工具")
                     .elementId(DEVELOPMENT_TOOL)
+                    .isOpen(false)
                     .links(new ArrayList<LinkTree>() {
                         {
                             this.add(LinkTree.builder()
@@ -128,6 +143,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("加解密工具")
                     .elementId(ENCRYPTION_TOOL)
+                    .isOpen(false)
                     .links(new ArrayList<LinkTree>() {
                         {
                             this.add(LinkTree.builder()
@@ -166,6 +182,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("其他类工具")
                     .elementId(OTHER_TOOL)
+                    .isOpen(false)
                     .links(new ArrayList<LinkTree>() {
                         {
                             this.add(LinkTree.builder()
@@ -191,5 +208,53 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             }
         }
         return kitBoxMenus;
+    }
+
+    /**
+     * 获取工具箱左侧菜单，包含展开状态
+     *
+     * @param key 应当展开的菜单ID
+     * @return
+     */
+    @Override
+    public List<KitBoxMenus> getKitBoxMenus(String key) {
+        List<KitBoxMenus> kitBoxMenus = getKitBoxMenus();
+        for (KitBoxMenus kitBoxMenu : kitBoxMenus
+        ) {
+            if (kitBoxMenu.getElementId().equals(key)) {
+                kitBoxMenu.setIsOpen(true);
+                break;
+            }
+        }
+        return kitBoxMenus;
+    }
+
+    /**
+     * 获取工具的评论
+     *
+     * @param kitBoxTypeEnum 菜单类型
+     * @return
+     */
+    @Override
+    public List<Comment> getCommentList(KitBoxTypeEnum kitBoxTypeEnum) {
+        String redisKey = REDIS_KEY_KITBOX + "comment:" + kitBoxTypeEnum.toString();
+        List<Comment> commentList = null;
+        assert SYSTEM_CONFIG != null;
+        if (SYSTEM_CONFIG.isEnableRedis()) {
+            // 查询是否曾经缓存过对象，有缓存直接吐出去
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof List) {
+                    commentList = (List<Comment>) object;
+                }
+            }
+        }
+        if (commentList == null) {
+            commentList = new CommentDomain(SystemTypeEnum.KITBOX, (long) kitBoxTypeEnum.getId()).getCommentList();
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                redisService.set(redisKey, commentList, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            }
+        }
+        return commentList;
     }
 }

@@ -13,5 +13,9 @@ public enum SystemTypeEnum {
     /**
      * 微博类
      */
-    WEIBO
+    WEIBO,
+    /**
+     * 工具箱类
+     */
+    KITBOX
 }

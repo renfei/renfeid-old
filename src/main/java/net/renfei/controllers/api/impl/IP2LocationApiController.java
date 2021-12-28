@@ -24,6 +24,7 @@ public class IP2LocationApiController extends BaseController implements IP2Locat
         this.ip2LocationService = ip2LocationService;
     }
 
+    @Override
     public APIResult<IPResult> queryIpInfo() {
         try {
             return new APIResult<>(ip2LocationService.ipQuery(IpUtils.getIpAddress(request)));
@@ -35,6 +36,7 @@ public class IP2LocationApiController extends BaseController implements IP2Locat
         }
     }
 
+    @Override
     public APIResult<IPResult> queryIpInfo(@PathVariable("ip") String ip) {
         try {
             return new APIResult<>(ip2LocationService.ipQuery(ip));

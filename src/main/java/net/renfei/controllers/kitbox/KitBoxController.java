@@ -2,13 +2,24 @@ package net.renfei.controllers.kitbox;
 
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.controllers.BaseController;
+import net.renfei.domain.comment.Comment;
+import net.renfei.domain.kitbox.KitBoxTypeEnum;
+import net.renfei.exception.IP2LocationException;
+import net.renfei.ip2location.IPResult;
 import net.renfei.model.kitbox.KitboxPageView;
+import net.renfei.services.IP2LocationService;
 import net.renfei.services.KitBoxService;
+import net.renfei.utils.IpUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.renfei.services.kitbox.KitBoxServiceImpl.NETWORK_TOOL;
 
 /**
  * 工具箱栏目
@@ -20,9 +31,11 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("/kitbox")
 public class KitBoxController extends BaseController {
     private final KitBoxService kitBoxService;
+    private final IP2LocationService ip2LocationService;
 
-    public KitBoxController(KitBoxService kitBoxService) {
+    public KitBoxController(KitBoxService kitBoxService, IP2LocationService ip2LocationService) {
         this.kitBoxService = kitBoxService;
+        this.ip2LocationService = ip2LocationService;
     }
 
     @RequestMapping("")
@@ -58,5 +71,39 @@ public class KitBoxController extends BaseController {
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/kitbox/");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
+    }
+
+    /**
+     * IP地址信息查询工具
+     *
+     * @param mv
+     * @return
+     */
+    @RequestMapping("ip")
+    public ModelAndView ip(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        String ip = IpUtils.getIpAddress(request);
+        IPResult ipInfoDTO = null;
+        try {
+            ipInfoDTO = ip2LocationService.ipQuery(ip);
+        } catch (IP2LocationException e) {
+            e.printStackTrace();
+        }
+        mv.addObject("myip", ip);
+        KitboxPageView<IPResult> pageView = buildPageView(KitboxPageView.class, ipInfoDTO);
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_IP.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("免费的开发者与站长工具箱小工具，包含网络工具、加解密工具、测试工具等，工欲善其事，必先利其器。");
+        pageView.getPageHead().setKeywords("IP,地址,信息,查询,工具,地理,位置");
+        mv.setViewName("kitbox/ipinfo");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, NETWORK_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.NETWORK_IP);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.NETWORK_IP.getId());
+        return mv;
+    }
+
+    private void setKitBoxMenus(ModelAndView mv, String key) {
+        mv.addObject("KitBoxMenus", kitBoxService.getKitBoxMenus(key));
     }
 }
