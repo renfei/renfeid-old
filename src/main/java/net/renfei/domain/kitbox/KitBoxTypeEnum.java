@@ -98,16 +98,16 @@ public enum KitBoxTypeEnum {
      * 其他
      */
     OTHER(-1, "其他", "其他", "/kitbox/");
-    private int id;
-    private String title;
-    private String readme;
-    private String url;
+    private final int id;
+    private final String title;
+    private final String readme;
+    private final String url;
 
     KitBoxTypeEnum(int id, String title, String readme, String url) {
-        id = id;
-        title = title;
-        readme = readme;
-        url = url;
+        this.id = id;
+        this.title = title;
+        this.readme = readme;
+        this.url = url;
     }
 
     public int getId() {
