@@ -9,12 +9,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class KitBoxControllerTests extends ApplicationTests {
     @Test
-    public void kitbox() throws Exception {
+    public void kitBoxTest() throws Exception {
         this.mockMvc.perform(get("/kitbox"))
                 .andDo(print())
                 .andExpect(status().isOk());
         this.mockMvc.perform(get("/kitbox/index.html"))
                 .andDo(print())
                 .andExpect(status().isMovedPermanently());
+    }
+
+    @Test
+    public void ipTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/ip"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
