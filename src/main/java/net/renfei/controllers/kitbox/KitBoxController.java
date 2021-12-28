@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.renfei.services.kitbox.KitBoxServiceImpl.NETWORK_TOOL;
+import static net.renfei.services.kitbox.KitBoxServiceImpl.*;
 
 /**
  * 工具箱栏目
@@ -100,6 +100,22 @@ public class KitBoxController extends BaseController {
         List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.NETWORK_IP);
         mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
         mv.addObject("kitBoxId", KitBoxTypeEnum.NETWORK_IP.getId());
+        return mv;
+    }
+
+    @RequestMapping({"freemarkerTest", "FtlTest"})
+    public ModelAndView freemarkerTest(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("FreeMarker(FTL)在线测试工具");
+        pageView.getPageHead().setKeywords("FreeMarker,ftl,在线,测试,工具");
+        mv.setViewName("kitbox/freemarkerTest");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getId());
         return mv;
     }
 

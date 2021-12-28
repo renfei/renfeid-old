@@ -24,4 +24,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void freemarkerTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/freemarkerTest"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
