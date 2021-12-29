@@ -118,4 +118,17 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void shaToolsTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/sha1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/kitbox/sha256"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/kitbox/sha512"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

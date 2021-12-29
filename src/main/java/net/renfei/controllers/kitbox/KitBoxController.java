@@ -320,6 +320,54 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("sha1")
+    public ModelAndView sha1Tools(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA1.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("SHA-1 散列函数加密算法输出的散列值为40位十六进制数字串，可用于验证信息的一致性，防止被篡改。本页面的 SHA-1 在线加密工具可对字符串进行 SHA-1 加密，并可转换散列值中字母的大小写。");
+        pageView.getPageHead().setKeywords("SHA-1,在线,加密,解密,字符串");
+        mv.setViewName("kitbox/sha1");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, ENCRYPTION_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.ENCRYPTION_SHA1);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.ENCRYPTION_SHA1.getId());
+        return mv;
+    }
+
+    @RequestMapping("sha256")
+    public ModelAndView sha256Tools(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA256.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("SHA-256 散列函数加密算法输出的散列值可用于验证信息的一致性，防止被篡改。本页面的 SHA-256 在线加密工具可对字符串进行 SHA-256 加密，并可转换散列值中字母的大小写。");
+        pageView.getPageHead().setKeywords("SHA-256,在线,加密,解密,字符串");
+        mv.setViewName("kitbox/sha256");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, ENCRYPTION_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.ENCRYPTION_SHA256);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.ENCRYPTION_SHA256.getId());
+        return mv;
+    }
+
+    @RequestMapping("sha512")
+    public ModelAndView sha512Tools(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA512.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("SHA-512 散列函数加密算法输出的散列值可用于验证信息的一致性，防止被篡改。本页面的 SHA-256 在线加密工具可对字符串进行 SHA-256 加密，并可转换散列值中字母的大小写。");
+        pageView.getPageHead().setKeywords("SHA-256,在线,加密,解密,字符串");
+        mv.setViewName("kitbox/sha512");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, ENCRYPTION_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.ENCRYPTION_SHA512);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.ENCRYPTION_SHA512.getId());
+        return mv;
+    }
+
     @ResponseBody
     @RequestMapping("ueditor/controller")
     public String ueditorConfig(@RequestParam("action") String action) {
