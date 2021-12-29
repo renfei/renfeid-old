@@ -157,6 +157,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("getmyip")
+    public ModelAndView getMyIp(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_GETMYIP.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("公网IP获取工具支持Linux、Windows、API");
+        pageView.getPageHead().setKeywords("IP,公网,出口,地址,工具");
+        mv.setViewName("kitbox/getmyip");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, NETWORK_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.NETWORK_GETMYIP);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.NETWORK_GETMYIP.getId());
+        return mv;
+    }
+
     @RequestMapping({"freemarkerTest", "FtlTest"})
     public ModelAndView freemarkerTest(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
