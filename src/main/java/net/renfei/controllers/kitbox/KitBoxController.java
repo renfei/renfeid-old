@@ -292,7 +292,7 @@ public class KitBoxController extends BaseController {
     public ModelAndView randomPassword(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
         pageView.getPageHead().setDescription("用户可根据自身需要选择生成密码所包含的字符以及密码长度，随机密码一键生成，简单易用，生成安全、随机的密码以保证网络账号的安全。");
         pageView.getPageHead().setKeywords("随机,密码,生成");
         mv.setViewName("kitbox/randomPassword");
@@ -301,6 +301,22 @@ public class KitBoxController extends BaseController {
         List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD);
         mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
         mv.addObject("kitBoxId", KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD.getId());
+        return mv;
+    }
+
+    @RequestMapping("md5")
+    public ModelAndView md5Tools(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_MD5.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("MD5在线加密工具，对字符串进行MD5计算得出MD5加密字符串");
+        pageView.getPageHead().setKeywords("MD5,在线,加密,解密,字符串");
+        mv.setViewName("kitbox/md5");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, ENCRYPTION_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.ENCRYPTION_MD5);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.ENCRYPTION_MD5.getId());
         return mv;
     }
 

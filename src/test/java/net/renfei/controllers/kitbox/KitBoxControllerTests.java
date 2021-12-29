@@ -111,4 +111,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void md5ToolsTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/md5"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
