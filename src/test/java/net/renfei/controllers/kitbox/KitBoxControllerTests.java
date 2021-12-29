@@ -175,4 +175,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void shortUrlToolsTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/ShortUrl"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

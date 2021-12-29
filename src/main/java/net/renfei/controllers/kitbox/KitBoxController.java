@@ -6,11 +6,13 @@ import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
 import net.renfei.exception.IP2LocationException;
 import net.renfei.ip2location.IPResult;
+import net.renfei.model.APIResult;
 import net.renfei.model.kitbox.KitboxPageView;
 import net.renfei.model.kitbox.PlistVO;
 import net.renfei.services.IP2LocationService;
 import net.renfei.services.KitBoxService;
 import net.renfei.utils.IpUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -428,6 +430,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping({"ShortUrl", "ShortURL"})
+    public ModelAndView shortUrl(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.OTHER_SHORT_URL.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("短网址在线生成工具");
+        pageView.getPageHead().setKeywords("短网址,Short,Url,生成,工具");
+        mv.setViewName("kitbox/shortURL");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, OTHER_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.OTHER_SHORT_URL);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.OTHER_SHORT_URL.getId());
+        return mv;
+    }
+
     @RequestMapping({"indexing", "Indexing"})
     public ModelAndView indexing(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
@@ -442,6 +460,20 @@ public class KitBoxController extends BaseController {
         mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
         mv.addObject("kitBoxId", KitBoxTypeEnum.OTHER_INDEXING.getId());
         return mv;
+    }
+
+    @ResponseBody
+    @PostMapping("ShortURL/do")
+    public APIResult setShortUrl(String url) {
+        // TODO 短网址
+        return null;
+    }
+
+    @ResponseBody
+    @RequestMapping("ShortURL/do/{url}")
+    public APIResult getShortUrl(@PathVariable("url") String url) {
+        // TODO 短网址
+        return null;
     }
 
     @ResponseBody
