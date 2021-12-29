@@ -59,4 +59,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void strHumpLineConvertTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/strHumpLineConvert"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

@@ -205,6 +205,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("strHumpLineConvert")
+    public ModelAndView strHumpLineConvert(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("下划线(Line)与驼峰(Hump)命名风格的相互转换工具，例如：test_test/testTest的相互转换");
+        pageView.getPageHead().setKeywords("驼峰,下划线,命名,风格,转换,互转,在线,工具,Hump,line");
+        mv.setViewName("kitbox/strHumpLineConvert");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT.getId());
+        return mv;
+    }
+
     private void setKitBoxMenus(ModelAndView mv, String key) {
         mv.addObject("KitBoxMenus", kitBoxService.getKitBoxMenus(key));
     }
