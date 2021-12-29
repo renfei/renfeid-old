@@ -428,6 +428,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping({"indexing", "Indexing"})
+    public ModelAndView indexing(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle("Indexing - 站长推送工具 - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("Indexing - 百度/必应/谷歌-站长推送工具");
+        pageView.getPageHead().setKeywords("百度必应,bing,谷歌,google,推送,工具,站长");
+        mv.setViewName("kitbox/indexing");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, OTHER_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.OTHER_INDEXING);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.OTHER_INDEXING.getId());
+        return mv;
+    }
+
     @ResponseBody
     @RequestMapping("ueditor/controller")
     public String ueditorConfig(@RequestParam("action") String action) {

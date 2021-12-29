@@ -168,4 +168,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void indexingToolsTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/indexing"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
