@@ -384,6 +384,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping({"qrcode", "QRCode"})
+    public ModelAndView qrCode(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.OTHER_QRCODE.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("二维码在线生成工具");
+        pageView.getPageHead().setKeywords("二维码,qrcode,在线,生成,工具");
+        mv.setViewName("kitbox/qrcode");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, OTHER_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.OTHER_QRCODE);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.OTHER_QRCODE.getId());
+        return mv;
+    }
+
     @ResponseBody
     @RequestMapping("ueditor/controller")
     public String ueditorConfig(@RequestParam("action") String action) {

@@ -138,4 +138,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void qrCodeTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/qrcode"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
