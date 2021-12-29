@@ -19,7 +19,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">FreeMarker(FTL)在线测试工具</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">FreeMarker(FTL) Online Test Tools</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">FreeMarker(FTL) Online Test Tools <span class="badge badge-secondary">Powered By FreeMarker ${version}</span></h6>
                         <div class="row">
                             <div class="col-md-6">
                                 <form>
@@ -59,6 +59,9 @@
                             <blockquote style="font-size: 14px;">
                                 <p>在「FreeMarker (ftl) Code」中填写FreeMarker代码；在「JavaBean (JSON)
                                     Code」中填写入参对象的JSON字符串；「Result」将返回FreeMarker引擎的运行结果。
+                                </p>
+                                <p>
+                                    当前基于 FreeMarker ${version} 驱动运行测试。
                                 </p>
                                 <footer>只支持自带函数方法，不支持自定义函数方法</footer>
                             </blockquote>
