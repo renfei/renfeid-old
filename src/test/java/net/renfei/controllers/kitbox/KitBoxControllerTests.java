@@ -3,8 +3,14 @@ package net.renfei.controllers.kitbox;
 import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -142,6 +148,23 @@ public class KitBoxControllerTests extends ApplicationTests {
     @Test
     public void qrCodeTest() throws Exception {
         this.mockMvc.perform(get("/kitbox/qrcode"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void plistTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/plist"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        this.mockMvc.perform(post("/kitbox/plist")
+                        .with(csrf())
+                        .param("appname", "任霏博客")
+                        .param("version", "1.0.2")
+                        .param("bundleid", "net.renfei.app")
+                        .param("ipa", "https://cdn.renfei.net/app/renfei.ipa")
+                        .param("icon", "https://cdn.renfei.net/app/icon.png")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

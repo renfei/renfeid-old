@@ -7,17 +7,19 @@ import net.renfei.domain.kitbox.KitBoxTypeEnum;
 import net.renfei.exception.IP2LocationException;
 import net.renfei.ip2location.IPResult;
 import net.renfei.model.kitbox.KitboxPageView;
+import net.renfei.model.kitbox.PlistVO;
 import net.renfei.services.IP2LocationService;
 import net.renfei.services.KitBoxService;
 import net.renfei.utils.IpUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -397,6 +399,32 @@ public class KitBoxController extends BaseController {
         List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.OTHER_QRCODE);
         mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
         mv.addObject("kitBoxId", KitBoxTypeEnum.OTHER_QRCODE.getId());
+        return mv;
+    }
+
+    @GetMapping("plist")
+    public ModelAndView plist(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle("苹果 iOS Plist 文件在线生成制作工具 - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("苹果 iOS Plist 文件在线生成制作工具，在服务器上部署 Plist 文件，用户即可通过自己的服务器下载 IPA 安装文件");
+        pageView.getPageHead().setKeywords("苹果,iOS,Plist,文件,在线,生成,制作,工具");
+        mv.setViewName("kitbox/plist");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_PLIST);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_PLIST.getId());
+        return mv;
+    }
+
+    @PostMapping("plist")
+    public ModelAndView plistDo(ModelAndView mv, HttpServletResponse response, PlistVO plistVO) throws UnsupportedEncodingException {
+        response.setHeader("content-type", "application/octet-stream;charset=UTF-8");
+        response.setHeader("content-disposition", "attachment; filename=" + URLEncoder.encode(plistVO.getAppname(), "UTF-8") + ".plist");
+        response.setContentType("application/octet-stream");
+        mv.addObject("plistVO", plistVO);
+        mv.setViewName("kitbox/plist-ftl");
         return mv;
     }
 
