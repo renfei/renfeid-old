@@ -271,6 +271,23 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("portNumberList")
+    public ModelAndView portNumberList(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle("计算机 TCP/UDP 端口号注册列表大全 - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("计算机之间依照互联网传输层TCP/IP协议的协议通信，不同的协议都对应不同的端口。并且，利用数据报文的UDP也不一定和TCP采用相同的端口号码。");
+        pageView.getPageHead().setKeywords("tcp,udp,port,端口,计算机,注册,列表,大全");
+        mv.setViewName("kitbox/portNumberList");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_PORT_NUMBER_LIST);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_PORT_NUMBER_LIST.getId());
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        return mv;
+    }
+
     @ResponseBody
     @RequestMapping("ueditor/controller")
     public String ueditorConfig(@RequestParam("action") String action) {

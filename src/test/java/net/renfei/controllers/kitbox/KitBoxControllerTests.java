@@ -97,4 +97,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void portNumberListTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/portNumberList"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
