@@ -5,9 +5,11 @@ import net.renfei.controllers.api.KitBoxApi;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.model.kitbox.IkAnalyzeVO;
 import net.renfei.services.KitBoxService;
 import net.renfei.utils.JacksonUtil;
 import net.renfei.utils.NumberUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.StringWriter;
@@ -105,5 +107,25 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
             stringUuid.add(uuid);
         }
         return new APIResult<>(stringUuid);
+    }
+
+    @Override
+    public APIResult<List<IkAnalyzeVO>> getWordIkAnalyze(String word) {
+        if (ObjectUtils.isEmpty(word)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("待分词内容为空，请检查入参。")
+                    .build();
+        }
+        try {
+            // TODO ES 搜索引擎集成以后才能集成
+//            return new APIResult<>(searchService.getIkAnalyzeTerms(word));
+            return new APIResult<>(new ArrayList<>());
+        } catch (Exception exception) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Error)
+                    .message("中文分词服务暂时不可用，请稍后再试。")
+                    .build();
+        }
     }
 }

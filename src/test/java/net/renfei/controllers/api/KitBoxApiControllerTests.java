@@ -45,14 +45,14 @@ public class KitBoxApiControllerTests extends ApplicationTests {
     @Test
     public void getUuid() throws Exception {
         this.mockMvc.perform(get("/api/uuid")
-                        .param("quantity","5"))
+                        .param("quantity", "5"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
         this.mockMvc.perform(get("/api/uuid")
-                        .param("quantity","5")
-                        .param("upperCase","false")
-                        .param("hyphen","false"))
+                        .param("quantity", "5")
+                        .param("upperCase", "false")
+                        .param("hyphen", "false"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
@@ -74,6 +74,17 @@ public class KitBoxApiControllerTests extends ApplicationTests {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("ftl", html)
                         .param("beanJson", beanJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+    }
+
+    @Test
+    public void getWordIkAnalyze() throws Exception {
+        this.mockMvc.perform(post("/api/wordIkAnalyze")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .content("书籍是人类进步的阶梯。"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))

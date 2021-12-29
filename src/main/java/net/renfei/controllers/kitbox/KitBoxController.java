@@ -255,6 +255,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("wordIkAnalyze")
+    public ModelAndView wordIkAnalyze(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("在线分词工具与API接口(IK Analyze)，提供免费的在线文字分词与切词API接口服务，基于IKAnalyzer同时提供了对Lucene的默认优化实现。");
+        pageView.getPageHead().setKeywords("分词,切词,中文,ik,analyze,api,接口,在线");
+        mv.setViewName("kitbox/wordIkAnalyze");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE.getId());
+        return mv;
+    }
+
     @ResponseBody
     @RequestMapping("ueditor/controller")
     public String ueditorConfig(@RequestParam("action") String action) {

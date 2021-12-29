@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
+import net.renfei.model.kitbox.IkAnalyzeVO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,4 +46,8 @@ public interface KitBoxApi {
     APIResult<List<String>> getUuid(@RequestParam(value = "quantity", required = false) String quantity,
                                     @RequestParam(value = "upperCase", required = false) Boolean upperCase,
                                     @RequestParam(value = "hyphen", required = false) Boolean hyphen);
+
+    @PostMapping("wordIkAnalyze")
+    @Operation(summary = "中文分词工具API", description = "中文分词工具API", tags = "开放接口")
+    APIResult<List<IkAnalyzeVO>> getWordIkAnalyze(@RequestBody String word);
 }
