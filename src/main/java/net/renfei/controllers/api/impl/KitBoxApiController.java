@@ -8,6 +8,7 @@ import net.renfei.utils.JacksonUtil;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.StringWriter;
+import java.util.Date;
 
 /**
  * 工具箱API接口
@@ -16,6 +17,11 @@ import java.io.StringWriter;
  */
 @RestController
 public class KitBoxApiController extends BaseController implements KitBoxApi {
+    @Override
+    public APIResult<String> getServerDateTime() {
+        return new APIResult<>(new Date().toString());
+    }
+
     @Override
     public APIResult<String> getContentByFreeMarkerAndBean(String ftl, String beanJson) {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.getVersion());
