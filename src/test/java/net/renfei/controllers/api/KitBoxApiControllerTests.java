@@ -43,6 +43,22 @@ public class KitBoxApiControllerTests extends ApplicationTests {
     }
 
     @Test
+    public void getUuid() throws Exception {
+        this.mockMvc.perform(get("/api/uuid")
+                        .param("quantity","5"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+        this.mockMvc.perform(get("/api/uuid")
+                        .param("quantity","5")
+                        .param("upperCase","false")
+                        .param("hyphen","false"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+    }
+
+    @Test
     public void getContentByFreeMarkerAndBean() throws Exception {
         String html = "<html>\n" +
                 "\t<body>\n" +

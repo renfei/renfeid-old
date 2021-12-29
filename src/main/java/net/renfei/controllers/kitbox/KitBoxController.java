@@ -173,6 +173,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping({"uuid", "guid", "UUID", "GUID"})
+    public ModelAndView getUUID(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_UUID.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("在线批量生成 UUID/GUID 工具");
+        pageView.getPageHead().setKeywords("UUID,GUID,在线,批量,生成,工具");
+        mv.setViewName("kitbox/uuid");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_UUID);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_UUID.getId());
+        return mv;
+    }
+
     @RequestMapping({"freemarkerTest", "FtlTest"})
     public ModelAndView freemarkerTest(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
