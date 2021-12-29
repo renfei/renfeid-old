@@ -13,6 +13,8 @@ import net.renfei.utils.IpUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -235,6 +237,95 @@ public class KitBoxController extends BaseController {
         mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
         mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION.getId());
         return mv;
+    }
+
+    @RequestMapping("ueditor")
+    public ModelAndView ueditor(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_UEDITOR.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("UEditor是由百度web前端研发部开发所见即所得富文本web编辑器，具有轻量，可定制，注重用户体验等特点，开源基于MIT协议，允许自由使用和修改代码。");
+        pageView.getPageHead().setKeywords("ueditor,百度,在线,测试,demo,富文本,编辑器");
+        mv.setViewName("kitbox/ueditor");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_UEDITOR);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_UEDITOR.getId());
+        return mv;
+    }
+
+    @ResponseBody
+    @RequestMapping("ueditor/controller")
+    public String ueditorConfig(@RequestParam("action") String action) {
+        if ("config".equals(action)) {
+            return "{" +
+                    "    \"imageActionName\": \"uploadimage\", " +
+                    "    \"imageFieldName\": \"upfile\", " +
+                    "    \"imageMaxSize\": 2048000, " +
+                    "    \"imageAllowFiles\": [\".png\", \".jpg\", \".jpeg\", \".gif\", \".bmp\"], " +
+                    "    \"imageCompressEnable\": true, " +
+                    "    \"imageCompressBorder\": 1600, " +
+                    "    \"imageInsertAlign\": \"none\", " +
+                    "    \"imageUrlPrefix\": \"\", " +
+                    "    \"imagePathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\", " +
+                    "    \"scrawlActionName\": \"uploadscrawl\", " +
+                    "    \"scrawlFieldName\": \"upfile\", " +
+                    "    \"scrawlPathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\", " +
+                    "    \"scrawlMaxSize\": 2048000, " +
+                    "    \"scrawlUrlPrefix\": \"\", " +
+                    "    \"scrawlInsertAlign\": \"none\"," +
+                    "    \"snapscreenActionName\": \"uploadimage\", " +
+                    "    \"snapscreenPathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\", " +
+                    "    \"snapscreenUrlPrefix\": \"\", " +
+                    "    \"snapscreenInsertAlign\": \"none\", " +
+                    "    \"catcherLocalDomain\": [\"127.0.0.1\", \"localhost\", \"img.baidu.com\"]," +
+                    "    \"catcherActionName\": \"catchimage\", " +
+                    "    \"catcherFieldName\": \"source\", " +
+                    "    \"catcherPathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\", " +
+                    "    \"catcherUrlPrefix\": \"\", " +
+                    "    \"catcherMaxSize\": 2048000, " +
+                    "    \"catcherAllowFiles\": [\".png\", \".jpg\", \".jpeg\", \".gif\", \".bmp\"], " +
+                    "    \"videoActionName\": \"uploadvideo\", " +
+                    "    \"videoFieldName\": \"upfile\", " +
+                    "    \"videoPathFormat\": \"/ueditor/jsp/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}\", " +
+                    "    \"videoUrlPrefix\": \"\", " +
+                    "    \"videoMaxSize\": 102400000, " +
+                    "    \"videoAllowFiles\": [" +
+                    "        \".flv\", \".swf\", \".mkv\", \".avi\", \".rm\", \".rmvb\", \".mpeg\", \".mpg\"," +
+                    "        \".ogg\", \".ogv\", \".mov\", \".wmv\", \".mp4\", \".webm\", \".mp3\", \".wav\", \".mid\"], " +
+                    "    \"fileActionName\": \"uploadfile\", " +
+                    "    \"fileFieldName\": \"upfile\", " +
+                    "    \"filePathFormat\": \"/ueditor/jsp/upload/file/{yyyy}{mm}{dd}/{time}{rand:6}\", " +
+                    "    \"fileUrlPrefix\": \"\", " +
+                    "    \"fileMaxSize\": 51200000, " +
+                    "    \"fileAllowFiles\": [" +
+                    "        \".png\", \".jpg\", \".jpeg\", \".gif\", \".bmp\"," +
+                    "        \".flv\", \".swf\", \".mkv\", \".avi\", \".rm\", \".rmvb\", \".mpeg\", \".mpg\"," +
+                    "        \".ogg\", \".ogv\", \".mov\", \".wmv\", \".mp4\", \".webm\", \".mp3\", \".wav\", \".mid\"," +
+                    "        \".rar\", \".zip\", \".tar\", \".gz\", \".7z\", \".bz2\", \".cab\", \".iso\"," +
+                    "        \".doc\", \".docx\", \".xls\", \".xlsx\", \".ppt\", \".pptx\", \".pdf\", \".txt\", \".md\", \".xml\"" +
+                    "    ], " +
+                    "    \"imageManagerActionName\": \"listimage\", " +
+                    "    \"imageManagerListPath\": \"/ueditor/jsp/upload/image/\", " +
+                    "    \"imageManagerListSize\": 20, " +
+                    "    \"imageManagerUrlPrefix\": \"\", " +
+                    "    \"imageManagerInsertAlign\": \"none\", " +
+                    "    \"imageManagerAllowFiles\": [\".png\", \".jpg\", \".jpeg\", \".gif\", \".bmp\"], " +
+                    "    \"fileManagerActionName\": \"listfile\", " +
+                    "    \"fileManagerListPath\": \"/ueditor/jsp/upload/file/\", " +
+                    "    \"fileManagerUrlPrefix\": \"\", " +
+                    "    \"fileManagerListSize\": 20, " +
+                    "    \"fileManagerAllowFiles\": [" +
+                    "        \".png\", \".jpg\", \".jpeg\", \".gif\", \".bmp\"," +
+                    "        \".flv\", \".swf\", \".mkv\", \".avi\", \".rm\", \".rmvb\", \".mpeg\", \".mpg\"," +
+                    "        \".ogg\", \".ogv\", \".mov\", \".wmv\", \".mp4\", \".webm\", \".mp3\", \".wav\", \".mid\"," +
+                    "        \".rar\", \".zip\", \".tar\", \".gz\", \".7z\", \".bz2\", \".cab\", \".iso\"," +
+                    "        \".doc\", \".docx\", \".xls\", \".xlsx\", \".ppt\", \".pptx\", \".pdf\", \".txt\", \".md\", \".xml\"" +
+                    "    ] " +
+                    "}";
+        }
+        return "Unsupported action. -By RenFei.Net";
     }
 
     private void setKitBoxMenus(ModelAndView mv, String key) {
