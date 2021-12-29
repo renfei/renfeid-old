@@ -103,6 +103,28 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * Dig+trace命令检测DNS状态工具
+     *
+     * @param mv
+     * @return
+     */
+    @RequestMapping("digtrace")
+    public ModelAndView getDigTrace(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_DIGTRACE.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("域名解析信息查询工具，开放服务接口实现dig+trace域名解析过程查询。");
+        pageView.getPageHead().setKeywords("域名,解析,信息,查询,工具,Dig,trace,DNS");
+        mv.setViewName("kitbox/digtrace");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, NETWORK_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.NETWORK_DIGTRACE);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.NETWORK_DIGTRACE.getId());
+        return mv;
+    }
+
     @RequestMapping({"freemarkerTest", "FtlTest"})
     public ModelAndView freemarkerTest(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;

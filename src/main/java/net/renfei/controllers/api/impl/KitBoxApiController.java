@@ -3,7 +3,9 @@ package net.renfei.controllers.api.impl;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.KitBoxApi;
 import net.renfei.model.APIResult;
+import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.services.KitBoxService;
 import net.renfei.utils.JacksonUtil;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,12 @@ import java.util.Date;
  */
 @RestController
 public class KitBoxApiController extends BaseController implements KitBoxApi {
+    private final KitBoxService kitBoxService;
+
+    public KitBoxApiController(KitBoxService kitBoxService) {
+        this.kitBoxService = kitBoxService;
+    }
+
     @Override
     public APIResult<String> getServerDateTime() {
         return new APIResult<>(new Date().toString());
@@ -47,5 +55,15 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
                     .build();
         }
         return apiResult;
+    }
+
+    @Override
+    public APIResult<String> getDomainDigTrace(String domain) {
+        return kitBoxService.execDigTrace(domain, null);
+    }
+
+    @Override
+    public APIResult<String> getDomainDigTrace(String domain, DnsTypeEnum dnsTypeEnum) {
+        return kitBoxService.execDigTrace(domain, dnsTypeEnum);
     }
 }

@@ -4,14 +4,20 @@ import net.renfei.domain.CommentDomain;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
 import net.renfei.domain.system.SystemTypeEnum;
+import net.renfei.model.APIResult;
+import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.LinkTree;
+import net.renfei.model.StateCodeEnum;
 import net.renfei.model.kitbox.KitBoxMenus;
 import net.renfei.services.BaseService;
 import net.renfei.services.KitBoxService;
 import net.renfei.services.RedisService;
+import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,11 +35,16 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     public static final String ENCRYPTION_TOOL = "encryptionTool";
     public static final String OTHER_TOOL = "otherTool";
     private RedisService redisService;
+    private final SysService sysService;
 
     {
         if (SYSTEM_CONFIG.isEnableRedis()) {
             redisService = (RedisService) ApplicationContextUtil.getBean("redisServiceImpl");
         }
+    }
+
+    public KitBoxServiceImpl(SysService sysService) {
+        this.sysService = sysService;
     }
 
     /**
@@ -256,5 +267,34 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             }
         }
         return commentList;
+    }
+
+    /**
+     * 执行 dig 命令
+     *
+     * @param domain
+     * @return
+     */
+    @Override
+    public APIResult<String> execDigTrace(String domain, DnsTypeEnum dnsTypeEnum) {
+        assert sysService != null;
+        if (dnsTypeEnum == null) {
+            dnsTypeEnum = DnsTypeEnum.A;
+        }
+        if (StringUtils.isDomain(domain)) {
+            try {
+                return new APIResult(sysService.execCmd("dig " + domain.trim() + " " + dnsTypeEnum + " +trace"));
+            } catch (IOException e) {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Error)
+                        .message("内部服务器错误。\nInternal server error.")
+                        .build();
+            }
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("域名格式不正确。\nIncorrect format of domain name.")
+                    .build();
+        }
     }
 }

@@ -5,6 +5,7 @@ import net.renfei.model.LinkTree;
 import net.renfei.model.SiteMapXml;
 import net.renfei.model.system.RegionVO;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -41,4 +42,22 @@ public interface SysService {
      * @return
      */
     List<LinkTree> getSysSiteFriendlyLinkList();
+
+    /**
+     * 【危险】在服务器主机上执行命令
+     *
+     * @param cmd 命令
+     * @return
+     * @throws IOException
+     */
+    String execCmd(String cmd) throws IOException;
+
+    /**
+     * 【危险】在服务器主机上执行命令
+     *
+     * @param cmd 命令
+     * @return
+     * @throws IOException
+     */
+    String execCmd(String[] cmd) throws IOException;
 }

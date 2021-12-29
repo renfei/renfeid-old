@@ -31,4 +31,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void getDigTraceTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/digtrace"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

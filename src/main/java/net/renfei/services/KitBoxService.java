@@ -2,6 +2,8 @@ package net.renfei.services;
 
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
+import net.renfei.model.APIResult;
+import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.kitbox.KitBoxMenus;
 
 import java.util.List;
@@ -34,4 +36,6 @@ public interface KitBoxService {
      * @return
      */
     List<Comment> getCommentList(KitBoxTypeEnum kitBoxTypeEnum);
+
+    APIResult<String> execDigTrace(String domain, DnsTypeEnum dnsTypeEnum);
 }

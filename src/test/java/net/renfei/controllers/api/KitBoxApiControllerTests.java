@@ -4,6 +4,7 @@ import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -13,6 +14,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author renfei
  */
 public class KitBoxApiControllerTests extends ApplicationTests {
+    @Test
+    public void getDomainDigTraceTest() throws Exception {
+        this.mockMvc.perform(get("/api/dns/dig/www.renfei.net"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+        this.mockMvc.perform(get("/api/dns/dig/www.renfei.net/A"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+        this.mockMvc.perform(get("/api/dns/dig/123"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+    }
+
     @Test
     public void getContentByFreeMarkerAndBean() throws Exception {
         String html = "<html>\n" +

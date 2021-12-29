@@ -18,6 +18,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -220,5 +223,43 @@ public class SysServiceImpl extends BaseService implements SysService {
             });
         }
         return linkList;
+    }
+
+    /**
+     * 【危险】在服务器主机上执行命令
+     *
+     * @param cmd 命令
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public String execCmd(String cmd) throws IOException {
+        Process p = Runtime.getRuntime().exec(cmd);
+        BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 【危险】在服务器主机上执行命令
+     *
+     * @param cmd 命令
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public String execCmd(String[] cmd) throws IOException {
+        Process p = Runtime.getRuntime().exec(cmd);
+        BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        return sb.toString();
     }
 }
