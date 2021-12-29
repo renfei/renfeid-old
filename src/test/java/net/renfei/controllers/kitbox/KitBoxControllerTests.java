@@ -66,4 +66,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void byteUnitConversionTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/byteUnitConversion"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

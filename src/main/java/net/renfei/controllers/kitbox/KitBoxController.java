@@ -221,6 +221,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("byteUnitConversion")
+    public ModelAndView byteUnitConversion(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("计算机字节(Byte)单位之间的转换换算工具：bit、Byte、KB、MB、GB、TB、PB、EB之间的转换计算工具");
+        pageView.getPageHead().setKeywords("字节,单位,比特,转换,换算,工具,bit,Byte,KB,MB,GB,TB,PB,EB");
+        mv.setViewName("kitbox/byteUnitConversion");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION.getId());
+        return mv;
+    }
+
     private void setKitBoxMenus(ModelAndView mv, String key) {
         mv.addObject("KitBoxMenus", kitBoxService.getKitBoxMenus(key));
     }
