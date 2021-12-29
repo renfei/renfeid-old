@@ -38,4 +38,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void getDnsQpsTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/dnsqps"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
