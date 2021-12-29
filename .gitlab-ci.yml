@@ -44,7 +44,7 @@ initialize_environmen_gitlab:
 
 compile:
   stage: compile
-  image: maven:latest
+  image: maven:3.8.4-openjdk-8
   script:
     - mvn --batch-mode compile
 
