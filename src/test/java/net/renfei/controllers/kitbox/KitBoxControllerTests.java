@@ -104,4 +104,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void randomPasswordTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/randomPassword"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
