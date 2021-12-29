@@ -131,4 +131,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void url16ToolsTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/url16"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

@@ -368,6 +368,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("url16")
+    public ModelAndView url16Tools(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_URL16.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("RL编码形式表示的ASCII字符(十六进制格式)。把URL网址转换成16进制代码形式,加密后可直接复制到地址栏访问。");
+        pageView.getPageHead().setKeywords("URL,网址,加密,16进制,hex");
+        mv.setViewName("kitbox/url16");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, ENCRYPTION_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.ENCRYPTION_URL16);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.ENCRYPTION_URL16.getId());
+        return mv;
+    }
+
     @ResponseBody
     @RequestMapping("ueditor/controller")
     public String ueditorConfig(@RequestParam("action") String action) {
