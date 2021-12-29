@@ -45,4 +45,11 @@ public class KitBoxControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void getWhoisTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/whois"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

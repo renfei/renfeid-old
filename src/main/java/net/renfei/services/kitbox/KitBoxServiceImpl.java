@@ -16,6 +16,7 @@ import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -284,6 +285,46 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
         if (StringUtils.isDomain(domain)) {
             try {
                 return new APIResult(sysService.execCmd("dig " + domain.trim() + " " + dnsTypeEnum + " +trace"));
+            } catch (IOException e) {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Error)
+                        .message("内部服务器错误。\nInternal server error.")
+                        .build();
+            }
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("域名格式不正确。\nIncorrect format of domain name.")
+                    .build();
+        }
+    }
+
+    @Override
+    public APIResult<String> execWhois(String domain) {
+        if (StringUtils.isDomain(domain)) {
+            try {
+                String result = sysService.execCmd("whois -H " + domain.trim());
+                StringBuilder whoisInfo = new StringBuilder();
+                if (!ObjectUtils.isEmpty(result)) {
+                    String[] infos = result.split("\n");
+                    boolean start = false;
+                    for (String info : infos
+                    ) {
+                        if (info.startsWith("   ")) {
+                            info = info.replace("   ", "");
+                        }
+                        if (info.startsWith("Domain Name")) {
+                            start = true;
+                        }
+                        if (info.startsWith(">>> ")) {
+                            start = false;
+                        }
+                        if (start) {
+                            whoisInfo.append(info).append("\n");
+                        }
+                    }
+                }
+                return new APIResult<>(whoisInfo.toString());
             } catch (IOException e) {
                 return APIResult.builder()
                         .code(StateCodeEnum.Error)

@@ -141,6 +141,22 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    @RequestMapping("whois")
+    public ModelAndView getWhois(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_WHOIS.getTitle() + "开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("域名Whois信息查询工具，查询域名是否已经被注册，以及注册域名的详细信息的数据库（如域名所有人、域名注册商、域名注册日期和过期日期等）。通过域名Whois服务器查询，可以查询域名归属者联系方式，以及注册和到期时间。");
+        pageView.getPageHead().setKeywords("域名,whois,信息,查询,工具");
+        mv.setViewName("kitbox/whois");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, NETWORK_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.NETWORK_WHOIS);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.NETWORK_WHOIS.getId());
+        return mv;
+    }
+
     @RequestMapping({"freemarkerTest", "FtlTest"})
     public ModelAndView freemarkerTest(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;

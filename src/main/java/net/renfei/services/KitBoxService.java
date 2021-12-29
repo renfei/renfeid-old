@@ -38,4 +38,6 @@ public interface KitBoxService {
     List<Comment> getCommentList(KitBoxTypeEnum kitBoxTypeEnum);
 
     APIResult<String> execDigTrace(String domain, DnsTypeEnum dnsTypeEnum);
+
+    APIResult<String> execWhois(String domain);
 }

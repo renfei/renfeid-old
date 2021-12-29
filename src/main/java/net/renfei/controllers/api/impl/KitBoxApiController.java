@@ -66,4 +66,9 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
     public APIResult<String> getDomainDigTrace(String domain, DnsTypeEnum dnsTypeEnum) {
         return kitBoxService.execDigTrace(domain, dnsTypeEnum);
     }
+
+    @Override
+    public APIResult<String> getDomainWhois(String domain) {
+        return kitBoxService.execWhois(domain);
+    }
 }
