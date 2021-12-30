@@ -75,6 +75,6 @@ jobs:
         run: |
           mvn clean test jacoco:report --file pom.xml
           bash <(curl -s https://codecov.io/bash)
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./target/site/jacoco/jacoco.xml
           sed -i.bak 's/yourcoverallsprojectrepositorytoken/${{ secrets.COVERALLS_TOKEN }}/g' pom.xml
           mvn coveralls:report
-          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./target/site/jacoco/jacoco.xml
