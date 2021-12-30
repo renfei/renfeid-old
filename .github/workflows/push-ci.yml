@@ -78,7 +78,7 @@ jobs:
           CODACY_ORGANIZATION_PROVIDER: gh
           CODACY_USERNAME: renfei
           CODACY_PROJECT_NAME: renfeid
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./target/site/jacoco/jacoco.xml
+        run: bash <(curl -s https://coverage.codacy.com/get.sh)
 
       - name: Upload coverage to Coveralls
         run: |
