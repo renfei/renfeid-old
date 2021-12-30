@@ -1,5 +1,6 @@
-package net.renfei.controllers;
+package net.renfei.controllers.other;
 
+import net.renfei.controllers.BaseController;
 import net.renfei.services.QrCodeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
