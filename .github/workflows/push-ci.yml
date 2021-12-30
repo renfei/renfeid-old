@@ -41,6 +41,12 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Snyk monitor
+        uses: snyk/actions/setup@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk test
+
       - name: Verify MariaDB Connection and Load Data
         env:
           PORT: ${{ job.services.mysql.ports[3306] }}
