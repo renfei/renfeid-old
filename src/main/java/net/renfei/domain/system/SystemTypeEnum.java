@@ -11,6 +11,10 @@ public enum SystemTypeEnum {
      */
     BLOG,
     /**
+     * 相册类
+     */
+    ALBUM,
+    /**
      * 微博类
      */
     WEIBO,

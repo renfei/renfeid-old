@@ -100,6 +100,49 @@ CREATE TABLE `leaf_alloc`  (
 -- ----------------------------
 INSERT INTO `leaf_alloc` VALUES ('leaf-segment-global', 1, 2000, 'Segment Mode Get Id', '2021-11-12 05:36:43');
 
+
+-- ----------------------------
+-- Table structure for photo_album
+-- ----------------------------
+DROP TABLE IF EXISTS `photo_album`;
+CREATE TABLE `photo_album`  (
+                                `id` bigint(20) UNSIGNED NOT NULL,
+                                `category_id` bigint(20) UNSIGNED NOT NULL,
+                                `title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
+                                `featured_image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '缩略图',
+                                `describes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
+                                `release_time` datetime NOT NULL COMMENT '发布时间',
+                                `add_time` datetime NOT NULL COMMENT '添加时间',
+                                `is_delete` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+                                PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '相册栏目' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of photo_album
+-- ----------------------------
+INSERT INTO `photo_album` VALUES (1, 8, '我家猫主子', 'https://cdn.renfei.net/upload/photo/2019/IMG_0881.JPG', '我家猫主子是在2018年年底捡到的，2019年过年的时候要出去，结果就再也没回来。', '2019-07-29 16:56:21', '2019-07-29 16:56:21', 0);
+INSERT INTO `photo_album` VALUES (2, 8, '信远软件研发社团', 'https://cdn.renfei.net/upload/photo/2019/xinyuan/P41017-163544.jpg', '石家庄信息工程职业学院-信远软件研发社团，很荣幸在我的大学人生中能参与这个组织，并成为其中一届的社长。', '2014-10-25 10:17:49', '2014-10-25 10:17:49', 0);
+INSERT INTO `photo_album` VALUES (3, 8, '【全国赛】全国大学生计算机应用能力与信息素养大赛', 'https://cdn.renfei.net/upload/photo/2019/QGDXSXXSYDS/QGDXSXXXYDS.jpg', '很荣幸能代表学校到北京中央民族大学参加全国大学生计算机应用能力与信息素养大赛，并获得了一等奖，受邀到台湾参加海峡两岸赛。并与谭浩强教授合影。', '2013-05-26 10:28:05', '2013-05-26 10:28:05', 0);
+INSERT INTO `photo_album` VALUES (4, 8, '【海峡两岸赛】全国大学生计算机应用能力与信息素养大赛', 'https://cdn.renfei.net/upload/photo/2019/Taiwan/Taiwan.jpg', '很荣幸能代表学校到台湾中国文化大学参加海峡两岸赛，7天的环台旅行学到很多，台湾的水果也十分好吃。', '2014-08-25 10:39:06', '2014-08-25 10:39:06', 0);
+INSERT INTO `photo_album` VALUES (6, 8, '我的荣誉和证书', 'https://cdn.renfei.net/upload/photo/2020/honors/20200410111002.jpg', '我还是曾经那个少年，没有一丝丝改变', '2020-04-10 11:49:55', '2020-04-10 11:49:53', 0);
+INSERT INTO `photo_album` VALUES (7, 8, '微博图片', 'https://cdn.renfei.net/images/default_posts.jpg', '微博中使用的图片', '2020-03-06 17:48:41', '2020-03-06 17:48:39', 0);
+
+-- ----------------------------
+-- Table structure for photo_album_img
+-- ----------------------------
+DROP TABLE IF EXISTS `photo_album_img`;
+CREATE TABLE `photo_album_img`  (
+                                    `id` bigint(20) UNSIGNED NOT NULL,
+                                    `photo_id` bigint(20) UNSIGNED NOT NULL COMMENT '相册ID',
+                                    `uri` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '照片地址',
+                                    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '相册中的照片列表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of photo_album_img
+-- ----------------------------
+INSERT INTO `photo_album_img` VALUES (528, 7, '//cdn.renfei.net/upload/image/2021/9d027f80f97c45cf9d5494e347372623.png');
+
 -- ----------------------------
 -- Table structure for qrtz_blob_triggers
 -- ----------------------------

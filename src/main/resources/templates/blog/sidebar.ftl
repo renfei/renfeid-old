@@ -1,3 +1,4 @@
+<#include "../layout/layout.ftl"/>
 <#macro sidebar sidebarVO>
     <div class="card" style="margin-bottom: 1rem;">
         <div class="card-body">
