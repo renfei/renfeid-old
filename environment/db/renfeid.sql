@@ -82,6 +82,28 @@ CREATE TABLE `blog_posts`  (
 -- ----------------------------
 INSERT INTO `blog_posts` VALUES (1, 1, 'https://cdn.renfei.net/images/default_posts.jpg', '你好，世界', 1, '你好,世界', '你好,世界', '你好，世界', '2021-12-07 16:27:43', 'PUBLISH', 0, 'OPEN', NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 10000, 1, 1);
 
+
+-- ----------------------------
+-- Table structure for docs_online_documents
+-- ----------------------------
+DROP TABLE IF EXISTS `docs_online_documents`;
+CREATE TABLE `docs_online_documents`  (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `doc_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `describe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of docs_online_documents
+-- ----------------------------
+INSERT INTO `docs_online_documents` VALUES (1, 'Java', 'JavaSE', '8u281', 'en', 'https://cdn.renfei.net/docs/java/javase/8u281/en/index.html', 'Java SE 8 API 英文原版在线文档手册');
+
+
 -- ----------------------------
 -- Table structure for leaf_alloc
 -- ----------------------------
