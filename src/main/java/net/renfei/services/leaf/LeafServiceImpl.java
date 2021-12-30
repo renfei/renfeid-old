@@ -2,6 +2,7 @@ package net.renfei.services.leaf;
 
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
+import net.renfei.exception.BusinessException;
 import net.renfei.repositories.LeafAllocMapper;
 import net.renfei.services.BaseService;
 import net.renfei.services.LeafService;
@@ -31,7 +32,7 @@ public class LeafServiceImpl extends BaseService implements LeafService {
             if (idGen.init()) {
                 log.info("Segment Service Init Successfully");
             } else {
-                throw new RuntimeException("Segment Service Init Fail");
+                throw new BusinessException("Segment Service Init Fail");
             }
         } else if (snowflakeFlag) {
             String zkAddress = systemConfig.getLeaf().getSnowflake().getZk().getAddress();
@@ -40,7 +41,7 @@ public class LeafServiceImpl extends BaseService implements LeafService {
             if (idGen.init()) {
                 log.info("Snowflake Service Init Successfully");
             } else {
-                throw new RuntimeException("Snowflake Service Init Fail");
+                throw new BusinessException("Snowflake Service Init Fail");
             }
         } else {
             idGen = new ZeroIDGen();

@@ -1,5 +1,7 @@
 package net.renfei.utils;
 
+import net.renfei.exception.BusinessException;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -168,7 +170,7 @@ public class DBMSMetaUtil {
                 }
                 rs = meta.getTables(catalog, schemaPattern, tableNamePattern, types);
             } else {
-                throw new RuntimeException("不认识的数据库类型!");
+                throw new BusinessException("不认识的数据库类型!");
             }
             //
             result = parseResultSetToMapList(rs);
@@ -315,7 +317,7 @@ public class DBMSMetaUtil {
             url += ":" + port.trim();
             url += "/" + dbname;
         } else {
-            throw new RuntimeException("不认识的数据库类型!");
+            throw new BusinessException("不认识的数据库类型!");
         }
         //
         return url;

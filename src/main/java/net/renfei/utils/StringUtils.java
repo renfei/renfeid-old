@@ -1,5 +1,6 @@
 package net.renfei.utils;
 
+import net.renfei.exception.BusinessException;
 import org.springframework.util.ObjectUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -289,7 +290,7 @@ public class StringUtils {
             String ip = InetAddress.getByAddress(unsignedBytes).toString();
             return ip.substring(ip.indexOf('/') + 1).trim();
         } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(e.getMessage());
         }
     }
 
