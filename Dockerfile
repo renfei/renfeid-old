@@ -1,5 +1,4 @@
 FROM ubuntu:20.04
-MAINTAINER RenFei <i@renfei.net>
 
 RUN adduser --system --group --home /opt/renfeid renfei
 
