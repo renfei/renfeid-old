@@ -71,7 +71,7 @@ public class PhotoController extends BaseController {
     })
     public RedirectView getPhotoListDir() {
         assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/photo/");
+        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/photo");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

@@ -67,7 +67,7 @@ public class WeiboController extends BaseController {
     })
     public RedirectView getWeiboListDir() {
         assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/weibo/");
+        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/weibo");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

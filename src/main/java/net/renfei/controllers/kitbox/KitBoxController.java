@@ -74,7 +74,7 @@ public class KitBoxController extends BaseController {
     })
     public RedirectView getKitBoxDir() {
         assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/kitbox/");
+        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/kitbox");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

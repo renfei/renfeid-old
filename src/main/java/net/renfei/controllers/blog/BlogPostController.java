@@ -70,7 +70,7 @@ public class BlogPostController extends BaseController {
     })
     public RedirectView getPostListDir() {
         assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts/");
+        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }
