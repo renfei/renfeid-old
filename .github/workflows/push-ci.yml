@@ -67,6 +67,11 @@ jobs:
           wget -P ./src/main/resources/ip2location https://github.com/renfei/ip2location/releases/download/2021.12.05/IP2LOCATION-LITE-DB11.IPV6.BIN
 
       - name: Tests
+        env:
+          CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN}}
+          CODACY_ORGANIZATION_PROVIDER: gh
+          CODACY_USERNAME: renfei
+          CODACY_PROJECT_NAME: renfeid
         run: mvn clean test jacoco:report --file pom.xml
 
       - name: Upload coverage to Codecov
@@ -78,7 +83,7 @@ jobs:
           CODACY_ORGANIZATION_PROVIDER: gh
           CODACY_USERNAME: renfei
           CODACY_PROJECT_NAME: renfeid
-        run: bash <(curl -s https://coverage.codacy.com/get.sh)
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./target/site/jacoco/jacoco.xml
 
       - name: Upload coverage to Coveralls
         run: |
