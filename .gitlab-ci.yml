@@ -48,12 +48,13 @@ compile:
   script:
     - mvn --batch-mode compile
 
-test_job:
+test_job_jh:
   stage: test
   image: centos:centos7
   services:
     - mysql:5.7
     - redis:6.0.1
+    - registry.gitlab.cn/renfei/elasticsearch:7.16.2
   variables:
     MYSQL_DATABASE: renfeid
     MYSQL_ROOT_PASSWORD: root
@@ -66,6 +67,30 @@ test_job:
     - yum -y install apache-maven
   script:
     - mvn -P gitlab --batch-mode test --file pom.xml
+  rules:
+    - if: "$CI_SERVER_URL =~ /gitlab.cn/"
+
+test_job_gitlab:
+  stage: test
+  image: centos:centos7
+  services:
+    - mysql:5.7
+    - redis:6.0.1
+    - registry.gitlab.com/renfei/elasticsearch:7.16.2
+  variables:
+    MYSQL_DATABASE: renfeid
+    MYSQL_ROOT_PASSWORD: root
+  before_script:
+    - yum install -y wget mysql java-1.8.0-openjdk* which
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
+      < environment/db/renfeid.sql --default-character-set=utf8
+    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
+      -O /etc/yum.repos.d/epel-apache-maven.repo
+    - yum -y install apache-maven
+  script:
+    - mvn -P gitlab --batch-mode test --file pom.xml
+  rules:
+    - if: "$CI_SERVER_URL =~ /gitlab.com/"
 
 sast:
   stage: test

@@ -25,6 +25,11 @@ jobs:
         image: redis:6.0.1
         ports:
           - 6379:6379
+      elasticsearch:
+        image: ghcr.io/renfei/elasticsearch:7.16.2
+        ports:
+          - 9200:9200
+          - 9300:9300
 
     steps:
       - uses: actions/checkout@v2
