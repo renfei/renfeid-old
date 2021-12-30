@@ -10,6 +10,8 @@ import net.renfei.exception.NotExistException;
 import net.renfei.model.ListData;
 import net.renfei.repositories.WeiboPostmetaMapper;
 import net.renfei.repositories.WeiboPostsMapper;
+import net.renfei.repositories.model.WeiboPostmeta;
+import net.renfei.repositories.model.WeiboPostmetaExample;
 import net.renfei.repositories.model.WeiboPosts;
 import net.renfei.repositories.model.WeiboPostsExample;
 import net.renfei.utils.ApplicationContextUtil;
@@ -55,10 +57,13 @@ public final class WeiboDomain {
         if (weiboPosts == null) {
             throw new NotExistException("微博文章不存在");
         }
-        // TODO 微博图像
-        String image = "";
         Weibo weibo = convert(weiboPosts);
-        weibo.setImage(image);
+        List<WeiboPostmeta> weiboMetas = getWeiboMetaListByWeiboId(weiboPosts.getId());
+        if (weiboMetas != null && weiboMetas.size() > 0) {
+            // 目前微博默认只支持一张图片，后续可支持多张图片或者视频等扩展
+            WeiboPostmeta weiboMeta = ListUtils.getOne(weiboMetas);
+            weibo.setImage(AlbumDomain.imageUrlByAlbumId(Long.parseLong(weiboMeta.getMetaValue())));
+        }
         this.weibo = weibo;
         commentList = new CommentDomain(SystemTypeEnum.WEIBO, id).getCommentList();
     }
@@ -110,6 +115,16 @@ public final class WeiboDomain {
         ListData<Weibo> weiboListData = new ListData<>(page);
         weiboListData.setData(weiboList);
         return weiboListData;
+    }
+
+    private List<WeiboPostmeta> getWeiboMetaListByWeiboId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        WeiboPostmetaExample example = new WeiboPostmetaExample();
+        example.createCriteria()
+                .andPostIdEqualTo(id);
+        return weiboPostmetaMapper.selectByExampleWithBLOBs(example);
     }
 
     private Weibo convert(WeiboPosts weiboPosts) {

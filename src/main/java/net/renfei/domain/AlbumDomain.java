@@ -53,6 +53,11 @@ public final class AlbumDomain {
         return albumDomain.getAllAlbumList(pages, rows);
     }
 
+    public static String imageUrlByAlbumId(Long id) {
+        AlbumDomain albumDomain = new AlbumDomain();
+        return albumDomain.getImageUrlByAlbumId(id);
+    }
+
     private Album initAlbum(Long id) {
         PhotoAlbumExample example = new PhotoAlbumExample();
         example
@@ -94,6 +99,21 @@ public final class AlbumDomain {
         }
         albumListData.setData(albumList);
         return albumListData;
+    }
+
+    private String getImageUrlByAlbumId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        PhotoAlbumImgExample example = new PhotoAlbumImgExample();
+        example
+                .createCriteria()
+                .andIdEqualTo(id);
+        PhotoAlbumImg photoAlbumImg = ListUtils.getOne(photoAlbumImgMapper.selectByExampleWithBLOBs(example));
+        if (photoAlbumImg == null) {
+            return null;
+        }
+        return photoAlbumImg.getUri();
     }
 
     private Album convert(PhotoAlbumWithBLOBs photoAlbums) {
