@@ -1,10 +1,16 @@
+####################################
+#     开发环境配置文件 RENFEI.NET
+#      --=== 配置说明 ===--
+# * local.renfei.net 默认解析为本机地址
+#   如果在特殊环境中修改 hosts 文件即可
+####################################
 server:
   port: 9595
 
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/renfeid?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://local.renfei.net:3306/renfeid?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -52,13 +58,13 @@ spring:
     settings:
       template_update_delay: 0
   elasticsearch:
-    uris: http://localhost:9200
+    uris: http://local.renfei.net:9200
 # 自定义配置
 system:
   active: dev
   version: @project.version@
   buildTime: @buildtimestamp@
-  siteDomainName: http://localhost:9595
+  siteDomainName: http://local.renfei.net:9595
   enableRedis: false
   globalAesKey: globalAesKey
   leafKey: leaf-segment-global

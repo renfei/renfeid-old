@@ -1,3 +1,10 @@
+#####################################
+#   GitLab-CI配置文件 RENFEI.NET
+#       --=== 配置说明 ===--
+# * local.renfei.net 默认解析为本机地址
+#   如果在特殊环境中修改 hosts 文件即可
+# * mysql、elasticsearch 均为docker服务
+#####################################
 server:
   port: 9595
 
@@ -58,7 +65,7 @@ system:
   active: gitlab
   version: @project.version@
   buildTime: @buildtimestamp@
-  siteDomainName: http://localhost:9595
+  siteDomainName: http://local.renfei.net:9595
   enableRedis: false
   globalAesKey: globalAesKey
   leafKey: leaf-segment-global
