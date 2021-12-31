@@ -17,6 +17,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ForegroundApiTests extends ApplicationTests {
 
     @Test
+    public void submitCommentsTest() throws Exception {
+        this.mockMvc.perform(post("/_api/foreground/comments/BLOG/1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("author", "UnitTest")
+                        .param("email", "i@renfei.net")
+                        .param("content", "UnitTest")
+                        .param("reply", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+    }
+
+    @Test
     public void getPostInfoByPasswordTest() throws Exception {
         this.mockMvc.perform(post("/_api/foreground/blog/1/byPassword")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)

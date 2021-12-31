@@ -51,7 +51,7 @@ function comment(typeid, id) {
         msg("电子邮件地址不能为空", "error");
         return;
     } else {
-        data.authoremail = email;
+        data.email = email;
     }
     if (content === "") {
         msg("评论内容不能为空", "error");
@@ -66,7 +66,7 @@ function comment(typeid, id) {
         data.reply = replyId;
     }
     $.ajax({
-        url: '/api/comments/' + typeid + '/' + id,
+        url: '/_api/foreground/comments/' + typeid + '/' + id,
         type: 'POST',
         async: true,
         data: data,

@@ -9,17 +9,27 @@ public enum SystemTypeEnum {
     /**
      * 博客类
      */
-    BLOG,
+    BLOG("/posts"),
     /**
      * 相册类
      */
-    ALBUM,
+    ALBUM("/photo"),
     /**
      * 微博类
      */
-    WEIBO,
+    WEIBO("/weibo"),
     /**
      * 工具箱类
      */
-    KITBOX
+    KITBOX("/kitbox");
+
+    private final String uriPath;
+
+    SystemTypeEnum(String uriPath) {
+        this.uriPath = uriPath;
+    }
+
+    public String getUriPath() {
+        return uriPath;
+    }
 }

@@ -68,9 +68,18 @@ public final class CommentDomain {
      * @param objectId   被评论对象的ID
      * @param comment    评论上下文内容
      */
-    CommentDomain(SystemTypeEnum systemType, Long objectId, Comment comment, User user) {
+    public CommentDomain(SystemTypeEnum systemType, Long objectId, Comment comment, User user) {
         commenting(systemType, objectId, comment, user);
         buildCommentList(systemType, objectId);
+    }
+
+    public static Comment commentById(long id) {
+        CommentDomain commentDomain = new CommentDomain();
+        return commentDomain.getCommentById(id);
+    }
+
+    private Comment getCommentById(Long id) {
+        return convert(commentsMapper.selectByPrimaryKey(id));
     }
 
     /**
@@ -178,6 +187,8 @@ public final class CommentDomain {
             if (ObjectUtils.isEmpty(comment.getEmail())) {
                 throw new BusinessException("电子邮箱不能为空");
             }
+        } else {
+            comment.setUser(user);
         }
         SysCommentsWithBLOBs sysComment = convert(systemType, objectId, comment);
         commentsMapper.insertSelective(sysComment);
