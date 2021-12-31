@@ -58,6 +58,7 @@ test_job_jh:
   variables:
     MYSQL_DATABASE: renfeid
     MYSQL_ROOT_PASSWORD: root
+    discovery.type: single-node
   before_script:
     - yum install -y wget mysql java-1.8.0-openjdk* which
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
@@ -80,6 +81,7 @@ test_job_gitlab:
   variables:
     MYSQL_DATABASE: renfeid
     MYSQL_ROOT_PASSWORD: root
+    discovery.type: single-node
   before_script:
     - yum install -y wget mysql java-1.8.0-openjdk* which
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
