@@ -71,6 +71,10 @@
         <sentry.version>5.5.2</sentry.version>
         <email.version>2.6.2</email.version>
         <springdoc.version>1.6.3</springdoc.version>
+        <!--Aliyun-->
+        <aliyun.core.verson>4.5.30</aliyun.core.verson>
+        <aliyun.oss.verson>3.13.2</aliyun.oss.verson>
+        <aliyun.green.verson>3.6.5</aliyun.green.verson>
         <sonar.organization>renfei</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
@@ -229,6 +233,28 @@
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
             <version>3.4.1</version>
+        </dependency>
+        <!--Aliyun-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>${aliyun.core.verson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun.oss.verson}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.aliyun</groupId>
+                    <artifactId>aliyun-java-sdk-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-green</artifactId>
+            <version>${aliyun.green.verson}</version>
         </dependency>
     </dependencies>
 
