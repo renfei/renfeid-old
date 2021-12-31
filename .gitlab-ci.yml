@@ -78,10 +78,13 @@ test_job_gitlab:
     - mysql:5.7
     - redis:6.0.1
     - registry.gitlab.com/renfei/elasticsearch:7.16.2
+    environment:
+      - discovery.type: single-node
+      - MYSQL_DATABASE: renfeid
+      - MYSQL_ROOT_PASSWORD: root
   variables:
     MYSQL_DATABASE: renfeid
     MYSQL_ROOT_PASSWORD: root
-    discovery.type: single-node
   before_script:
     - yum install -y wget mysql java-1.8.0-openjdk* which
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
