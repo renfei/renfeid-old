@@ -7,6 +7,7 @@ import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.kitbox.IkAnalyzeVO;
 import net.renfei.services.KitBoxService;
+import net.renfei.services.SearchService;
 import net.renfei.utils.JacksonUtil;
 import net.renfei.utils.NumberUtils;
 import org.springframework.util.ObjectUtils;
@@ -26,9 +27,12 @@ import java.util.UUID;
 @RestController
 public class KitBoxApiController extends BaseController implements KitBoxApi {
     private final KitBoxService kitBoxService;
+    private final SearchService searchService;
 
-    public KitBoxApiController(KitBoxService kitBoxService) {
+    public KitBoxApiController(KitBoxService kitBoxService,
+                               SearchService searchService) {
         this.kitBoxService = kitBoxService;
+        this.searchService = searchService;
     }
 
     @Override
@@ -118,9 +122,7 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
                     .build();
         }
         try {
-            // TODO ES 搜索引擎集成以后才能集成
-//            return new APIResult<>(searchService.getIkAnalyzeTerms(word));
-            return new APIResult<>(new ArrayList<>());
+            return new APIResult<>(searchService.getIkAnalyzeTerms(word));
         } catch (Exception exception) {
             return APIResult.builder()
                     .code(StateCodeEnum.Error)
