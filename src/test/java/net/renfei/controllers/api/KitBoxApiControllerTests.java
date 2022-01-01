@@ -72,7 +72,6 @@ public class KitBoxApiControllerTests extends ApplicationTests {
                 "\t}\n" +
                 "}";
         this.mockMvc.perform(post("/api/freemarker/test")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("ftl", html)
                         .param("beanJson", beanJson))
@@ -85,7 +84,6 @@ public class KitBoxApiControllerTests extends ApplicationTests {
     @Test
     public void getWordIkAnalyze() throws Exception {
         this.mockMvc.perform(post("/api/wordIkAnalyze")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .content("书籍是人类进步的阶梯。"))
                 .andDo(print())

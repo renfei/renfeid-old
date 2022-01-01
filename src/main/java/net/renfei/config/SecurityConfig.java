@@ -19,6 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+                .ignoringAntMatchers("/api/**")
                 .and()
                 .headers()
                 .frameOptions().sameOrigin()
