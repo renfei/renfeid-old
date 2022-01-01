@@ -18,10 +18,10 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void submitCommentsTest() throws Exception {
-        this.mockMvc.perform(post("/_api/foreground/comments/BLOG/1")
+        this.mockMvc.perform(post("/_/api/foreground/comments/BLOG/1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("author", "UnitTest")
-                        .param("email", "i@renfei.net")
+                        .param("email", "unittesting@163.com")
                         .param("content", "UnitTest")
                         .param("reply", "1"))
                 .andDo(print())
@@ -32,7 +32,7 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void getPostInfoByPasswordTest() throws Exception {
-        this.mockMvc.perform(post("/_api/foreground/blog/1/byPassword")
+        this.mockMvc.perform(post("/_/api/foreground/blog/1/byPassword")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content("testPassword"))
                 .andDo(print())
@@ -43,7 +43,7 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void weiboThumbsUpTest() throws Exception {
-        this.mockMvc.perform(post("/_api/foreground/weibo/1/thumbsUp")
+        this.mockMvc.perform(post("/_/api/foreground/weibo/1/thumbsUp")
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -53,7 +53,7 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void weiboThumbsDownTest() throws Exception {
-        this.mockMvc.perform(post("/_api/foreground/weibo/1/thumbsDown")
+        this.mockMvc.perform(post("/_/api/foreground/weibo/1/thumbsDown")
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())

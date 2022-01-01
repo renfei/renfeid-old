@@ -66,7 +66,7 @@ function comment(typeid, id) {
         data.reply = replyId;
     }
     $.ajax({
-        url: '/_api/foreground/comments/' + typeid + '/' + id,
+        url: '/_/api/foreground/comments/' + typeid + '/' + id,
         type: 'POST',
         async: true,
         data: data,

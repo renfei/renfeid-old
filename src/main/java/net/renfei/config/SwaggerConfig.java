@@ -53,7 +53,7 @@ public class SwaggerConfig {
     public GroupedOpenApi foregroundApi() {
         return GroupedOpenApi.builder()
                 .group("ForegroundApi")
-                .pathsToMatch("/_api/foreground/**")
+                .pathsToMatch("/_/api/foreground/**")
                 .build();
     }
 
@@ -61,7 +61,7 @@ public class SwaggerConfig {
     public GroupedOpenApi backgroundApi() {
         return GroupedOpenApi.builder()
                 .group("BackgroundApi")
-                .pathsToMatch("/_api/background/**")
+                .pathsToMatch("/_/api/background/**")
                 .build();
     }
 }
