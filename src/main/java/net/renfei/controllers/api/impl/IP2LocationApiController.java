@@ -25,26 +25,12 @@ public class IP2LocationApiController extends BaseController implements IP2Locat
     }
 
     @Override
-    public APIResult<IPResult> queryIpInfo() {
-        try {
-            return new APIResult<>(ip2LocationService.ipQuery(IpUtils.getIpAddress(request)));
-        } catch (IP2LocationException ip2LocationException) {
-            return APIResult.builder()
-                    .code(StateCodeEnum.Failure)
-                    .message(ip2LocationException.getMessage())
-                    .build();
-        }
+    public APIResult<IPResult> queryIpInfo() throws IP2LocationException {
+        return new APIResult<>(ip2LocationService.ipQuery(IpUtils.getIpAddress(request)));
     }
 
     @Override
-    public APIResult<IPResult> queryIpInfo(@PathVariable("ip") String ip) {
-        try {
-            return new APIResult<>(ip2LocationService.ipQuery(ip));
-        } catch (IP2LocationException ip2LocationException) {
-            return APIResult.builder()
-                    .code(StateCodeEnum.Failure)
-                    .message(ip2LocationException.getMessage())
-                    .build();
-        }
+    public APIResult<IPResult> queryIpInfo(@PathVariable("ip") String ip) throws IP2LocationException {
+        return new APIResult<>(ip2LocationService.ipQuery(ip));
     }
 }

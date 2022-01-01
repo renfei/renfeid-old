@@ -23,10 +23,12 @@ public class RegionCodeApiController extends BaseController implements RegionCod
         this.sysService = sysService;
     }
 
+    @Override
     public APIResult<List<RegionVO>> getRegionByCode() {
         return new APIResult<>(sysService.getRegion(""));
     }
 
+    @Override
     public APIResult<List<RegionVO>> getRegionByCode(@PathVariable("regionCode") String regionCode) {
         return new APIResult<>(sysService.getRegion(regionCode));
     }

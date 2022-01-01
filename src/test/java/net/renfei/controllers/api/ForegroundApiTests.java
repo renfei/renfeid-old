@@ -1,4 +1,4 @@
-package net.renfei.controllers._api.foreground;
+package net.renfei.controllers.api;
 
 import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
@@ -30,6 +30,16 @@ public class ForegroundApiTests extends ApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.code").value(200));
+        this.mockMvc.perform(post("/foreground/api/comments/BLOG/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("author", "UnitTest")
+                        .param("content", "UnitTest")
+                        .param("reply", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(100));
     }
 
     @Test
