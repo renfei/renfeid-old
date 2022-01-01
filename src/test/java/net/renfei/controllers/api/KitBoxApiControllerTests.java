@@ -4,6 +4,7 @@ import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -71,6 +72,7 @@ public class KitBoxApiControllerTests extends ApplicationTests {
                 "\t}\n" +
                 "}";
         this.mockMvc.perform(post("/api/freemarker/test")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("ftl", html)
                         .param("beanJson", beanJson))
@@ -83,6 +85,7 @@ public class KitBoxApiControllerTests extends ApplicationTests {
     @Test
     public void getWordIkAnalyze() throws Exception {
         this.mockMvc.perform(post("/api/wordIkAnalyze")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .content("书籍是人类进步的阶梯。"))
                 .andDo(print())

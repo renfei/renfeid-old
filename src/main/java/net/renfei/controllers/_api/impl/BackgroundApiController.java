@@ -1,7 +1,7 @@
-package net.renfei.controllers._api.background.impl;
+package net.renfei.controllers._api.impl;
 
 import net.renfei.controllers.BaseController;
-import net.renfei.controllers._api.background.BackgroundApi;
+import net.renfei.controllers._api.BackgroundApi;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
