@@ -19,14 +19,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().csrfTokenRepository(new HttpSessionCsrfTokenRepository())
-                .ignoringAntMatchers("/api/**", "/_/api/foreground/**")
                 .and()
                 .headers()
                 .frameOptions().sameOrigin()
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/_/**").authenticated()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().permitAll();
     }
 }

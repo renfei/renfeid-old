@@ -4,6 +4,7 @@ import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -18,7 +19,8 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void submitCommentsTest() throws Exception {
-        this.mockMvc.perform(post("/_/api/foreground/comments/BLOG/1")
+        this.mockMvc.perform(post("/foreground/api/comments/BLOG/1")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("author", "UnitTest")
                         .param("email", "unittesting@163.com")
@@ -32,7 +34,8 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void getPostInfoByPasswordTest() throws Exception {
-        this.mockMvc.perform(post("/_/api/foreground/blog/1/byPassword")
+        this.mockMvc.perform(post("/foreground/api/blog/1/byPassword")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content("testPassword"))
                 .andDo(print())
@@ -43,7 +46,8 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void weiboThumbsUpTest() throws Exception {
-        this.mockMvc.perform(post("/_/api/foreground/weibo/1/thumbsUp")
+        this.mockMvc.perform(post("/foreground/api/weibo/1/thumbsUp")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -53,7 +57,8 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void weiboThumbsDownTest() throws Exception {
-        this.mockMvc.perform(post("/_/api/foreground/weibo/1/thumbsDown")
+        this.mockMvc.perform(post("/foreground/api/weibo/1/thumbsDown")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())

@@ -1,4 +1,4 @@
-package net.renfei.controllers._api.foreground;
+package net.renfei.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  * @author renfei
  */
-@RequestMapping("/_/api/foreground")
+@RequestMapping("/foreground/api")
 @Tag(name = "前台接口", description = "前台接口")
 public interface ForegroundApi {
 
