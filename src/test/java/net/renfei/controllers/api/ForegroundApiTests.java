@@ -19,7 +19,7 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void submitCommentsTest() throws Exception {
-        this.mockMvc.perform(post("/foreground/api/comments/BLOG/1")
+        this.mockMvc.perform(post("/-/api/comments/BLOG/1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("author", "UnitTest")
@@ -30,7 +30,7 @@ public class ForegroundApiTests extends ApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.code").value(200));
-        this.mockMvc.perform(post("/foreground/api/comments/BLOG/1")
+        this.mockMvc.perform(post("/-/api/comments/BLOG/1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("author", "UnitTest")
@@ -44,7 +44,7 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void getPostInfoByPasswordTest() throws Exception {
-        this.mockMvc.perform(post("/foreground/api/blog/1/byPassword")
+        this.mockMvc.perform(post("/-/api/blog/1/byPassword")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content("testPassword"))
@@ -56,7 +56,7 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void weiboThumbsUpTest() throws Exception {
-        this.mockMvc.perform(post("/foreground/api/weibo/1/thumbsUp")
+        this.mockMvc.perform(post("/-/api/weibo/1/thumbsUp")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -67,7 +67,7 @@ public class ForegroundApiTests extends ApplicationTests {
 
     @Test
     public void weiboThumbsDownTest() throws Exception {
-        this.mockMvc.perform(post("/foreground/api/weibo/1/thumbsDown")
+        this.mockMvc.perform(post("/-/api/weibo/1/thumbsDown")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())

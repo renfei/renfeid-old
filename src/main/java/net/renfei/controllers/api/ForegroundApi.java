@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  * @author renfei
  */
-@RequestMapping("/foreground/api")
+@RequestMapping("/-/api")
 @Tag(name = "前台接口", description = "前台接口")
 public interface ForegroundApi {
 
