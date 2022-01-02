@@ -35,4 +35,23 @@ public class AuthPageController extends BaseController {
         mv.setViewName("auth/signIn");
         return mv;
     }
+
+    /**
+     * 注册界面
+     */
+    @GetMapping("signUp")
+    public ModelAndView signUpPage(ModelAndView mv) {
+        if (getSignUser() != null) {
+            return new ModelAndView("redirect:/");
+        }
+        HomePageView<User> pageView = buildPageView(HomePageView.class, getSignUser());
+        assert SYSTEM_CONFIG != null;
+        pageView.getPageHead().setTitle("创建您的账户 - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("pageView", pageView);
+        mv.addObject("title", "登录 - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("ReCAPTCHA_Client_Key", SYSTEM_CONFIG.getGoogle().getReCAPTCHA().getClientKey());
+        mv.addObject("pageView", pageView);
+        mv.setViewName("auth/signUp");
+        return mv;
+    }
 }
