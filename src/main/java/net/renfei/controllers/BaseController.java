@@ -13,6 +13,8 @@ import net.renfei.utils.SentryUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -80,7 +82,17 @@ public abstract class BaseController {
     }
 
     protected User getSignUser() {
-        // TODO
+        Object object = null;
+        assert SYSTEM_CONFIG != null;
+        if ("SESSION".equals(SYSTEM_CONFIG.getAuthMode())) {
+            object = request.getSession().getAttribute(SESSION_KEY);
+        } else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            object = authentication.getPrincipal();
+        }
+        if (object instanceof User) {
+            return (User) object;
+        }
         return null;
     }
 
