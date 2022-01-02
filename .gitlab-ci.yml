@@ -85,14 +85,14 @@ test_job_gitlab:
     MYSQL_DATABASE: renfeid
     MYSQL_ROOT_PASSWORD: root
   before_script:
-    - yum install -y wget mysql java-1.8.0-openjdk* which
+    - yum install -y wget mysql java-1.8.0-openjdk* which git
     - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
       < environment/db/renfeid.sql --default-character-set=utf8
     - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
       -O /etc/yum.repos.d/epel-apache-maven.repo
     - yum -y install apache-maven
   script:
-    - git clone https://cd-robot:"$CD_ROBOT_TOKEN"@github.com/renfei/config.git
+    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
     - mvn -P gitlab --batch-mode test --file pom.xml
   rules:
