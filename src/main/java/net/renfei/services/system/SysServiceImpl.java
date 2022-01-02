@@ -1,19 +1,23 @@
 package net.renfei.services.system;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.exception.BusinessException;
 import net.renfei.model.FeedVO;
 import net.renfei.model.LinkTree;
+import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.SiteMapXml;
 import net.renfei.model.system.RegionVO;
 import net.renfei.repositories.SysRegionMapper;
+import net.renfei.repositories.SysSecretKeyMapper;
 import net.renfei.repositories.SysSiteFriendlyLinkMapper;
-import net.renfei.repositories.model.SysRegion;
-import net.renfei.repositories.model.SysRegionExample;
-import net.renfei.repositories.model.SysSiteFriendlyLinkExample;
-import net.renfei.repositories.model.SysSiteFriendlyLinkWithBLOBs;
+import net.renfei.repositories.model.*;
 import net.renfei.services.BaseService;
+import net.renfei.services.LeafService;
 import net.renfei.services.SysService;
 import net.renfei.utils.CommonUtil;
+import net.renfei.utils.ListUtils;
+import net.renfei.utils.RSAUtils;
+import net.renfei.utils.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -21,7 +25,7 @@ import org.springframework.util.ObjectUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -32,11 +36,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 @Service
 public class SysServiceImpl extends BaseService implements SysService {
+    private final LeafService leafService;
     private final SysRegionMapper regionMapper;
+    private final SysSecretKeyMapper sysSecretKeyMapper;
     private final SysSiteFriendlyLinkMapper siteFriendlyLinkMapper;
 
-    public SysServiceImpl(SysRegionMapper regionMapper, SysSiteFriendlyLinkMapper siteFriendlyLinkMapper) {
+    public SysServiceImpl(LeafService leafService,
+                          SysRegionMapper regionMapper,
+                          SysSecretKeyMapper sysSecretKeyMapper,
+                          SysSiteFriendlyLinkMapper siteFriendlyLinkMapper) {
+        this.leafService = leafService;
         this.regionMapper = regionMapper;
+        this.sysSecretKeyMapper = sysSecretKeyMapper;
         this.siteFriendlyLinkMapper = siteFriendlyLinkMapper;
     }
 
@@ -77,9 +88,9 @@ public class SysServiceImpl extends BaseService implements SysService {
         for (SysRegion region : regionList
         ) {
             if (region.getRegionCode().equals(regionCode)) {
-                if (!"460400".equals(regionCode)
-                        && !"441900".equals(regionCode)
-                        && !"442000".equals(regionCode)) {
+                if (!"460400" .equals(regionCode)
+                        && !"441900" .equals(regionCode)
+                        && !"442000" .equals(regionCode)) {
                     continue;
                 }
             }
@@ -87,7 +98,7 @@ public class SysServiceImpl extends BaseService implements SysService {
             BeanUtils.copyProperties(region, regionVO);
             regionVoList.add(regionVO);
         }
-        if ("410000".equals(regionCode)) {
+        if ("410000" .equals(regionCode)) {
             // 单独处理济源市（县级市）的情况
             example = new SysRegionExample();
             example.createCriteria().andRegionCodeEqualTo("419001");
@@ -95,7 +106,7 @@ public class SysServiceImpl extends BaseService implements SysService {
             RegionVO regionVO = new RegionVO();
             BeanUtils.copyProperties(region, regionVO);
             regionVoList.add(regionVO);
-        } else if ("420000".equals(regionCode)) {
+        } else if ("420000" .equals(regionCode)) {
             // 单独处理湖北省的情况
             example = new SysRegionExample();
             example.createCriteria().andRegionCodeLike("4290__");
@@ -106,7 +117,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                 BeanUtils.copyProperties(region, regionVO);
                 regionVoList.add(regionVO);
             }
-        } else if ("650000".equals(regionCode)) {
+        } else if ("650000" .equals(regionCode)) {
             // 单独处理新疆维吾尔自治区直辖县级市的情况
             example = new SysRegionExample();
             example.createCriteria().andRegionCodeLike("65900_");
@@ -117,7 +128,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                 BeanUtils.copyProperties(region, regionVO);
                 regionVoList.add(regionVO);
             }
-        } else if ("460000".equals(regionCode)) {
+        } else if ("460000" .equals(regionCode)) {
             // 单独处理海南省直辖县级市的情况
             example = new SysRegionExample();
             example.createCriteria().andRegionCodeLike("4690__");
@@ -128,7 +139,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                 BeanUtils.copyProperties(region, regionVO);
                 regionVoList.add(regionVO);
             }
-        } else if ("830000".equals(regionCode)) {
+        } else if ("830000" .equals(regionCode)) {
             // 单独处理台湾省直辖县级市的情况
             example = new SysRegionExample();
             example.createCriteria().andRegionCodeLike("8390__");
@@ -139,28 +150,28 @@ public class SysServiceImpl extends BaseService implements SysService {
                 BeanUtils.copyProperties(region, regionVO);
                 regionVoList.add(regionVO);
             }
-        } else if ("429004".equals(regionCode) || "429021".equals(regionCode)
-                || "429006".equals(regionCode) || "429005".equals(regionCode)
-                || "659001".equals(regionCode) || "659009".equals(regionCode)
-                || "659008".equals(regionCode) || "659007".equals(regionCode)
-                || "659006".equals(regionCode) || "659005".equals(regionCode)
-                || "659004".equals(regionCode) || "659003".equals(regionCode)
-                || "659002".equals(regionCode) || "469001".equals(regionCode)
-                || "469029".equals(regionCode) || "469028".equals(regionCode)
-                || "469027".equals(regionCode) || "469026".equals(regionCode)
-                || "469025".equals(regionCode) || "469024".equals(regionCode)
-                || "469023".equals(regionCode) || "469022".equals(regionCode)
-                || "469021".equals(regionCode) || "469007".equals(regionCode)
-                || "469006".equals(regionCode) || "469005".equals(regionCode)
-                || "469002".equals(regionCode) || "839001".equals(regionCode)
-                || "839013".equals(regionCode) || "839012".equals(regionCode)
-                || "839011".equals(regionCode) || "839009".equals(regionCode)
-                || "839008".equals(regionCode) || "839007".equals(regionCode)
-                || "839006".equals(regionCode) || "839005".equals(regionCode)
-                || "839004".equals(regionCode) || "839003".equals(regionCode)
-                || "429024".equals(regionCode) || "429025".equals(regionCode)
-                || "429026".equals(regionCode) || "839002".equals(regionCode)
-                || "419001".equals(regionCode)) {
+        } else if ("429004" .equals(regionCode) || "429021" .equals(regionCode)
+                || "429006" .equals(regionCode) || "429005" .equals(regionCode)
+                || "659001" .equals(regionCode) || "659009" .equals(regionCode)
+                || "659008" .equals(regionCode) || "659007" .equals(regionCode)
+                || "659006" .equals(regionCode) || "659005" .equals(regionCode)
+                || "659004" .equals(regionCode) || "659003" .equals(regionCode)
+                || "659002" .equals(regionCode) || "469001" .equals(regionCode)
+                || "469029" .equals(regionCode) || "469028" .equals(regionCode)
+                || "469027" .equals(regionCode) || "469026" .equals(regionCode)
+                || "469025" .equals(regionCode) || "469024" .equals(regionCode)
+                || "469023" .equals(regionCode) || "469022" .equals(regionCode)
+                || "469021" .equals(regionCode) || "469007" .equals(regionCode)
+                || "469006" .equals(regionCode) || "469005" .equals(regionCode)
+                || "469002" .equals(regionCode) || "839001" .equals(regionCode)
+                || "839013" .equals(regionCode) || "839012" .equals(regionCode)
+                || "839011" .equals(regionCode) || "839009" .equals(regionCode)
+                || "839008" .equals(regionCode) || "839007" .equals(regionCode)
+                || "839006" .equals(regionCode) || "839005" .equals(regionCode)
+                || "839004" .equals(regionCode) || "839003" .equals(regionCode)
+                || "429024" .equals(regionCode) || "429025" .equals(regionCode)
+                || "429026" .equals(regionCode) || "839002" .equals(regionCode)
+                || "419001" .equals(regionCode)) {
             // 单独处理直辖县级市的情况
             example = new SysRegionExample();
             example.createCriteria().andRegionCodeEqualTo(regionCode);
@@ -261,5 +272,65 @@ public class SysServiceImpl extends BaseService implements SysService {
             sb.append(line).append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * 获取服务器公钥
+     */
+    @Override
+    public Map<Integer, String> secretKey() {
+        Map<Integer, String> map = RSAUtils.genKeyPair(2048);
+        if (ObjectUtils.isEmpty(map)) {
+            return null;
+        }
+        //保存
+        String uuid = UUID.randomUUID().toString();
+        SysSecretKeyWithBLOBs secretKeyDO = new SysSecretKeyWithBLOBs();
+        secretKeyDO.setId(leafService.getId().getId());
+        secretKeyDO.setUuid(uuid);
+        secretKeyDO.setCreateTime(new Date());
+        secretKeyDO.setPrivateKey(map.get(1));
+        secretKeyDO.setPublicKey(map.get(0));
+        sysSecretKeyMapper.insertSelective(secretKeyDO);
+        map.put(1, uuid);
+        return map;
+    }
+
+    @Override
+    public Map<String, String> setSecretKey(ReportPublicKeyVO reportPublicKeyVO) throws BusinessException {
+        SysSecretKeyExample example = new SysSecretKeyExample();
+        example.createCriteria()
+                .andUuidEqualTo(reportPublicKeyVO.getSecretKeyId());
+        SysSecretKeyWithBLOBs secretKeyDO = ListUtils.getOne(sysSecretKeyMapper.selectByExampleWithBLOBs(example));
+        if (ObjectUtils.isEmpty(secretKeyDO)) {
+            throw new BusinessException("secretKeyId不正确");
+        }
+        String clientKey;
+        try {
+            clientKey = RSAUtils.decrypt(reportPublicKeyVO.getPublicKey(), secretKeyDO.getPrivateKey());
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new BusinessException("publicKey解密失败");
+        }
+        String aes = StringUtils.getRandomString(16);
+        String aesEnc;
+        try {
+            aesEnc = RSAUtils.encrypt(aes, clientKey.replaceAll("\n", ""));
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new BusinessException("服务器内部错误，使用RSA客户端公钥加密失败");
+        }
+        //保存AES
+        String uuid = UUID.randomUUID().toString();
+        SysSecretKeyWithBLOBs setPrivateKey = new SysSecretKeyWithBLOBs();
+        setPrivateKey.setId(leafService.getId().getId());
+        setPrivateKey.setUuid(uuid);
+        setPrivateKey.setCreateTime(new Date());
+        setPrivateKey.setPrivateKey(aes);
+        sysSecretKeyMapper.insertSelective(setPrivateKey);
+        Map<String, String> map = new HashMap<>();
+        map.put("keyid", uuid);
+        map.put("aeskey", aesEnc);
+        return map;
     }
 }

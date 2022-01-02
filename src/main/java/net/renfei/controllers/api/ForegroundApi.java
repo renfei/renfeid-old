@@ -29,6 +29,7 @@ public interface ForegroundApi {
      * @return
      */
     @PostMapping("comments/{systemTypeEnum}/{id}")
+    @Operation(summary = "提交评论接口", tags = {"前台接口"})
     APIResult submitComments(@PathVariable("systemTypeEnum") SystemTypeEnum systemTypeEnum,
                              @PathVariable("id") String id,
                              Comment comment);
