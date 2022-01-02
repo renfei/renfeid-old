@@ -6,7 +6,7 @@ import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.services.SysService;
-import net.renfei.utils.JwtUtils;
+import net.renfei.utils.JwtTokenUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,10 +19,10 @@ import java.util.Map;
  */
 @RestController
 public class AuthorizationApiController extends BaseController implements AuthorizationApi {
-    private final JwtUtils jwtUtils;
+    private final JwtTokenUtils jwtUtils;
     private final SysService sysService;
 
-    public AuthorizationApiController(JwtUtils jwtUtils, SysService sysService) {
+    public AuthorizationApiController(JwtTokenUtils jwtUtils, SysService sysService) {
         this.jwtUtils = jwtUtils;
         this.sysService = sysService;
     }

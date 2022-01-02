@@ -23,6 +23,7 @@ public class SystemConfig {
     private String buildTime;
     private String siteDomainName;
     private boolean enableRedis;
+    private String authMode;
     private String globalAesKey;
     private String leafKey;
     private String ownerUserName;

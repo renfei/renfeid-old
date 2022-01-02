@@ -66,6 +66,7 @@ system:
   buildTime: @buildtimestamp@
   siteDomainName: http://local.renfei.net:9595
   enableRedis: false
+  authMode: TOKEN
   globalAesKey: globalAesKey
   leafKey: leaf-segment-global
   ownerUserName: renfei

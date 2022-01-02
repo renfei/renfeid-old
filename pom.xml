@@ -54,6 +54,12 @@
             </properties>
         </profile>
         <profile>
+            <id>demo</id>
+            <properties>
+                <activatedProperties>demo</activatedProperties>
+            </properties>
+        </profile>
+        <profile>
             <id>prod</id>
             <properties>
                 <activatedProperties>prod</activatedProperties>

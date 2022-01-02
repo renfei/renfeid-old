@@ -33,6 +33,7 @@ import java.net.URL;
  */
 @Slf4j
 public abstract class BaseController {
+    public static final String SESSION_KEY = "signedUserSession";
     protected final SystemConfig SYSTEM_CONFIG;
     @Autowired
     protected HttpServletRequest request;
