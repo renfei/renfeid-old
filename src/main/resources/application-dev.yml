@@ -65,6 +65,7 @@ system:
   version: @project.version@
   buildTime: @buildtimestamp@
   siteDomainName: http://local.renfei.net:9595
+  staticDomain: https://cdn.renfei.net
   enableRedis: false
   authMode: TOKEN
   globalAesKey: globalAesKey
