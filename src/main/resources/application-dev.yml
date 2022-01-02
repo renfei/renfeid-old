@@ -130,6 +130,10 @@ system:
   google:
     analytics: 1
     ads: 1
+  jwt:
+    secret: zL4pC7mP4vH4nY2cK1kE6lC3bJ0yC5wI4kB0kZ2wK4tW3nQ9vP1hO6vZ5jA7wP7ulN6vY3mQ7uI5wU5sE6yP0hP6pK0tF5tT1oO0nO2mL4nO8uP3kJ3rV3iJ4aD5iB5h
+    issuer: RENFEI.NET
+    expiration: 28800000
 sentry:
   dsn: https://8843a97fdea6415bae0f696f3749eaf6@o1071939.ingest.sentry.io/6069834
   environment: development

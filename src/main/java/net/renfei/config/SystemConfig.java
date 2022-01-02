@@ -38,6 +38,7 @@ public class SystemConfig {
     private ThreadPool threadPool;
     private Baidu baidu;
     private Google google;
+    private Jwt jwt;
 
     @Data
     public static class PageHead {
@@ -111,5 +112,12 @@ public class SystemConfig {
     public static class Google {
         private String ads;
         private String analytics;
+    }
+
+    @Data
+    public static class Jwt {
+        private String secret;
+        private String issuer;
+        private Long expiration;
     }
 }
