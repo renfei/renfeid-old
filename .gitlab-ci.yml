@@ -92,6 +92,8 @@ test_job_gitlab:
       -O /etc/yum.repos.d/epel-apache-maven.repo
     - yum -y install apache-maven
   script:
+    - git clone https://cd-robot:${{ secrets.CD_ROBOT_TOKEN }}@github.com/renfei/config.git
+    - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
     - mvn -P gitlab --batch-mode test --file pom.xml
   rules:
     - if: "$CI_SERVER_URL =~ /gitlab.com/"
