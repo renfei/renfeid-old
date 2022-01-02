@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/github/license/renfei/renfeid)](https://github.com/renfei/renfeid/blob/master/LICENSE)
 [![Actions Status](https://github.com/renfei/renfeid/workflows/CI/badge.svg)](https://github.com/renfei/renfeid/actions)
-[![pipeline status](https://gitlab.com/renfei/renfeid/badges/master/pipeline.svg)](https://gitlab.com/renfei/renfeid/-/commits/master)
+[![pipeline status](https://gitlab.com/renfei/renfeid/badges/master/pipeline.svg)](https://gitlab.com/renfei/renfeid/-/pipelines)
 [![codecov](https://codecov.io/gh/renfei/renfeid/branch/master/graph/badge.svg?token=2Hd5NL3fnV)](https://codecov.io/gh/renfei/renfeid)
 [![Coverage Status](https://coveralls.io/repos/github/renfei/renfeid/badge.svg?branch=master)](https://coveralls.io/github/renfei/renfeid?branch=master)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/945285e334094d2f93643778bb4c8dd7)](https://www.codacy.com/gh/renfei/renfeid/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=renfei/renfeid&amp;utm_campaign=Badge_Grade)

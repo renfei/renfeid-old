@@ -112,6 +112,6 @@ deploy_staging:
   environment:
     name: production
     url: https://www.renfei.net/
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: manual
+#  rules:
+#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#      when: manual
