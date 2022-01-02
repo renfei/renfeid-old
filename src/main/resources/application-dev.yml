@@ -62,8 +62,8 @@ spring:
 # 自定义配置
 system:
   active: dev
-  version: @project.version@
-  buildTime: @buildtimestamp@
+  version: "@project.version@"
+  buildTime: "@buildtimestamp@"
   siteDomainName: http://local.renfei.net:9595
   staticDomain: https://cdn.renfei.net
   enableRedis: false
@@ -156,5 +156,5 @@ system:
 sentry:
   dsn: https://8843a97fdea6415bae0f696f3749eaf6@o1071939.ingest.sentry.io/6069834
   environment: development
-  release: @project.version@
+  release: "@project.version@"
   traces-sample-rate: 0.3
