@@ -3,7 +3,6 @@ package net.renfei.services.aliyun;
 import com.aliyuncs.green.model.v20180509.TextScanRequest;
 import com.aliyuncs.http.FormatType;
 import com.aliyuncs.http.HttpResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.services.aliyun.model.AliyunGreenAO;
 import net.renfei.services.aliyun.model.AliyunGreenVO;
@@ -76,11 +75,13 @@ public class AliyunGreen extends AliyunService {
                             }
                         } else {
                             log.info("task process fail:" + taskResult.getCode());
+                            log.info("task process Msg:" + taskResult.getMsg());
                             return false;
                         }
                     }
                 } else {
                     log.info("detect not success. code:" + aliyunGreenVO.getCode());
+                    log.info("detect not success. Msg:" + aliyunGreenVO.getMsg());
                     return false;
                 }
             } else {
