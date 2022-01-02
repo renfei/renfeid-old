@@ -37,6 +37,7 @@ public class SystemConfig {
     private String ip2LocationBinFileV6;
     private Leaf leaf;
     private ThreadPool threadPool;
+    private Aliyun aliyun;
     private Baidu baidu;
     private Google google;
     private Jwt jwt;
@@ -102,6 +103,35 @@ public class SystemConfig {
          * 任务队列容量（阻塞队列）
          */
         private int queueCapacity;
+    }
+
+    @Data
+    public static class Aliyun {
+        private String accessKeyId;
+        private String accessKeySecret;
+        private Oss oss;
+        private Green green;
+        private Sms sms;
+
+        @Data
+        public static class Oss {
+            private String endpoint;
+            private String bucketName;
+            private String downloadBucketName;
+            private String downloadHost;
+        }
+
+        @Data
+        public static class Green {
+            private String regionId;
+        }
+
+        @Data
+        public static class Sms {
+            private String regionId;
+            private String signName;
+            private String templateCode;
+        }
     }
 
     @Data

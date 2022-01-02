@@ -1,15 +1,20 @@
 package net.renfei.services.comment;
 
+import lombok.extern.slf4j.Slf4j;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
+import net.renfei.exception.BusinessException;
 import net.renfei.model.APIResult;
+import net.renfei.model.StateCodeEnum;
 import net.renfei.services.BaseService;
 import net.renfei.services.CommentService;
 import net.renfei.services.EmailService;
 import net.renfei.services.LeafService;
+import net.renfei.services.aliyun.AliyunGreen;
+import net.renfei.utils.JacksonUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +26,32 @@ import java.util.List;
 /**
  * @author renfei
  */
+@Slf4j
 @Service
 public class CommentServiceImpl extends BaseService implements CommentService {
     private final LeafService leafService;
     private final EmailService emailService;
+    private final AliyunGreen aliyunGreen;
 
-    public CommentServiceImpl(LeafService leafService, EmailService emailService) {
+    public CommentServiceImpl(LeafService leafService, EmailService emailService, AliyunGreen aliyunGreen) {
         this.leafService = leafService;
         this.emailService = emailService;
+        this.aliyunGreen = aliyunGreen;
     }
 
     @Override
     public APIResult<CommentDomain> submit(SystemTypeEnum systemTypeEnum, Comment comment, User user) {
-        // TODO 核验检查评论内容
-        comment.setDatetime(new Date());
-        comment.setId(leafService.getId().getId());
-        CommentDomain commentDomain = new CommentDomain(systemTypeEnum, comment.getObjectId(), comment, user);
-        return new APIResult<>(commentDomain);
+        // 检查评论内容，包括昵称和内容
+        if (aliyunGreen.textScan(comment.getAuthor())
+                && aliyunGreen.textScan(comment.getContent())) {
+            comment.setDatetime(new Date());
+            comment.setId(leafService.getId().getId());
+            CommentDomain commentDomain = new CommentDomain(systemTypeEnum, comment.getObjectId(), comment, user);
+            return new APIResult<>(commentDomain);
+        } else {
+            log.warn("评论未能通过机器自动审查。内容为：{}", JacksonUtil.obj2String(comment));
+            throw new BusinessException("您提交的内容可能包含不健康或不和谐的内容，未能通过机器自动审查，请重试。");
+        }
     }
 
     @Async

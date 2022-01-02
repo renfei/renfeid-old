@@ -126,6 +126,20 @@ system:
     maxPoolSize: 20
     keepAliveSeconds: 300
     queueCapacity: 100
+  aliyun:
+    accessKeyId: <accessKeyId>
+    accessKeySecret: <accessKeySecret>
+    oss:
+      endpoint: http://oss-cn-hangzhou.aliyuncs.com
+      bucketName: renfei
+      downloadBucketName: down-renfei
+      downloadHost: https://download.renfei.net
+    green:
+      regionId: cn-beijing
+    sms:
+      regionId: cn-hangzhou
+      signName: 任霏博客
+      templateCode: SMS_205876298
   baidu:
     tongji: 1
   google:
