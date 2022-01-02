@@ -10,8 +10,10 @@ import net.renfei.model.PageView;
 import net.renfei.services.PaginationService;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +23,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Controller 基类
@@ -77,6 +81,21 @@ public abstract class BaseController {
     protected User getSignUser() {
         // TODO
         return null;
+    }
+
+    protected String getCallBack(String callback) {
+        if (!ObjectUtils.isEmpty(callback)) {
+            try {
+                URL url = new URL(callback);
+                String host = url.getHost();
+                if (host.endsWith(".renfei.net")) {
+                    return callback;
+                }
+            } catch (MalformedURLException ignored) {
+                return "";
+            }
+        }
+        return "";
     }
 
     /**

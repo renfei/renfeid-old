@@ -112,6 +112,13 @@ public class SystemConfig {
     public static class Google {
         private String ads;
         private String analytics;
+        private ReCAPTCHA reCAPTCHA;
+
+        @Data
+        public static class ReCAPTCHA {
+            private String clientKey;
+            private String serverKey;
+        }
     }
 
     @Data

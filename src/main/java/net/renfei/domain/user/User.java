@@ -14,6 +14,7 @@ public final class User {
     private String userName;
     private String email;
     private String webSite;
+    private String ucScript;
     private SecretLevelEnum secretLevelEnum;
 
     private User() {
