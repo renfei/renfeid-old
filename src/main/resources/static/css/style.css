@@ -524,6 +524,19 @@ body {
 .footer {
     background-color: #f5f5f7;
     color: #1d1d1f;
+    position: absolute;
+    width: 100%;
+    margin-top: 300px;
+    padding-top: 30px;
+}
+
+.footer_image {
+    height: 368px;
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    top: -293px;
+    pointer-events: none;
 }
 
 .text-muted {

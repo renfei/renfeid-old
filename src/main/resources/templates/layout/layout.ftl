@@ -186,7 +186,8 @@
 </#macro>
 <#macro footer pageView>
     <@compress single_line=false>
-        <div class="footer" style="margin-top: 20px;padding-top: 30px;">
+        <div class="footer">
+            <div class="footer_image" style="background: url('/img/footer_image.webp') 50% center no-repeat;"></div>
             <div class="container">
                 <div class="row">
                     <#list pageView.pageFooter.footerMenuLinks! as footerMenus>
