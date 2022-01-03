@@ -27,7 +27,7 @@ public class DBMSMetaUtilTests extends ApplicationTests {
         //
         String ip = "127.0.0.1";
         if (systemConfig.getActive().equals("gitlab")) {
-            ip = "mysql";
+            ip = "mariadb";
         }
         String port = "3306";
         String dbname = "renfeid";

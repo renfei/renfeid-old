@@ -47,7 +47,7 @@ jobs:
         env:
           PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
-          while ! mariadb-admin ping -h"127.0.0.1" -P"$PORT" --silent; do
+          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
             sleep 1
           done
 

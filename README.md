@@ -26,7 +26,26 @@
 
 ## 技术栈
 
-待补充
+| 依赖 | 类型 | 版本 | 说明 |
+| ----: | :----: | :----: | :---- |
+| Java | 基础设施 | JDK1.8 | 本程序基于JVM运行 |
+| SpringBoot | Framework | 2.6.2 | 我会保持最新版本 |
+| Druid | 数据库连接池 | 1.2.8 | 来自 Alibaba 的开源数据库连接池 |
+| MyBatis | ORM | 2.2.1 | 选用 MyBatis 写 SQL 更自由 |
+| Feign | HttpClient | 3.1.0 | 虽然它来自SpringCloud，但我很喜欢用它 |
+| MariaDB | DataBase | 10.6.5 | MySQL 的最佳替代者，我使用最新版本 |
+| JWT | Token | - | 我使用JWT支持无状态接口，支持分布式部署 |
+| Redis | NoSQL | 6.2.6 | 用于缓存加速，数据变化不频繁的扔到内存里 |
+| ElasticSearch | 搜索引擎 | 7.16.2 | 站内搜索就是依赖 ES 搜索引擎实现的 |
+| Freemarker | 视图引擎 | 2.3.31 | 我是放弃 Thymeleaf 又换回来的，不解释 |
+| Quartz | 定时任务 | 2.3.2 | 为了支持分布式部署，本地定时任务不能用 |
+| SpringSecurity | 安全框架 | 5.6.1 | Spring全家桶，各种权限判断和拦截就是基于它的 |
+| Leaf | 全局发号器 | - | 美团技术团队的开源分布式ID生成，参考雪花算法 |
 
-### License
+## License
+
+[Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0)
+
+由于 MySQL 是 GPL License，所以已经移除所有 MySQL 的依赖，全部使用 MariaDB 来兼容 MySQL。
+
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frenfei%2Frenfeid.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frenfei%2Frenfeid?ref=badge_large)
