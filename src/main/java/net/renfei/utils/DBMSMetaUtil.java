@@ -23,7 +23,7 @@ public class DBMSMetaUtil {
      * 数据库类型,枚举
      */
     public enum DATABASETYPE {
-        ORACLE, MYSQL, SQLSERVER, SQLSERVER2005, DB2, INFORMIX, SYBASE, OTHER, EMPTY, DAMENG
+        ORACLE, MYSQL, MARIADB, SQLSERVER, SQLSERVER2005, DB2, INFORMIX, SYBASE, OTHER, EMPTY, DAMENG
     }
 
     /**
@@ -45,9 +45,9 @@ public class DBMSMetaUtil {
             return DATABASETYPE.ORACLE;
         }
         // MYSQL 数据库
-        if (databaseType.contains("MYSQL")) {
+        if (databaseType.contains("MYSQL") || databaseType.contains("MARIADB")) {
             //
-            return DATABASETYPE.MYSQL;
+            return DATABASETYPE.MARIADB;
         }
         // SQL SERVER 数据库
         if (databaseType.contains("SQL") && databaseType.contains("SERVER")) {
@@ -140,7 +140,7 @@ public class DBMSMetaUtil {
                 }
                 // 查询
                 rs = meta.getTables(catalog, schemaPattern, tableNamePattern, types);
-            } else if (DATABASETYPE.MYSQL.equals(dbtype)) {
+            } else if (DATABASETYPE.MYSQL.equals(dbtype) || DATABASETYPE.MARIADB.equals(dbtype)) {
                 // Mysql查询
                 // MySQL 的 table 这一级别查询不到备注信息
                 schemaPattern = dbname;
@@ -275,9 +275,9 @@ public class DBMSMetaUtil {
                     ")(FAILOVER_MODE = (TYPE = SELECT)(METHOD = BASIC)(RETRIES = 180)(DELAY = 5))))";
             //
             // url = url2;
-        } else if (DATABASETYPE.MYSQL.equals(dbtype)) {
+        } else if (DATABASETYPE.MYSQL.equals(dbtype) || DATABASETYPE.MARIADB.equals(dbtype)) {
             //
-            url += "jdbc:mysql://";
+            url += "jdbc:mariadb://";
             url += ip.trim();
             url += ":" + port.trim();
             url += "/" + dbname;

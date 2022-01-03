@@ -10,16 +10,16 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     services:
-      mysql:
-        image: mysql:5.7
+      mariadb:
+        image: mariadb:10.6.5
         ports:
           - 3306:3306
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: renfeid
-          MYSQL_ROOT_PASSWORD: root
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
+          MARIADB_DATABASE: renfeid
+          MARIADB_ROOT_PASSWORD: root
         options:
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mariadb-admin ping"
           --health-interval=5s
           --health-timeout=2s
           --health-retries=3
@@ -45,16 +45,16 @@ jobs:
 
       - name: Verify MariaDB Connection and Load Data
         env:
-          PORT: ${{ job.services.mysql.ports[3306] }}
+          PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+          while ! mariadb-admin ping -h"127.0.0.1" -P"$PORT" --silent; do
             sleep 1
           done
 
       - name: Loading Database
         env:
-          PORT: ${{ job.services.mysql.ports[3306] }}
-        run: mysql -h 127.0.0.1 -P $PORT -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
+          PORT: ${{ job.services.mariadb.ports[3306] }}
+        run: mariadb -h 127.0.0.1 -P $PORT -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
 
       - name: Cache Maven packages
         uses: actions/cache@v2

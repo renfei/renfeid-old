@@ -228,6 +228,38 @@
                         </div>
                         <div class="timeline-event p-2">
                             <div class="timeline-heading">
+                                <h4>彻底移除对 Oracle MySQL 的依赖</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p>因 MySQL 的 GPL License，数据库全部迁移到 MariaDB，包括 Connector/J。</p>
+                            </div>
+                            <div class="timeline-footer">
+                                <p class="text-right">2022-01-03</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-point timeline-point-success">
+                            <i class="fab fa-money"></i>
+                        </div>
+                        <div class="timeline-event p-2">
+                            <div class="timeline-heading">
+                                <h4>日访问量破500IP</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p>自然流量日访问IP创新高突破500，2021-12月访问量达1.3万IP；1.4万UV；1.9万PV。不含其他子站与接口流量。</p>
+                            </div>
+                            <div class="timeline-footer">
+                                <p class="text-right">2021-12-07</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-point timeline-point-success">
+                            <i class="fab fa-money"></i>
+                        </div>
+                        <div class="timeline-event p-2">
+                            <div class="timeline-heading">
                                 <h4>迎来第100位注册用户</h4>
                             </div>
                             <div class="timeline-body">

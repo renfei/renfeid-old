@@ -52,17 +52,20 @@ test_job_jh:
   stage: test
   image: centos:centos7
   services:
-    - mysql:5.7
+    - mariadb:10.6.5
     - redis:6.0.1
     - name: "registry.gitlab.cn/renfei/elasticsearch:7.16.2"
       alias: "elasticsearch"
       command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
   variables:
-    MYSQL_DATABASE: renfeid
-    MYSQL_ROOT_PASSWORD: root
+    MARIADB_DATABASE: renfeid
+    MARIADB_ROOT_PASSWORD: root
   before_script:
-    - yum install -y wget mysql java-1.8.0-openjdk* which git
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
+    - yum install -y wget java-1.8.0-openjdk* which git
+    - curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash
+    - rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+    - yum install -y MariaDB-server galera-4 MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
+    - mariadb --user=root --password="$MARIADB_ROOT_PASSWORD" --host=mariadb $MARIADB_DATABASE
       < environment/db/renfeid.sql --default-character-set=utf8
     - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
       -O /etc/yum.repos.d/epel-apache-maven.repo
@@ -78,17 +81,20 @@ test_job_gitlab:
   stage: test
   image: centos:centos7
   services:
-    - mysql:5.7
+    - mariadb:10.6.5
     - redis:6.0.1
     - name: "registry.gitlab.com/renfei/elasticsearch:7.16.2"
       alias: "elasticsearch"
       command: ["bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node"]
   variables:
-    MYSQL_DATABASE: renfeid
-    MYSQL_ROOT_PASSWORD: root
+    MARIADB_DATABASE: renfeid
+    MARIADB_ROOT_PASSWORD: root
   before_script:
-    - yum install -y wget mysql java-1.8.0-openjdk* which git
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql $MYSQL_DATABASE
+    - yum install -y wget java-1.8.0-openjdk* which git
+    - curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash
+    - rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+    - yum install -y MariaDB-server galera-4 MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
+    - mariadb --user=root --password="$MARIADB_ROOT_PASSWORD" --host=mariadb $MARIADB_DATABASE
       < environment/db/renfeid.sql --default-character-set=utf8
     - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
       -O /etc/yum.repos.d/epel-apache-maven.repo

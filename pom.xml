@@ -83,6 +83,7 @@
         <sentry.version>5.5.2</sentry.version>
         <email.version>2.6.2</email.version>
         <springdoc.version>1.6.3</springdoc.version>
+        <mariadb.client.version>2.7.4</mariadb.client.version>
         <!--Aliyun-->
         <aliyun.core.verson>4.5.30</aliyun.core.verson>
         <aliyun.oss.verson>3.13.2</aliyun.oss.verson>
@@ -196,9 +197,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb.client.version}</version>
         </dependency>
         <!--达梦数据库驱动包-->
         <dependency>
