@@ -1,6 +1,7 @@
 package net.renfei.controllers.kitbox;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
@@ -9,6 +10,7 @@ import net.renfei.ip2location.IPResult;
 import net.renfei.model.APIResult;
 import net.renfei.model.kitbox.KitboxPageView;
 import net.renfei.model.kitbox.PlistVO;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.IP2LocationService;
 import net.renfei.services.KitBoxService;
 import net.renfei.utils.IpUtils;
@@ -45,6 +47,7 @@ public class KitBoxController extends BaseController {
     }
 
     @RequestMapping("")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问开发者工具箱首页")
     public ModelAndView kitbox(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<Object> pageView = buildPageView(KitboxPageView.class, null);
@@ -72,6 +75,7 @@ public class KitBoxController extends BaseController {
             "default.jsp", "default.dll", "default.php3", "default.pl",
             "default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问开发者工具箱首页Index.html")
     public RedirectView getKitBoxDir() {
         assert SYSTEM_CONFIG != null;
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/kitbox");
@@ -86,6 +90,7 @@ public class KitBoxController extends BaseController {
      * @return
      */
     @RequestMapping("ip")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问IP地址信息查询工具")
     public ModelAndView ip(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         String ip = IpUtils.getIpAddress(request);
@@ -116,6 +121,7 @@ public class KitBoxController extends BaseController {
      * @return
      */
     @RequestMapping("digtrace")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问Dig+trace命令检测DNS状态工具")
     public ModelAndView getDigTrace(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -131,7 +137,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 域名解析QPS压力测试工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("dnsqps")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问域名解析QPS压力测试工具")
     public ModelAndView getDnsQps(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -147,7 +160,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 域名Whois信息查询工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("whois")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问域名Whois信息查询工具")
     public ModelAndView getWhois(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -163,7 +183,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 公网IP获取工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("getmyip")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问公网IP获取工具")
     public ModelAndView getMyIp(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -179,7 +206,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 在线批量生成 UUID/GUID 工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping({"uuid", "guid", "UUID", "GUID"})
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问在线批量生成 UUID/GUID 工具")
     public ModelAndView getUUID(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -195,7 +229,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * FreeMarker(FTL)在线测试工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping({"freemarkerTest", "FtlTest"})
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问FreeMarker(FTL)在线测试工具")
     public ModelAndView freemarkerTest(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -212,7 +253,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 下划线(Line)与驼峰(Hump)命名风格的相互转换工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("strHumpLineConvert")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问下划线(Line)与驼峰(Hump)命名风格的相互转换工具")
     public ModelAndView strHumpLineConvert(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -228,7 +276,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 计算机字节(Byte)单位之间的转换换算工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("byteUnitConversion")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问计算机字节(Byte)单位之间的转换换算工具")
     public ModelAndView byteUnitConversion(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -244,7 +299,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * UEditor工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("ueditor")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问UEditor工具")
     public ModelAndView ueditor(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -260,7 +322,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 在线分词工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("wordIkAnalyze")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问在线分词工具")
     public ModelAndView wordIkAnalyze(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -276,7 +345,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 计算机 TCP/UDP 端口号注册列表大全
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("portNumberList")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问计算机 TCP/UDP 端口号注册列表大全工具")
     public ModelAndView portNumberList(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -292,7 +368,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 随机密码生成工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("randomPassword")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问随机密码生成工具")
     public ModelAndView randomPassword(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -308,7 +391,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * MD5在线加密工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("md5")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问MD5在线加密工具")
     public ModelAndView md5Tools(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -324,7 +414,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * SHA-1 散列函数加密算法
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("sha1")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问SHA-1散列函数加密算法工具")
     public ModelAndView sha1Tools(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -340,7 +437,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 访问SHA-256散列函数加密算法工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("sha256")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问SHA-256散列函数加密算法工具")
     public ModelAndView sha256Tools(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -356,7 +460,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 访问SHA-512散列函数加密算法工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("sha512")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问SHA-512散列函数加密算法工具")
     public ModelAndView sha512Tools(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -372,12 +483,19 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * URL16进制加密
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping("url16")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问URL16进制加密")
     public ModelAndView url16Tools(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
         pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_URL16.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
-        pageView.getPageHead().setDescription("RL编码形式表示的ASCII字符(十六进制格式)。把URL网址转换成16进制代码形式,加密后可直接复制到地址栏访问。");
+        pageView.getPageHead().setDescription("URL编码形式表示的ASCII字符(十六进制格式)。把URL网址转换成16进制代码形式,加密后可直接复制到地址栏访问。");
         pageView.getPageHead().setKeywords("URL,网址,加密,16进制,hex");
         mv.setViewName("kitbox/url16");
         mv.addObject("pageView", pageView);
@@ -388,7 +506,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 二维码在线生成工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping({"qrcode", "QRCode"})
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问二维码在线生成工具")
     public ModelAndView qrCode(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -404,7 +529,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 苹果 iOS Plist 文件在线生成制作工具
+     *
+     * @param mv
+     * @return
+     */
     @GetMapping("plist")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问苹果iOSPlist文件在线生成制作工具")
     public ModelAndView plist(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -420,7 +552,17 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 苹果iOSPlist文件在线生成制作接口
+     *
+     * @param mv
+     * @param response
+     * @param plistVO
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @PostMapping("plist")
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问苹果iOSPlist文件在线生成制作接口")
     public ModelAndView plistDo(ModelAndView mv, HttpServletResponse response, PlistVO plistVO) throws UnsupportedEncodingException {
         response.setHeader("content-type", "application/octet-stream;charset=UTF-8");
         response.setHeader("content-disposition", "attachment; filename=" + URLEncoder.encode(plistVO.getAppname(), "UTF-8") + ".plist");
@@ -430,7 +572,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * 短网址在线生成工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping({"ShortUrl", "ShortURL"})
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问短网址在线生成工具")
     public ModelAndView shortUrl(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -446,7 +595,14 @@ public class KitBoxController extends BaseController {
         return mv;
     }
 
+    /**
+     * Indexing - 站长推送工具
+     *
+     * @param mv
+     * @return
+     */
     @RequestMapping({"indexing", "Indexing"})
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问Indexing站长推送工具")
     public ModelAndView indexing(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
@@ -476,8 +632,15 @@ public class KitBoxController extends BaseController {
         return null;
     }
 
+    /**
+     * ueditor配置接口
+     *
+     * @param action
+     * @return
+     */
     @ResponseBody
     @RequestMapping("ueditor/controller")
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问ueditor配置接口")
     public String ueditorConfig(@RequestParam("action") String action) {
         if ("config".equals(action)) {
             return "{" +

@@ -7,7 +7,7 @@ import net.renfei.domain.CommentDomain;
 import net.renfei.domain.WeiboDomain;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
-import net.renfei.domain.system.SystemTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.exception.BlogPostNeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;

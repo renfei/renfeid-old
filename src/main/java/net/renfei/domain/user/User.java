@@ -12,6 +12,7 @@ import net.renfei.model.SecretLevelEnum;
 public final class User {
     private Long id;
     private String userName;
+    private String uuid;
     private String email;
     private String webSite;
     private String ucScript;

@@ -1,4 +1,4 @@
-package net.renfei.model;
+package net.renfei.model.blog;
 
 /**
  * 文章或页面状态

@@ -4,7 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.Getter;
 import net.renfei.domain.comment.Comment;
-import net.renfei.domain.system.SystemTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.weibo.Weibo;
 import net.renfei.exception.NotExistException;
 import net.renfei.model.ListData;

@@ -1,9 +1,11 @@
 package net.renfei.controllers.auth;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.user.User;
 import net.renfei.model.HomePageView;
+import net.renfei.model.system.SystemTypeEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ public class AuthPageController extends BaseController {
      * 登陆界面
      */
     @GetMapping("signIn")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问登陆页")
     public ModelAndView signInPage(ModelAndView mv,
                                    @RequestParam(value = "callback", required = false) String callback) {
         HomePageView<User> pageView = buildPageView(HomePageView.class, getSignUser());
@@ -40,6 +43,7 @@ public class AuthPageController extends BaseController {
      * 注册界面
      */
     @GetMapping("signUp")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问注册页")
     public ModelAndView signUpPage(ModelAndView mv) {
         if (getSignUser() != null) {
             return new ModelAndView("redirect:/");

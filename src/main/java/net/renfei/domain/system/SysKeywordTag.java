@@ -2,6 +2,7 @@ package net.renfei.domain.system;
 
 import lombok.Data;
 import net.renfei.exception.NotExistException;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.SysKeywordObjectMapper;
 import net.renfei.repositories.SysKeywordTagMapper;
 import net.renfei.repositories.model.SysKeywordObject;

@@ -1,6 +1,8 @@
 package net.renfei.controllers.search;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.SearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ public class SearchController extends BaseController {
     }
 
     @RequestMapping(value = "search.xml")
+    @OperationLog(module = SystemTypeEnum.SEARCH, desc = "search.xml")
     public ModelAndView getSearchXml(ModelAndView mv, HttpServletResponse response) {
         assert SYSTEM_CONFIG != null;
         mv.addObject("siteName", SYSTEM_CONFIG.getSiteName());

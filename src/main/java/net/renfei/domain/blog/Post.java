@@ -3,7 +3,7 @@ package net.renfei.domain.blog;
 import lombok.Builder;
 import lombok.Data;
 import net.renfei.model.CommentStatusEnum;
-import net.renfei.model.PostStatusEnum;
+import net.renfei.model.blog.PostStatusEnum;
 import net.renfei.model.SecretLevelEnum;
 
 import java.util.Date;

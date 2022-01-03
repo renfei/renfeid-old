@@ -62,6 +62,7 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="weibo_postmeta"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="photo_album"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="photo_album_img"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="docs_online_documents"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="docs_online_documents"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="sys_logs"/>
     </context>
 </generatorConfiguration>

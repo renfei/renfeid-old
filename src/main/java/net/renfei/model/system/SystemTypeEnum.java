@@ -1,4 +1,4 @@
-package net.renfei.domain.system;
+package net.renfei.model.system;
 
 /**
  * 子系统类型
@@ -6,6 +6,26 @@ package net.renfei.domain.system;
  * @author renfei
  */
 public enum SystemTypeEnum {
+    /**
+     * 首页
+     */
+    HOME("/"),
+    /**
+     * API开放接口
+     */
+    API("/api"),
+    /**
+     * 账号模块
+     */
+    ACCOUNT(""),
+    /**
+     * 认证模块
+     */
+    AUTH(""),
+    /**
+     * 评论系统
+     */
+    COMMENT(""),
     /**
      * 博客类
      */
@@ -21,7 +41,15 @@ public enum SystemTypeEnum {
     /**
      * 工具箱类
      */
-    KITBOX("/kitbox");
+    KITBOX("/kitbox"),
+    /**
+     * 在线文档
+     */
+    DOCS("/docs"),
+    /**
+     * 站内搜索
+     */
+    SEARCH("/search");
 
     private final String uriPath;
 

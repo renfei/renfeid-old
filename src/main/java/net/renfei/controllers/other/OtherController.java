@@ -1,6 +1,8 @@
 package net.renfei.controllers.other;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.QrCodeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/other")
 public class OtherController extends BaseController {
     @GetMapping("qrcode")
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问二维码生成接口")
     public void qrcode(@RequestParam("content") String content,
                        @RequestParam(value = "size", required = false) String size,
                        HttpServletResponse response) throws Exception {

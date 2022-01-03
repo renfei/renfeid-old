@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.comment.Comment;
-import net.renfei.domain.system.SystemTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.IP2LocationException;

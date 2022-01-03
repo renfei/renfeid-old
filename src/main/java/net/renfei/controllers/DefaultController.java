@@ -1,10 +1,14 @@
 package net.renfei.controllers;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.domain.BlogDomain;
 import net.renfei.model.HomePageView;
 import net.renfei.model.ListData;
 import net.renfei.model.OGProtocol;
 import net.renfei.model.SiteMapXml;
+import net.renfei.model.log.LogLevelEnum;
+import net.renfei.model.log.OperationTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.SysService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -39,6 +43,7 @@ public class DefaultController extends BaseController {
      * @return
      */
     @RequestMapping("")
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "访问首页")
     public ModelAndView index(ModelAndView mv) {
         ListData<BlogDomain> blogDomainListData = BlogDomain.allPostList(getSignUser(), false, 1, 15);
         HomePageView<ListData<BlogDomain>> homePageView = buildPageView(HomePageView.class, blogDomainListData);
@@ -78,6 +83,7 @@ public class DefaultController extends BaseController {
             "default.jsp", "default.dll", "default.php3", "default.pl",
             "default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "index.html")
     public RedirectView indexPage() {
         RedirectView redirectView = new RedirectView("/");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
@@ -91,6 +97,7 @@ public class DefaultController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "robots.txt", produces = "text/plain")
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "robots.txt")
     public String getRobotsTxt() {
         assert SYSTEM_CONFIG != null;
         return "#\n" +
@@ -114,6 +121,7 @@ public class DefaultController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "ads.txt", produces = "text/plain")
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "ads.txt")
     public String getGoogleAds() throws NoHandlerFoundException {
         String ads;
         assert SYSTEM_CONFIG != null;
@@ -132,6 +140,7 @@ public class DefaultController extends BaseController {
      * @return
      */
     @RequestMapping(value = "sitemap.xml")
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "sitemap.xml")
     public ModelAndView getSiteMapXml(ModelAndView mv, HttpServletResponse response) {
         List<SiteMapXml> siteMapXmls = sysService.getSiteMaps();
         mv.addObject("data", siteMapXmls);
@@ -149,6 +158,7 @@ public class DefaultController extends BaseController {
      * @return
      */
     @RequestMapping(value = "sitemap.xsl")
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "sitemap.xsl")
     public ModelAndView getSiteMapXsl(ModelAndView mv, HttpServletResponse response) {
         response.setHeader("content-type", "application/octet-stream;charset=UTF-8");
         response.setContentType("application/octet-stream;charset=UTF-8");
@@ -164,6 +174,7 @@ public class DefaultController extends BaseController {
      * @return
      */
     @RequestMapping(value = "feed")
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "feed")
     public ModelAndView getFeed(ModelAndView mv, HttpServletResponse response) {
         mv.addObject("feed", sysService.getFeed());
         response.setHeader("content-type", "text/xml;charset=UTF-8");

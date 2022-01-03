@@ -1,11 +1,13 @@
 package net.renfei.controllers.photo;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.AlbumDomain;
 import net.renfei.domain.photo.Album;
 import net.renfei.model.ListData;
 import net.renfei.model.album.AlbumPageView;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.PaginationService;
 import net.renfei.services.photo.PhotoServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,7 @@ public class PhotoController extends BaseController {
      * @return
      */
     @RequestMapping("")
+    @OperationLog(module = SystemTypeEnum.ALBUM, desc = "访问相册首页")
     public ModelAndView getAllPhotoList(@RequestParam(value = "page", required = false) String page,
                                         ModelAndView mv) {
         ListData<Album> albumListData = photoService.getAllAlbumList(page, "10");
@@ -69,6 +72,7 @@ public class PhotoController extends BaseController {
             "default.jsp", "default.dll", "default.php3", "default.pl",
             "default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.ALBUM, desc = "访问相册首页Index.html")
     public RedirectView getPhotoListDir() {
         assert SYSTEM_CONFIG != null;
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/photo");
@@ -77,6 +81,7 @@ public class PhotoController extends BaseController {
     }
 
     @RequestMapping("{id}")
+    @OperationLog(module = SystemTypeEnum.ALBUM, desc = "访问相册详情页")
     public ModelAndView getPhotoById(@PathVariable("id") Long id, ModelAndView mv) throws NoHandlerFoundException {
         AlbumDomain albumDomain = photoService.getPhotoImgByPhotoId(id);
         if (albumDomain.getAlbum() == null) {

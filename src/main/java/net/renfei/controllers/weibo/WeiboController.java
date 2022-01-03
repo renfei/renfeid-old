@@ -1,12 +1,14 @@
 package net.renfei.controllers.weibo;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.WeiboDomain;
 import net.renfei.domain.weibo.Weibo;
 import net.renfei.exception.NotExistException;
 import net.renfei.model.ListData;
 import net.renfei.model.OGProtocol;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.model.weibo.WeiboPageView;
 import net.renfei.services.PaginationService;
 import net.renfei.services.WeiboService;
@@ -37,6 +39,7 @@ public class WeiboController extends BaseController {
     }
 
     @RequestMapping("")
+    @OperationLog(module = SystemTypeEnum.WEIBO, desc = "访问微博首页")
     public ModelAndView getWeiboList(@RequestParam(value = "page", required = false) String page,
                                      ModelAndView mv) {
         WeiboPageView<ListData<Weibo>> weiboPageView = buildPageView(WeiboPageView.class, weiboService.getWeiboList(page, "10"));
@@ -65,6 +68,7 @@ public class WeiboController extends BaseController {
             "default.jsp", "default.dll", "default.php3", "default.pl",
             "default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.WEIBO, desc = "index.html")
     public RedirectView getWeiboListDir() {
         assert SYSTEM_CONFIG != null;
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/weibo");
@@ -73,6 +77,7 @@ public class WeiboController extends BaseController {
     }
 
     @RequestMapping("{id}")
+    @OperationLog(module = SystemTypeEnum.WEIBO, desc = "访问微博详情页")
     public ModelAndView getWeiboById(@PathVariable("id") String id, ModelAndView mv) throws NoHandlerFoundException {
         WeiboPageView<WeiboDomain> weiboPageView = null;
         try {
@@ -117,6 +122,7 @@ public class WeiboController extends BaseController {
             "{id}/default.jsp", "{id}/default.dll", "{id}/default.php3", "{id}/default.pl",
             "{id}/default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.WEIBO, desc = "访问微博详情页Index.html")
     public RedirectView getWeiboInfoDir(@PathVariable("id") String id) {
         assert SYSTEM_CONFIG != null;
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/weibo/" + id);

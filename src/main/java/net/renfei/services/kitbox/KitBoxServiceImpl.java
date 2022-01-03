@@ -3,7 +3,7 @@ package net.renfei.services.kitbox;
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
-import net.renfei.domain.system.SystemTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.LinkTree;

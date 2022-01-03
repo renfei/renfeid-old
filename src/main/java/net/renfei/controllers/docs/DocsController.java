@@ -1,9 +1,11 @@
 package net.renfei.controllers.docs;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.model.docs.DocsPageView;
 import net.renfei.model.kitbox.KitBoxMenus;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.model.DocsOnlineDocuments;
 import net.renfei.services.DocsService;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,7 @@ public class DocsController extends BaseController {
     }
 
     @RequestMapping("")
+    @OperationLog(module = SystemTypeEnum.DOCS, desc = "访问在线文档首页")
     public ModelAndView getDocs(ModelAndView mv) {
         DocsPageView<List<KitBoxMenus>> pageView = buildPageView(DocsPageView.class, docsService.getDocs());
         assert SYSTEM_CONFIG != null;
@@ -58,6 +61,7 @@ public class DocsController extends BaseController {
             "default.jsp", "default.dll", "default.php3", "default.pl",
             "default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.DOCS, desc = "访问在线文档首页Index.html")
     public RedirectView getPostListDir() {
         assert SYSTEM_CONFIG != null;
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/docs");
@@ -66,6 +70,7 @@ public class DocsController extends BaseController {
     }
 
     @RequestMapping("{category}/{title}/{version}/{lang}")
+    @OperationLog(module = SystemTypeEnum.DOCS, desc = "访问在线文档详情页")
     public ModelAndView getEmbed(ModelAndView mv,
                                  @PathVariable("category") String category,
                                  @PathVariable("title") String title,

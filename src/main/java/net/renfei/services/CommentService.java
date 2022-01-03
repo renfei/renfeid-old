@@ -2,7 +2,7 @@ package net.renfei.services;
 
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.comment.Comment;
-import net.renfei.domain.system.SystemTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.model.APIResult;
 

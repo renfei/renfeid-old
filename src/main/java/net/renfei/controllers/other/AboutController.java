@@ -1,7 +1,9 @@
 package net.renfei.controllers.other;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.model.HomePageView;
+import net.renfei.model.system.SystemTypeEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class AboutController extends BaseController {
 
     @RequestMapping("")
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "访问关于页面")
     public ModelAndView getAbout(ModelAndView mv) {
         HomePageView<String> homePageView = buildPageView(HomePageView.class, "");
         assert SYSTEM_CONFIG != null;
@@ -44,6 +47,7 @@ public class AboutController extends BaseController {
             "default.jsp", "default.dll", "default.php3", "default.pl",
             "default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.HOME, desc = "访问关于页面Index.html")
     public RedirectView getAboutDir() {
         assert SYSTEM_CONFIG != null;
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/about");

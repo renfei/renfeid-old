@@ -1,6 +1,7 @@
 package net.renfei.controllers.blog;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.BlogDomain;
 import net.renfei.exception.BlogPostNeedPasswordException;
@@ -8,6 +9,7 @@ import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.*;
 import net.renfei.model.blog.PostPageView;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.BlogService;
 import net.renfei.services.PaginationService;
 import net.renfei.utils.NumberUtils;
@@ -39,6 +41,7 @@ public class BlogPostController extends BaseController {
     }
 
     @RequestMapping("")
+    @OperationLog(module = SystemTypeEnum.BLOG, desc = "访问博客首页")
     public ModelAndView getPostList(ModelAndView mv,
                                     @RequestParam(value = "page", required = false) String page) {
         mv.addObject("catTitle", "全部文档");
@@ -68,6 +71,7 @@ public class BlogPostController extends BaseController {
             "default.jsp", "default.dll", "default.php3", "default.pl",
             "default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.BLOG, desc = "访问博客首页Index.html")
     public RedirectView getPostListDir() {
         assert SYSTEM_CONFIG != null;
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts");
@@ -85,6 +89,7 @@ public class BlogPostController extends BaseController {
      * @throws NoHandlerFoundException 404不存在异常
      */
     @GetMapping("{id}")
+    @OperationLog(module = SystemTypeEnum.BLOG, desc = "访问博客详情页")
     public ModelAndView getPostInfo(ModelAndView mv, @PathVariable("id") Long id) throws NoHandlerFoundException {
         BlogDomain blogDomain = null;
         assert blogService != null;
@@ -143,6 +148,7 @@ public class BlogPostController extends BaseController {
             "{id}/default.jsp", "{id}/default.dll", "{id}/default.php3", "{id}/default.pl",
             "{id}/default.cgi"
     })
+    @OperationLog(module = SystemTypeEnum.BLOG, desc = "访问博客详情页Index.html")
     public RedirectView getPostInfoDir(@PathVariable("id") String id) {
         assert SYSTEM_CONFIG != null;
         RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + id);
