@@ -11,10 +11,6 @@ import org.apache.ibatis.annotations.Param;
 public interface SysLogsMapper {
     long countByExample(SysLogsExample example);
 
-    int deleteByExample(SysLogsExample example);
-
-    int deleteByPrimaryKey(Long id);
-
     int insert(SysLogsWithBLOBs record);
 
     int insertSelective(SysLogsWithBLOBs record);
@@ -24,16 +20,4 @@ public interface SysLogsMapper {
     List<SysLogs> selectByExample(SysLogsExample example);
 
     SysLogsWithBLOBs selectByPrimaryKey(Long id);
-
-    int updateByExampleSelective(@Param("record") SysLogsWithBLOBs record, @Param("example") SysLogsExample example);
-
-    int updateByExampleWithBLOBs(@Param("record") SysLogsWithBLOBs record, @Param("example") SysLogsExample example);
-
-    int updateByExample(@Param("record") SysLogs record, @Param("example") SysLogsExample example);
-
-    int updateByPrimaryKeySelective(SysLogsWithBLOBs record);
-
-    int updateByPrimaryKeyWithBLOBs(SysLogsWithBLOBs record);
-
-    int updateByPrimaryKey(SysLogs record);
 }
