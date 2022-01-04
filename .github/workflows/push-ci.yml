@@ -85,7 +85,6 @@ jobs:
           mvn -P ci coveralls:report
 
   security:
-    on: push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
