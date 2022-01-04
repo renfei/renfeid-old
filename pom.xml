@@ -85,7 +85,7 @@
         <springdoc.version>1.6.3</springdoc.version>
         <mariadb.client.version>2.7.4</mariadb.client.version>
         <!--Aliyun-->
-        <aliyun.core.verson>4.5.30</aliyun.core.verson>
+        <aliyun.core.verson>4.6.0</aliyun.core.verson>
         <aliyun.oss.verson>3.13.2</aliyun.oss.verson>
         <aliyun.green.verson>3.6.5</aliyun.green.verson>
         <jjwt.version>0.11.2</jjwt.version>
