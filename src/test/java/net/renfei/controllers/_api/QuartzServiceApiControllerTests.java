@@ -33,6 +33,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.code").value(200));
+        Thread.sleep(3000);
         this.mockMvc.perform(put("/_/api/quartz/job/pause")
                         .with(csrf())
                         .param("jobName", "testJob")
@@ -41,6 +42,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.code").value(200));
+        Thread.sleep(3000);
         this.mockMvc.perform(put("/_/api/quartz/job/resume")
                         .with(csrf())
                         .param("jobName", "testJob")
@@ -49,6 +51,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.code").value(200));
+        Thread.sleep(3000);
         this.mockMvc.perform(put("/_/api/quartz/job")
                         .with(csrf())
                         .param("jobName", "testJob")

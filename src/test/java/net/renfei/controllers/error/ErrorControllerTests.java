@@ -28,10 +28,6 @@ public class ErrorControllerTests extends ApplicationTests {
         this.mockMvc.perform(get("/error/500"))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
-        // 403
-        this.mockMvc.perform(get("/_/test"))
-                .andDo(print())
-                .andExpect(status().isForbidden());
         // 404
         this.mockMvc.perform(get("/test/test/test/test"))
                 .andDo(print())
