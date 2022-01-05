@@ -112,13 +112,13 @@
                                 <select class="form-control form-control-sm btn-dark" name="type"
                                         style="border-top-right-radius: 0;border-bottom-right-radius: 0;">
                                     <option selected value="all">全部</option>
-                                    <option value="post">文章</option>
-                                    <option value="bbs">论坛</option>
-                                    <option value="weibo">微博</option>
-                                    <option value="page">页面</option>
-                                    <option value="photo">相册</option>
-                                    <option value="video">视频</option>
-                                    <option value="kitbox">工具箱</option>
+                                    <option value="POSTS">文章</option>
+                                    <option value="DISCUZ">论坛</option>
+                                    <option value="WEIBO">微博</option>
+                                    <option value="PAGES">页面</option>
+                                    <option value="PHOTO">相册</option>
+                                    <option value="VIDEO">视频</option>
+                                    <option value="KITBOX">工具箱</option>
                                 </select>
                             </div>
                             <input type="text" class="form-control form-control-sm btn-dark" placeholder="搜索一下，发现更多"

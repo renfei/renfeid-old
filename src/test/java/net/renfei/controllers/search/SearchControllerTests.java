@@ -13,6 +13,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SearchControllerTests extends ApplicationTests {
 
     @Test
+    public void searchTest() throws Exception {
+        this.mockMvc.perform(get("/search")
+                        .param("type","ALL")
+                        .param("w","测试"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void getSearchXmlTest() throws Exception {
         this.mockMvc.perform(get("/search/search.xml"))
                 .andDo(print())

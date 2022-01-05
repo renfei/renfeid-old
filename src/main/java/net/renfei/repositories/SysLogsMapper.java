@@ -1,6 +1,8 @@
 package net.renfei.repositories;
 
 import java.util.List;
+
+import net.renfei.repositories.model.HotSearch;
 import net.renfei.repositories.model.SysLogs;
 import net.renfei.repositories.model.SysLogsExample;
 import net.renfei.repositories.model.SysLogsWithBLOBs;
@@ -20,4 +22,6 @@ public interface SysLogsMapper {
     List<SysLogs> selectByExample(SysLogsExample example);
 
     SysLogsWithBLOBs selectByPrimaryKey(Long id);
+
+    List<HotSearch> selectHotSearchList();
 }

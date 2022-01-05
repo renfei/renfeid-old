@@ -1,10 +1,14 @@
 package net.renfei.services.search;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import net.renfei.model.ListData;
 import net.renfei.model.kitbox.IkAnalyzeVO;
 import net.renfei.model.search.SearchItem;
 import net.renfei.model.search.TypeEnum;
 import net.renfei.repositories.SearchRepository;
+import net.renfei.repositories.SysLogsMapper;
+import net.renfei.repositories.model.HotSearch;
 import net.renfei.services.BaseService;
 import net.renfei.services.SearchService;
 import net.renfei.utils.NumberUtils;
@@ -43,13 +47,16 @@ public class SearchServiceImpl extends BaseService implements SearchService {
     private final SearchRepository searchRepository;
     private final RestHighLevelClient restHighLevelClient;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
+    private final SysLogsMapper sysLogsMapper;
 
     public SearchServiceImpl(SearchRepository searchRepository,
                              RestHighLevelClient restHighLevelClient,
-                             ElasticsearchRestTemplate elasticsearchRestTemplate) {
+                             ElasticsearchRestTemplate elasticsearchRestTemplate,
+                             SysLogsMapper sysLogsMapper) {
         this.searchRepository = searchRepository;
         this.restHighLevelClient = restHighLevelClient;
         this.elasticsearchRestTemplate = elasticsearchRestTemplate;
+        this.sysLogsMapper = sysLogsMapper;
     }
 
     /**
@@ -98,7 +105,6 @@ public class SearchServiceImpl extends BaseService implements SearchService {
                     .should(QueryBuilders.matchQuery("title", word))
                     .should(QueryBuilders.matchQuery("content", word));
             queryBuilder.must(wordBuilder);
-            // TODO logService.log(LogLevel.INFO, LogModule.SEARCH, LogType.GET, word, null);
         }
         if (type != null) {
             queryBuilder.must(QueryBuilders.termQuery("type", type.getName()));
@@ -205,5 +211,12 @@ public class SearchServiceImpl extends BaseService implements SearchService {
     @Override
     public void deleteIndex() {
         searchRepository.deleteAll();
+    }
+
+    @Override
+    public List<HotSearch> getHotSearchList() {
+        Page<HotSearch> page = PageHelper.startPage(1, 15);
+        sysLogsMapper.selectHotSearchList();
+        return page.getResult();
     }
 }

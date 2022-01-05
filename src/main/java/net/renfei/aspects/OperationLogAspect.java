@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static net.renfei.controllers.BaseController.SESSION_KEY;
+import static net.renfei.services.system.LogServiceImpl.convertMap;
 
 /**
  * 在切面记录操作日志
@@ -127,18 +128,5 @@ public class OperationLogAspect {
             }
         }
         return resultMethod;
-    }
-
-    /**
-     * 转换request 请求参数
-     *
-     * @param paramMap request获取的参数数组
-     */
-    private Map<String, String> convertMap(Map<String, String[]> paramMap) {
-        Map<String, String> rtnMap = new HashMap<String, String>();
-        for (String key : paramMap.keySet()) {
-            rtnMap.put(key, paramMap.get(key)[0]);
-        }
-        return rtnMap;
     }
 }

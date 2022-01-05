@@ -7,6 +7,7 @@ package net.renfei.model.search;
  * @author RenFei
  */
 public enum TypeEnum {
+    ALL(1L, "ALL", "/"),
     POSTS(1L, "POSTS", "/posts"),
     PAGES(2L, "PAGES", "/page"),
     VIDEO(3L, "VIDEO", "/video"),

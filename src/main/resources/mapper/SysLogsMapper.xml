@@ -281,4 +281,19 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  <select id="selectHotSearchList" resultType="net.renfei.repositories.model.HotSearch">
+    SELECT
+      log_desc AS word,
+      COUNT( 1 ) AS cont
+    FROM
+      sys_logs
+    WHERE
+      log_module = 'SEARCH'
+      AND requ_param IS NOT NULL
+      AND requ_uri = '/search'
+    GROUP BY
+      word
+    ORDER BY
+      cont DESC
+  </select>
 </mapper>
