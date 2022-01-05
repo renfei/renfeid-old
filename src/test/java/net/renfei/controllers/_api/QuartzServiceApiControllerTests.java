@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class QuartzServiceApiControllerTests extends ApplicationTests {
 
     @Test
-    public void test() throws Exception {
+    public void quartzTest() throws Exception {
         QuartzJob quartzJob = new QuartzJob();
         quartzJob.setJobName("testJob");
         quartzJob.setJobGroup("testJobGroup");
