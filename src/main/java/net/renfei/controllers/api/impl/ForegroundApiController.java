@@ -8,7 +8,7 @@ import net.renfei.domain.WeiboDomain;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
 import net.renfei.model.system.SystemTypeEnum;
-import net.renfei.exception.BlogPostNeedPasswordException;
+import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.APIResult;
@@ -82,7 +82,7 @@ public class ForegroundApiController extends BaseController implements Foregroun
                     .code(StateCodeEnum.Failure)
                     .message("文章不存在。")
                     .build();
-        } catch (BlogPostNeedPasswordException e) {
+        } catch (NeedPasswordException e) {
             return APIResult.builder()
                     .code(StateCodeEnum.Forbidden)
                     .message("文章密码不正确。")

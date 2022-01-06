@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.BlogDomain;
-import net.renfei.exception.BlogPostNeedPasswordException;
+import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.*;
@@ -98,7 +98,7 @@ public class BlogPostController extends BaseController {
             blogDomain = blogService.getBlogById(id, getSignUser());
         } catch (NotExistException e) {
             noHandlerFoundException();
-        } catch (BlogPostNeedPasswordException e) {
+        } catch (NeedPasswordException e) {
             // TODO 文章需要密码才能查看
         } catch (SecretLevelException e) {
             // TODO 保密等级无权查看此文章内容

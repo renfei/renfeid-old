@@ -2,6 +2,7 @@ package net.renfei.model;
 
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.BlogDomain;
+import net.renfei.domain.PagesDomain;
 import net.renfei.utils.ApplicationContextUtil;
 
 /**
@@ -26,6 +27,15 @@ public class SocialSharing {
         this.url = SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogDomain.getPost().getId();
         this.describes = blogDomain.getPost().getExcerpt();
         this.pics = blogDomain.getPost().getFeaturedImage();
+    }
+
+    public SocialSharing(PagesDomain pagesDomain) {
+        this.title = pagesDomain.getPage().getPageTitle();
+        assert SYSTEM_CONFIG != null;
+        this.url = SYSTEM_CONFIG.getSiteDomainName() + "/page/" + pagesDomain.getPage().getId();
+        this.describes = pagesDomain.getPage().getPageExcerpt();
+        this.pics = pagesDomain.getPage().getFeaturedImage() == null ?
+                "https://cdn.renfei.net/Logo/ogimage.png" : pagesDomain.getPage().getFeaturedImage();
     }
 
     public String getTitle() {

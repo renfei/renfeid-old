@@ -8,7 +8,7 @@ import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
-import net.renfei.exception.BlogPostNeedPasswordException;
+import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.CommentStatusEnum;
@@ -73,7 +73,7 @@ public final class BlogDomain {
      * @throws NotExistException 文章不存在异常
      */
     public BlogDomain(Long id, User user, String password, boolean isAdmin)
-            throws NotExistException, BlogPostNeedPasswordException, SecretLevelException {
+            throws NotExistException, NeedPasswordException, SecretLevelException {
         if (id == null) {
             throw new NotExistException("博客文章不存在");
         }
@@ -90,11 +90,11 @@ public final class BlogDomain {
             // 判断密码正确性
             if (!ObjectUtils.isEmpty(post.getPostPassword())) {
                 if (ObjectUtils.isEmpty(password)) {
-                    throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
+                    throw new NeedPasswordException("文章需要密码才能查看。");
                 } else {
                     // 判断密码是否正确
                     if (!password.equals(post.getPostPassword())) {
-                        throw new BlogPostNeedPasswordException("文章需要密码才能查看。");
+                        throw new NeedPasswordException("文章需要密码才能查看。");
                     }
                 }
             }
@@ -177,7 +177,7 @@ public final class BlogDomain {
             BlogDomain blogDomain;
             try {
                 blogDomain = new BlogDomain(blogPostsWithBLOBs.getId(), user, blogPostsWithBLOBs.getPostPassword(), isAdmin);
-            } catch (NotExistException | SecretLevelException | BlogPostNeedPasswordException exception) {
+            } catch (NotExistException | SecretLevelException | NeedPasswordException exception) {
                 SentryUtils.captureException(exception);
                 continue;
             }

@@ -9,7 +9,7 @@ import net.renfei.domain.comment.Comment;
 import net.renfei.domain.system.SysKeywordTag;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
-import net.renfei.exception.BlogPostNeedPasswordException;
+import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.LinkTree;
@@ -50,12 +50,12 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param user 当前查看的用户
      * @return BlogDomain
      * @throws NotExistException             文章不存在异常
-     * @throws BlogPostNeedPasswordException 文章需要密码异常
+     * @throws NeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
     @Override
     public BlogDomain getBlogById(Long id, User user) throws NotExistException,
-            BlogPostNeedPasswordException, SecretLevelException {
+            NeedPasswordException, SecretLevelException {
         return getBlogById(id, user, null, false);
     }
 
@@ -67,12 +67,12 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param password 查看文章的密码
      * @return BlogDomain
      * @throws NotExistException             文章不存在异常
-     * @throws BlogPostNeedPasswordException 文章需要密码异常
+     * @throws NeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
     @Override
     public BlogDomain getBlogById(Long id, User user, String password) throws NotExistException,
-            BlogPostNeedPasswordException, SecretLevelException {
+            NeedPasswordException, SecretLevelException {
         return getBlogById(id, user, password, false);
     }
 
@@ -85,12 +85,12 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param isAdmin  是否是管理员操作
      * @return BlogDomain
      * @throws NotExistException             文章不存在异常
-     * @throws BlogPostNeedPasswordException 文章需要密码异常
+     * @throws NeedPasswordException 文章需要密码异常
      * @throws SecretLevelException          保密等级异常
      */
     @Override
     public BlogDomain getBlogById(Long id, User user, String password, boolean isAdmin)
-            throws NotExistException, BlogPostNeedPasswordException, SecretLevelException {
+            throws NotExistException, NeedPasswordException, SecretLevelException {
         BlogDomain blogDomain = null;
         String redisKey = REDIS_KEY_BLOG + "post:" + id;
         assert SYSTEM_CONFIG != null;
