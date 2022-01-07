@@ -26,20 +26,6 @@ public interface SysService {
     List<RegionVO> getRegion(String regionCode);
 
     /**
-     * 获取站点地图
-     *
-     * @return
-     */
-    List<SiteMapXml> getSiteMaps();
-
-    /**
-     * Feed 订阅
-     *
-     * @return
-     */
-    FeedVO getFeed();
-
-    /**
      * 获取网站友情链接列表
      *
      * @return

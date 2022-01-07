@@ -6,7 +6,7 @@
         <#list data as info>
             <url>
                 <loc>${info.loc}</loc>
-                <changefreq>${info.getChangefreqEnum}</changefreq>
+                <changefreq>${info.changefreqEnum}</changefreq>
                 <priority>${info.priority}</priority>
                 <lastmod>${info.lastmod}</lastmod>
             </url>

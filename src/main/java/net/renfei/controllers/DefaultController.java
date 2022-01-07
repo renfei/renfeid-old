@@ -6,10 +6,9 @@ import net.renfei.model.HomePageView;
 import net.renfei.model.ListData;
 import net.renfei.model.OGProtocol;
 import net.renfei.model.SiteMapXml;
-import net.renfei.model.log.LogLevelEnum;
-import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.SysService;
+import net.renfei.services.system.SiteMapService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +30,11 @@ import java.util.List;
 @RequestMapping("/")
 public class DefaultController extends BaseController {
     private final SysService sysService;
+    private final SiteMapService siteMapService;
 
-    public DefaultController(SysService sysService) {
+    public DefaultController(SysService sysService, SiteMapService siteMapService) {
         this.sysService = sysService;
+        this.siteMapService = siteMapService;
     }
 
     /**
@@ -142,7 +143,7 @@ public class DefaultController extends BaseController {
     @RequestMapping(value = "sitemap.xml")
     @OperationLog(module = SystemTypeEnum.HOME, desc = "sitemap.xml")
     public ModelAndView getSiteMapXml(ModelAndView mv, HttpServletResponse response) {
-        List<SiteMapXml> siteMapXmls = sysService.getSiteMaps();
+        List<SiteMapXml> siteMapXmls = siteMapService.getSiteMaps();
         mv.addObject("data", siteMapXmls);
         response.setHeader("content-type", "text/xml;charset=UTF-8");
         response.setContentType("text/xml;charset=UTF-8");
@@ -176,7 +177,7 @@ public class DefaultController extends BaseController {
     @RequestMapping(value = "feed")
     @OperationLog(module = SystemTypeEnum.HOME, desc = "feed")
     public ModelAndView getFeed(ModelAndView mv, HttpServletResponse response) {
-        mv.addObject("feed", sysService.getFeed());
+        mv.addObject("feed", siteMapService.getFeed());
         response.setHeader("content-type", "text/xml;charset=UTF-8");
         response.setContentType("text/xml;charset=UTF-8");
         mv.setViewName("feed");

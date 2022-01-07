@@ -116,7 +116,7 @@ public class AggregateService extends BaseService {
                         searchItem.setTitle(link.getText());
                         searchItem.setContent(link.getRel());
                         searchItem.setImage(getImgUrl(""));
-                        searchItem.setUrl(SYSTEM_CONFIG.getSiteDomainName() + link.getHref());
+                        searchItem.setUrl(link.getHref());
                         searchItem.setOriginalId(0L);
                         searchItem.setDate(new Date());
                         searchItemAll.add(searchItem);

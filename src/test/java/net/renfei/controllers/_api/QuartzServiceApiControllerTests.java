@@ -24,7 +24,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
         quartzJob.setJobName("testJob");
         quartzJob.setJobGroup("testJobGroup");
         quartzJob.setReference("net.renfei.services.jobs.ExampleJob");
-        quartzJob.setCron("0/5 * * * * ? ");
+        quartzJob.setCron("0 0 0/5 * * ? ");
         this.mockMvc.perform(post("/_/api/quartz/job")
                         .with(csrf())
                         .content(JacksonUtil.obj2String(quartzJob))
@@ -53,7 +53,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
                         .with(csrf())
                         .param("jobName", "testJob")
                         .param("jobGroup", "testJobGroup")
-                        .param("cron", "0/1 * * * * ? "))
+                        .param("cron", "0 0 0/5 * * ? "))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
