@@ -82,7 +82,7 @@
         <openfeign.version>3.1.0</openfeign.version>
         <sentry.version>5.5.2</sentry.version>
         <email.version>2.6.2</email.version>
-        <springdoc.version>1.6.3</springdoc.version>
+        <springdoc.version>1.6.4</springdoc.version>
         <mariadb.client.version>2.7.4</mariadb.client.version>
         <!--Aliyun-->
         <aliyun.core.verson>4.6.0</aliyun.core.verson>
