@@ -1,12 +1,10 @@
 package net.renfei.services;
 
 import com.aliyun.oss.ServiceException;
-import net.renfei.model.FeedVO;
-import net.renfei.model.LinkTree;
-import net.renfei.model.ReportPublicKeyVO;
-import net.renfei.model.SiteMapXml;
+import net.renfei.model.*;
 import net.renfei.model.system.RegionVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -53,4 +51,10 @@ public interface SysService {
     Map<Integer, String> secretKey();
 
     Map<String, String> setSecretKey(ReportPublicKeyVO reportPublicKeyVO) throws ServiceException;
+
+    PageHead getPageHead();
+
+    PageHeader getPageHeader(HttpServletRequest request);
+
+    PageFooter getPageFooter();
 }

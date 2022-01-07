@@ -1,12 +1,11 @@
 package net.renfei.services.system;
 
 import lombok.extern.slf4j.Slf4j;
+import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.model.*;
 import net.renfei.model.system.RegionVO;
-import net.renfei.repositories.SysRegionMapper;
-import net.renfei.repositories.SysSecretKeyMapper;
-import net.renfei.repositories.SysSiteFriendlyLinkMapper;
+import net.renfei.repositories.*;
 import net.renfei.repositories.model.*;
 import net.renfei.services.*;
 import net.renfei.utils.CommonUtil;
@@ -14,14 +13,20 @@ import net.renfei.utils.ListUtils;
 import net.renfei.utils.RSAUtils;
 import net.renfei.utils.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+
+import static net.renfei.controllers.BaseController.SESSION_KEY;
 
 /**
  * 系统基础服务
@@ -31,18 +36,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 @Service
 public class SysServiceImpl extends BaseService implements SysService {
+    private static final String REDIS_KEY_BLOG = REDIS_KEY + "system:";
     private final LeafService leafService;
+    private final RedisService redisService;
     private final SysRegionMapper regionMapper;
+    private final SysSiteMenuMapper sysSiteMenuMapper;
     private final SysSecretKeyMapper sysSecretKeyMapper;
+    private final SysSiteFooterMenuMapper siteFooterMenuMapper;
     private final SysSiteFriendlyLinkMapper siteFriendlyLinkMapper;
 
     public SysServiceImpl(LeafService leafService,
+                          RedisService redisService,
                           SysRegionMapper regionMapper,
+                          SysSiteMenuMapper sysSiteMenuMapper,
                           SysSecretKeyMapper sysSecretKeyMapper,
+                          SysSiteFooterMenuMapper siteFooterMenuMapper,
                           SysSiteFriendlyLinkMapper siteFriendlyLinkMapper) {
         this.leafService = leafService;
+        this.redisService = redisService;
         this.regionMapper = regionMapper;
+        this.sysSiteMenuMapper = sysSiteMenuMapper;
         this.sysSecretKeyMapper = sysSecretKeyMapper;
+        this.siteFooterMenuMapper = siteFooterMenuMapper;
         this.siteFriendlyLinkMapper = siteFriendlyLinkMapper;
     }
 
@@ -305,5 +320,193 @@ public class SysServiceImpl extends BaseService implements SysService {
         map.put("keyid", uuid);
         map.put("aeskey", aesEnc);
         return map;
+    }
+
+    @Override
+    public PageHead getPageHead() {
+        assert SYSTEM_CONFIG != null;
+        return PageHead.builder()
+                .title("")
+                .description("")
+                .keywords("")
+                .author(SYSTEM_CONFIG.getPageHead().getAuthor())
+                .copyright(SYSTEM_CONFIG.getPageHead().getCopyright())
+                .dnsPrefetch(SYSTEM_CONFIG.getPageHead().getDnsPrefetch())
+                .ogProtocol(null)
+                .favicon(SYSTEM_CONFIG.getPageHead().getFavicon())
+                .fbAppId(SYSTEM_CONFIG.getPageHead().getFbAppId())
+                .fbPages(SYSTEM_CONFIG.getPageHead().getFbPages())
+                .appleTouchIcon(SYSTEM_CONFIG.getPageHead().getAppleTouchIcon())
+                .css(SYSTEM_CONFIG.getPageHead().getCss().stream().map(item -> item + "?ver=" + SYSTEM_CONFIG.getBuildTime()).collect(Collectors.toList()))
+                .cssText("")
+                .jsText("")
+                .build();
+    }
+
+    @Override
+    public PageHeader getPageHeader(HttpServletRequest request) {
+        PageHeader pageHeader = null;
+        String redisKey = REDIS_KEY_BLOG + "PageHeader";
+        assert SYSTEM_CONFIG != null;
+        if (SYSTEM_CONFIG.isEnableRedis()) {
+            // 查询是否曾经缓存过对象，有缓存直接吐出去
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof PageHeader) {
+                    pageHeader = (PageHeader) object;
+                }
+            }
+        }
+        if (pageHeader == null) {
+            pageHeader = new PageHeader();
+            SysSiteMenuExample example = new SysSiteMenuExample();
+            example.setOrderByClause("order_number");
+            example.createCriteria()
+                    .andPidIsNull();
+            pageHeader.setMenus(convertSiteMenu(sysSiteMenuMapper.selectByExample(example)));
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                redisService.set(redisKey, pageHeader, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            }
+        }
+        Object object;
+        if ("SESSION".equals(SYSTEM_CONFIG.getAuthMode())) {
+            object = request.getSession().getAttribute(SESSION_KEY);
+        } else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            object = authentication.getPrincipal();
+        }
+        if (object instanceof User) {
+            pageHeader.setUser((User) object);
+        }
+        return pageHeader;
+    }
+
+    @Override
+    public PageFooter getPageFooter() {
+        assert SYSTEM_CONFIG != null;
+        PageFooter pageFooter = null;
+        String redisKey = REDIS_KEY_BLOG + "PageFooter";
+        if (SYSTEM_CONFIG.isEnableRedis()) {
+            // 查询是否曾经缓存过对象，有缓存直接吐出去
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof PageFooter) {
+                    pageFooter = (PageFooter) object;
+                }
+            }
+        }
+        if (pageFooter == null) {
+            SysSiteFooterMenuExample example = new SysSiteFooterMenuExample();
+            example.setOrderByClause("order_number");
+            example.createCriteria()
+                    .andPidIsNull();
+            List<String> jss = new ArrayList<>();
+            jss.add("https://www.googletagmanager.com/gtag/js?id=" + SYSTEM_CONFIG.getGoogle().getAnalytics());
+            jss.add("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            pageFooter = PageFooter.builder()
+                    .showFriendlyLink(SYSTEM_CONFIG.isShowFriendlyLink())
+                    .friendlyLink(this.getSysSiteFriendlyLinkList())
+                    .version(SYSTEM_CONFIG.getVersion())
+                    .buildTime(SYSTEM_CONFIG.getBuildTime())
+                    .footerMenuLinks(convertFooterMenu(siteFooterMenuMapper.selectByExample(example)))
+                    .smallMenu(smallMenuList())
+                    .jss(SYSTEM_CONFIG.getPageFooter().getJss().stream().map(item -> item + "?ver=" + SYSTEM_CONFIG.getBuildTime()).collect(Collectors.toList()))
+                    .jss(jss)
+                    .jsText("var _hmt = _hmt || [];\n"
+                            + "(function() {\n"
+                            + "  var hm = document.createElement(\"script\");\n"
+                            + "  var analytics_bd = '" + SYSTEM_CONFIG.getBaidu().getTongji() + "';\n"
+                            // 为了防止爬虫扫描到统计代码的key，将URL地址打碎成数组
+                            // 原地址：hm.src = https://hm.baidu.com/hm.js?<key>
+                            + "  hm.src = ['ht','t','ps',':/','/h','m','.','ba','i','d','u.c','o','m/','h','m','.j','s?',analytics_bd].join('');\n"
+                            + "  var s = document.getElementsByTagName(\"script\")[0]; \n"
+                            + "  s.parentNode.insertBefore(hm, s);\n"
+                            + "})();\n")
+                    .build();
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                redisService.set(redisKey, pageFooter, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            }
+        }
+        return pageFooter;
+    }
+
+    private List<LinkTree> convertSiteMenu(List<SysSiteMenu> sysSiteMenus) {
+        List<LinkTree> menus = new CopyOnWriteArrayList<>();
+        for (SysSiteMenu sysSiteMenu : sysSiteMenus
+        ) {
+            LinkTree linkSubTree = LinkTree.builder()
+                    .href(sysSiteMenu.getMenuLink())
+                    .text(sysSiteMenu.getMenuText())
+                    .target(sysSiteMenu.getIsNewWin() ? "_blank" : "_self")
+                    .build();
+            linkSubTree.setSubLink(setSiteMenuSubLink(sysSiteMenu.getId()));
+            menus.add(linkSubTree);
+        }
+        return menus;
+    }
+
+    private List<LinkTree> setSiteMenuSubLink(Long pid) {
+        SysSiteMenuExample example = new SysSiteMenuExample();
+        example.setOrderByClause("order_number");
+        example.createCriteria()
+                .andPidEqualTo(pid);
+        assert sysSiteMenuMapper != null;
+        List<SysSiteMenu> sysSiteMenus = sysSiteMenuMapper.selectByExample(example);
+        if (sysSiteMenus == null || sysSiteMenus.size() < 1) {
+            return null;
+        }
+        return convertSiteMenu(sysSiteMenus);
+    }
+
+    private List<LinkTree> smallMenuList() {
+        List<LinkTree> menus = new CopyOnWriteArrayList<>();
+        String split = "@";
+        // 前端是居右，这里需要倒序输出
+        assert SYSTEM_CONFIG != null;
+        for (int i = SYSTEM_CONFIG.getFooterSmallMenu().size() - 1; i >= 0; i--) {
+            LinkTree linkTree = LinkTree.builder()
+                    .href(SYSTEM_CONFIG.getFooterSmallMenu().get(i).split(split)[1])
+                    .text(SYSTEM_CONFIG.getFooterSmallMenu().get(i).split(split)[0])
+                    .target("_blank")
+                    .build();
+            menus.add(linkTree);
+        }
+        return menus;
+    }
+
+    private List<FooterMenuLinks> convertFooterMenu(List<SysSiteFooterMenu> sysSiteMenus) {
+        List<FooterMenuLinks> menus = new CopyOnWriteArrayList<>();
+        for (SysSiteFooterMenu sysSiteMenu : sysSiteMenus
+        ) {
+            FooterMenuLinks linkSubTree = FooterMenuLinks.builder()
+                    .title(sysSiteMenu.getMenuText())
+                    .links(setFooterMenuSubLink(sysSiteMenu.getId()))
+                    .build();
+            menus.add(linkSubTree);
+        }
+        return menus;
+    }
+
+    private List<LinkTree> setFooterMenuSubLink(Long pid) {
+        SysSiteFooterMenuExample example = new SysSiteFooterMenuExample();
+        example.setOrderByClause("order_number");
+        example.createCriteria()
+                .andPidEqualTo(pid);
+        assert siteFooterMenuMapper != null;
+        List<SysSiteFooterMenu> sysSiteMenus = siteFooterMenuMapper.selectByExample(example);
+        if (sysSiteMenus == null || sysSiteMenus.size() < 1) {
+            return null;
+        }
+        List<LinkTree> menus = new CopyOnWriteArrayList<>();
+        for (SysSiteFooterMenu sysSiteMenu : sysSiteMenus
+        ) {
+            LinkTree linkSubTree = LinkTree.builder()
+                    .href(sysSiteMenu.getMenuLink())
+                    .text(sysSiteMenu.getMenuText())
+                    .target(sysSiteMenu.getIsNewWin() ? "_blank" : "_self")
+                    .build();
+            menus.add(linkSubTree);
+        }
+        return menus;
     }
 }

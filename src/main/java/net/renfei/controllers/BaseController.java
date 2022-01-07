@@ -3,11 +3,11 @@ package net.renfei.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.user.User;
-import net.renfei.model.PageFooter;
-import net.renfei.model.PageHead;
-import net.renfei.model.PageHeader;
-import net.renfei.model.PageView;
+import net.renfei.model.*;
+import net.renfei.model.system.BlogVO;
 import net.renfei.services.PaginationService;
+import net.renfei.services.RedisService;
+import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
 import org.springframework.beans.BeanUtils;
@@ -37,11 +37,13 @@ import java.net.URL;
 public abstract class BaseController {
     public static final String SESSION_KEY = "signedUserSession";
     protected final SystemConfig SYSTEM_CONFIG;
+    private SysService sysService;
     @Autowired
     protected HttpServletRequest request;
 
     {
         SYSTEM_CONFIG = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
+        sysService = (SysService) ApplicationContextUtil.getBean("sysServiceImpl");
     }
 
     /**
@@ -130,9 +132,13 @@ public abstract class BaseController {
             SentryUtils.captureException(e);
             return null;
         }
-        result.setPageHead(new PageHead());
-        result.setPageHeader(new PageHeader(null));
-        result.setPageFooter(new PageFooter());
+        if (sysService == null) {
+            sysService = (SysService) ApplicationContextUtil.getBean("sysServiceImpl");
+        }
+        assert sysService != null;
+        result.setPageHead(sysService.getPageHead());
+        result.setPageHeader(sysService.getPageHeader(request));
+        result.setPageFooter(sysService.getPageFooter());
         return result;
     }
 }
