@@ -1,5 +1,6 @@
 package net.renfei.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -36,6 +37,7 @@ public class FeedVO implements Serializable {
     }
 
     @Data
+    @Builder
     public static class Image{
         private String url;
         private String title;

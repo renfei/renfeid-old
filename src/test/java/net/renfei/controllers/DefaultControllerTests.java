@@ -37,4 +37,21 @@ public class DefaultControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void getSiteMapTest() throws Exception {
+        this.mockMvc.perform(get("/sitemap.xml"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/sitemap.xsl"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getFeedTest() throws Exception {
+        this.mockMvc.perform(get("/feed"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

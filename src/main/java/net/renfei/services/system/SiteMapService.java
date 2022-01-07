@@ -1,6 +1,8 @@
 package net.renfei.services.system;
 
 import net.renfei.domain.BlogDomain;
+import net.renfei.domain.blog.Category;
+import net.renfei.domain.blog.Post;
 import net.renfei.domain.photo.Album;
 import net.renfei.domain.weibo.Weibo;
 import net.renfei.model.*;
@@ -99,7 +101,39 @@ public class SiteMapService extends BaseService {
      * @return
      */
     public FeedVO getFeed() {
-        // TODO 待补充
-        return null;
+        FeedVO feedVO = new FeedVO();
+        assert SYSTEM_CONFIG != null;
+        feedVO.setTitle(SYSTEM_CONFIG.getSiteName());
+        feedVO.setAuthor("i@renfei.net (RenFei)");
+        feedVO.setLink(SYSTEM_CONFIG.getSiteDomainName());
+        feedVO.setDescription("任霏博客是任霏的个人网站与博客，一个程序员自己写的网站，不仅仅是文章内容，还包括网站程序的代码。 对新鲜事物都十分感兴趣，利用这个站点向大家分享自己的所见所得，同时这个站点也是我的实验室。");
+        feedVO.setLanguage("zh-CN");
+        feedVO.setImage(FeedVO.Image.builder()
+                .link(SYSTEM_CONFIG.getSiteDomainName())
+                .height("32")
+                .title(SYSTEM_CONFIG.getSiteName())
+                .url("https://cdn.renfei.net/Logo/RF_white.svg")
+                .width("32")
+                .build());
+        List<FeedVO.Item> items = new ArrayList<>();
+        ListData<BlogDomain> blogDomainListData = BlogDomain.allPostList(null, false, 1, 10);
+        if (blogDomainListData.getData() != null && blogDomainListData.getData().size() > 0) {
+            for (BlogDomain blogDomain : blogDomainListData.getData()
+            ) {
+                Post post = blogDomain.getPost();
+                Category category = blogDomain.getCategory();
+                FeedVO.Item item = new FeedVO.Item();
+                item.setTitle(post.getTitle());
+                item.setAuthor(post.getSourceName());
+                item.setLink(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + post.getId());
+                item.setGuid(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + post.getId());
+                item.setDescription(post.getExcerpt());
+                item.setCategory(category.getZhName());
+                item.setPubDate(post.getPostDate());
+                items.add(item);
+            }
+        }
+        feedVO.setItem(items);
+        return feedVO;
     }
 }
