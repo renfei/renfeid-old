@@ -29,11 +29,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class DefaultController extends BaseController {
-    private final SysService sysService;
     private final SiteMapService siteMapService;
 
-    public DefaultController(SysService sysService, SiteMapService siteMapService) {
-        this.sysService = sysService;
+    public DefaultController(SiteMapService siteMapService) {
         this.siteMapService = siteMapService;
     }
 
