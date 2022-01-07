@@ -11,6 +11,7 @@ import net.renfei.repositories.SysLogsMapper;
 import net.renfei.repositories.model.HotSearch;
 import net.renfei.services.BaseService;
 import net.renfei.services.SearchService;
+import net.renfei.services.system.AggregateService;
 import net.renfei.utils.NumberUtils;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -48,15 +49,17 @@ public class SearchServiceImpl extends BaseService implements SearchService {
     private final RestHighLevelClient restHighLevelClient;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
     private final SysLogsMapper sysLogsMapper;
+    private final AggregateService aggregateService;
 
     public SearchServiceImpl(SearchRepository searchRepository,
                              RestHighLevelClient restHighLevelClient,
                              ElasticsearchRestTemplate elasticsearchRestTemplate,
-                             SysLogsMapper sysLogsMapper) {
+                             SysLogsMapper sysLogsMapper, AggregateService aggregateService) {
         this.searchRepository = searchRepository;
         this.restHighLevelClient = restHighLevelClient;
         this.elasticsearchRestTemplate = elasticsearchRestTemplate;
         this.sysLogsMapper = sysLogsMapper;
+        this.aggregateService = aggregateService;
     }
 
     /**
@@ -196,9 +199,8 @@ public class SearchServiceImpl extends BaseService implements SearchService {
             Document mapping = indexOperations.createMapping();
             //writes a mapping to the index  将刚刚通过类创建的映射写入索引
             indexOperations.putMapping(mapping);
-            // TODO 全量同步
-//            List<SearchItem> searchItemAll = aggregateService.getAllDataBySearchItem();
-//            this.searchRepository.saveAll(searchItemAll);
+            List<SearchItem> searchItemAll = aggregateService.getAllDataBySearchItem();
+            this.searchRepository.saveAll(searchItemAll);
         }
     }
 
