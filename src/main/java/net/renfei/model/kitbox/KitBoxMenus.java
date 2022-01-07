@@ -1,9 +1,10 @@
 package net.renfei.model.kitbox;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.Tolerate;
 import net.renfei.model.LinkTree;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,9 @@ import java.util.List;
  */
 @Data
 @Builder
-public class KitBoxMenus {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class KitBoxMenus implements Serializable {
     private String title;
     private String elementId;
     private Boolean isOpen;

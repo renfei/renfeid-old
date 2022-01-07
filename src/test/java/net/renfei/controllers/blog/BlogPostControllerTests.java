@@ -19,6 +19,9 @@ public class BlogPostControllerTests extends ApplicationTests {
         this.mockMvc.perform(get("/posts"))
                 .andDo(print())
                 .andExpect(status().isOk());
+        this.mockMvc.perform(get("/posts"))
+                .andDo(print())
+                .andExpect(status().isOk());
         this.mockMvc.perform(get("/posts/index.html"))
                 .andDo(print())
                 .andExpect(status().isMovedPermanently());
@@ -32,6 +35,9 @@ public class BlogPostControllerTests extends ApplicationTests {
 
     @Test
     public void getPostByIdTest() throws Exception {
+        this.mockMvc.perform(get("/posts/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
         this.mockMvc.perform(get("/posts/1"))
                 .andDo(print())
                 .andExpect(status().isOk());

@@ -9,6 +9,7 @@ import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.*;
 import net.renfei.model.blog.PostPageView;
+import net.renfei.model.system.BlogVO;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.BlogService;
 import net.renfei.services.PaginationService;
@@ -45,13 +46,13 @@ public class BlogPostController extends BaseController {
     public ModelAndView getPostList(ModelAndView mv,
                                     @RequestParam(value = "page", required = false) String page) {
         mv.addObject("catTitle", "全部文档");
-        ListData<BlogDomain> blogDomainListData = BlogDomain.allPostList(getSignUser(), false, NumberUtils.parseInt(page, 1), 15);
-        PostPageView<List<BlogDomain>> postPageView = buildPageView(PostPageView.class, blogDomainListData.getData());
+        ListData<BlogVO> allPostList = blogService.getAllPostList(getSignUser(), false, NumberUtils.parseInt(page, 1), 15);
+        PostPageView<List<BlogDomain>> postPageView = buildPageView(PostPageView.class, allPostList.getData());
         assert SYSTEM_CONFIG != null;
         postPageView.getPageHead().setTitle("任霏的博客文章 - " + SYSTEM_CONFIG.getSiteName());
         mv.addObject("pageView", postPageView);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
-        setPagination(paginationService, mv, page, blogDomainListData.getTotal(), "/posts?page=");
+        setPagination(paginationService, mv, page, allPostList.getTotal(), "/posts?page=");
         mv.setViewName("blog/list");
         return mv;
     }
@@ -91,11 +92,11 @@ public class BlogPostController extends BaseController {
     @GetMapping("{id}")
     @OperationLog(module = SystemTypeEnum.BLOG, desc = "访问博客详情页")
     public ModelAndView getPostInfo(ModelAndView mv, @PathVariable("id") Long id) throws NoHandlerFoundException {
-        BlogDomain blogDomain = null;
+        BlogVO blogVO = null;
         assert blogService != null;
         // 页面没查到缓存，去数据库查询
         try {
-            blogDomain = blogService.getBlogById(id, getSignUser());
+            blogVO = blogService.getBlogById(id, getSignUser());
         } catch (NotExistException e) {
             noHandlerFoundException();
         } catch (NeedPasswordException e) {
@@ -103,32 +104,32 @@ public class BlogPostController extends BaseController {
         } catch (SecretLevelException e) {
             // TODO 保密等级无权查看此文章内容
         }
-        if (blogDomain == null) {
+        if (blogVO == null) {
             noHandlerFoundException();
         }
-        PostPageView<BlogDomain> postPageView = buildPageView(PostPageView.class, blogDomain);
-        assert blogDomain != null;
-        SocialSharing socialSharing = new SocialSharing(blogDomain);
+        PostPageView<BlogVO> postPageView = buildPageView(PostPageView.class, blogVO);
+        assert blogVO != null;
+        SocialSharing socialSharing = new SocialSharing(blogVO);
         mv.addObject("pageView", postPageView);
         mv.addObject("socialSharing", socialSharing);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
         assert SYSTEM_CONFIG != null;
-        postPageView.getPageHead().setTitle(blogDomain.getPost().getTitle() + " - Posts - " + SYSTEM_CONFIG.getSiteName());
-        mv.addObject("jsonld", blogService.getJsonld(blogDomain));
+        postPageView.getPageHead().setTitle(blogVO.getPost().getTitle() + " - Posts - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("jsonld", blogService.getJsonld(blogVO));
         postPageView.getPageHead().setOgProtocol(OGProtocol.builder()
-                .author(blogDomain.getPost().getSourceName())
-                .description(blogDomain.getPost().getExcerpt())
-                .image(blogDomain.getPost().getFeaturedImage())
+                .author(blogVO.getPost().getSourceName())
+                .description(blogVO.getPost().getExcerpt())
+                .image(blogVO.getPost().getFeaturedImage())
                 .locale("zh_CN")
-                .releaseDate(blogDomain.getPost().getPostDate())
+                .releaseDate(blogVO.getPost().getPostDate())
                 .siteName("RenFei.Net")
-                .title(blogDomain.getPost().getTitle())
+                .title(blogVO.getPost().getTitle())
                 .type("article")
-                .url(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogDomain.getPost().getId())
+                .url(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogVO.getPost().getId())
                 .build());
         // TODO 获取文章扩展信息
         mv.setViewName("blog/post");
-        blogService.view(blogDomain);
+        blogService.view(blogVO, getSignUser(), null);
         return mv;
     }
 

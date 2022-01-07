@@ -7,6 +7,8 @@ import net.renfei.domain.blog.Category;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.system.SysKeywordTag;
+import net.renfei.model.ListData;
+import net.renfei.model.system.BlogVO;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.NeedPasswordException;
@@ -17,7 +19,6 @@ import net.renfei.model.blog.PostSidebarVO;
 import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
-import net.renfei.utils.ApplicationContextUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,42 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 public class BlogServiceImpl extends BaseService implements BlogService {
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "blog:";
-    private RedisService redisService;
+    private final RedisService redisService;
 
-    {
+    public BlogServiceImpl(RedisService redisService) {
+        this.redisService = redisService;
+    }
+
+    @Override
+    public ListData<BlogVO> getAllPostList(User user, boolean isAdmin, int pages, int rows) {
+        ListData<BlogVO> blogVOListData = null;
+        ListData<BlogDomain> blogDomainListData;
+        String redisKey = REDIS_KEY_BLOG + "post:list_" + pages + "_" + rows;
+        assert SYSTEM_CONFIG != null;
         if (SYSTEM_CONFIG.isEnableRedis()) {
-            redisService = (RedisService) ApplicationContextUtil.getBean("redisServiceImpl");
+            // 查询是否曾经缓存过对象，有缓存直接吐出去
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof ListData) {
+                    blogVOListData = (ListData<BlogVO>) object;
+                }
+            }
         }
+        if (user == null) {
+            // 未登录用户访问，可以用缓存
+            if (blogVOListData == null) {
+                blogDomainListData = BlogDomain.allPostList(user, isAdmin, pages, rows);
+                blogVOListData = convert(blogDomainListData);
+                if (SYSTEM_CONFIG.isEnableRedis()) {
+                    redisService.set(redisKey, blogVOListData, SYSTEM_CONFIG.getDefaultCacheSeconds());
+                }
+            }
+        } else {
+            // 站内用户直接查最新
+            blogDomainListData = BlogDomain.allPostList(user, isAdmin, pages, rows);
+            blogVOListData = convert(blogDomainListData);
+        }
+        return blogVOListData;
     }
 
     /**
@@ -49,12 +80,12 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param id   文章ID
      * @param user 当前查看的用户
      * @return BlogDomain
-     * @throws NotExistException             文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws NeedPasswordException 文章需要密码异常
-     * @throws SecretLevelException          保密等级异常
+     * @throws SecretLevelException  保密等级异常
      */
     @Override
-    public BlogDomain getBlogById(Long id, User user) throws NotExistException,
+    public BlogVO getBlogById(Long id, User user) throws NotExistException,
             NeedPasswordException, SecretLevelException {
         return getBlogById(id, user, null, false);
     }
@@ -66,12 +97,12 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param user     当前查看的用户
      * @param password 查看文章的密码
      * @return BlogDomain
-     * @throws NotExistException             文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws NeedPasswordException 文章需要密码异常
-     * @throws SecretLevelException          保密等级异常
+     * @throws SecretLevelException  保密等级异常
      */
     @Override
-    public BlogDomain getBlogById(Long id, User user, String password) throws NotExistException,
+    public BlogVO getBlogById(Long id, User user, String password) throws NotExistException,
             NeedPasswordException, SecretLevelException {
         return getBlogById(id, user, password, false);
     }
@@ -84,43 +115,54 @@ public class BlogServiceImpl extends BaseService implements BlogService {
      * @param password 查看文章的密码
      * @param isAdmin  是否是管理员操作
      * @return BlogDomain
-     * @throws NotExistException             文章不存在异常
+     * @throws NotExistException     文章不存在异常
      * @throws NeedPasswordException 文章需要密码异常
-     * @throws SecretLevelException          保密等级异常
+     * @throws SecretLevelException  保密等级异常
      */
     @Override
-    public BlogDomain getBlogById(Long id, User user, String password, boolean isAdmin)
+    public BlogVO getBlogById(Long id, User user, String password, boolean isAdmin)
             throws NotExistException, NeedPasswordException, SecretLevelException {
-        BlogDomain blogDomain = null;
+        BlogVO blogVO = null;
         String redisKey = REDIS_KEY_BLOG + "post:" + id;
         assert SYSTEM_CONFIG != null;
         if (SYSTEM_CONFIG.isEnableRedis()) {
             // 查询是否曾经缓存过对象，有缓存直接吐出去
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
-                if (object instanceof BlogDomain) {
-                    blogDomain = (BlogDomain) object;
+                if (object instanceof BlogVO) {
+                    blogVO = (BlogVO) object;
                 }
             }
         }
-        if (blogDomain == null) {
-            blogDomain = new BlogDomain(id, user, password, isAdmin);
+        if (blogVO == null) {
+            BlogDomain blogDomain = new BlogDomain(id, user, password, isAdmin);
+            blogVO = convert(blogDomain);
             if (SYSTEM_CONFIG.isEnableRedis()) {
-                redisService.set(redisKey, blogDomain, SYSTEM_CONFIG.getDefaultCacheSeconds());
+                redisService.set(redisKey, blogVO, SYSTEM_CONFIG.getDefaultCacheSeconds());
             }
         }
-        return blogDomain;
+        return blogVO;
     }
 
     /**
      * 增加博客文章的阅读量，交给线程池异步执行
      *
-     * @param blogDomain 博文领域对象
+     * @param blogVO 博文领域对象
      */
     @Override
     @Async
-    public void view(BlogDomain blogDomain) {
-        blogDomain.view();
+    public void view(BlogVO blogVO, User user, String password) {
+        BlogDomain blogDomain = null;
+        try {
+            blogDomain = new BlogDomain(blogVO.getPost().getId(), user, password, false);
+            blogDomain.view();
+        } catch (NotExistException e) {
+            e.printStackTrace();
+        } catch (NeedPasswordException e) {
+            e.printStackTrace();
+        } catch (SecretLevelException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -186,25 +228,25 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                         .build();
                 hotPostList.add(link);
             });
+            List<PostSidebarVO.PostSidebar> postSidebars = new ArrayList<>();
+            postSidebars.add(PostSidebarVO.PostSidebar.builder()
+                    .title("文档分类")
+                    .link(blogCategoryLinks)
+                    .build());
+            postSidebars.add(PostSidebarVO.PostSidebar.builder()
+                    .title("标签云")
+                    .link(allTagList)
+                    .build());
+            postSidebars.add(PostSidebarVO.PostSidebar.builder()
+                    .title("最新留言")
+                    .link(lastCommentList)
+                    .build());
+            postSidebars.add(PostSidebarVO.PostSidebar.builder()
+                    .title("热文排行")
+                    .link(hotPostList)
+                    .build());
             postSidebarVO = PostSidebarVO.builder()
-                    .postSidebars(new ArrayList<PostSidebarVO.PostSidebar>() {{
-                        this.add(PostSidebarVO.PostSidebar.builder()
-                                .title("文档分类")
-                                .link(blogCategoryLinks)
-                                .build());
-                        this.add(PostSidebarVO.PostSidebar.builder()
-                                .title("标签云")
-                                .link(allTagList)
-                                .build());
-                        this.add(PostSidebarVO.PostSidebar.builder()
-                                .title("最新留言")
-                                .link(lastCommentList)
-                                .build());
-                        this.add(PostSidebarVO.PostSidebar.builder()
-                                .title("热文排行")
-                                .link(hotPostList)
-                                .build());
-                    }})
+                    .postSidebars(postSidebars)
                     .build();
             if (SYSTEM_CONFIG.isEnableRedis()) {
                 redisService.set(redisKey, postSidebarVO, SYSTEM_CONFIG.getDefaultCacheSeconds());
@@ -214,18 +256,18 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     }
 
     @Override
-    public String getJsonld(BlogDomain blogDomain) {
+    public String getJsonld(BlogVO blogVO) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+08:00'");
         assert SYSTEM_CONFIG != null;
         return getCommonTop() +
                 "\"@type\": \"NewsArticle\"," +
-                "\"dateModified\":\"" + sdf.format(blogDomain.getPost().getPostDate()) + "\"," +
-                "\"datePublished\":\"" + sdf.format(blogDomain.getPost().getPostDate()) + "\"," +
-                "\"headline\":\"" + blogDomain.getPost().getTitle().replace("\"", "") + "\"," +
-                "\"image\":\"" + (blogDomain.getPost().getFeaturedImage() == null ? "https://cdn.renfei.net/Logo/ogimage.png" : blogDomain.getPost().getFeaturedImage()) + "\"," +
+                "\"dateModified\":\"" + sdf.format(blogVO.getPost().getPostDate()) + "\"," +
+                "\"datePublished\":\"" + sdf.format(blogVO.getPost().getPostDate()) + "\"," +
+                "\"headline\":\"" + blogVO.getPost().getTitle().replace("\"", "") + "\"," +
+                "\"image\":\"" + (blogVO.getPost().getFeaturedImage() == null ? "https://cdn.renfei.net/Logo/ogimage.png" : blogVO.getPost().getFeaturedImage()) + "\"," +
                 "\"author\":{" +
                 "\"@type\": \"Person\"," +
-                "\"name\": \"" + (blogDomain.getPost().getSourceName() == null ? "任霏" : blogDomain.getPost().getSourceName()) + "\"" +
+                "\"name\": \"" + (blogVO.getPost().getSourceName() == null ? "任霏" : blogVO.getPost().getSourceName()) + "\"" +
                 "}," +
                 "\"publisher\":{" +
                 "\"@type\": \"Organization\"," +
@@ -235,10 +277,10 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 "\"url\": \"https://cdn.renfei.net/Logo/logo_112.png\"" +
                 "}" +
                 "}," +
-                "\"description\": \"" + blogDomain.getPost().getExcerpt() + "\"," +
+                "\"description\": \"" + blogVO.getPost().getExcerpt() + "\"," +
                 "\"mainEntityOfPage\": {" +
                 "\"@type\":\"WebPage\"," +
-                "\"@id\":\"" + SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogDomain.getPost().getId() + "\"" +
+                "\"@id\":\"" + SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogVO.getPost().getId() + "\"" +
                 "}," +
                 "\"speakable\": {" +
                 "\"@type\": \"SpeakableSpecification\"," +
@@ -282,5 +324,28 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 "]" +
                 "}," +
                 "{";
+    }
+
+    private ListData<BlogVO> convert(ListData<BlogDomain> blogDomainListData) {
+        ListData<BlogVO> blogVOListData = new ListData<>();
+        blogVOListData.setTotal(blogDomainListData.getTotal());
+        blogVOListData.setEndRow(blogDomainListData.getEndRow());
+        blogVOListData.setPages(blogDomainListData.getPages());
+        blogVOListData.setTotal(blogDomainListData.getTotal());
+        blogVOListData.setPageNum(blogDomainListData.getPageNum());
+        blogVOListData.setStartRow(blogDomainListData.getStartRow());
+        List<BlogVO> blogVOS = new CopyOnWriteArrayList<>();
+        blogDomainListData.getData().forEach(blogDomain -> blogVOS.add(convert(blogDomain)));
+        blogVOListData.setData(blogVOS);
+        return blogVOListData;
+    }
+
+    private BlogVO convert(BlogDomain blogDomain) {
+        BlogVO blogVO = new BlogVO();
+        blogVO.setPost(blogDomain.getPost());
+        blogVO.setAuthor(blogDomain.getAuthor());
+        blogVO.setCategory(blogDomain.getCategory());
+        blogVO.setCommentList(blogDomain.getCommentList());
+        return blogVO;
     }
 }

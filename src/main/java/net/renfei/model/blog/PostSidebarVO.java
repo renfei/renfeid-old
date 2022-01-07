@@ -2,6 +2,7 @@ package net.renfei.model.blog;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 import net.renfei.model.LinkTree;
 
 import java.util.List;
@@ -22,5 +23,13 @@ public class PostSidebarVO {
     public static class PostSidebar {
         private String title;
         private List<LinkTree> link;
+
+        @Tolerate
+        PostSidebar() {
+        }
+    }
+
+    @Tolerate
+    PostSidebarVO() {
     }
 }

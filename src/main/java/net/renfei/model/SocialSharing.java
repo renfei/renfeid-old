@@ -3,6 +3,7 @@ package net.renfei.model;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.PagesDomain;
+import net.renfei.model.system.BlogVO;
 import net.renfei.utils.ApplicationContextUtil;
 
 /**
@@ -21,12 +22,12 @@ public class SocialSharing {
         SYSTEM_CONFIG = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
     }
 
-    public SocialSharing(BlogDomain blogDomain) {
-        this.title = blogDomain.getPost().getTitle();
+    public SocialSharing(BlogVO blogVO) {
+        this.title = blogVO.getPost().getTitle();
         assert SYSTEM_CONFIG != null;
-        this.url = SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogDomain.getPost().getId();
-        this.describes = blogDomain.getPost().getExcerpt();
-        this.pics = blogDomain.getPost().getFeaturedImage();
+        this.url = SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogVO.getPost().getId();
+        this.describes = blogVO.getPost().getExcerpt();
+        this.pics = blogVO.getPost().getFeaturedImage();
     }
 
     public SocialSharing(PagesDomain pagesDomain) {

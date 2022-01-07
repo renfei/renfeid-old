@@ -18,11 +18,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import static net.renfei.controllers.BaseController.SESSION_KEY;
@@ -100,7 +100,9 @@ public class OperationLogAspect {
             operationLog.setRequAgent(request.getHeader("User-Agent"));
         }
         if (retObj != null) {
-            operationLog.setRespParam(JacksonUtil.obj2String(retObj));
+            if (!(retObj instanceof ModelAndView)) {
+                operationLog.setRespParam(JacksonUtil.obj2String(retObj));
+            }
         }
         operationLog.setLogTime(new Date());
         operationLog.setLogDesc(annotation.desc());

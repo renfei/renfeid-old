@@ -19,6 +19,9 @@ public class DefaultControllerTests extends ApplicationTests {
         this.mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk());
+        this.mockMvc.perform(get("/"))
+                .andDo(print())
+                .andExpect(status().isOk());
         this.mockMvc.perform(get("/index.html"))
                 .andDo(print())
                 .andExpect(status().isMovedPermanently());

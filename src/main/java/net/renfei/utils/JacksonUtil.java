@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Jackson 工具
@@ -48,7 +51,7 @@ public class JacksonUtil {
         try {
             return obj instanceof String ? (String) obj : OBJECT_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.warn("Parse Object to String error : {}", e.getMessage());
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -66,7 +69,7 @@ public class JacksonUtil {
         try {
             return obj instanceof String ? (String) obj : OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.warn("Parse Object to String error : {}", e.getMessage());
+            log.error(e.getMessage(), e);
             return null;
         }
     }

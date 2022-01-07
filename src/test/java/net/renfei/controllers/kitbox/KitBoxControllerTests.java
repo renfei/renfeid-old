@@ -21,6 +21,9 @@ public class KitBoxControllerTests extends ApplicationTests {
         this.mockMvc.perform(get("/kitbox"))
                 .andDo(print())
                 .andExpect(status().isOk());
+        this.mockMvc.perform(get("/kitbox"))
+                .andDo(print())
+                .andExpect(status().isOk());
         this.mockMvc.perform(get("/kitbox/index.html"))
                 .andDo(print())
                 .andExpect(status().isMovedPermanently());
@@ -28,6 +31,9 @@ public class KitBoxControllerTests extends ApplicationTests {
 
     @Test
     public void ipTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/ip"))
+                .andDo(print())
+                .andExpect(status().isOk());
         this.mockMvc.perform(get("/kitbox/ip"))
                 .andDo(print())
                 .andExpect(status().isOk());

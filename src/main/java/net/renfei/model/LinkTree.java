@@ -1,13 +1,16 @@
 package net.renfei.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.Tolerate;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Builder
-public class LinkTree {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class LinkTree implements Serializable {
     private String icon;
     private String href;
     private String text;

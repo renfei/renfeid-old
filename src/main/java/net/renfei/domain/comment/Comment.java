@@ -2,6 +2,7 @@ package net.renfei.domain.comment;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 import net.renfei.domain.user.User;
 
 import java.util.Date;
@@ -28,4 +29,8 @@ public final class Comment {
     private Boolean isOwner;
     private User user;
     private List<Comment> child;
+
+    @Tolerate
+    Comment() {
+    }
 }

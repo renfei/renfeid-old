@@ -2,6 +2,7 @@ package net.renfei.domain.blog;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 import net.renfei.model.CommentStatusEnum;
 import net.renfei.model.blog.PostStatusEnum;
 import net.renfei.model.SecretLevelEnum;
@@ -38,4 +39,8 @@ public class Post {
     private Double avgComment;
     private Double pageRank;
     private SecretLevelEnum secretLevelEnum;
+
+    @Tolerate
+    Post() {
+    }
 }

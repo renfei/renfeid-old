@@ -7,6 +7,7 @@ import net.renfei.domain.CommentDomain;
 import net.renfei.domain.WeiboDomain;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
+import net.renfei.model.system.BlogVO;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
@@ -72,11 +73,11 @@ public class ForegroundApiController extends BaseController implements Foregroun
      */
     @Override
     public APIResult<Post> getPostInfoByPassword(Long id, String password) {
-        BlogDomain blogDomain;
+        BlogVO blogVO;
         assert blogService != null;
         // 页面没查到缓存，去数据库查询
         try {
-            blogDomain = blogService.getBlogById(id, getSignUser(), password);
+            blogVO = blogService.getBlogById(id, getSignUser(), password);
         } catch (NotExistException e) {
             return APIResult.builder()
                     .code(StateCodeEnum.Failure)
@@ -93,8 +94,8 @@ public class ForegroundApiController extends BaseController implements Foregroun
                     .message("根据您的保密等级，您无权查看此内容。")
                     .build();
         }
-        blogService.view(blogDomain);
-        return new APIResult<>(blogDomain.getPost());
+        blogService.view(blogVO, getSignUser(), password);
+        return new APIResult<>(blogVO.getPost());
     }
 
     @Override

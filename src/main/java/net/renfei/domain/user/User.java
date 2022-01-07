@@ -18,7 +18,7 @@ public final class User {
     private String ucScript;
     private SecretLevelEnum secretLevelEnum;
 
-    private User() {
+    public User() {
     }
 
     public User(Long id) {

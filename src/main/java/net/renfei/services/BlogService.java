@@ -5,7 +5,9 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
+import net.renfei.model.ListData;
 import net.renfei.model.blog.PostSidebarVO;
+import net.renfei.model.system.BlogVO;
 
 /**
  * 博客服务
@@ -14,6 +16,17 @@ import net.renfei.model.blog.PostSidebarVO;
  */
 public interface BlogService {
     /**
+     * 获取所有文章列表
+     *
+     * @param user
+     * @param isAdmin
+     * @param pages
+     * @param rows
+     * @return
+     */
+    ListData<BlogVO> getAllPostList(User user, boolean isAdmin, int pages, int rows);
+
+    /**
      * 根据ID获取公开的博客文章
      *
      * @param id   文章ID
@@ -21,9 +34,9 @@ public interface BlogService {
      * @return BlogDomain
      * @throws NotExistException     文章不存在异常
      * @throws NeedPasswordException 文章需要密码异常
-     * @throws SecretLevelException          保密等级异常
+     * @throws SecretLevelException  保密等级异常
      */
-    BlogDomain getBlogById(Long id, User user) throws NotExistException,
+    BlogVO getBlogById(Long id, User user) throws NotExistException,
             NeedPasswordException, SecretLevelException;
 
     /**
@@ -35,9 +48,9 @@ public interface BlogService {
      * @return BlogDomain
      * @throws NotExistException     文章不存在异常
      * @throws NeedPasswordException 文章需要密码异常
-     * @throws SecretLevelException          保密等级异常
+     * @throws SecretLevelException  保密等级异常
      */
-    BlogDomain getBlogById(Long id, User user, String password) throws NotExistException,
+    BlogVO getBlogById(Long id, User user, String password) throws NotExistException,
             NeedPasswordException, SecretLevelException;
 
     /**
@@ -50,17 +63,17 @@ public interface BlogService {
      * @return BlogDomain
      * @throws NotExistException     文章不存在异常
      * @throws NeedPasswordException 文章需要密码异常
-     * @throws SecretLevelException          保密等级异常
+     * @throws SecretLevelException  保密等级异常
      */
-    BlogDomain getBlogById(Long id, User user, String password, boolean isAdmin)
+    BlogVO getBlogById(Long id, User user, String password, boolean isAdmin)
             throws NotExistException, NeedPasswordException, SecretLevelException;
 
     /**
      * 增加博客文章的阅读量，交给线程池异步执行
      *
-     * @param blogDomain 博文领域对象
+     * @param blogVO 博文领域对象
      */
-    void view(BlogDomain blogDomain);
+    void view(BlogVO blogVO, User user, String password);
 
     /**
      * 构建博客侧边栏内容
@@ -69,5 +82,5 @@ public interface BlogService {
      */
     PostSidebarVO buildPostSidebar(User user);
 
-    String getJsonld(BlogDomain blogDomain);
+    String getJsonld(BlogVO blogDomain);
 }

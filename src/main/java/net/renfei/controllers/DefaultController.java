@@ -6,8 +6,9 @@ import net.renfei.model.HomePageView;
 import net.renfei.model.ListData;
 import net.renfei.model.OGProtocol;
 import net.renfei.model.SiteMapXml;
+import net.renfei.model.system.BlogVO;
 import net.renfei.model.system.SystemTypeEnum;
-import net.renfei.services.SysService;
+import net.renfei.services.BlogService;
 import net.renfei.services.system.SiteMapService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -29,9 +30,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class DefaultController extends BaseController {
+    private final BlogService blogService;
     private final SiteMapService siteMapService;
 
-    public DefaultController(SiteMapService siteMapService) {
+    public DefaultController(BlogService blogService, SiteMapService siteMapService) {
+        this.blogService = blogService;
         this.siteMapService = siteMapService;
     }
 
@@ -44,8 +47,8 @@ public class DefaultController extends BaseController {
     @RequestMapping("")
     @OperationLog(module = SystemTypeEnum.HOME, desc = "访问首页")
     public ModelAndView index(ModelAndView mv) {
-        ListData<BlogDomain> blogDomainListData = BlogDomain.allPostList(getSignUser(), false, 1, 15);
-        HomePageView<ListData<BlogDomain>> homePageView = buildPageView(HomePageView.class, blogDomainListData);
+        ListData<BlogVO> blogDomainListData = blogService.getAllPostList(getSignUser(), false, 1, 15);
+        HomePageView<ListData<BlogVO>> homePageView = buildPageView(HomePageView.class, blogDomainListData);
         assert SYSTEM_CONFIG != null;
         homePageView.getPageHead().setTitle("任霏 - " + SYSTEM_CONFIG.getSiteName());
         homePageView.getPageHead().setDescription("任霏的博客是任霏的个人网站与博客，一个程序员自己写的网站，不仅仅是文章内容，还包括网站程序的代码。 对新鲜事物都十分感兴趣，利用这个站点向大家分享自己的所见所得，同时这个站点也是我的实验室。");

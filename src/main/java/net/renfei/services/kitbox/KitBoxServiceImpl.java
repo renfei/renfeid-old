@@ -13,7 +13,6 @@ import net.renfei.services.BaseService;
 import net.renfei.services.KitBoxService;
 import net.renfei.services.RedisService;
 import net.renfei.services.SysService;
-import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -35,17 +34,12 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     public static final String DEVELOPMENT_TOOL = "developmentTool";
     public static final String ENCRYPTION_TOOL = "encryptionTool";
     public static final String OTHER_TOOL = "otherTool";
-    private RedisService redisService;
     private final SysService sysService;
+    private final RedisService redisService;
 
-    {
-        if (SYSTEM_CONFIG.isEnableRedis()) {
-            redisService = (RedisService) ApplicationContextUtil.getBean("redisServiceImpl");
-        }
-    }
-
-    public KitBoxServiceImpl(SysService sysService) {
+    public KitBoxServiceImpl(SysService sysService, RedisService redisService) {
         this.sysService = sysService;
+        this.redisService = redisService;
     }
 
     /**
@@ -69,151 +63,55 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
         }
         if (kitBoxMenus == null) {
             kitBoxMenus = new CopyOnWriteArrayList<>();
+            List<LinkTree> networkToolLinks = new ArrayList<>();
+            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_IP));
+            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_DIGTRACE));
+            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_DNSQPSE));
+            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_WHOIS));
+            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_GETMYIP));
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("网络工具")
                     .elementId(NETWORK_TOOL)
                     .isOpen(false)
-                    .links(new ArrayList<LinkTree>() {
-                        {
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.NETWORK_IP.getUrl())
-                                    .rel(KitBoxTypeEnum.NETWORK_IP.getReadme())
-                                    .text(KitBoxTypeEnum.NETWORK_IP.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.NETWORK_DIGTRACE.getUrl())
-                                    .rel(KitBoxTypeEnum.NETWORK_DIGTRACE.getReadme())
-                                    .text(KitBoxTypeEnum.NETWORK_DIGTRACE.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.NETWORK_DNSQPSE.getUrl())
-                                    .rel(KitBoxTypeEnum.NETWORK_DNSQPSE.getReadme())
-                                    .text(KitBoxTypeEnum.NETWORK_DNSQPSE.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.NETWORK_WHOIS.getUrl())
-                                    .rel(KitBoxTypeEnum.NETWORK_WHOIS.getReadme())
-                                    .text(KitBoxTypeEnum.NETWORK_WHOIS.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.NETWORK_GETMYIP.getUrl())
-                                    .rel(KitBoxTypeEnum.NETWORK_GETMYIP.getReadme())
-                                    .text(KitBoxTypeEnum.NETWORK_GETMYIP.getTitle())
-                                    .build());
-                        }
-                    })
+                    .links(networkToolLinks)
                     .build());
+            List<LinkTree> developmentToolLinks = new ArrayList<>();
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_UUID));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_UEDITOR));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_PORT_NUMBER_LIST));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_PLIST));
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("开发类工具")
                     .elementId(DEVELOPMENT_TOOL)
                     .isOpen(false)
-                    .links(new ArrayList<LinkTree>() {
-                        {
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.DEVELOP_UUID.getUrl())
-                                    .rel(KitBoxTypeEnum.DEVELOP_UUID.getReadme())
-                                    .text(KitBoxTypeEnum.DEVELOP_UUID.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getUrl())
-                                    .rel(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getReadme())
-                                    .text(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT.getUrl())
-                                    .rel(KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT.getReadme())
-                                    .text(KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION.getUrl())
-                                    .rel(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION.getReadme())
-                                    .text(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.DEVELOP_UEDITOR.getUrl())
-                                    .rel(KitBoxTypeEnum.DEVELOP_UEDITOR.getReadme())
-                                    .text(KitBoxTypeEnum.DEVELOP_UEDITOR.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE.getUrl())
-                                    .rel(KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE.getReadme())
-                                    .text(KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.DEVELOP_PORT_NUMBER_LIST.getUrl())
-                                    .rel(KitBoxTypeEnum.DEVELOP_PORT_NUMBER_LIST.getReadme())
-                                    .text(KitBoxTypeEnum.DEVELOP_PORT_NUMBER_LIST.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.DEVELOP_PLIST.getUrl())
-                                    .rel(KitBoxTypeEnum.DEVELOP_PLIST.getReadme())
-                                    .text(KitBoxTypeEnum.DEVELOP_PLIST.getTitle())
-                                    .build());
-                        }
-                    })
+                    .links(developmentToolLinks)
                     .build());
+            List<LinkTree> encryptionToolLinks = new ArrayList<>();
+            encryptionToolLinks.add(buildLinkTree(KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD));
+            encryptionToolLinks.add(buildLinkTree(KitBoxTypeEnum.ENCRYPTION_MD5));
+            encryptionToolLinks.add(buildLinkTree(KitBoxTypeEnum.ENCRYPTION_SHA1));
+            encryptionToolLinks.add(buildLinkTree(KitBoxTypeEnum.ENCRYPTION_SHA256));
+            encryptionToolLinks.add(buildLinkTree(KitBoxTypeEnum.ENCRYPTION_SHA512));
+            encryptionToolLinks.add(buildLinkTree(KitBoxTypeEnum.ENCRYPTION_URL16));
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("加解密工具")
                     .elementId(ENCRYPTION_TOOL)
                     .isOpen(false)
-                    .links(new ArrayList<LinkTree>() {
-                        {
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD.getUrl())
-                                    .rel(KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD.getReadme())
-                                    .text(KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.ENCRYPTION_MD5.getUrl())
-                                    .rel(KitBoxTypeEnum.ENCRYPTION_MD5.getReadme())
-                                    .text(KitBoxTypeEnum.ENCRYPTION_MD5.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.ENCRYPTION_SHA1.getUrl())
-                                    .rel(KitBoxTypeEnum.ENCRYPTION_SHA1.getReadme())
-                                    .text(KitBoxTypeEnum.ENCRYPTION_SHA1.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.ENCRYPTION_SHA256.getUrl())
-                                    .rel(KitBoxTypeEnum.ENCRYPTION_SHA256.getReadme())
-                                    .text(KitBoxTypeEnum.ENCRYPTION_SHA256.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.ENCRYPTION_SHA512.getUrl())
-                                    .rel(KitBoxTypeEnum.ENCRYPTION_SHA512.getReadme())
-                                    .text(KitBoxTypeEnum.ENCRYPTION_SHA512.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.ENCRYPTION_URL16.getUrl())
-                                    .rel(KitBoxTypeEnum.ENCRYPTION_URL16.getReadme())
-                                    .text(KitBoxTypeEnum.ENCRYPTION_URL16.getTitle())
-                                    .build());
-                        }
-                    })
+                    .links(encryptionToolLinks)
                     .build());
+            List<LinkTree> otherToolLinks = new ArrayList<>();
+            otherToolLinks.add(buildLinkTree(KitBoxTypeEnum.OTHER_QRCODE));
+            otherToolLinks.add(buildLinkTree(KitBoxTypeEnum.OTHER_SHORT_URL));
+            otherToolLinks.add(buildLinkTree(KitBoxTypeEnum.OTHER_INDEXING));
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("其他类工具")
                     .elementId(OTHER_TOOL)
                     .isOpen(false)
-                    .links(new ArrayList<LinkTree>() {
-                        {
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.OTHER_QRCODE.getUrl())
-                                    .rel(KitBoxTypeEnum.OTHER_QRCODE.getReadme())
-                                    .text(KitBoxTypeEnum.OTHER_QRCODE.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.OTHER_SHORT_URL.getUrl())
-                                    .rel(KitBoxTypeEnum.OTHER_SHORT_URL.getReadme())
-                                    .text(KitBoxTypeEnum.OTHER_SHORT_URL.getTitle())
-                                    .build());
-                            this.add(LinkTree.builder()
-                                    .href(SYSTEM_CONFIG.getSiteDomainName() + KitBoxTypeEnum.OTHER_INDEXING.getUrl())
-                                    .rel(KitBoxTypeEnum.OTHER_INDEXING.getReadme())
-                                    .text(KitBoxTypeEnum.OTHER_INDEXING.getTitle())
-                                    .build());
-                        }
-                    })
+                    .links(otherToolLinks)
                     .build());
             if (SYSTEM_CONFIG.isEnableRedis()) {
                 redisService.set(redisKey, kitBoxMenus, SYSTEM_CONFIG.getDefaultCacheSeconds());
@@ -284,7 +182,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
         }
         if (StringUtils.isDomain(domain)) {
             try {
-                return new APIResult(sysService.execCmd("dig " + domain.trim() + " " + dnsTypeEnum + " +trace"));
+                return new APIResult<>(sysService.execCmd("dig " + domain.trim() + " " + dnsTypeEnum + " +trace"));
             } catch (IOException e) {
                 return APIResult.builder()
                         .code(StateCodeEnum.Error)
@@ -337,5 +235,13 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
                     .message("域名格式不正确。\nIncorrect format of domain name.")
                     .build();
         }
+    }
+
+    private LinkTree buildLinkTree(KitBoxTypeEnum kitBoxTypeEnum) {
+        return LinkTree.builder()
+                .href(SYSTEM_CONFIG.getSiteDomainName() + kitBoxTypeEnum.getUrl())
+                .rel(kitBoxTypeEnum.getReadme())
+                .text(kitBoxTypeEnum.getTitle())
+                .build();
     }
 }
