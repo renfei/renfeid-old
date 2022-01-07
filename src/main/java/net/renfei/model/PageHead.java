@@ -4,6 +4,7 @@ import lombok.Data;
 import net.renfei.config.SystemConfig;
 import net.renfei.utils.ApplicationContextUtil;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
  * @author renfei
  */
 @Data
-public class PageHead {
+public class PageHead implements Serializable {
     private final SystemConfig SYSTEM_CONFIG;
     private String title;
     private String description;

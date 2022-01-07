@@ -10,6 +10,7 @@ import net.renfei.repositories.model.SysSiteMenuExample;
 import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * @author renfei
  */
 @Data
-public class PageFooter {
+public class PageFooter implements Serializable {
     private final SystemConfig SYSTEM_CONFIG;
     private List<FooterMenuLinks> footerMenuLinks;
     private boolean showFriendlyLink;

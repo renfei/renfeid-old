@@ -6,10 +6,12 @@ import net.renfei.domain.PagesDomain;
 import net.renfei.model.system.BlogVO;
 import net.renfei.utils.ApplicationContextUtil;
 
+import java.io.Serializable;
+
 /**
  * 社会化分享
  */
-public class SocialSharing {
+public class SocialSharing implements Serializable {
     private String title;
     private String describes;
     private String url;

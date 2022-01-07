@@ -1,10 +1,10 @@
 package net.renfei.domain.pages;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import net.renfei.model.SecretLevelEnum;
 import net.renfei.model.blog.PostStatusEnum;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +12,9 @@ import java.util.Date;
  */
 @Data
 @Builder
-public class Page {
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class Page implements Serializable {
     private Long id;
 
     private Long pageAuthor;

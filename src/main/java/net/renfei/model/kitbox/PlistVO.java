@@ -1,6 +1,11 @@
 package net.renfei.model.kitbox;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * <p>Title: PlistVO</p>
@@ -9,7 +14,9 @@ import lombok.Data;
  * @author RenFei(i @ renfei.net)
  */
 @Data
-public class PlistVO {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class PlistVO implements Serializable {
     private String appname;
     private String version;
     private String bundleid;

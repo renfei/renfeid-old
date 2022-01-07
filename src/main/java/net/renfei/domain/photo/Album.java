@@ -2,10 +2,11 @@ package net.renfei.domain.photo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class Album {
+public class Album implements Serializable {
     private Long id;
 
     private Long categoryId;

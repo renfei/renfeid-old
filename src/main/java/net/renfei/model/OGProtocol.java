@@ -1,8 +1,8 @@
 package net.renfei.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +10,9 @@ import java.util.Date;
  */
 @Data
 @Builder
-public class OGProtocol {
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class OGProtocol implements Serializable {
     private String title;
     private String description;
     private String type;

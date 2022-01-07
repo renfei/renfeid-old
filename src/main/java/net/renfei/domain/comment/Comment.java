@@ -1,10 +1,10 @@
 package net.renfei.domain.comment;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.Tolerate;
 import net.renfei.domain.user.User;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +15,9 @@ import java.util.List;
  */
 @Data
 @Builder
-public final class Comment {
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public final class Comment implements Serializable {
     private Long id;
     private Long objectId;
     private Long reply;
@@ -29,8 +31,4 @@ public final class Comment {
     private Boolean isOwner;
     private User user;
     private List<Comment> child;
-
-    @Tolerate
-    Comment() {
-    }
 }

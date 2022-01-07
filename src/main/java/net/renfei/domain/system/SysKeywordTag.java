@@ -10,6 +10,7 @@ import net.renfei.repositories.model.SysKeywordObjectExample;
 import net.renfei.repositories.model.SysKeywordTagExample;
 import net.renfei.utils.ApplicationContextUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author renfei
  */
 @Data
-public final class SysKeywordTag {
+public final class SysKeywordTag implements Serializable {
     private Long id;
     private String enName;
     private String zhName;

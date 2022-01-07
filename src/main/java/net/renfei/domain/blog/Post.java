@@ -1,12 +1,12 @@
 package net.renfei.domain.blog;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.Tolerate;
 import net.renfei.model.CommentStatusEnum;
 import net.renfei.model.blog.PostStatusEnum;
 import net.renfei.model.SecretLevelEnum;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +14,9 @@ import java.util.Date;
  */
 @Data
 @Builder
-public class Post {
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class Post implements Serializable {
     private Long id;
     private String title;
     private String keyword;
@@ -39,8 +41,4 @@ public class Post {
     private Double avgComment;
     private Double pageRank;
     private SecretLevelEnum secretLevelEnum;
-
-    @Tolerate
-    Post() {
-    }
 }

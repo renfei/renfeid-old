@@ -1,7 +1,6 @@
 package net.renfei.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +13,8 @@ import java.util.List;
  * @author RenFei(i @ renfei.net)
  */
 @Data
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class FeedVO implements Serializable {
     private static final long serialVersionUID = 1L;
     private String title;
@@ -25,7 +26,9 @@ public class FeedVO implements Serializable {
     private List<Item> item;
 
     @Data
-    public static class Item{
+    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Item implements Serializable {
         private String title;
         private String author;
         private String link;
@@ -38,7 +41,9 @@ public class FeedVO implements Serializable {
 
     @Data
     @Builder
-    public static class Image{
+    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Image implements Serializable {
         private String url;
         private String title;
         private String link;

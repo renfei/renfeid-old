@@ -1,6 +1,7 @@
 package net.renfei.model.search;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,8 @@ import java.util.Date;
  * @author RenFei(i @ renfei.net)
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Document(indexName = "searchitem", shards = 1, replicas = 0)
 public class SearchItem implements Serializable {
     public static final String INDEX_COORDINATES = "searchitem";

@@ -1,13 +1,15 @@
 package net.renfei.domain.weibo;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Builder
-public class Weibo {
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class Weibo implements Serializable {
     private Long id;
     private String content;
     private Date releaseTime;
