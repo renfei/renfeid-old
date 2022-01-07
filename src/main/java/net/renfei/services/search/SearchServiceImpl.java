@@ -189,6 +189,10 @@ public class SearchServiceImpl extends BaseService implements SearchService {
      */
     @Override
     public void createIndex() {
+        /*
+        由于我的博客数据量小，更新频率低，所以采取每天删掉索引重建的方式来同步数据
+        省去了丢失的全量同步，新增的增量同步，直接每天凌晨全量导入
+         */
         //设置索引信息(绑定实体类)  返回IndexOperations
         IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(SearchItem.class);
         if (!indexOperations.exists()) {
@@ -205,14 +209,12 @@ public class SearchServiceImpl extends BaseService implements SearchService {
     }
 
     @Override
-    public void saveAll(List<SearchItem> searchItem) {
-        createIndex();
-        searchRepository.saveAll(searchItem);
-    }
-
-    @Override
     public void deleteIndex() {
-        searchRepository.deleteAll();
+        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(SearchItem.class);
+        if (indexOperations.exists()) {
+            // 已经存在，删除
+            indexOperations.delete();
+        }
     }
 
     @Override

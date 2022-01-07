@@ -16,9 +16,13 @@ import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.LinkTree;
 import net.renfei.model.blog.PostSidebarVO;
+import net.renfei.repositories.BlogPostsMapper;
+import net.renfei.repositories.model.BlogPostsExample;
+import net.renfei.repositories.model.BlogPostsWithBLOBs;
 import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
+import net.renfei.utils.PageRankUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -36,10 +40,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 public class BlogServiceImpl extends BaseService implements BlogService {
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "blog:";
+    private static final Double DATE_WEIGHTED = 37.5D;
+    private static final Double VIEW_WEIGHTED = 57.5D;
+    private static final Double COMMENTHTED = 5D;
     private final RedisService redisService;
+    private final BlogPostsMapper blogPostsMapper;
 
-    public BlogServiceImpl(RedisService redisService) {
+    public BlogServiceImpl(RedisService redisService, BlogPostsMapper blogPostsMapper) {
         this.redisService = redisService;
+        this.blogPostsMapper = blogPostsMapper;
     }
 
     @Override
@@ -294,6 +303,23 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 "}";
     }
 
+    @Override
+    public void updatePageRank() {
+        BlogPostsExample example = new BlogPostsExample();
+        example.createCriteria();
+        List<BlogPostsWithBLOBs> blogPosts = blogPostsMapper.selectByExampleWithBLOBs(example);
+        for (BlogPostsWithBLOBs blogPost : blogPosts
+        ) {
+            setPageRank(blogPost);
+            long id = blogPost.getId();
+            example = new BlogPostsExample();
+            example.createCriteria()
+                    .andIdEqualTo(id);
+            blogPost.setId(null);
+            blogPostsMapper.updateByExampleSelective(blogPost, example);
+        }
+    }
+
     private String getCommonTop() {
         return "{" +
                 "\"@context\": \"http://schema.org/\"," +
@@ -347,5 +373,23 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         blogVO.setCategory(blogDomain.getCategory());
         blogVO.setCommentList(blogDomain.getCommentList());
         return blogVO;
+    }
+
+    private void setPageRank(BlogPostsWithBLOBs postsDO) {
+        PageRankUtil pageRankUtil = new PageRankUtil();
+        postsDO.setPageRank(pageRankUtil.getPageRank(
+                postsDO.getPostDate(),
+                postsDO.getPostViews(),
+                0L,
+                DATE_WEIGHTED, VIEW_WEIGHTED, COMMENTHTED
+        ));
+        postsDO.setAvgViews(pageRankUtil.getAvgViews(
+                postsDO.getPostDate(),
+                postsDO.getPostViews()
+        ));
+        postsDO.setAvgComment(pageRankUtil.getAvgComments(
+                postsDO.getPostDate(),
+                0L
+        ));
     }
 }

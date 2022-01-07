@@ -18,7 +18,6 @@ import java.util.List;
  */
 public interface SearchService {
     void createIndex();
-    void saveAll(List<SearchItem> searchItem);
     void deleteIndex();
     ListData<SearchItem> search(String word, String pages, String rows);
     ListData<SearchItem> search(TypeEnum type, String word, String pages, String rows);

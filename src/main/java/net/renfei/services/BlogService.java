@@ -1,6 +1,5 @@
 package net.renfei.services;
 
-import net.renfei.domain.BlogDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
@@ -83,4 +82,6 @@ public interface BlogService {
     PostSidebarVO buildPostSidebar(User user);
 
     String getJsonld(BlogVO blogDomain);
+
+    void updatePageRank();
 }
