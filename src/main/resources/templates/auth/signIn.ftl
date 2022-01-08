@@ -65,7 +65,6 @@
     <script src="https://cdn.renfei.net/thunder/js/crypto-js/3.1.2/aes.js" type="text/javascript"></script>
     <div id="jScriptBox"></div>
     <@footer pageView></@footer>
-    <script src="https://www.recaptcha.net/recaptcha/api.js?render=${ReCAPTCHA_Client_Key}"></script>
     <script>
         <#if pageView.object??>
         let signed = "1";
@@ -186,7 +185,7 @@
                 grecaptcha.execute('${ReCAPTCHA_Client_Key}', {action: 'signIn'}).then(function (token) {
                     signInVo.reCAPTCHAToken = token;
                     $.ajax({
-                        url: '/auth/signIn',
+                        url: '/-/api/auth/signIn',
                         type: 'POST',
                         async: true,
                         data: JSON.stringify(signInVo),

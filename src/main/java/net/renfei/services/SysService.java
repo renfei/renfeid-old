@@ -52,6 +52,8 @@ public interface SysService {
 
     Map<String, String> setSecretKey(ReportPublicKeyVO reportPublicKeyVO) throws ServiceException;
 
+    String decrypt(String string, String keyId);
+
     PageHead getPageHead();
 
     PageHeader getPageHeader(HttpServletRequest request);

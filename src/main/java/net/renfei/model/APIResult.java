@@ -80,9 +80,10 @@ public final class APIResult<T> {
     private void signature() {
         this.timestamp = (int)(System.currentTimeMillis() / 1000L);
         this.nonce = StringUtils.getRandomString(16);
-        this.signature = StringUtils.signature(new String[]{this.timestamp.toString(), this.nonce});
+        this.signature = StringUtils.signature(this.timestamp.toString(), this.nonce);
     }
 
+    @Override
     public String toString() {
         return "APIResult{stateCode=" + (this.stateCodeEnum == null ? "null" : this.stateCodeEnum.toString()) + ", code=" + (this.code == null ? "null" : this.code) + ", message='" + (this.message == null ? "null" : this.message) + '\'' + ", timestamp=" + (this.timestamp == null ? "null" : this.timestamp) + ", signature='" + (this.signature == null ? "null" : this.signature) + '\'' + ", nonce='" + (this.nonce == null ? "null" : this.nonce) + '\'' + ", data=" + (this.data == null ? "null" : this.data.toString()) + '}';
     }

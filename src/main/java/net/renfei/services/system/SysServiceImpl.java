@@ -1,6 +1,5 @@
 package net.renfei.services.system;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.model.*;
@@ -8,10 +7,9 @@ import net.renfei.model.system.RegionVO;
 import net.renfei.repositories.*;
 import net.renfei.repositories.model.*;
 import net.renfei.services.*;
-import net.renfei.utils.CommonUtil;
-import net.renfei.utils.ListUtils;
-import net.renfei.utils.RSAUtils;
-import net.renfei.utils.StringUtils;
+import net.renfei.utils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 import static net.renfei.controllers.BaseController.SESSION_KEY;
 
@@ -33,9 +30,9 @@ import static net.renfei.controllers.BaseController.SESSION_KEY;
  *
  * @author renfei
  */
-@Slf4j
 @Service
 public class SysServiceImpl extends BaseService implements SysService {
+    private static final Logger logger = LoggerFactory.getLogger(SysServiceImpl.class);
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "system:";
     private final LeafService leafService;
     private final RedisService redisService;
@@ -297,7 +294,7 @@ public class SysServiceImpl extends BaseService implements SysService {
         try {
             clientKey = RSAUtils.decrypt(reportPublicKeyVO.getPublicKey(), secretKeyDO.getPrivateKey());
         } catch (Exception ex) {
-            log.error(ex.getMessage());
+            logger.error(ex.getMessage());
             throw new BusinessException("publicKey解密失败");
         }
         String aes = StringUtils.getRandomString(16);
@@ -305,7 +302,7 @@ public class SysServiceImpl extends BaseService implements SysService {
         try {
             aesEnc = RSAUtils.encrypt(aes, clientKey.replaceAll("\n", ""));
         } catch (Exception ex) {
-            log.error(ex.getMessage());
+            logger.error(ex.getMessage());
             throw new BusinessException("服务器内部错误，使用RSA客户端公钥加密失败");
         }
         //保存AES
@@ -320,6 +317,29 @@ public class SysServiceImpl extends BaseService implements SysService {
         map.put("keyid", uuid);
         map.put("aeskey", aesEnc);
         return map;
+    }
+
+    /**
+     * 根据秘钥ID解密AES密文
+     */
+    @Override
+    public String decrypt(String string, String keyId) {
+        SysSecretKeyExample secretKeyExample = new SysSecretKeyExample();
+        secretKeyExample.createCriteria()
+                .andUuidEqualTo(keyId);
+        SysSecretKeyWithBLOBs secretKey = ListUtils.getOne(sysSecretKeyMapper.selectByExampleWithBLOBs(secretKeyExample));
+        if (ObjectUtils.isEmpty(secretKey)) {
+            throw new BusinessException("AESKeyId不存在");
+        } else {
+            try {
+                string = AESUtils.decrypt(string, secretKey.getPrivateKey());
+            } catch (Exception ex) {
+                logger.error(ex.getMessage(), ex);
+                SentryUtils.captureException(ex);
+                throw new BusinessException("加密密文解密失败");
+            }
+            return string;
+        }
     }
 
     @Override
@@ -337,7 +357,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                 .fbAppId(SYSTEM_CONFIG.getPageHead().getFbAppId())
                 .fbPages(SYSTEM_CONFIG.getPageHead().getFbPages())
                 .appleTouchIcon(SYSTEM_CONFIG.getPageHead().getAppleTouchIcon())
-                .css(SYSTEM_CONFIG.getPageHead().getCss().stream().map(item -> item + "?ver=" + SYSTEM_CONFIG.getBuildTime()).collect(Collectors.toList()))
+                .css(SYSTEM_CONFIG.getPageHead().getCss())
                 .cssText("")
                 .jsText("")
                 .build();
@@ -400,9 +420,6 @@ public class SysServiceImpl extends BaseService implements SysService {
             example.setOrderByClause("order_number");
             example.createCriteria()
                     .andPidIsNull();
-            List<String> jss = new ArrayList<>();
-            jss.add("https://www.googletagmanager.com/gtag/js?id=" + SYSTEM_CONFIG.getGoogle().getAnalytics());
-            jss.add("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
             pageFooter = PageFooter.builder()
                     .showFriendlyLink(SYSTEM_CONFIG.isShowFriendlyLink())
                     .friendlyLink(this.getSysSiteFriendlyLinkList())
@@ -410,8 +427,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                     .buildTime(SYSTEM_CONFIG.getBuildTime())
                     .footerMenuLinks(convertFooterMenu(siteFooterMenuMapper.selectByExample(example)))
                     .smallMenu(smallMenuList())
-                    .jss(SYSTEM_CONFIG.getPageFooter().getJss().stream().map(item -> item + "?ver=" + SYSTEM_CONFIG.getBuildTime()).collect(Collectors.toList()))
-                    .jss(jss)
+                    .jss(SYSTEM_CONFIG.getPageFooter().getJss())
                     .jsText("var _hmt = _hmt || [];\n"
                             + "(function() {\n"
                             + "  var hm = document.createElement(\"script\");\n"

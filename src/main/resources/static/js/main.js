@@ -216,7 +216,7 @@ function getAESKey() {
         let reportPublicKeyVO = {};
         // 获取服务器端公钥
         $.ajax({
-            url: '/auth/secretKey',
+            url: '/-/api/auth/secretKey',
             type: 'GET',
             async: false,
             data: {},
@@ -250,7 +250,7 @@ function getAESKey() {
         if (ok) {
             // 将加密好的客户端公钥上报给服务器
             $.ajax({
-                url: '/auth/secretKey',
+                url: '/-/api/auth/secretKey',
                 type: 'POST',
                 async: false,
                 data: JSON.stringify(reportPublicKeyVO),
@@ -311,12 +311,12 @@ function aesencrypt(word) {
 
 function signOut() {
     let callback = window.location.href;
-    window.location.href = "/auth/signOut?callback=" + callback;
+    window.location.href = "/-/api/auth/signOut?callback=" + callback;
 }
 
 function signInFun() {
     let callback = window.location.href;
-    window.location.href = "/auth/signIn?callback=" + callback;
+    window.location.href = "/-/api/auth/signIn?callback=" + callback;
 }
 
 function loadJS(url, callback) {

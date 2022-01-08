@@ -26,8 +26,9 @@ public class DemoFilter implements Filter {
     private static final String PUT_METHOD = "put";
     private static final String DELETE_METHOD = "delete";
     private static final List<String> IGNORE_LIST = new ArrayList<String>() {{
-        // TODO 添加登陆注册等接口
+        // 登陆注册等接口允许提交
         this.add("/-/api/auth/signIn");
+        this.add("/-/api/auth/signUp");
     }};
 
     public DemoFilter(SystemConfig systemConfig) {

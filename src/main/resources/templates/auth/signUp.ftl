@@ -56,7 +56,6 @@
     <script src="https://cdn.renfei.net/thunder/js/crypto-js/3.1.2/mode-ecb.js" type="text/javascript"></script>
     <script src="https://cdn.renfei.net/thunder/js/crypto-js/3.1.2/aes.js" type="text/javascript"></script>
     <@footer pageView></@footer>
-    <script src="https://www.recaptcha.net/recaptcha/api.js?render=${ReCAPTCHA_Client_Key}"></script>
     <script>
         let signUpVo = {};
         let useVerCode = false;
@@ -93,7 +92,7 @@
                 grecaptcha.execute('${ReCAPTCHA_Client_Key}', {action: 'signUp'}).then(function (token) {
                     signUpVo.reCAPTCHAToken = token;
                     $.ajax({
-                        url: '/auth/signUp',
+                        url: '/-/api/auth/signUp',
                         type: 'POST',
                         async: true,
                         data: JSON.stringify(signUpVo),

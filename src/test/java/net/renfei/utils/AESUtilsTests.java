@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 public class AESUtilsTests extends ApplicationTests {
     @Test
     public void encryptTest() throws Exception {
-        String key = "key";
+        String key = "1234567890123456";
         String cont = "cont";
-        byte[] encrypt = AESUtils.encrypt(cont.getBytes(), key.getBytes());
-        assert cont.equals(new String(AESUtils.decrypt(encrypt, key.getBytes())));
+        String encrypt = AESUtils.encrypt(cont, key);
+        assert cont.equals(AESUtils.decrypt(encrypt, key));
     }
 }

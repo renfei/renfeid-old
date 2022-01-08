@@ -96,7 +96,7 @@ system:
       - //hm.baidu.com
       - //www.googletagmanager.com
       - //www.google-analytics.com
-      - //cloudflareinsights.com
+      - //www.recaptcha.net
     fbAppId: 205704373959112
     fbPages: 108842630700746
     favicon: https://cdn.renfei.net/favicon.ico
@@ -105,7 +105,7 @@ system:
       - https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css
       - https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css
       - /css/bs4.pop.css
-      - /css/style.css
+      - /css/style.css?ver=${system.version}
   pageFooter:
     jss:
       - https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js
@@ -113,7 +113,10 @@ system:
       - https://cdn.renfei.net/thunder/js/popper.min.js
       - https://cdn.renfei.net/thunder/js/clipboard.min.js
       - /js/bs4.pop.js
-      - /js/main.js
+      - /js/main.js?ver=${system.version}
+      - https://www.recaptcha.net/recaptcha/api.js?render=${system.google.reCAPTCHA.clientKey}
+      - https://www.googletagmanager.com/gtag/js?id=${system.google.analytics}
+      - https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
   # https://github.com/renfei/ip2location/releases
   ip2LocationBinFile: classpath:/ip2location/IP2LOCATION-LITE-DB11.BIN
   ip2LocationBinFileV6: classpath:/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
