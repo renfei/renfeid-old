@@ -146,6 +146,11 @@ system:
       regionId: cn-hangzhou
       signName: 任霏博客
       templateCode: SMS_205876298
+  weChat:
+    appId: wx0aeac235b86963c1
+    appSecret: a2443ee4b6d60e202287c3a27a89d712
+    token: tttt123sdg
+    encodingAESKey: <encodingAESKey>
   baidu:
     tongji: 1
   google:

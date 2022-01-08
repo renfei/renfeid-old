@@ -39,6 +39,7 @@ public class SystemConfig {
     private Leaf leaf;
     private ThreadPool threadPool;
     private Aliyun aliyun;
+    private WeChat weChat;
     private Baidu baidu;
     private Google google;
     private Jwt jwt;
@@ -133,6 +134,14 @@ public class SystemConfig {
             private String signName;
             private String templateCode;
         }
+    }
+
+    @Data
+    public static class WeChat {
+        private String appId;
+        private String appSecret;
+        private String token;
+        private String encodingAESKey;
     }
 
     @Data
