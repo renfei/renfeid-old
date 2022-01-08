@@ -1,3 +1,9 @@
+#######################################
+# 创建数据
+#######################################
+CREATE DATABASE IF NOT EXISTS renfeid;
+CREATE DATABASE IF NOT EXISTS discuz;
+
 SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
 SET NAMES utf8mb4;

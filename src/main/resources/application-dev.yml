@@ -18,6 +18,11 @@ spring:
       stat-view-servlet:
         login-username: admin
         login-password: admin
+    discuz:
+      url: jdbc:mariadb://local.renfei.net:3306/discuz?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: root
+      password: root
   devtools:
     restart:
       enabled: true
