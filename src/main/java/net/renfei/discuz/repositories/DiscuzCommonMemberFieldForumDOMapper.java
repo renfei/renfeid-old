@@ -3,12 +3,12 @@ package net.renfei.discuz.repositories;
 import net.renfei.discuz.repositories.entity.DiscuzCommonMemberFieldForumDO;
 import net.renfei.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOExample;
 import net.renfei.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOWithBLOBs;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Mapper
 public interface DiscuzCommonMemberFieldForumDOMapper {
     long countByExample(DiscuzCommonMemberFieldForumDOExample example);
 

@@ -415,6 +415,34 @@ INSERT INTO `QRTZ_TRIGGERS` VALUES ('quartzScheduler', 'UpdateBlogPageRankJob', 
 INSERT INTO `QRTZ_TRIGGERS` VALUES ('quartzScheduler', 'UpdateSearchEngineJob', 'SystemTimedTask', 'UpdateSearchEngineJob', 'SystemTimedTask', NULL, 1641583800000, -1, 5, 'WAITING', 'CRON', 1641570233000, 0, NULL, 0, '');
 
 -- ----------------------------
+-- Table structure for sys_account
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_account`;
+CREATE TABLE `sys_account`  (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'UUID',
+  `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户名',
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮箱',
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '手机',
+  `registration_date` datetime NULL DEFAULT NULL COMMENT '注册时间',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `totp` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '两步验证',
+  `registration_ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '注册IP地址',
+  `trial_error_times` int(11) NOT NULL DEFAULT 0 COMMENT '密码试错次数',
+  `lock_time` datetime NULL DEFAULT NULL COMMENT '锁定时间',
+  `state_code` int(11) NOT NULL DEFAULT 0 COMMENT '状态码：0全都未验证；1邮箱验证；2手机验证；3邮箱和手机都验证',
+  `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '姓氏',
+  `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名字',
+  `secret_level` int(255) UNSIGNED NOT NULL DEFAULT 1 COMMENT '保密等级（1:非密/2:秘密/3:机密）',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户账户' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_account
+-- ----------------------------
+INSERT INTO `sys_account` VALUES (1, 'B358EB124DF0445D90BFD3BCC36D8FB0', 'demo', 'demo@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1);
+
+-- ----------------------------
 -- Table structure for sys_account_keep_name
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_account_keep_name`;
@@ -4103,6 +4131,7 @@ CREATE TABLE `sys_secret_key`  (
 -- ----------------------------
 -- Records of sys_secret_key
 -- ----------------------------
+INSERT INTO `sys_secret_key` VALUES (10000, 'a3c2a92a-08ce-4598-80ef-55e0366b4484', NULL, '94xIh1Mxx0LY7dLT', '2022-01-09 19:25:41', NULL);
 
 -- ----------------------------
 -- Table structure for sys_site_footer_menu
@@ -4203,6 +4232,29 @@ INSERT INTO `sys_site_menu` VALUES (13, NULL, '在线文档', '/docs', 0, 1, 7);
 INSERT INTO `sys_site_menu` VALUES (14, 6, '赞助', '/sponsors', 0, 1, 1);
 
 -- ----------------------------
+-- Table structure for sys_verification_code
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_verification_code`;
+CREATE TABLE `sys_verification_code`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '验证码',
+  `expires` datetime NOT NULL COMMENT '到期时间',
+  `addressee` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收件人',
+  `channel` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '渠道：SMS、EMAIL',
+  `be_used` tinyint(1) NOT NULL DEFAULT 0 COMMENT '被使用',
+  `auth_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '验证类型',
+  `account_uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '关联账号',
+  `send_time` datetime NOT NULL COMMENT '发送时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '验证码（数据库实现）' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_verification_code
+-- ----------------------------
+
+
+-- ----------------------------
 -- Table structure for weibo_postmeta
 -- ----------------------------
 DROP TABLE IF EXISTS `weibo_postmeta`;
@@ -4240,3 +4292,34 @@ CREATE TABLE `weibo_posts`  (
 INSERT INTO `weibo_posts` VALUES (1, '第一条微博', '2021-12-27 08:24:21', 7, 1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+###########################
+# Discuz 论坛用到的表
+###########################
+
+-- ----------------------------
+-- Table structure for bbs_ucenter_members
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_ucenter_members`;
+CREATE TABLE `discuz`.`bbs_ucenter_members`  (
+  `uid` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `username` char(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `password` char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `email` char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `myid` char(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `myidkey` char(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `regip` char(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `regdate` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `lastloginip` int(10) NOT NULL DEFAULT 0,
+  `lastlogintime` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `salt` char(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `secques` char(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`uid`) USING BTREE,
+  UNIQUE INDEX `username`(`username`) USING BTREE,
+  INDEX `email`(`email`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 10253 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+
+-- ----------------------------
+-- Records of bbs_ucenter_members
+-- ----------------------------
+INSERT INTO `discuz`.`bbs_ucenter_members` VALUES (10252, 'demo', '', '', '', '', '127.0.0.1', 1641725706, 0, 0, 'b076f4', '');

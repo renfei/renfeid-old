@@ -311,12 +311,12 @@ function aesencrypt(word) {
 
 function signOut() {
     let callback = window.location.href;
-    window.location.href = "/-/api/auth/signOut?callback=" + callback;
+    window.location.href = "/auth/signOut?callback=" + callback;
 }
 
 function signInFun() {
     let callback = window.location.href;
-    window.location.href = "/-/api/auth/signIn?callback=" + callback;
+    window.location.href = "/auth/signIn?callback=" + callback;
 }
 
 function loadJS(url, callback) {

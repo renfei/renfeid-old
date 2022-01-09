@@ -3,12 +3,12 @@ package net.renfei.discuz.repositories;
 import net.renfei.discuz.repositories.entity.DiscuzForumPostDO;
 import net.renfei.discuz.repositories.entity.DiscuzForumPostDOExample;
 import net.renfei.discuz.repositories.entity.DiscuzForumPostDOKey;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Mapper
 public interface DiscuzForumPostDOMapper {
     long countByExample(DiscuzForumPostDOExample example);
 

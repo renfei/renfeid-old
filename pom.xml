@@ -298,6 +298,11 @@
             <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>discuz-ucenter-api-for-java</artifactId>
+            <version>1.0.7</version>
+        </dependency>
     </dependencies>
 
     <build>

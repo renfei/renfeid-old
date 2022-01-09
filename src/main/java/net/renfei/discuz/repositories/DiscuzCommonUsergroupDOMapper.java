@@ -2,12 +2,12 @@ package net.renfei.discuz.repositories;
 
 import net.renfei.discuz.repositories.entity.DiscuzCommonUsergroupDO;
 import net.renfei.discuz.repositories.entity.DiscuzCommonUsergroupDOExample;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Mapper
 public interface DiscuzCommonUsergroupDOMapper {
     long countByExample(DiscuzCommonUsergroupDOExample example);
 

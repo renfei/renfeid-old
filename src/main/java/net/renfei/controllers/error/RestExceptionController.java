@@ -3,6 +3,7 @@ package net.renfei.controllers.error;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.IP2LocationException;
+import net.renfei.exception.NeedU2FException;
 import net.renfei.model.APIResult;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.utils.SentryUtils;
@@ -34,6 +35,23 @@ public class RestExceptionController {
         log.error(exception.getMessage(), exception);
         return APIResult.builder()
                 .code(StateCodeEnum.Failure)
+                .message(exception.getLocalizedMessage())
+                .build();
+    }
+
+    /**
+     * NeedU2FException 异常处理
+     *
+     * @param exception NeedU2FException
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @ExceptionHandler(NeedU2FException.class)
+    public final APIResult handleBusinessException(NeedU2FException exception, WebRequest request) {
+        log.error(exception.getMessage(), exception);
+        return APIResult.builder()
+                .code(StateCodeEnum.NeedTOTP)
                 .message(exception.getLocalizedMessage())
                 .build();
     }

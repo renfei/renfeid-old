@@ -2,12 +2,12 @@ package net.renfei.discuz.repositories;
 
 import net.renfei.discuz.repositories.entity.DiscuzCommonMemberCountDO;
 import net.renfei.discuz.repositories.entity.DiscuzCommonMemberCountDOExample;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Mapper
 public interface DiscuzCommonMemberCountDOMapper {
     long countByExample(DiscuzCommonMemberCountDOExample example);
 

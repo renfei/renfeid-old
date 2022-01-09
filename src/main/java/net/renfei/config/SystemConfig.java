@@ -43,6 +43,7 @@ public class SystemConfig {
     private Baidu baidu;
     private Google google;
     private Jwt jwt;
+    private UCenter uCenter;
 
     @Data
     public static class PageHead {
@@ -167,5 +168,13 @@ public class SystemConfig {
         private String secret;
         private String issuer;
         private Long expiration;
+    }
+
+    @Data
+    public static class UCenter {
+        private String api;
+        private String key;
+        private String appId;
+        private String connect;
     }
 }

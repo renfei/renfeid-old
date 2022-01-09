@@ -63,6 +63,8 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="photo_album"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="photo_album_img"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="docs_online_documents"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="sys_logs"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_logs"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="sys_account"/>
+        <table schema="renfeid" delimitAllColumns="true" tableName="sys_verification_code"/>
     </context>
 </generatorConfiguration>

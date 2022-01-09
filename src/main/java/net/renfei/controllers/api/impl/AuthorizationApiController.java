@@ -2,17 +2,22 @@ package net.renfei.controllers.api.impl;
 
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.AuthorizationApi;
+import net.renfei.domain.user.User;
+import net.renfei.exception.BusinessException;
+import net.renfei.exception.NeedU2FException;
 import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.auth.ReCaptchaVerify;
 import net.renfei.model.auth.ReCaptchaVerifyResponse;
 import net.renfei.model.auth.SignInVO;
+import net.renfei.services.AccountService;
 import net.renfei.services.ReCaptchaService;
 import net.renfei.services.SysService;
 import net.renfei.utils.IpUtils;
 import net.renfei.utils.JacksonUtil;
 import net.renfei.utils.JwtTokenUtils;
+import net.renfei.utils.SentryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
@@ -30,13 +35,16 @@ public class AuthorizationApiController extends BaseController implements Author
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationApiController.class);
     private final JwtTokenUtils jwtUtils;
     private final SysService sysService;
+    private final AccountService accountService;
     private final ReCaptchaService reCaptchaService;
 
     public AuthorizationApiController(JwtTokenUtils jwtUtils,
                                       SysService sysService,
+                                      AccountService accountService,
                                       ReCaptchaService reCaptchaService) {
         this.jwtUtils = jwtUtils;
         this.sysService = sysService;
+        this.accountService = accountService;
         this.reCaptchaService = reCaptchaService;
     }
 
@@ -78,7 +86,7 @@ public class AuthorizationApiController extends BaseController implements Author
      * @return
      */
     @Override
-    public APIResult<String> doSignIn(SignInVO signInVO) {
+    public APIResult<String> doSignIn(SignInVO signInVO) throws NeedU2FException {
         if (getSignUser() != null) {
             return new APIResult<>("已登陆无需再次登陆。");
         }
@@ -107,7 +115,15 @@ public class AuthorizationApiController extends BaseController implements Author
             logger.error("reCaptchaService 调用失败，返回内容：{}", JacksonUtil.obj2String(verifyResponse));
         }
         signInVO.setPassword(sysService.decrypt(signInVO.getPassword(), signInVO.getKeyUuid()));
-        // TODO 用户登陆服务
-        return null;
+        // 用户登陆服务
+        User user = accountService.signIn(signInVO, request);
+        if ("SESSION".equals(SYSTEM_CONFIG.getAuthMode())) {
+            request.getSession().setAttribute(SESSION_KEY, user);
+            return new APIResult<>(user.getUcScript());
+        } else {
+            // 签发TOKEN
+            String token = jwtUtils.createJWT(user.getUserName(), request);
+            return new APIResult<>(token);
+        }
     }
 }
