@@ -164,4 +164,33 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         }
         return user;
     }
+
+    /**
+     * 登出，返回Discuz的登出代码
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public String signOut(User user) {
+        if (user != null) {
+            DiscuzUcenterMembersDOExample discuzUcenterMembersExample = new DiscuzUcenterMembersDOExample();
+            discuzUcenterMembersExample.createCriteria().andUsernameEqualTo(user.getUserName());
+            DiscuzUcenterMembersDO discuzUcenterMembers = ListUtils.getOne(discuzUcenterMembersMapper.selectByExample(discuzUcenterMembersExample));
+            assert SYSTEM_CONFIG != null;
+            if (discuzUcenterMembers != null) {
+                try {
+                    Client client =
+                            new Client(SYSTEM_CONFIG.getUCenter().getApi(),
+                                    null,
+                                    SYSTEM_CONFIG.getUCenter().getKey(),
+                                    SYSTEM_CONFIG.getUCenter().getAppId(),
+                                    SYSTEM_CONFIG.getUCenter().getConnect());
+                    return client.ucUserSynlogout();
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        return "";
+    }
 }

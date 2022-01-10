@@ -24,4 +24,18 @@ public class AuthPageControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void signUpSuccessPageTest() throws Exception {
+        this.mockMvc.perform(get("/auth/signUp/success"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void signOutTest() throws Exception {
+        this.mockMvc.perform(get("/auth/signOut"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

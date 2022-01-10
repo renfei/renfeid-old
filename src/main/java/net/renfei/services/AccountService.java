@@ -21,4 +21,12 @@ public interface AccountService {
      * @return
      */
     User signIn(SignInVO signInVO, HttpServletRequest request) throws BusinessException, NeedU2FException;
+
+    /**
+     * 登出，返回Discuz的登出代码
+     *
+     * @param user
+     * @return
+     */
+    String signOut(User user);
 }

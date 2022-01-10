@@ -126,7 +126,7 @@ CREATE TABLE `leaf_alloc`  (
 -- ----------------------------
 -- Records of leaf_alloc
 -- ----------------------------
-INSERT INTO `leaf_alloc` VALUES ('leaf-segment-global', 10000, 20, 'Segment Mode Get Id', '2021-11-12 05:36:43');
+INSERT INTO `leaf_alloc` VALUES ('leaf-segment-global', 100000, 20, 'Segment Mode Get Id', '2021-11-12 05:36:43');
 
 
 -- ----------------------------
