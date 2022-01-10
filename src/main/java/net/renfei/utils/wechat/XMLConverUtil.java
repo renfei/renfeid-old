@@ -139,6 +139,7 @@ public abstract class XMLConverUtil {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			// 设置CDATA输出字符
 			marshaller.setProperty(CharacterEscapeHandler.class.getName(), new CharacterEscapeHandler() {
+				@Override
 				public void escape(char[] ac, int i, int j, boolean flag, Writer writer) throws IOException {
 					writer.write(ac, i, j);
 				}

@@ -33,7 +33,7 @@ import java.util.Date;
  */
 @Service
 public class AccountServiceImpl extends BaseService implements AccountService {
-    private final static Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
     private final SysAccountMapper accountMapper;
     private final VerificationCodeService verificationCodeService;
     private final DiscuzUcenterMembersDOMapper discuzUcenterMembersMapper;

@@ -18,7 +18,7 @@ import java.util.UUID;
  * @author renfei
  */
 @Service
-public class AliyunOSS extends AliyunService {
+public class AliyunOSS extends AbstractAliyunService {
     public String upload(String path, MultipartFile file) throws Exception {
         if (file.isEmpty()) {
             throw new RuntimeException("文件为空!");

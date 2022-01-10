@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
  * @author renfei
  */
 @Service
-public class AliyunSms extends AliyunService implements SmsService {
-    private final static Logger logger = LoggerFactory.getLogger(AliyunSms.class);
+public class AliyunSmsImpl extends AbstractAliyunService implements SmsService {
+    private static final Logger logger = LoggerFactory.getLogger(AliyunSmsImpl.class);
 
     @Override
     public String sendSms(Sms sms) throws BusinessException {

@@ -23,7 +23,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Document(indexName = "searchitem", shards = 1, replicas = 0)
+@Document(indexName = "searchitem")
 public class SearchItem implements Serializable {
     public static final String INDEX_COORDINATES = "searchitem";
     @Id

@@ -18,9 +18,18 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
+    /**
+     * Session 认证模式
+     */
+    public static final String SESSION_AUTH_MODE = "SESSION";
+    /**
+     * ReCaptcha 容忍最大阈值
+     */
+    public static final Float RE_CAPTCHA_MIN_SOURCE = 0.6F;
     private String active;
     private String version;
     private String buildTime;
+    private String baseDomainName;
     private String siteDomainName;
     private String staticDomain;
     private boolean enableRedis;

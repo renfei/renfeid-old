@@ -4,13 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.user.User;
 import net.renfei.model.*;
-import net.renfei.model.system.BlogVO;
 import net.renfei.services.PaginationService;
-import net.renfei.services.RedisService;
 import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
@@ -27,6 +24,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 
 /**
  * Controller 基类
@@ -57,6 +56,7 @@ public abstract class BaseController {
 
     @ModelAttribute
     public void modelAttribute(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
         mv.addObject("active", SYSTEM_CONFIG.getActive());
         mv.addObject("account", getSignUser());
     }
@@ -86,7 +86,7 @@ public abstract class BaseController {
     protected User getSignUser() {
         Object object = null;
         assert SYSTEM_CONFIG != null;
-        if ("SESSION".equals(SYSTEM_CONFIG.getAuthMode())) {
+        if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
             object = request.getSession().getAttribute(SESSION_KEY);
         } else {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -103,7 +103,8 @@ public abstract class BaseController {
             try {
                 URL url = new URL(callback);
                 String host = url.getHost();
-                if (host.endsWith(".renfei.net")) {
+                assert SYSTEM_CONFIG != null;
+                if (host.endsWith(SYSTEM_CONFIG.getBaseDomainName())) {
                     return callback;
                 }
             } catch (MalformedURLException ignored) {

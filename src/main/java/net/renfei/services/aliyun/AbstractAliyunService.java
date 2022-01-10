@@ -11,17 +11,17 @@ import net.renfei.services.BaseService;
  *
  * @author renfei
  */
-public abstract class AliyunService extends BaseService {
+public abstract class AbstractAliyunService extends BaseService {
     protected IAcsClient client;
 
-    protected AliyunService() {
+    protected AbstractAliyunService() {
         client = new DefaultAcsClient(DefaultProfile.getProfile(
                 SYSTEM_CONFIG.getAliyun().getGreen().getRegionId(),
                 SYSTEM_CONFIG.getAliyun().getAccessKeyId(),
                 SYSTEM_CONFIG.getAliyun().getAccessKeySecret()));
     }
 
-    protected AliyunService(IClientProfile profile) {
+    protected AbstractAliyunService(IClientProfile profile) {
         client = new DefaultAcsClient(profile);
     }
 }

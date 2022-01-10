@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 import static net.renfei.controllers.BaseController.SESSION_KEY;
 
 /**
@@ -59,7 +60,7 @@ public class LogServiceImpl extends BaseService implements LogService {
         sysLogs.setLogTime(new Date());
         if (request != null) {
             User user = null;
-            if ("SESSION".equals(systemConfig.getAuthMode())) {
+            if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
                 Object session = request.getSession().getAttribute(SESSION_KEY);
                 if (session instanceof User) {
                     user = (User) session;

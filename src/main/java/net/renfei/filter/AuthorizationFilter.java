@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 import static net.renfei.controllers.BaseController.SESSION_KEY;
 
 /**
@@ -45,7 +46,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         final String auth = request.getHeader(HEADER_TOKEN_NAME);
         UserDetail userDetails;
-        if ("SESSION".equals(systemConfig.getAuthMode())) {
+        if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
             HttpSession session = request.getSession();
             Object sessionObject = session.getAttribute(SESSION_KEY);
             if (sessionObject instanceof User) {

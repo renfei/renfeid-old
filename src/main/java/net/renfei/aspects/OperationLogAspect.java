@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
 
+import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 import static net.renfei.controllers.BaseController.SESSION_KEY;
 import static net.renfei.services.system.LogServiceImpl.convertMap;
 
@@ -75,7 +76,7 @@ public class OperationLogAspect {
         HttpServletRequest request = servletRequestAttributes.getRequest();
         if (request != null) {
             User user = null;
-            if ("SESSION".equals(systemConfig.getAuthMode())) {
+            if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
                 Object session = request.getSession().getAttribute(SESSION_KEY);
                 if (session instanceof User) {
                     user = (User) session;

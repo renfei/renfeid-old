@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -191,7 +192,7 @@ public class SnowflakeZookeeperHolder {
         LOGGER.info("file exists status is {}", exists);
         if (exists) {
             try {
-                FileUtils.writeStringToFile(leafConfFile, "workerID=" + workerID, false);
+                FileUtils.writeStringToFile(leafConfFile, "workerID=" + workerID, Charset.defaultCharset(), false);
                 LOGGER.info("update file cache workerID is {}", workerID);
             } catch (IOException e) {
                 LOGGER.error("update file cache error ", e);
@@ -203,7 +204,7 @@ public class SnowflakeZookeeperHolder {
                 LOGGER.info("init local file cache create parent dis status is {}, worker id is {}", mkdirs, workerID);
                 if (mkdirs) {
                     if (leafConfFile.createNewFile()) {
-                        FileUtils.writeStringToFile(leafConfFile, "workerID=" + workerID, false);
+                        FileUtils.writeStringToFile(leafConfFile, "workerID=" + workerID, Charset.defaultCharset(), false);
                         LOGGER.info("local file cache workerID is {}", workerID);
                     }
                 } else {

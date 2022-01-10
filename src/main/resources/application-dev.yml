@@ -69,6 +69,7 @@ system:
   active: dev
   version: "@project.version@"
   buildTime: "@buildtimestamp@"
+  baseDomainName: .renfei.net
   siteDomainName: http://local.renfei.net:9595
   staticDomain: https://cdn.renfei.net
   enableRedis: true

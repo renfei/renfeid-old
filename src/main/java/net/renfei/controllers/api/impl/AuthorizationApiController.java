@@ -3,7 +3,6 @@ package net.renfei.controllers.api.impl;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.AuthorizationApi;
 import net.renfei.domain.user.User;
-import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
@@ -17,13 +16,15 @@ import net.renfei.services.SysService;
 import net.renfei.utils.IpUtils;
 import net.renfei.utils.JacksonUtil;
 import net.renfei.utils.JwtTokenUtils;
-import net.renfei.utils.SentryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+
+import static net.renfei.config.SystemConfig.RE_CAPTCHA_MIN_SOURCE;
+import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 
 /**
  * 认证接口
@@ -104,7 +105,7 @@ public class AuthorizationApiController extends BaseController implements Author
         ReCaptchaVerifyResponse verifyResponse = reCaptchaService.siteVerify(reCaptchaVerify);
         if (verifyResponse.getSuccess()) {
             // 低于验证阈值，拦截
-            if (verifyResponse.getScore() < 0.6) {
+            if (verifyResponse.getScore() < RE_CAPTCHA_MIN_SOURCE) {
                 return APIResult.builder()
                         .code(StateCodeEnum.Failure)
                         .message("我们的服务器好像对你很感兴趣，想知道你是人类还是同类？刷新一下再试试")
@@ -117,7 +118,7 @@ public class AuthorizationApiController extends BaseController implements Author
         signInVO.setPassword(sysService.decrypt(signInVO.getPassword(), signInVO.getKeyUuid()));
         // 用户登陆服务
         User user = accountService.signIn(signInVO, request);
-        if ("SESSION".equals(SYSTEM_CONFIG.getAuthMode())) {
+        if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
             request.getSession().setAttribute(SESSION_KEY, user);
             return new APIResult<>(user.getUcScript());
         } else {

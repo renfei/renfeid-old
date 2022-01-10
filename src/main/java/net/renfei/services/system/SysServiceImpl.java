@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 import static net.renfei.controllers.BaseController.SESSION_KEY;
 
 /**
@@ -389,7 +390,7 @@ public class SysServiceImpl extends BaseService implements SysService {
             }
         }
         Object object;
-        if ("SESSION".equals(SYSTEM_CONFIG.getAuthMode())) {
+        if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
             object = request.getSession().getAttribute(SESSION_KEY);
         } else {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

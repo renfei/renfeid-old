@@ -19,7 +19,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
-public class AliyunGreen extends AliyunService {
+public class AliyunGreen extends AbstractAliyunService {
     /**
      * @param text 待检测的文本，长度不超过10000个字符
      */
