@@ -75,6 +75,13 @@ public class KitBoxControllerTests extends ApplicationTests {
     }
 
     @Test
+    public void getCliEnvTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/clienv"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void strHumpLineConvertTest() throws Exception {
         this.mockMvc.perform(get("/kitbox/strHumpLineConvert"))
                 .andDo(print())

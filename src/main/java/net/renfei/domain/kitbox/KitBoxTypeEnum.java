@@ -95,6 +95,10 @@ public enum KitBoxTypeEnum {
      */
     OTHER_INDEXING(22, "站长推送工具", "百度/必应/谷歌-站长推送工具", "/kitbox/indexing"),
     /**
+     *
+     */
+    NETWORK_CLIENV(23, "客户端环境获取", "客户端环境操作系统与浏览器版本获取工具", "/kitbox/clienv"),
+    /**
      * 其他
      */
     OTHER(-1, "其他", "其他", "/kitbox/");

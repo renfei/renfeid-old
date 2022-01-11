@@ -69,6 +69,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_DNSQPSE));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_WHOIS));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_GETMYIP));
+            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_CLIENV));
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("网络工具")
                     .elementId(NETWORK_TOOL)

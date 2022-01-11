@@ -207,6 +207,29 @@ public class KitBoxController extends BaseController {
     }
 
     /**
+     * 客户端环境获取工具
+     *
+     * @param mv
+     * @return
+     */
+    @RequestMapping("clienv")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问客户端环境获取工具")
+    public ModelAndView getCliEnvPage(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_CLIENV.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("客户端环境获取工具，获取操作系统与浏览器版本环境信息");
+        pageView.getPageHead().setKeywords("客户端,环境,系统,浏览器,版本,探针,获取client,env,environment");
+        mv.setViewName("kitbox/clienv");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, NETWORK_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.NETWORK_CLIENV);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.NETWORK_CLIENV.getId());
+        return mv;
+    }
+
+    /**
      * 在线批量生成 UUID/GUID 工具
      *
      * @param mv
