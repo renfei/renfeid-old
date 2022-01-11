@@ -7,6 +7,7 @@ import net.renfei.exception.NeedU2FException;
 import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.auth.SignInVO;
+import net.renfei.model.auth.SignUpVO;
 import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.SystemTypeEnum;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,4 +53,14 @@ public interface AuthorizationApi {
     @PostMapping("signIn")
     @Operation(summary = "登陆接口", tags = {"认证接口"})
     APIResult<String> doSignIn(@RequestBody SignInVO signInVO) throws NeedU2FException;
+
+    /**
+     * 注册接口
+     *
+     * @param signUpVO
+     * @return
+     */
+    @PostMapping("signUp")
+    @Operation(summary = "注册接口", tags = {"认证接口"})
+    APIResult doSignUp(@RequestBody SignUpVO signUpVO);
 }

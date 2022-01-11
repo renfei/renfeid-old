@@ -4,6 +4,8 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.auth.SignInVO;
+import net.renfei.model.auth.SignUpVO;
+import net.renfei.utils.PasswordUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +23,14 @@ public interface AccountService {
      * @return
      */
     User signIn(SignInVO signInVO, HttpServletRequest request) throws BusinessException, NeedU2FException;
+
+    /**
+     * 注册
+     *
+     * @param signUpVO 注册请求对象
+     * @param request  请求对象
+     */
+    void signUp(SignUpVO signUpVO, HttpServletRequest request) throws PasswordUtils.CannotPerformOperationException;
 
     /**
      * 登出，返回Discuz的登出代码

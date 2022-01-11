@@ -4323,3 +4323,270 @@ CREATE TABLE `discuz`.`bbs_ucenter_members`  (
 -- Records of bbs_ucenter_members
 -- ----------------------------
 INSERT INTO `discuz`.`bbs_ucenter_members` VALUES (10252, 'demo', '', '', '', '', '127.0.0.1', 1641725706, 0, 0, 'b076f4', '');
+
+-- ----------------------------
+-- Table structure for bbs_common_member
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_common_member`;
+CREATE TABLE `discuz`.`bbs_common_member` (
+  `uid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `email` char(40) NOT NULL DEFAULT '',
+  `username` char(15) NOT NULL DEFAULT '',
+  `password` char(32) NOT NULL DEFAULT '',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `emailstatus` tinyint(1) NOT NULL DEFAULT '0',
+  `avatarstatus` tinyint(1) NOT NULL DEFAULT '0',
+  `videophotostatus` tinyint(1) NOT NULL DEFAULT '0',
+  `adminid` tinyint(1) NOT NULL DEFAULT '0',
+  `groupid` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `groupexpiry` int(10) unsigned NOT NULL DEFAULT '0',
+  `extgroupids` char(20) NOT NULL DEFAULT '',
+  `regdate` int(10) unsigned NOT NULL DEFAULT '0',
+  `credits` int(10) NOT NULL DEFAULT '0',
+  `notifysound` tinyint(1) NOT NULL DEFAULT '0',
+  `timeoffset` char(4) NOT NULL DEFAULT '',
+  `newpm` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `newprompt` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `accessmasks` tinyint(1) NOT NULL DEFAULT '0',
+  `allowadmincp` tinyint(1) NOT NULL DEFAULT '0',
+  `onlyacceptfriendpm` tinyint(1) NOT NULL DEFAULT '0',
+  `conisbind` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `freeze` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `username` (`username`),
+  KEY `email` (`email`),
+  KEY `groupid` (`groupid`),
+  KEY `conisbind` (`conisbind`),
+  KEY `regdate` (`regdate`)
+) ENGINE=MyISAM AUTO_INCREMENT=10253 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for bbs_common_member_count
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_common_member_count`;
+CREATE TABLE `discuz`.`bbs_common_member_count` (
+  `uid` mediumint(8) unsigned NOT NULL,
+  `extcredits1` int(10) NOT NULL DEFAULT '0',
+  `extcredits2` int(10) NOT NULL DEFAULT '0',
+  `extcredits3` int(10) NOT NULL DEFAULT '0',
+  `extcredits4` int(10) NOT NULL DEFAULT '0',
+  `extcredits5` int(10) NOT NULL DEFAULT '0',
+  `extcredits6` int(10) NOT NULL DEFAULT '0',
+  `extcredits7` int(10) NOT NULL DEFAULT '0',
+  `extcredits8` int(10) NOT NULL DEFAULT '0',
+  `friends` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `posts` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `threads` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `digestposts` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `doings` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `blogs` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `albums` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `sharings` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `attachsize` int(10) unsigned NOT NULL DEFAULT '0',
+  `views` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `oltime` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `todayattachs` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `todayattachsize` int(10) unsigned NOT NULL DEFAULT '0',
+  `feeds` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `follower` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `following` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `newfollower` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `blacklist` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  KEY `posts` (`posts`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for bbs_common_member_field_forum
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_common_member_field_forum`;
+CREATE TABLE `discuz`.`bbs_common_member_field_forum` (
+  `uid` mediumint(8) unsigned NOT NULL,
+  `publishfeed` tinyint(3) NOT NULL DEFAULT '0',
+  `customshow` tinyint(1) unsigned NOT NULL DEFAULT '26',
+  `customstatus` varchar(30) NOT NULL DEFAULT '',
+  `medals` text NOT NULL,
+  `sightml` text NOT NULL,
+  `groupterms` text NOT NULL,
+  `authstr` varchar(20) NOT NULL DEFAULT '',
+  `groups` mediumtext NOT NULL,
+  `attentiongroup` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for bbs_common_member_field_home
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_common_member_field_home`;
+CREATE TABLE `discuz`.`bbs_common_member_field_home` (
+  `uid` mediumint(8) unsigned NOT NULL,
+  `videophoto` varchar(255) NOT NULL DEFAULT '',
+  `spacename` varchar(255) NOT NULL DEFAULT '',
+  `spacedescription` varchar(255) NOT NULL DEFAULT '',
+  `domain` char(15) NOT NULL DEFAULT '',
+  `addsize` int(10) unsigned NOT NULL DEFAULT '0',
+  `addfriend` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `menunum` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `theme` varchar(20) NOT NULL DEFAULT '',
+  `spacecss` text NOT NULL,
+  `blockposition` text NOT NULL,
+  `recentnote` text NOT NULL,
+  `spacenote` text NOT NULL,
+  `privacy` text NOT NULL,
+  `feedfriend` mediumtext NOT NULL,
+  `acceptemail` text NOT NULL,
+  `magicgift` text NOT NULL,
+  `stickblogs` text NOT NULL,
+  PRIMARY KEY (`uid`),
+  KEY `domain` (`domain`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for bbs_common_member_profile
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_common_member_profile`;
+CREATE TABLE `discuz`.`bbs_common_member_profile` (
+  `uid` mediumint(8) unsigned NOT NULL,
+  `realname` varchar(255) NOT NULL DEFAULT '',
+  `gender` tinyint(1) NOT NULL DEFAULT '0',
+  `birthyear` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `birthmonth` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `birthday` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `constellation` varchar(255) NOT NULL DEFAULT '',
+  `zodiac` varchar(255) NOT NULL DEFAULT '',
+  `telephone` varchar(255) NOT NULL DEFAULT '',
+  `mobile` varchar(255) NOT NULL DEFAULT '',
+  `idcardtype` varchar(255) NOT NULL DEFAULT '',
+  `idcard` varchar(255) NOT NULL DEFAULT '',
+  `address` varchar(255) NOT NULL DEFAULT '',
+  `zipcode` varchar(255) NOT NULL DEFAULT '',
+  `nationality` varchar(255) NOT NULL DEFAULT '',
+  `birthprovince` varchar(255) NOT NULL DEFAULT '',
+  `birthcity` varchar(255) NOT NULL DEFAULT '',
+  `birthdist` varchar(20) NOT NULL DEFAULT '',
+  `birthcommunity` varchar(255) NOT NULL DEFAULT '',
+  `resideprovince` varchar(255) NOT NULL DEFAULT '',
+  `residecity` varchar(255) NOT NULL DEFAULT '',
+  `residedist` varchar(20) NOT NULL DEFAULT '',
+  `residecommunity` varchar(255) NOT NULL DEFAULT '',
+  `residesuite` varchar(255) NOT NULL DEFAULT '',
+  `graduateschool` varchar(255) NOT NULL DEFAULT '',
+  `company` varchar(255) NOT NULL DEFAULT '',
+  `education` varchar(255) NOT NULL DEFAULT '',
+  `occupation` varchar(255) NOT NULL DEFAULT '',
+  `position` varchar(255) NOT NULL DEFAULT '',
+  `revenue` varchar(255) NOT NULL DEFAULT '',
+  `affectivestatus` varchar(255) NOT NULL DEFAULT '',
+  `lookingfor` varchar(255) NOT NULL DEFAULT '',
+  `bloodtype` varchar(255) NOT NULL DEFAULT '',
+  `height` varchar(255) NOT NULL DEFAULT '',
+  `weight` varchar(255) NOT NULL DEFAULT '',
+  `alipay` varchar(255) NOT NULL DEFAULT '',
+  `icq` varchar(255) NOT NULL DEFAULT '',
+  `qq` varchar(255) NOT NULL DEFAULT '',
+  `yahoo` varchar(255) NOT NULL DEFAULT '',
+  `msn` varchar(255) NOT NULL DEFAULT '',
+  `taobao` varchar(255) NOT NULL DEFAULT '',
+  `site` varchar(255) NOT NULL DEFAULT '',
+  `bio` text NOT NULL,
+  `interest` text NOT NULL,
+  `field1` text NOT NULL,
+  `field2` text NOT NULL,
+  `field3` text NOT NULL,
+  `field4` text NOT NULL,
+  `field5` text NOT NULL,
+  `field6` text NOT NULL,
+  `field7` text NOT NULL,
+  `field8` text NOT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for bbs_common_member_status
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_common_member_status`;
+CREATE TABLE `discuz`.`bbs_common_member_status` (
+  `uid` mediumint(8) unsigned NOT NULL,
+  `regip` char(15) NOT NULL DEFAULT '',
+  `lastip` char(15) NOT NULL DEFAULT '',
+  `port` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `lastvisit` int(10) unsigned NOT NULL DEFAULT '0',
+  `lastactivity` int(10) unsigned NOT NULL DEFAULT '0',
+  `lastpost` int(10) unsigned NOT NULL DEFAULT '0',
+  `lastsendmail` int(10) unsigned NOT NULL DEFAULT '0',
+  `invisible` tinyint(1) NOT NULL DEFAULT '0',
+  `buyercredit` smallint(6) NOT NULL DEFAULT '0',
+  `sellercredit` smallint(6) NOT NULL DEFAULT '0',
+  `favtimes` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sharetimes` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `profileprogress` tinyint(2) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  KEY `lastactivity` (`lastactivity`,`invisible`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for bbs_common_usergroup
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_common_usergroup`;
+CREATE TABLE `discuz`.`bbs_common_usergroup` (
+  `groupid` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
+  `radminid` tinyint(3) NOT NULL DEFAULT '0',
+  `type` enum('system','special','member') NOT NULL DEFAULT 'member',
+  `system` varchar(255) NOT NULL DEFAULT 'private',
+  `grouptitle` varchar(255) NOT NULL DEFAULT '',
+  `creditshigher` int(10) NOT NULL DEFAULT '0',
+  `creditslower` int(10) NOT NULL DEFAULT '0',
+  `stars` tinyint(3) NOT NULL DEFAULT '0',
+  `color` varchar(255) NOT NULL DEFAULT '',
+  `icon` varchar(255) NOT NULL DEFAULT '',
+  `allowvisit` tinyint(1) NOT NULL DEFAULT '0',
+  `allowsendpm` tinyint(1) NOT NULL DEFAULT '1',
+  `allowinvite` tinyint(1) NOT NULL DEFAULT '0',
+  `allowmailinvite` tinyint(1) NOT NULL DEFAULT '0',
+  `maxinvitenum` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `inviteprice` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `maxinviteday` smallint(6) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`groupid`),
+  KEY `creditsrange` (`creditshigher`,`creditslower`)
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for bbs_forum_post
+-- ----------------------------
+DROP TABLE IF EXISTS `discuz`.`bbs_forum_post`;
+CREATE TABLE `discuz`.`bbs_forum_post` (
+  `pid` int(10) unsigned NOT NULL,
+  `fid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `tid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `first` tinyint(1) NOT NULL DEFAULT '0',
+  `author` varchar(15) NOT NULL DEFAULT '',
+  `authorid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `subject` varchar(80) NOT NULL DEFAULT '',
+  `dateline` int(10) unsigned NOT NULL DEFAULT '0',
+  `message` mediumtext NOT NULL,
+  `useip` varchar(15) NOT NULL DEFAULT '',
+  `port` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `invisible` tinyint(1) NOT NULL DEFAULT '0',
+  `anonymous` tinyint(1) NOT NULL DEFAULT '0',
+  `usesig` tinyint(1) NOT NULL DEFAULT '0',
+  `htmlon` tinyint(1) NOT NULL DEFAULT '0',
+  `bbcodeoff` tinyint(1) NOT NULL DEFAULT '0',
+  `smileyoff` tinyint(1) NOT NULL DEFAULT '0',
+  `parseurloff` tinyint(1) NOT NULL DEFAULT '0',
+  `attachment` tinyint(1) NOT NULL DEFAULT '0',
+  `rate` smallint(6) NOT NULL DEFAULT '0',
+  `ratetimes` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `status` int(10) NOT NULL DEFAULT '0',
+  `tags` varchar(255) NOT NULL DEFAULT '0',
+  `comment` tinyint(1) NOT NULL DEFAULT '0',
+  `replycredit` int(10) NOT NULL DEFAULT '0',
+  `position` int(8) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`tid`,`position`),
+  UNIQUE KEY `pid` (`pid`),
+  KEY `fid` (`fid`),
+  KEY `authorid` (`authorid`,`invisible`),
+  KEY `dateline` (`dateline`),
+  KEY `invisible` (`invisible`),
+  KEY `displayorder` (`tid`,`invisible`,`dateline`),
+  KEY `first` (`tid`,`first`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

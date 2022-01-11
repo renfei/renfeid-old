@@ -1,30 +1,35 @@
 package net.renfei.services.account;
 
-import net.renfei.discuz.repositories.DiscuzUcenterMembersDOMapper;
-import net.renfei.discuz.repositories.entity.DiscuzUcenterMembersDO;
-import net.renfei.discuz.repositories.entity.DiscuzUcenterMembersDOExample;
+import com.aliyun.oss.ServiceException;
+import net.renfei.discuz.repositories.*;
+import net.renfei.discuz.repositories.entity.*;
 import net.renfei.discuz.ucenter.client.Client;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.SecretLevelEnum;
 import net.renfei.model.auth.SignInVO;
+import net.renfei.model.auth.SignUpVO;
+import net.renfei.repositories.SysAccountKeepNameMapper;
 import net.renfei.repositories.SysAccountMapper;
-import net.renfei.repositories.model.SysAccount;
-import net.renfei.repositories.model.SysAccountExample;
-import net.renfei.repositories.model.SysVerificationCode;
+import net.renfei.repositories.model.*;
 import net.renfei.services.AccountService;
 import net.renfei.services.BaseService;
+import net.renfei.services.LeafService;
 import net.renfei.services.VerificationCodeService;
 import net.renfei.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * 账号服务
@@ -34,16 +39,41 @@ import java.util.Date;
 @Service
 public class AccountServiceImpl extends BaseService implements AccountService {
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
+    private final LeafService leafService;
     private final SysAccountMapper accountMapper;
     private final VerificationCodeService verificationCodeService;
+    private final SysAccountKeepNameMapper sysAccountKeepNameMapper;
+    private final DiscuzCommonMemberDOMapper discuzCommonMemberMapper;
     private final DiscuzUcenterMembersDOMapper discuzUcenterMembersMapper;
+    private final DiscuzCommonMemberCountDOMapper discuzCommonMemberCountMapper;
+    private final DiscuzCommonMemberStatusDOMapper discuzCommonMemberStatusMapper;
+    private final DiscuzCommonMemberProfileDOMapper discuzCommonMemberProfileMapper;
+    private final DiscuzCommonMemberFieldHomeDOMapper discuzCommonMemberFieldHomeMapper;
+    private final DiscuzCommonMemberFieldForumDOMapper discuzCommonMemberFieldForumMapper;
+    private static final Pattern SPECIAL_PATTERN = Pattern.compile("[ _`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]|\n|\r|\t");
 
-    public AccountServiceImpl(SysAccountMapper accountMapper,
+    public AccountServiceImpl(LeafService leafService,
+                              SysAccountMapper accountMapper,
                               VerificationCodeService verificationCodeService,
-                              DiscuzUcenterMembersDOMapper discuzUcenterMembersMapper) {
+                              SysAccountKeepNameMapper sysAccountKeepNameMapper,
+                              DiscuzCommonMemberDOMapper discuzCommonMemberMapper,
+                              DiscuzUcenterMembersDOMapper discuzUcenterMembersMapper,
+                              DiscuzCommonMemberCountDOMapper discuzCommonMemberCountMapper,
+                              DiscuzCommonMemberStatusDOMapper discuzCommonMemberStatusMapper,
+                              DiscuzCommonMemberProfileDOMapper discuzCommonMemberProfileMapper,
+                              DiscuzCommonMemberFieldHomeDOMapper discuzCommonMemberFieldHomeMapper,
+                              DiscuzCommonMemberFieldForumDOMapper discuzCommonMemberFieldForumMapper) {
+        this.leafService = leafService;
         this.accountMapper = accountMapper;
         this.verificationCodeService = verificationCodeService;
+        this.sysAccountKeepNameMapper = sysAccountKeepNameMapper;
+        this.discuzCommonMemberMapper = discuzCommonMemberMapper;
         this.discuzUcenterMembersMapper = discuzUcenterMembersMapper;
+        this.discuzCommonMemberCountMapper = discuzCommonMemberCountMapper;
+        this.discuzCommonMemberStatusMapper = discuzCommonMemberStatusMapper;
+        this.discuzCommonMemberProfileMapper = discuzCommonMemberProfileMapper;
+        this.discuzCommonMemberFieldHomeMapper = discuzCommonMemberFieldHomeMapper;
+        this.discuzCommonMemberFieldForumMapper = discuzCommonMemberFieldForumMapper;
     }
 
     /**
@@ -163,6 +193,154 @@ public class AccountServiceImpl extends BaseService implements AccountService {
             logger.warn("根据UserName：{}，未找到论坛用户，所以没有论坛登录脚本。", account.getUserName());
         }
         return user;
+    }
+
+    /**
+     * 注册
+     *
+     * @param signUpVO 注册请求对象
+     * @param request  请求对象
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void signUp(SignUpVO signUpVO, HttpServletRequest request) throws PasswordUtils.CannotPerformOperationException {
+        if (ObjectUtils.isEmpty(signUpVO.getUserName().trim())) {
+            throw new ServiceException("用户名不能为空。");
+        }
+        if (signUpVO.getUserName().trim().getBytes().length < 4) {
+            throw new ServiceException("用户名长度过短，请重起一个名字吧。");
+        }
+        if (ObjectUtils.isEmpty(signUpVO.getEmail().trim())) {
+            throw new ServiceException("电子邮箱不能为空。");
+        }
+        if (StringUtils.isEmail(signUpVO.getUserName().trim())) {
+            throw new ServiceException("您不能使用电子邮件地址作为您的用户名。");
+        }
+        if (StringUtils.isChinaPhone(signUpVO.getUserName().trim())) {
+            throw new ServiceException("您不能使用手机号码作为您的用户名，注册成功后您可以绑定您的手机号码。");
+        }
+        if (StringUtils.isDomain(signUpVO.getUserName().trim())) {
+            throw new ServiceException("用户名格式不正确，请换个用户名试试。");
+        }
+        if (SPECIAL_PATTERN.matcher(signUpVO.getUserName().trim()).find()) {
+            throw new ServiceException("用户名包含非法字符，请重起一个名字吧。");
+        }
+        if (ObjectUtils.isEmpty(signUpVO.getPassword())) {
+            throw new ServiceException("密码不能为空。");
+        }
+        if (!StringUtils.isEmail(signUpVO.getEmail().trim())) {
+            throw new ServiceException("您填写的电子邮箱地址格式不正确。");
+        }
+        // 检查保留用户名
+        SysAccountKeepNameExample keepNameExample = new SysAccountKeepNameExample();
+        keepNameExample.createCriteria().andUserNameEqualTo(signUpVO.getUserName());
+        List<SysAccountKeepName> keepNameDOS = sysAccountKeepNameMapper.selectByExample(keepNameExample);
+        if (keepNameDOS != null && keepNameDOS.size() > 0) {
+            throw new ServiceException("用户名已经被占用，请换个用户名试试。");
+        }
+        // 检查用户名重复
+        SysAccountExample example = new SysAccountExample();
+        example.createCriteria().andUserNameEqualTo(signUpVO.getUserName().trim().toLowerCase());
+        SysAccount account = ListUtils.getOne(accountMapper.selectByExample(example));
+        if (account != null) {
+            throw new ServiceException("用户名已经被占用，请换个用户名试试。");
+        }
+        // 检查Email重复
+        example = new SysAccountExample();
+        example.createCriteria().andEmailEqualTo(signUpVO.getEmail().trim().toLowerCase());
+        account = ListUtils.getOne(accountMapper.selectByExample(example));
+        if (account != null) {
+            throw new ServiceException("电子邮箱地址已经被注册，您不妨直接登陆试试。");
+        }
+        account = new SysAccount();
+        account.setId(leafService.getId().getId());
+        account.setUuid(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+        account.setUserName(signUpVO.getUserName().trim().toLowerCase());
+        account.setEmail(signUpVO.getEmail().trim().toLowerCase());
+        account.setPassword(PasswordUtils.createHash(signUpVO.getPassword()));
+        account.setRegistrationDate(new Date());
+        account.setRegistrationIp(IpUtils.getIpAddress(request));
+        account.setStateCode(0);
+        accountMapper.insertSelective(account);
+        try {
+            assert SYSTEM_CONFIG != null;
+            Client client =
+                    new Client(SYSTEM_CONFIG.getUCenter().getApi(),
+                            null,
+                            SYSTEM_CONFIG.getUCenter().getKey(),
+                            SYSTEM_CONFIG.getUCenter().getAppId(),
+                            SYSTEM_CONFIG.getUCenter().getConnect());
+            client.ucUserRegister(account.getUserName(), UUID.randomUUID().toString(), account.getEmail());
+            // 向Discuz表里插入用户
+            DiscuzUcenterMembersDOExample discuzUcenterMembersExample = new DiscuzUcenterMembersDOExample();
+            discuzUcenterMembersExample.createCriteria().andUsernameEqualTo(account.getUserName());
+            DiscuzUcenterMembersDO discuzUcenterMembers = ListUtils.getOne(discuzUcenterMembersMapper.selectByExample(discuzUcenterMembersExample));
+            if (discuzUcenterMembers != null) {
+                DiscuzCommonMemberDO commonMemberDO = new DiscuzCommonMemberDO();
+                commonMemberDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberDO.setEmail(signUpVO.getEmail().trim().toLowerCase());
+                commonMemberDO.setUsername(signUpVO.getUserName().trim().toLowerCase());
+                commonMemberDO.setGroupid((short) 10);
+                commonMemberDO.setRegdate((int) DateUtils.getUnixTimestamp());
+                commonMemberDO.setTimeoffset("9999");
+                commonMemberDO.setEmailstatus(1);
+                discuzCommonMemberMapper.insertSelective(commonMemberDO);
+                DiscuzCommonMemberCountDO commonMemberCountDO = new DiscuzCommonMemberCountDO();
+                commonMemberCountDO.setUid(discuzUcenterMembers.getUid());
+                discuzCommonMemberCountMapper.insertSelective(commonMemberCountDO);
+                DiscuzCommonMemberFieldForumDOWithBLOBs commonMemberFieldForumDO = new DiscuzCommonMemberFieldForumDOWithBLOBs();
+                commonMemberFieldForumDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberFieldForumDO.setMedals("");
+                commonMemberFieldForumDO.setSightml("");
+                commonMemberFieldForumDO.setGroupterms("");
+                commonMemberFieldForumDO.setGroups("");
+                discuzCommonMemberFieldForumMapper.insertSelective(commonMemberFieldForumDO);
+                DiscuzCommonMemberFieldHomeDOWithBLOBs commonMemberFieldHomeDO = new DiscuzCommonMemberFieldHomeDOWithBLOBs();
+                commonMemberFieldHomeDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberFieldHomeDO.setSpacecss("");
+                commonMemberFieldHomeDO.setBlockposition("");
+                commonMemberFieldHomeDO.setRecentnote("");
+                commonMemberFieldHomeDO.setSpacenote("");
+                commonMemberFieldHomeDO.setPrivacy("");
+                commonMemberFieldHomeDO.setFeedfriend("");
+                commonMemberFieldHomeDO.setAcceptemail("");
+                commonMemberFieldHomeDO.setMagicgift("");
+                commonMemberFieldHomeDO.setStickblogs("");
+                discuzCommonMemberFieldHomeMapper.insertSelective(commonMemberFieldHomeDO);
+                DiscuzCommonMemberProfileDOWithBLOBs commonMemberProfileDO = new DiscuzCommonMemberProfileDOWithBLOBs();
+                commonMemberProfileDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberProfileDO.setBio("");
+                commonMemberProfileDO.setInterest("");
+                commonMemberProfileDO.setField1("");
+                commonMemberProfileDO.setField2("");
+                commonMemberProfileDO.setField3("");
+                commonMemberProfileDO.setField4("");
+                commonMemberProfileDO.setField5("");
+                commonMemberProfileDO.setField6("");
+                commonMemberProfileDO.setField7("");
+                commonMemberProfileDO.setField8("");
+                discuzCommonMemberProfileMapper.insertSelective(commonMemberProfileDO);
+                DiscuzCommonMemberStatusDO commonMemberStatusDO = new DiscuzCommonMemberStatusDO();
+                commonMemberStatusDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberStatusDO.setRegip(IpUtils.getIpAddress(request));
+                commonMemberStatusDO.setLastip(IpUtils.getIpAddress(request));
+                commonMemberStatusDO.setLastvisit((int) DateUtils.getUnixTimestamp());
+                commonMemberStatusDO.setLastactivity((int) DateUtils.getUnixTimestamp());
+                commonMemberStatusDO.setLastsendmail(0);
+                commonMemberStatusDO.setInvisible(0);
+                commonMemberStatusDO.setBuyercredit((short) 0);
+                commonMemberStatusDO.setSellercredit((short) 0);
+                commonMemberStatusDO.setFavtimes(0);
+                commonMemberStatusDO.setSharetimes(0);
+                commonMemberStatusDO.setProfileprogress((byte) 0);
+                discuzCommonMemberStatusMapper.insertSelective(commonMemberStatusDO);
+            }
+        } catch (Exception exception) {
+            logger.error(exception.getMessage(), exception);
+        }
+        // 发送激活邮件
+        verificationCodeService.sendVerificationCode(true, DateUtils.nextHours(2),
+                account.getEmail(), "SIGN_UP", account, SYSTEM_CONFIG.getSiteDomainName() + "/auth/signUp/activation");
     }
 
     /**
