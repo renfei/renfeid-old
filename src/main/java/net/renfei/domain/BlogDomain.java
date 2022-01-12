@@ -24,6 +24,8 @@ import net.renfei.repositories.model.BlogPostsWithBLOBs;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.ListUtils;
 import net.renfei.utils.SentryUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
@@ -37,6 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author renfei
  */
 public final class BlogDomain {
+    private static final Logger logger = LoggerFactory.getLogger(BlogDomain.class);
     @Getter
     private final Post post;
     @Getter
@@ -49,12 +52,13 @@ public final class BlogDomain {
     private BlogCategoryMapper categoryMapper;
 
     {
-        while (ApplicationContextUtil.getBean("blogPostsMapper") != null) {
-            blogPostsMapper = (BlogPostsMapper) ApplicationContextUtil.getBean("blogPostsMapper");
+        while (ApplicationContextUtil.getBean("blogPostsMapper") == null
+                || ApplicationContextUtil.getBean("blogCategoryMapper") == null) {
+            logger.info("BlogDomain spin waiting ...");
         }
-        while (ApplicationContextUtil.getBean("blogCategoryMapper") != null) {
-            categoryMapper = (BlogCategoryMapper) ApplicationContextUtil.getBean("blogCategoryMapper");
-        }
+        blogPostsMapper = (BlogPostsMapper) ApplicationContextUtil.getBean("blogPostsMapper");
+        categoryMapper = (BlogCategoryMapper) ApplicationContextUtil.getBean("blogCategoryMapper");
+
     }
 
     /**
