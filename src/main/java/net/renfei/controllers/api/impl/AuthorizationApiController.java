@@ -3,14 +3,12 @@ package net.renfei.controllers.api.impl;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.AuthorizationApi;
 import net.renfei.domain.user.User;
+import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.StateCodeEnum;
-import net.renfei.model.auth.ReCaptchaVerify;
-import net.renfei.model.auth.ReCaptchaVerifyResponse;
-import net.renfei.model.auth.SignInVO;
-import net.renfei.model.auth.SignUpVO;
+import net.renfei.model.auth.*;
 import net.renfei.services.AccountService;
 import net.renfei.services.ReCaptchaService;
 import net.renfei.services.SysService;
@@ -169,6 +167,25 @@ public class AuthorizationApiController extends BaseController implements Author
             return APIResult.builder()
                     .code(StateCodeEnum.Error)
                     .message(StateCodeEnum.Error.getDescribe())
+                    .build();
+        }
+        return APIResult.success();
+    }
+
+    /**
+     * 账户激活接口
+     *
+     * @param signUpActivationVO
+     * @return
+     */
+    @Override
+    public APIResult doSignUpActivation(SignUpActivationVO signUpActivationVO) {
+        try {
+            accountService.activation(signUpActivationVO);
+        } catch (BusinessException e) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message(e.getMessage())
                     .build();
         }
         return APIResult.success();

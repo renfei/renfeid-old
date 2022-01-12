@@ -7,6 +7,7 @@ import net.renfei.exception.NeedU2FException;
 import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.auth.SignInVO;
+import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
 import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.SystemTypeEnum;
@@ -63,4 +64,14 @@ public interface AuthorizationApi {
     @PostMapping("signUp")
     @Operation(summary = "注册接口", tags = {"认证接口"})
     APIResult doSignUp(@RequestBody SignUpVO signUpVO);
+
+    /**
+     * 注册接口
+     *
+     * @param signUpActivationVO
+     * @return
+     */
+    @PostMapping("signUp/activation")
+    @Operation(summary = "账户激活接口", tags = {"认证接口"})
+    APIResult doSignUpActivation(@RequestBody SignUpActivationVO signUpActivationVO);
 }

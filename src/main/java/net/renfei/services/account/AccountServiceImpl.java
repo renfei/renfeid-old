@@ -9,6 +9,7 @@ import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.SecretLevelEnum;
 import net.renfei.model.auth.SignInVO;
+import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
 import net.renfei.repositories.SysAccountKeepNameMapper;
 import net.renfei.repositories.SysAccountMapper;
@@ -341,6 +342,51 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         // 发送激活邮件
         verificationCodeService.sendVerificationCode(true, DateUtils.nextHours(2),
                 account.getEmail(), "SIGN_UP", account, SYSTEM_CONFIG.getSiteDomainName() + "/auth/signUp/activation");
+    }
+
+    /**
+     * 账户激活
+     *
+     * @param signUpActivationVO
+     */
+    @Override
+    public void activation(SignUpActivationVO signUpActivationVO) {
+        if (!StringUtils.isEmail(signUpActivationVO.getEmailOrPhone())
+                && !StringUtils.isChinaPhone(signUpActivationVO.getEmailOrPhone())) {
+            // 验证的地址既不是手机也不是邮箱，直接拒绝
+            throw new BusinessException("请填写正确的邮箱或手机号");
+        }
+        SysVerificationCode verificationCode = verificationCodeService.verificationCode(signUpActivationVO.getCode(), signUpActivationVO.getEmailOrPhone(), "SIGN_UP");
+        if (verificationCode == null) {
+            // 验证码找不到，拒绝
+            throw new BusinessException("验证码错误或已过期");
+        }
+        if (!verificationCode.getCode().equals(signUpActivationVO.getCode())) {
+            // 验证码对不上，直接拒绝
+            throw new BusinessException("验证码错误或已过期");
+        }
+        // 查找对应的账户
+        if (ObjectUtils.isEmpty(verificationCode.getAccountUuid())) {
+            logger.error("验证码不包含账户UUID，无法激活账户。验证码查询结果：{}", verificationCode);
+            throw new BusinessException("验证码错误或已过期");
+        }
+        SysAccountExample example = new SysAccountExample();
+        example.createCriteria()
+                .andUuidEqualTo(verificationCode.getAccountUuid())
+                .andStateCodeEqualTo(0);
+        SysAccount account = ListUtils.getOne(accountMapper.selectByExample(example));
+        if (account == null) {
+            logger.warn("无法激活账户,UUID:{}不存在或账户状态不正确", verificationCode.getAccountUuid());
+            throw new BusinessException("验证码错误或已过期");
+        }
+        if (StringUtils.isEmail(signUpActivationVO.getEmailOrPhone())) {
+            account.setStateCode(1);
+        } else if (StringUtils.isChinaPhone(signUpActivationVO.getEmailOrPhone())) {
+            account.setStateCode(2);
+        } else {
+            throw new BusinessException("验证码错误或已过期");
+        }
+        accountMapper.updateByPrimaryKeySelective(account);
     }
 
     /**

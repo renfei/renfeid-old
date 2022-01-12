@@ -192,8 +192,6 @@
                         timeout: 20000,
                         dataType: 'JSON',
                         contentType: "application/json;charset=utf-8",
-                        beforeSend: function (xhr) {
-                        },
                         success: function (data, textStatus, jqXHR) {
                             $("#signInBtn").val('登 录');
                             $("#signInBtn").attr('disabled', false);

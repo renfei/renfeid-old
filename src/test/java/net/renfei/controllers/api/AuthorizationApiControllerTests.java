@@ -5,12 +5,15 @@ import net.renfei.ApplicationTests;
 import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.auth.SignInVO;
+import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
 import net.renfei.utils.JacksonUtil;
 import net.renfei.utils.RSAUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -92,7 +95,7 @@ public class AuthorizationApiControllerTests extends ApplicationTests {
     public void doSignUpTest() throws Exception {
         SignUpVO signUpVO = new SignUpVO();
         signUpVO.setUserName("unittest");
-        signUpVO.setEmail("i@renfei.net");
+        signUpVO.setEmail("unittesting@163.com");
         signUpVO.setPassword("QSZv+HMaiJLT6YFS8yZrlg==");
         signUpVO.setKeyUuid("a3c2a92a-08ce-4598-80ef-55e0366b4484");
         signUpVO.setReCAPTCHAToken("03AGdBq26c-0yL1qQkAXinEUyCsN24-FMSKQFUzWe0VpxS0Uy4odaoaM-0j5_bSekK2RPleQp7mtrReoqh-JDBCCcziTOebXeQ7McgJYbsb4qQJFWJywBtJerDIdGqjojB91WHk5VfLWlLvL1I90rnDw_BIoKAdy4K60bnCvBGBF8W_vj9vLsn5cXSrF_fyYsSbb2OHS4H1TKbEKZXtyz8ByTm174RsOCItupc4JXRIeYGJUG41bhdwBnkIwNX4R9FdLes_0Ah7n_13W9b82fJ20001O2bOLTofcYXhf0jjQytdj0olW2HfCK4-sq2GLOn1GTWu0IIb870MuW3JWAByDc-jdoAeNEXQFL_E-feDfm9Y5aBgb_sbI0Id-Nn8wVOrgJZr1GEGuoTNshiV9v_yNQDfc3Gv5kof2FdphH_nkt9CqJXVVrheK1724ZFPt0ZVPu9iN0fJYGhBwLGTJhFvyuL6XVVdjEMjQ");
@@ -103,5 +106,19 @@ public class AuthorizationApiControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200));
+    }
+
+    @Test
+    public void doSignUpActivationTest() throws Exception {
+        SignUpActivationVO signUpActivationVO = new SignUpActivationVO();
+        signUpActivationVO.setEmailOrPhone("i@renfei.net");
+        signUpActivationVO.setCode("1234");
+        signUpActivationVO.setReCAPTCHAToken("03AGdBq26c-0yL1qQkAXinEUyCsN24-FMSKQFUzWe0VpxS0Uy4odaoaM-0j5_bSekK2RPleQp7mtrReoqh-JDBCCcziTOebXeQ7McgJYbsb4qQJFWJywBtJerDIdGqjojB91WHk5VfLWlLvL1I90rnDw_BIoKAdy4K60bnCvBGBF8W_vj9vLsn5cXSrF_fyYsSbb2OHS4H1TKbEKZXtyz8ByTm174RsOCItupc4JXRIeYGJUG41bhdwBnkIwNX4R9FdLes_0Ah7n_13W9b82fJ20001O2bOLTofcYXhf0jjQytdj0olW2HfCK4-sq2GLOn1GTWu0IIb870MuW3JWAByDc-jdoAeNEXQFL_E-feDfm9Y5aBgb_sbI0Id-Nn8wVOrgJZr1GEGuoTNshiV9v_yNQDfc3Gv5kof2FdphH_nkt9CqJXVVrheK1724ZFPt0ZVPu9iN0fJYGhBwLGTJhFvyuL6XVVdjEMjQ");
+        this.mockMvc.perform(post("/-/api/auth/signUp/activation")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(JacksonUtil.obj2String(signUpActivationVO)))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

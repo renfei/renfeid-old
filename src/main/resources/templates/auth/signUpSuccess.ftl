@@ -19,7 +19,9 @@
             <h4 style="font-size: 14px;">接下来您还需要一些验证工作。</h4>
         </div>
         <div class="border rounded mt-3 p-4" style="font-size: 14px;">
-            为了确保账户的真实有效，我们向您注册时所填写的邮箱发送了一封激活确认邮件，请您到您的邮箱中点击激活链接来启用您的账户。
+            为了确保账户的真实有效，我们向您注册时所填写的邮箱发送了一封激活确认邮件或给您的手机发送了一条短信，
+            请您到您的邮箱中点击激活链接来启用您的账户，
+            手机短信注册可访问<a href="/auth/signUp/activation" target="_blank">/auth/signUp/activation</a> 激活您的账户。
         </div>
     </div>
     <@footer pageView></@footer>

@@ -99,8 +99,6 @@
                         timeout: 5000,
                         dataType: 'JSON',
                         contentType: "application/json;charset=utf-8",
-                        beforeSend: function (xhr) {
-                        },
                         success: function (data, textStatus, jqXHR) {
                             $("#signUpBtn").val('创 建');
                             $("#signUpBtn").attr('disabled', false);

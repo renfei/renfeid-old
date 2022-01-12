@@ -1,5 +1,6 @@
 package net.renfei.controllers.auth;
 
+import com.aliyun.oss.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
@@ -7,6 +8,7 @@ import net.renfei.domain.user.User;
 import net.renfei.model.HomePageView;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.AccountService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
@@ -77,6 +79,20 @@ public class AuthPageController extends BaseController {
         pageView.getPageHead().setTitle("您已成功创建了账户 - " + SYSTEM_CONFIG.getSiteName());
         mv.addObject("pageView", pageView);
         mv.setViewName("auth/signUpSuccess");
+        return mv;
+    }
+
+    /**
+     * 注册邮箱验证页面
+     */
+    @GetMapping("signUp/activation")
+    public ModelAndView signUpActivation(ModelAndView mv, @RequestParam(value = "code", required = false) String code) {
+        HomePageView<String> pageView = buildPageView(HomePageView.class, code);
+        assert SYSTEM_CONFIG != null;
+        pageView.getPageHead().setTitle("激活您的账户 - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("pageView", pageView);
+        mv.addObject("ReCAPTCHA_Client_Key", SYSTEM_CONFIG.getGoogle().getReCAPTCHA().getClientKey());
+        mv.setViewName("auth/signUpActivation");
         return mv;
     }
 

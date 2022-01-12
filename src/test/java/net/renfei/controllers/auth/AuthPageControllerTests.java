@@ -33,6 +33,13 @@ public class AuthPageControllerTests extends ApplicationTests {
     }
 
     @Test
+    public void signUpActivationPageTest() throws Exception {
+        this.mockMvc.perform(get("/auth/signUp/activation"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void signOutTest() throws Exception {
         this.mockMvc.perform(get("/auth/signOut"))
                 .andDo(print())

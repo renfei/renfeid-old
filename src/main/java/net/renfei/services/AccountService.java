@@ -4,6 +4,7 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.auth.SignInVO;
+import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
 import net.renfei.utils.PasswordUtils;
 
@@ -31,6 +32,13 @@ public interface AccountService {
      * @param request  请求对象
      */
     void signUp(SignUpVO signUpVO, HttpServletRequest request) throws PasswordUtils.CannotPerformOperationException;
+
+    /**
+     * 账户激活
+     *
+     * @param signUpActivationVO
+     */
+    void activation(SignUpActivationVO signUpActivationVO);
 
     /**
      * 登出，返回Discuz的登出代码
