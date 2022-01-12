@@ -45,12 +45,16 @@ public final class BlogDomain {
     private final Category category;
     @Getter
     private final List<Comment> commentList;
-    private final BlogPostsMapper blogPostsMapper;
-    private final BlogCategoryMapper categoryMapper;
+    private BlogPostsMapper blogPostsMapper;
+    private BlogCategoryMapper categoryMapper;
 
     {
-        blogPostsMapper = (BlogPostsMapper) ApplicationContextUtil.getBean("blogPostsMapper");
-        categoryMapper = (BlogCategoryMapper) ApplicationContextUtil.getBean("blogCategoryMapper");
+        while (ApplicationContextUtil.getBean("blogPostsMapper") != null) {
+            blogPostsMapper = (BlogPostsMapper) ApplicationContextUtil.getBean("blogPostsMapper");
+        }
+        while (ApplicationContextUtil.getBean("blogCategoryMapper") != null) {
+            categoryMapper = (BlogCategoryMapper) ApplicationContextUtil.getBean("blogCategoryMapper");
+        }
     }
 
     /**
