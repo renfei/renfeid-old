@@ -14,8 +14,8 @@ initialize_environmen_jihu:
   stage: initialize
   script:
     - yum install -y wget unzip
-    - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
-    - wget https://gitlab.cn/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
+    - wget https://jihulab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
+    - wget https://jihulab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
     - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   artifacts:
@@ -24,7 +24,7 @@ initialize_environmen_jihu:
     paths:
       - src/main/resources/ip2location/
   rules:
-    - if: "$CI_SERVER_URL =~ /gitlab.cn/"
+    - if: "$CI_SERVER_URL =~ /jihulab.com/"
 
 initialize_environmen_gitlab:
   stage: initialize
@@ -54,7 +54,7 @@ test_job_jh:
   services:
     - mariadb:10.6.5
     - redis:6.0.1
-    - name: "registry.gitlab.cn/renfei/elasticsearch:7.16.2"
+    - name: "registry.jihulab.com/renfei/elasticsearch:7.16.2"
       alias: "elasticsearch"
       command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
   variables:
@@ -75,7 +75,7 @@ test_job_jh:
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
     - mvn -P gitlab --batch-mode test --file pom.xml
   rules:
-    - if: "$CI_SERVER_URL =~ /gitlab.cn/"
+    - if: "$CI_SERVER_URL =~ /jihulab.com/"
 
 test_job_gitlab:
   stage: test
