@@ -52,6 +52,8 @@
 
 [Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0)
 
+虽然我这点代码在开源生态里就是芝麻渣渣，但是出于对各路大佬的尊重和敬仰，我同样遵守开源圈的 License 协议，我选用 Apache-2.0 License。
+
 由于 MySQL 是 GPL License，所以已经移除所有 MySQL 的依赖，全部使用 MariaDB 来兼容 MySQL。
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frenfei%2Frenfeid.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frenfei%2Frenfeid?ref=badge_large)

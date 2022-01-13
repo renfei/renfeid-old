@@ -147,7 +147,7 @@
                                 <a class="nav-link dropdown-toggle" href="" style=""
                                    data-toggle="dropdown"
                                    style="font-size: 14px;padding-right: .5rem;padding-left: .5rem;"
-                                   aria-expanded="false">${pageView.pageHeader.user.userName!}</a>
+                                   aria-expanded="false">${pageView.pageHeader.user.userName!?html}</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="/account/manage" style="">
                                         管理账户
