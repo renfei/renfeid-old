@@ -71,7 +71,7 @@ jobs:
         run: |
           mkdir ip2location
           wget -P ./ip2location https://raw.githubusercontent.com/renfei/ip2location/master/IP2LOCATION-LITE-DB11.BIN.ZIP
-          wget -P ./ip2location https://raw.githubusercontent.com/renfei/ip2location/master/IP2LOCATION-LITE-DB11.BIN.ZIP
+          wget -P ./ip2location https://raw.githubusercontent.com/renfei/ip2location/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
           unzip -o ./ip2location/IP2LOCATION-LITE-DB11.BIN.ZIP -d ./src/main/resources/ip2location/
           unzip -o ./ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d ./src/main/resources/ip2location/
 
