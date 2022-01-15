@@ -148,7 +148,7 @@ release_jh:
   before_script:
     - yum install -y yum-utils
     - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    - yum install docker-ce docker-ce-cli containerd.io
+    - yum install -y docker-ce docker-ce-cli containerd.io
     - systemctl start docker
     - rm -rf config
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
@@ -168,7 +168,7 @@ release_gitlab:
   before_script:
     - yum install -y yum-utils
     - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    - yum install docker-ce docker-ce-cli containerd.io
+    - yum install -y docker-ce docker-ce-cli containerd.io
     - systemctl start docker
     - rm -rf config
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
