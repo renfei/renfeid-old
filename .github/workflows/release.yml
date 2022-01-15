@@ -72,13 +72,8 @@ jobs:
           mkdir ip2location
           wget -P ./ip2location https://github.com/renfei/ip2location/releases/download/2021.12.05/IP2LOCATION-LITE-DB11.BIN
           wget -P ./ip2location https://github.com/renfei/ip2location/releases/download/2021.12.05/IP2LOCATION-LITE-DB11.IPV6.BIN
-          ls -l ./ip2location
-
-      - name: Pull Config File
-        run: |
-          rm -rf ./config
-          git clone https://cd-robot:${{ secrets.CD_ROBOT_TOKEN }}@github.com/renfei/config.git
-          cp ./config/renfeid/application-prod.yml ./src/main/resources/
+          unzip -o ./ip2location/IP2LOCATION-LITE-DB11.BIN.ZIP -d ./src/main/resources/ip2location/
+          unzip -o ./ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d ./src/main/resources/ip2location/
 
       - name: Build And Push Docker Image
         run: |
