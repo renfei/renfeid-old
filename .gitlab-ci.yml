@@ -20,7 +20,7 @@ initialize:
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
     - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
-    - cp ./config/renfeid/ ./src/main/resources/
+    - cp -rf ./config/renfeid/* ./src/main/resources/
   artifacts:
     expire_in: 1d
     when: on_success
