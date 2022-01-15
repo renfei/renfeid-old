@@ -11,7 +11,7 @@ cache:
   paths:
     - ".m2/repository/"
 
-initialize_environmen_jihu:
+initialize:
   stage: initialize
   script:
     - yum install -y wget unzip
@@ -36,13 +36,13 @@ compile:
     paths:
       - src/main/resources/ip2location/
 
-test_job:
+test:
   stage: test
   image: centos:centos7
   services:
     - mariadb:10.6.5
     - redis:6.0.1
-    - name: "$CI_REGISTRY_IMAGE/$CI_PROJECT_NAMESPACE/elasticsearch:7.16.2"
+    - name: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/elasticsearch:7.16.2"
       alias: "elasticsearch"
       command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
   variables:
@@ -84,7 +84,7 @@ package:
       - /target/
       - /src/main/resources/
 
-release_jh:
+release:
   stage: release
   image: docker:latest
   rules:
@@ -94,9 +94,9 @@ release_jh:
   before_script:
     - dicker info
   script:
-    - docker build -t $CI_REGISTRY_IMAGE/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_TAG .
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG .
     - docker login --username=$CI_REGISTRY_USER --password=$CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
-    - docker push $CI_REGISTRY_IMAGE/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
   dependencies:
     - package
   environment:
