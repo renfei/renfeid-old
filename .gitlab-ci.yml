@@ -78,7 +78,7 @@ package:
     - cp ./config/renfeid/application-prod.yml ./src/main/resources/
     - ./mvnw clean package -Dmaven.test.skip=true -P prod
   artifacts:
-    expire_in: 1 seconds
+    expire_in: 1d
     when: on_success
     paths:
       - /target/
