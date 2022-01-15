@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.renfei</groupId>
     <artifactId>renfeid</artifactId>
-    <version>0.0.24</version>
+    <version>0.0.25</version>
     <name>renfeid</name>
     <description>The RenFei Blog</description>
     <url>https://www.renfei.net</url>

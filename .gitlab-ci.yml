@@ -4,6 +4,7 @@ stages:
   - initialize
   - compile
   - test
+  - package
   - release
 
 cache:
@@ -14,8 +15,8 @@ initialize_environmen_jihu:
   stage: initialize
   script:
     - yum install -y wget unzip
-    - wget https://jihulab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
-    - wget https://jihulab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
+    - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
+    - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
     - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
   artifacts:
@@ -23,24 +24,6 @@ initialize_environmen_jihu:
     when: on_success
     paths:
       - src/main/resources/ip2location/
-  rules:
-    - if: "$CI_SERVER_URL =~ /jihulab.com/"
-
-initialize_environmen_gitlab:
-  stage: initialize
-  script:
-    - yum install -y wget unzip
-    - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
-    - wget https://gitlab.com/renfei/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
-    - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
-    - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
-  artifacts:
-    expire_in: 1d
-    when: on_success
-    paths:
-      - src/main/resources/ip2location/
-  rules:
-    - if: "$CI_SERVER_URL =~ /gitlab.com/"
 
 compile:
   stage: compile
@@ -53,15 +36,13 @@ compile:
     paths:
       - src/main/resources/ip2location/
 
-test_job_jh:
+test_job:
   stage: test
   image: centos:centos7
-  rules:
-    - if: "$CI_SERVER_URL =~ /jihulab.com/"
   services:
     - mariadb:10.6.5
     - redis:6.0.1
-    - name: "registry.jihulab.com/renfei/elasticsearch:7.16.2"
+    - name: "$CI_REGISTRY_IMAGE/$CI_PROJECT_NAMESPACE/elasticsearch:7.16.2"
       alias: "elasticsearch"
       command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
   variables:
@@ -74,47 +55,10 @@ test_job_jh:
     - yum install -y MariaDB-server galera-4 MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
     - mariadb --user=root --password="$MARIADB_ROOT_PASSWORD" --host=mariadb $MARIADB_DATABASE
       < environment/db/renfeid.sql --default-character-set=utf8
-    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
-      -O /etc/yum.repos.d/epel-apache-maven.repo
-    - yum -y install apache-maven
   script:
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
-    - mvn -P gitlab --batch-mode test --file pom.xml
-  artifacts:
-    expire_in: 1d
-    when: on_success
-    paths:
-      - src/main/resources/ip2location/
-
-test_job_gitlab:
-  stage: test
-  image: centos:centos7
-  rules:
-    - if: "$CI_SERVER_URL =~ /gitlab.com/"
-  services:
-    - mariadb:10.6.5
-    - redis:6.0.1
-    - name: "registry.gitlab.com/renfei/elasticsearch:7.16.2"
-      alias: "elasticsearch"
-      command: ["bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node"]
-  variables:
-    MARIADB_DATABASE: renfeid
-    MARIADB_ROOT_PASSWORD: root
-  before_script:
-    - yum install -y wget java-1.8.0-openjdk* which git
-    - curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash
-    - rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-    - yum install -y MariaDB-server galera-4 MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
-    - mariadb --user=root --password="$MARIADB_ROOT_PASSWORD" --host=mariadb $MARIADB_DATABASE
-      < environment/db/renfeid.sql --default-character-set=utf8
-    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
-      -O /etc/yum.repos.d/epel-apache-maven.repo
-    - yum -y install apache-maven
-  script:
-    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
-    - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
-    - mvn -P gitlab --batch-mode test --file pom.xml
+    - ./mvnw test -P gitlab
   artifacts:
     expire_in: 1d
     when: on_success
@@ -140,47 +84,40 @@ include:
     artifacts:
       expire_in: 1d
 
+package:
+  stage: package
+  image: centos:centos7
+  rules:
+    - if: $CI_COMMIT_TAG
+  before_script:
+    - yum install -y java-1.8.0-openjdk* which git
+  script:
+    - rm -rf config
+    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
+    - cp ./config/renfeid/application-prod.yml ./src/main/resources/
+    - ./mvnw clean package -Dmaven.test.skip=true -P prod
+  artifacts:
+    expire_in: 0 seconds
+    when: on_success
+    paths:
+      - /target/
+      - /src/main/resources/
+
 release_jh:
   stage: release
   image: docker:latest
   rules:
-    - if: "$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/"
+    - if: $CI_COMMIT_TAG
   services:
     - docker:dind
   before_script:
-    - yum install -y wget java-1.8.0-openjdk* which git
-    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
-      -O /etc/yum.repos.d/epel-apache-maven.repo
-    - yum -y install apache-maven
-    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
-    - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
+    - dicker info
   script:
-    - ./mvnw clean package -Dmaven.test.skip=true -P prod
-    - chmod +x ./environment/shell/buildDockerPushJiHu.sh
-    - ./environment/shell/buildDockerPushJiHu.sh "$DOCKER_REGISTRY_PASSWORD"
-  environment:
-    name: production
-    url: https://www.renfei.net/
-
-release_gitlab:
-  stage: release
-  image: docker:latest
-  rules:
-    - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
-  services:
-    - docker:dind
-  before_script:
-    - yum install -y wget java-1.8.0-openjdk* which git
-    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
-      -O /etc/yum.repos.d/epel-apache-maven.repo
-    - yum -y install apache-maven
-    - rm -rf config
-    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
-    - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
-  script:
-    - ./mvnw clean package -Dmaven.test.skip=true -P prod
-    - chmod +x ./environment/shell/buildDockerPushGitLab.sh
-    - ./environment/shell/buildDockerPushGitLab.sh "$DOCKER_REGISTRY_PASSWORD"
+    - docker build -t $CI_REGISTRY_IMAGE/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_TAG .
+    - docker login --username=$CI_REGISTRY_USER --password=$CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
+    - docker push $CI_REGISTRY_IMAGE/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  dependencies:
+    - package
   environment:
     name: production
     url: https://www.renfei.net/
