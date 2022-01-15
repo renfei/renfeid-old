@@ -76,6 +76,7 @@ jobs:
 
       - name: Pull Config File
         run: |
+          rm -rf ./config
           git clone https://cd-robot:${{ secrets.CD_ROBOT_TOKEN }}@github.com/renfei/config.git
           cp ./config/renfeid/application-prod.yml ./src/main/resources/
 

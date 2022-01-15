@@ -118,14 +118,14 @@ include:
 release_jh:
   stage: release
   rules:
-    - if: $CI_COMMIT_TAG
-    - if: "$CI_SERVER_URL =~ /jihulab.com/"
+    - if: "$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/"
   release:
     name: 'Release $CI_COMMIT_TAG'
     description: 'Created using the release-cli $EXTRA_DESCRIPTION'
     tag_name: '$CI_COMMIT_TAG'
     ref: '$CI_COMMIT_TAG'
   script:
+    - chmod +x ./environment/shell/buildDockerPushJiHu.sh
     - ./environment/shell/buildDockerPushJiHu.sh "$DOCKER_REGISTRY_PASSWORD"
   environment:
     name: production
@@ -134,14 +134,14 @@ release_jh:
 release_gitlab:
   stage: release
   rules:
-    - if: $CI_COMMIT_TAG
-    - if: "$CI_SERVER_URL =~ /gitlab.com/"
+    - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   release:
     name: 'Release $CI_COMMIT_TAG'
     description: 'Created using the release-cli $EXTRA_DESCRIPTION'
     tag_name: '$CI_COMMIT_TAG'
     ref: '$CI_COMMIT_TAG'
   script:
+    - chmod +x ./environment/shell/buildDockerPushGitLab.sh
     - ./environment/shell/buildDockerPushGitLab.sh "$DOCKER_REGISTRY_PASSWORD"
   environment:
     name: production
