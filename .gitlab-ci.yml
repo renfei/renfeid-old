@@ -65,25 +65,6 @@ test_job:
     paths:
       - src/main/resources/ip2location/
 
-sast:
-  stage: test
-  artifacts:
-    expire_in: 1d
-
-include:
-  - template: Security/SAST.gitlab-ci.yml
-    artifacts:
-      expire_in: 1d
-  - template: Security/SAST-IaC.latest.gitlab-ci.yml
-    artifacts:
-      expire_in: 1d
-  - template: Security/Dependency-Scanning.gitlab-ci.yml
-    artifacts:
-      expire_in: 1d
-  - template: Security/Secret-Detection.gitlab-ci.yml
-    artifacts:
-      expire_in: 1d
-
 package:
   stage: package
   image: centos:centos7
