@@ -82,7 +82,7 @@ jobs:
 
       - name: Build And Push Docker Image
         run: |
-          chmod +x ./environment/shell/buildDockerPush.sh
+          chmod +x ./environment/shell/buildDockerPushGitHub.sh
           ./environment/shell/buildDockerPushGitHub.sh "${{ secrets.docker_registry_password }}"
 
       - name: Sentry Release
