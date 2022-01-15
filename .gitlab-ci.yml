@@ -51,6 +51,8 @@ compile:
 test_job_jh:
   stage: test
   image: centos:centos7
+  rules:
+    - if: "$CI_SERVER_URL =~ /jihulab.com/"
   services:
     - mariadb:10.6.5
     - redis:6.0.1
@@ -74,12 +76,17 @@ test_job_jh:
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
     - mvn -P gitlab --batch-mode test --file pom.xml
-  rules:
-    - if: "$CI_SERVER_URL =~ /jihulab.com/"
+  artifacts:
+    expire_in: 1d
+    when: on_success
+    paths:
+      - src/main/resources/
 
 test_job_gitlab:
   stage: test
   image: centos:centos7
+  rules:
+    - if: "$CI_SERVER_URL =~ /gitlab.com/"
   services:
     - mariadb:10.6.5
     - redis:6.0.1
@@ -103,8 +110,11 @@ test_job_gitlab:
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
     - mvn -P gitlab --batch-mode test --file pom.xml
-  rules:
-    - if: "$CI_SERVER_URL =~ /gitlab.com/"
+  artifacts:
+    expire_in: 1d
+    when: on_success
+    paths:
+      - src/main/resources/
 
 sast:
   stage: test
@@ -117,8 +127,14 @@ include:
 
 release_jh:
   stage: release
+  image: centos:centos7
   rules:
     - if: "$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/"
+  before_script:
+    - yum install -y yum-utils
+    - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    - yum install docker-ce docker-ce-cli containerd.io
+    - systemctl start docker
   script:
     - chmod +x ./environment/shell/buildDockerPushJiHu.sh
     - ./environment/shell/buildDockerPushJiHu.sh "$DOCKER_REGISTRY_PASSWORD"
@@ -128,8 +144,14 @@ release_jh:
 
 release_gitlab:
   stage: release
+  image: centos:centos7
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
+  before_script:
+    - yum install -y yum-utils
+    - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    - yum install docker-ce docker-ce-cli containerd.io
+    - systemctl start docker
   script:
     - chmod +x ./environment/shell/buildDockerPushGitLab.sh
     - ./environment/shell/buildDockerPushGitLab.sh "$DOCKER_REGISTRY_PASSWORD"
