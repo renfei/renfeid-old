@@ -68,7 +68,7 @@ package:
     expire_in: 1d
     when: on_success
     paths:
-      - /target/
+      - target/
       - src/main/resources/ip2location/
 
 release:
