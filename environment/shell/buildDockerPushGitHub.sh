@@ -5,14 +5,14 @@
 ## 极狐地址：registry.jihulab.com/renfei/renfeid
 ## GitLab地址：registry.gitlab.com/renfei/renfeid
 ## GitHub地址：ghcr.io/renfei/renfeid
-## 公网地址：registry.cn-hangzhou.aliyuncs.com/privately/renfeid
-## 专有网络：registry-vpc.cn-hangzhou.aliyuncs.com/privately/renfeid
-## 经典网络：registry-internal.cn-hangzhou.aliyuncs.com/privately/renfeid
+## 公网地址：registry.cn-hangzhou.aliyuncs.com/privately/renfei
+## 专有网络：registry-vpc.cn-hangzhou.aliyuncs.com/privately/renfei
+## 经典网络：registry-internal.cn-hangzhou.aliyuncs.com/privately/renfei
 #########################################
 PASSWORD=$1
 PROJECT_VERSION=$(mvn -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec -q)
-REGISTRY=registry.cn-hangzhou.aliyuncs.com
-NAMESPACES=privately
+REGISTRY=ghcr.io
+NAMESPACES=renfei
 REPOSITORIES=renfeid
 #########################################
 echo "#########################################"

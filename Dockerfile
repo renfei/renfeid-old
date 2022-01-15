@@ -23,7 +23,7 @@ RUN set -ex; \
 
 ARG JAR_FILE=target/*.jar
 # git clone https://github.com/renfei/ip2location.git
-ARG IP2LocationBinFile=ip2location/*.BIN
+ARG IP2LocationBinFile=src/main/resources/ip2location/*.BIN
 
 RUN mkdir /opt/renfeid/ip2location
 
