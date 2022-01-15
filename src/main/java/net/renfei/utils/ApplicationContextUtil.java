@@ -26,7 +26,9 @@ public class ApplicationContextUtil {
         if ("systemConfig".equals(beanName)) {
             return systemConfig;
         }
-        for (int i = 0; i < MAX_ATTEMPTS || applicationContext.getBean(beanName) == null; i++) {
+        for (int i = 0;
+             i < MAX_ATTEMPTS && (applicationContext == null || applicationContext.getBean(beanName) == null);
+             i++) {
             Thread.yield();
         }
         return applicationContext != null ? applicationContext.getBean(beanName) : null;
