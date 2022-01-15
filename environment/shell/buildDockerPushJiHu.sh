@@ -22,7 +22,6 @@ echo "#########################################"
 if [ "$PASSWORD" == "" ]; then
   read -p "请输入 Docker 仓库密码：" PASSWORD
 fi
-mvn clean package -Dmaven.test.skip=true -P prod
 echo "#########################################"
 echo "# Docker 构建开始 >>>>"
 echo "#########################################"

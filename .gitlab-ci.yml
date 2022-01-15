@@ -142,7 +142,7 @@ include:
 
 release_jh:
   stage: release
-  image: centos:centos7
+  image: docker:latest
   rules:
     - if: "$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/"
   services:
@@ -155,6 +155,7 @@ release_jh:
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
   script:
+    - ./mvnw clean package -Dmaven.test.skip=true -P prod
     - chmod +x ./environment/shell/buildDockerPushJiHu.sh
     - ./environment/shell/buildDockerPushJiHu.sh "$DOCKER_REGISTRY_PASSWORD"
   environment:
@@ -163,7 +164,7 @@ release_jh:
 
 release_gitlab:
   stage: release
-  image: centos:centos7
+  image: docker:latest
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   services:
@@ -177,6 +178,7 @@ release_gitlab:
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
   script:
+    - ./mvnw clean package -Dmaven.test.skip=true -P prod
     - chmod +x ./environment/shell/buildDockerPushGitLab.sh
     - ./environment/shell/buildDockerPushGitLab.sh "$DOCKER_REGISTRY_PASSWORD"
   environment:
