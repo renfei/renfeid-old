@@ -145,12 +145,13 @@ release_jh:
   image: centos:centos7
   rules:
     - if: "$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/"
+  services:
+    - docker:dind
   before_script:
-    - yum install -y yum-utils
-    - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    - yum install -y docker-ce docker-ce-cli containerd.io
-    - systemctl start docker
-    - rm -rf config
+    - yum install -y wget java-1.8.0-openjdk* which git
+    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
+      -O /etc/yum.repos.d/epel-apache-maven.repo
+    - yum -y install apache-maven
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
   script:
@@ -165,11 +166,13 @@ release_gitlab:
   image: centos:centos7
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
+  services:
+    - docker:dind
   before_script:
-    - yum install -y yum-utils
-    - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    - yum install -y docker-ce docker-ce-cli containerd.io
-    - systemctl start docker
+    - yum install -y wget java-1.8.0-openjdk* which git
+    - wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
+      -O /etc/yum.repos.d/epel-apache-maven.repo
+    - yum -y install apache-maven
     - rm -rf config
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
     - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
