@@ -48,14 +48,10 @@ public final class BlogDomain {
     private final Category category;
     @Getter
     private final List<Comment> commentList;
-    private BlogPostsMapper blogPostsMapper;
-    private BlogCategoryMapper categoryMapper;
+    private final BlogPostsMapper blogPostsMapper;
+    private final BlogCategoryMapper categoryMapper;
 
     {
-        while (ApplicationContextUtil.getBean("blogPostsMapper") == null
-                || ApplicationContextUtil.getBean("blogCategoryMapper") == null) {
-            logger.info("BlogDomain spin waiting ...");
-        }
         blogPostsMapper = (BlogPostsMapper) ApplicationContextUtil.getBean("blogPostsMapper");
         categoryMapper = (BlogCategoryMapper) ApplicationContextUtil.getBean("blogCategoryMapper");
 
