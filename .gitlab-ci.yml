@@ -14,27 +14,26 @@ cache:
 initialize:
   stage: initialize
   script:
-    - yum install -y wget unzip
+    - yum install -y wget unzip git
     - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
     - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
     - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
+    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
+    - cp ./config/renfeid/ ./src/main/resources/
   artifacts:
     expire_in: 1d
     when: on_success
     paths:
       - src/main/resources/ip2location/
+      - src/main/resources/application-gitlab.yml
+      - src/main/resources/application-prod.yml
 
 compile:
   stage: compile
   image: maven:3.8.4-openjdk-8
   script:
     - mvn --batch-mode compile
-  artifacts:
-    expire_in: 1d
-    when: on_success
-    paths:
-      - src/main/resources/ip2location/
 
 test:
   stage: test
@@ -49,40 +48,28 @@ test:
     MARIADB_DATABASE: renfeid
     MARIADB_ROOT_PASSWORD: root
   before_script:
-    - yum install -y wget java-1.8.0-openjdk* which git
+    - yum install -y wget java-1.8.0-openjdk* which
     - curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash
     - rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
     - yum install -y MariaDB-server galera-4 MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
     - mariadb --user=root --password="$MARIADB_ROOT_PASSWORD" --host=mariadb $MARIADB_DATABASE
       < environment/db/renfeid.sql --default-character-set=utf8
   script:
-    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
-    - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
     - ./mvnw test -P gitlab
-  artifacts:
-    expire_in: 1d
-    when: on_success
-    paths:
-      - src/main/resources/ip2location/
 
 package:
   stage: package
-  image: centos:centos7
+  image: maven:3.8.4-openjdk-8
   rules:
     - if: $CI_COMMIT_TAG
-  before_script:
-    - yum install -y java-1.8.0-openjdk* which git
   script:
-    - rm -rf config
-    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
-    - cp ./config/renfeid/application-prod.yml ./src/main/resources/
-    - ./mvnw clean package -Dmaven.test.skip=true -P prod
+    - mvn clean package -Dmaven.test.skip=true -P prod
   artifacts:
     expire_in: 1d
     when: on_success
     paths:
       - /target/
-      - /src/main/resources/
+      - src/main/resources/ip2location/
 
 release:
   stage: release
