@@ -47,6 +47,11 @@ compile:
   image: maven:3.8.4-openjdk-8
   script:
     - mvn --batch-mode compile
+  artifacts:
+    expire_in: 1d
+    when: on_success
+    paths:
+      - src/main/resources/ip2location/
 
 test_job_jh:
   stage: test
@@ -80,7 +85,7 @@ test_job_jh:
     expire_in: 1d
     when: on_success
     paths:
-      - src/main/resources/
+      - src/main/resources/ip2location/
 
 test_job_gitlab:
   stage: test
@@ -114,16 +119,26 @@ test_job_gitlab:
     expire_in: 1d
     when: on_success
     paths:
-      - src/main/resources/
+      - src/main/resources/ip2location/
 
 sast:
   stage: test
+  artifacts:
+    expire_in: 1d
 
 include:
   - template: Security/SAST.gitlab-ci.yml
+    artifacts:
+      expire_in: 1d
   - template: Security/SAST-IaC.latest.gitlab-ci.yml
+    artifacts:
+      expire_in: 1d
   - template: Security/Dependency-Scanning.gitlab-ci.yml
+    artifacts:
+      expire_in: 1d
   - template: Security/Secret-Detection.gitlab-ci.yml
+    artifacts:
+      expire_in: 1d
 
 release_jh:
   stage: release
@@ -135,6 +150,9 @@ release_jh:
     - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     - yum install docker-ce docker-ce-cli containerd.io
     - systemctl start docker
+    - rm -rf config
+    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
+    - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
   script:
     - chmod +x ./environment/shell/buildDockerPushJiHu.sh
     - ./environment/shell/buildDockerPushJiHu.sh "$DOCKER_REGISTRY_PASSWORD"
@@ -152,6 +170,9 @@ release_gitlab:
     - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     - yum install docker-ce docker-ce-cli containerd.io
     - systemctl start docker
+    - rm -rf config
+    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
+    - cp ./config/renfeid/application-gitlab.yml ./src/main/resources/
   script:
     - chmod +x ./environment/shell/buildDockerPushGitLab.sh
     - ./environment/shell/buildDockerPushGitLab.sh "$DOCKER_REGISTRY_PASSWORD"
