@@ -2,7 +2,6 @@
 
 [![License](https://img.shields.io/github/license/renfei/renfeid)](https://github.com/renfei/renfeid/blob/master/LICENSE)
 [![Actions Status](https://github.com/renfei/renfeid/workflows/CI/badge.svg)](https://github.com/renfei/renfeid/actions)
-[![pipeline status](https://gitlab.com/renfei/renfeid/badges/master/pipeline.svg)](https://gitlab.com/renfei/renfeid/-/pipelines)
 [![codecov](https://codecov.io/gh/renfei/renfeid/branch/master/graph/badge.svg?token=2Hd5NL3fnV)](https://codecov.io/gh/renfei/renfeid)
 [![Coverage Status](https://coveralls.io/repos/github/renfei/renfeid/badge.svg?branch=master)](https://coveralls.io/github/renfei/renfeid?branch=master)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/945285e334094d2f93643778bb4c8dd7)](https://www.codacy.com/gh/renfei/renfeid/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=renfei/renfeid&amp;utm_campaign=Badge_Grade)
@@ -47,6 +46,27 @@
 - [ ] 计划移除 Lombok，一旦使用整个团队其他人也必须安装插件，强X队友；
 同时在慢慢使用中发现除非真的非常了解 Lombok 的注解会生成什么，否则会出现奇怪的各种问题，当然只使用简单的```@Data```没什么问题。
 - [ ] 计划升级到 Java11，虽然 Java8 完全满足需求，但毕竟新的东西会优化很多旧的问题。
+
+### DevOps 和 CI/CD 的探索
+
+之前使用 GitHub 的 Actions Workflow，但因为是境外所以和境内的相关服务器网络延迟高失败率高，一直没什么太大用处，
+直到 2021年底 GitLab 在国内成立了分公司并上线了 [极狐(GitLab)](https://gitlab.cn) SaaS 平台，一群开源大佬布道中国的 DevOps，
+我正好参与了内测，开始接触并尝试探索大佬们的理念。
+
+项目中的 [.gitlab-ci.yml](./.gitlab-ci.yml) 就是 GitLab 的 Pipeline 文件，主要由这几个阶段 (stage) 组成：
+
+- initialize：初始化准备环境，包括下载测试环境配置文件、[IP2Location](https://github.com/renfei/ip2location) 数据 BIN 文件，将 artifact 向下面的阶段传递。
+- compile：编译，先执行编译确保没有基础的语法错误，如果编译都过不了下面的就不用执行了。
+- test：测试，执行单元测试，验证各个接口和服务可以正常运行。
+- package：打包，将 SpringBoot 应用打包成 Jar 包。
+- release：发布，构建 Docker 镜像，发布到制品仓库中
+
+自动部署方面，我还没探索，后面等着尝试探索一下。
+
+#### 安全风险告知
+
+如果您也使用 GitLab Pipeline，注意项目可访问性，或者设置 CI/CD 的可访问性，如果都是公开的状态，
+那么每个阶段 (stage) 的制品 (artifact) 将会公开下载！其中一旦包含配置文件或相关敏感文件将被公开。
 
 ## License
 
