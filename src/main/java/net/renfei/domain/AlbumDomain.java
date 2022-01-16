@@ -2,8 +2,6 @@ package net.renfei.domain;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import lombok.Getter;
-import net.renfei.domain.blog.Category;
 import net.renfei.domain.photo.Album;
 import net.renfei.domain.photo.AlbumImg;
 import net.renfei.model.ListData;
@@ -22,9 +20,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class AlbumDomain {
-    @Getter
     private final Album album;
-    @Getter
     private final List<AlbumImg> albumImgList;
     private final PhotoAlbumMapper photoAlbumMapper;
     private final PhotoAlbumImgMapper photoAlbumImgMapper;
@@ -132,5 +128,13 @@ public final class AlbumDomain {
         AlbumImg album = new AlbumImg();
         BeanUtils.copyProperties(photoAlbumImg, album);
         return album;
+    }
+
+    public Album getAlbum() {
+        return album;
+    }
+
+    public List<AlbumImg> getAlbumImgList() {
+        return albumImgList;
     }
 }

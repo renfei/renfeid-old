@@ -1,6 +1,5 @@
 package net.renfei.controllers.photo;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.AlbumDomain;
@@ -24,7 +23,6 @@ import org.springframework.web.servlet.view.RedirectView;
  *
  * @author renfei
  */
-@Slf4j
 @Controller
 @RequestMapping("/photo")
 public class PhotoController extends BaseController {

@@ -1,6 +1,5 @@
 package net.renfei.services.comment;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.comment.Comment;
@@ -14,6 +13,8 @@ import net.renfei.services.EmailService;
 import net.renfei.services.LeafService;
 import net.renfei.services.aliyun.AliyunGreen;
 import net.renfei.utils.JacksonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +26,9 @@ import java.util.List;
 /**
  * @author renfei
  */
-@Slf4j
 @Service
 public class CommentServiceImpl extends BaseService implements CommentService {
+    private static final Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
     private final LeafService leafService;
     private final EmailService emailService;
     private final AliyunGreen aliyunGreen;
@@ -48,7 +49,7 @@ public class CommentServiceImpl extends BaseService implements CommentService {
             CommentDomain commentDomain = new CommentDomain(systemTypeEnum, comment.getObjectId(), comment, user);
             return new APIResult<>(commentDomain);
         } else {
-            log.warn("评论未能通过机器自动审查。内容为：{}", JacksonUtil.obj2String(comment));
+            logger.warn("评论未能通过机器自动审查。内容为：{}", JacksonUtil.obj2String(comment));
             throw new BusinessException("您提交的内容可能包含不健康或不和谐的内容，未能通过机器自动审查，请重试。");
         }
     }

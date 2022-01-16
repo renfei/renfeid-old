@@ -1,8 +1,9 @@
 package net.renfei.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
@@ -16,8 +17,8 @@ import java.util.*;
 /**
  * @author renfei
  */
-@Slf4j
 public class JwtTokenUtilsTests extends ApplicationTests {
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtilsTests.class);
     @Autowired
     private JwtTokenUtils jwtUtils;
 
@@ -370,8 +371,8 @@ public class JwtTokenUtilsTests extends ApplicationTests {
             }
         };
         String jwt = jwtUtils.createJWT("tester", request);
-        log.info("createJwtTest: " + jwt);
-        log.info("parseJWT: " + jwtUtils.parseJWT(jwt));
+        logger.info("createJwtTest: " + jwt);
+        logger.info("parseJWT: " + jwtUtils.parseJWT(jwt));
         assert jwtUtils.validate(jwt, request);
         assert "tester".equals(jwtUtils.getUsername(jwt));
     }

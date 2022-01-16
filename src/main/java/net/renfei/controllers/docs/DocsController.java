@@ -1,6 +1,5 @@
 package net.renfei.controllers.docs;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.model.docs.DocsPageView;
@@ -23,7 +22,6 @@ import java.util.List;
  *
  * @author renfei
  */
-@Slf4j
 @Controller
 @RequestMapping("/docs")
 public class DocsController extends BaseController {

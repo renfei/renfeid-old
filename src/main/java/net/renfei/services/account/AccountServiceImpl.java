@@ -162,11 +162,11 @@ public class AccountServiceImpl extends BaseService implements AccountService {
             try {
                 assert SYSTEM_CONFIG != null;
                 Client client =
-                        new Client(SYSTEM_CONFIG.getUCenter().getApi(),
+                        new Client(SYSTEM_CONFIG.getuCenter().getApi(),
                                 null,
-                                SYSTEM_CONFIG.getUCenter().getKey(),
-                                SYSTEM_CONFIG.getUCenter().getAppId(),
-                                SYSTEM_CONFIG.getUCenter().getConnect());
+                                SYSTEM_CONFIG.getuCenter().getKey(),
+                                SYSTEM_CONFIG.getuCenter().getAppId(),
+                                SYSTEM_CONFIG.getuCenter().getConnect());
                 String script = client.ucUserSynlogin(discuzUcenterMembers.getUid());
                 logger.info("uc script:{}", script);
                 if (!ObjectUtils.isEmpty(script)) {
@@ -266,11 +266,11 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         try {
             assert SYSTEM_CONFIG != null;
             Client client =
-                    new Client(SYSTEM_CONFIG.getUCenter().getApi(),
+                    new Client(SYSTEM_CONFIG.getuCenter().getApi(),
                             null,
-                            SYSTEM_CONFIG.getUCenter().getKey(),
-                            SYSTEM_CONFIG.getUCenter().getAppId(),
-                            SYSTEM_CONFIG.getUCenter().getConnect());
+                            SYSTEM_CONFIG.getuCenter().getKey(),
+                            SYSTEM_CONFIG.getuCenter().getAppId(),
+                            SYSTEM_CONFIG.getuCenter().getConnect());
             client.ucUserRegister(account.getUserName(), UUID.randomUUID().toString(), account.getEmail());
             // 向Discuz表里插入用户
             DiscuzUcenterMembersDOExample discuzUcenterMembersExample = new DiscuzUcenterMembersDOExample();
@@ -405,11 +405,11 @@ public class AccountServiceImpl extends BaseService implements AccountService {
             if (discuzUcenterMembers != null) {
                 try {
                     Client client =
-                            new Client(SYSTEM_CONFIG.getUCenter().getApi(),
+                            new Client(SYSTEM_CONFIG.getuCenter().getApi(),
                                     null,
-                                    SYSTEM_CONFIG.getUCenter().getKey(),
-                                    SYSTEM_CONFIG.getUCenter().getAppId(),
-                                    SYSTEM_CONFIG.getUCenter().getConnect());
+                                    SYSTEM_CONFIG.getuCenter().getKey(),
+                                    SYSTEM_CONFIG.getuCenter().getAppId(),
+                                    SYSTEM_CONFIG.getuCenter().getConnect());
                     return client.ucUserSynlogout();
                 } catch (Exception ignored) {
                 }

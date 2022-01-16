@@ -1,7 +1,5 @@
 package net.renfei.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,8 +9,23 @@ import java.util.List;
  *
  * @author RenFei(i @ renfei.net)
  */
-@Data
 public class FooterMenuVO implements Serializable {
     private String title;
     private List<LinkTree> links;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public List<LinkTree> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<LinkTree> links) {
+        this.links = links;
+    }
 }

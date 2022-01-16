@@ -2,7 +2,6 @@ package net.renfei.domain;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import lombok.Getter;
 import net.renfei.domain.comment.Comment;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.weibo.Weibo;
@@ -27,9 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author renfei
  */
 public final class WeiboDomain {
-    @Getter
     private final Weibo weibo;
-    @Getter
     private final List<Comment> commentList;
     private final WeiboPostsMapper weiboPostsMapper;
     private final WeiboPostmetaMapper weiboPostmetaMapper;
@@ -128,13 +125,21 @@ public final class WeiboDomain {
     }
 
     private Weibo convert(WeiboPosts weiboPosts) {
-        return Weibo.builder()
-                .id(weiboPosts.getId())
-                .content(weiboPosts.getContent())
-                .releaseTime(weiboPosts.getReleaseTime())
-                .views(weiboPosts.getViews())
-                .thumbsUp(weiboPosts.getThumbsUp())
-                .thumbsDown(weiboPosts.getThumbsDown())
-                .build();
+        Weibo weibo = new Weibo();
+        weibo.setId(weiboPosts.getId());
+        weibo.setContent(weiboPosts.getContent());
+        weibo.setReleaseTime(weiboPosts.getReleaseTime());
+        weibo.setViews(weiboPosts.getViews());
+        weibo.setThumbsUp(weiboPosts.getThumbsUp());
+        weibo.setThumbsDown(weiboPosts.getThumbsDown());
+        return weibo;
+    }
+
+    public Weibo getWeibo() {
+        return weibo;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
     }
 }

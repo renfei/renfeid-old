@@ -1,6 +1,5 @@
 package net.renfei.services.system;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.user.User;
 import net.renfei.model.log.LogLevelEnum;
@@ -13,6 +12,8 @@ import net.renfei.services.BaseService;
 import net.renfei.services.LogService;
 import net.renfei.utils.IpUtils;
 import net.renfei.utils.JacksonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,9 +32,9 @@ import static net.renfei.controllers.BaseController.SESSION_KEY;
  *
  * @author renfei
  */
-@Slf4j
 @Service
 public class LogServiceImpl extends BaseService implements LogService {
+    private static final Logger logger = LoggerFactory.getLogger(LogServiceImpl.class);
     private final SysLogsMapper sysLogsMapper;
     private final SystemConfig systemConfig;
 
@@ -86,7 +87,7 @@ public class LogServiceImpl extends BaseService implements LogService {
                 sysLogs.setRequParam(params);
                 sysLogs.setRequAgent(request.getHeader("User-Agent"));
             } catch (Exception exception) {
-                log.error(exception.getMessage(), exception);
+                logger.error(exception.getMessage(), exception);
             }
         }
         return sysLogsMapper.insertSelective(sysLogs);

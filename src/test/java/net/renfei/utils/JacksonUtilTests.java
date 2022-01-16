@@ -1,16 +1,16 @@
 package net.renfei.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 public class JacksonUtilTests extends ApplicationTests {
+    private static final Logger logger = LoggerFactory.getLogger(JacksonUtilTests.class);
 
     @Test
     public void test() {
@@ -19,7 +19,7 @@ public class JacksonUtilTests extends ApplicationTests {
         user1.setEmail("chenhaifei@163.com");
         String userJsonstr = JacksonUtil.obj2String(user1);
         String userJsonPretty = JacksonUtil.obj2StringPretty(user1);
-        log.info("userJson: {}", userJsonPretty);
+        logger.info("userJson: {}", userJsonPretty);
 
         User user2 = JacksonUtil.string2Obj(userJsonstr, User.class);
         user2.setId(2);
@@ -44,9 +44,24 @@ public class JacksonUtilTests extends ApplicationTests {
         }
     }
 
-    @Data
     public static class User {
         private Integer id;
         private String email;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
     }
 }

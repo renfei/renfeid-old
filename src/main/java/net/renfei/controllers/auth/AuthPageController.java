@@ -1,14 +1,11 @@
 package net.renfei.controllers.auth;
 
-import com.aliyun.oss.ServiceException;
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.user.User;
 import net.renfei.model.HomePageView;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.AccountService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
@@ -22,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * @author renfei
  */
-@Slf4j
 @Controller
 @RequestMapping("/auth")
 public class AuthPageController extends BaseController {

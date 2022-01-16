@@ -1,6 +1,5 @@
 package net.renfei.domain.system;
 
-import lombok.Data;
 import net.renfei.exception.NotExistException;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.SysKeywordObjectMapper;
@@ -21,7 +20,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author renfei
  */
-@Data
 public final class SysKeywordTag implements Serializable {
     private Long id;
     private String enName;
@@ -143,5 +141,45 @@ public final class SysKeywordTag implements Serializable {
         List<Long> objIds = new ArrayList<>();
         sysKeywordObjects.forEach(sysKeywordObject -> objIds.add(sysKeywordObject.getObjectId()));
         return objIds;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEnName() {
+        return enName;
+    }
+
+    public void setEnName(String enName) {
+        this.enName = enName;
+    }
+
+    public String getZhName() {
+        return zhName;
+    }
+
+    public void setZhName(String zhName) {
+        this.zhName = zhName;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
+
+    public SysKeywordTagMapper getKeywordTagMapper() {
+        return keywordTagMapper;
+    }
+
+    public SysKeywordObjectMapper getKeywordObjectMapper() {
+        return keywordObjectMapper;
     }
 }

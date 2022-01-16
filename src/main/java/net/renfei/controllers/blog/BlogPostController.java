@@ -1,6 +1,5 @@
 package net.renfei.controllers.blog;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.BlogDomain;
@@ -28,7 +27,6 @@ import java.util.List;
  *
  * @author renfei
  */
-@Slf4j
 @Controller
 @RequestMapping("/posts")
 public class BlogPostController extends BaseController {

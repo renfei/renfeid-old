@@ -1,8 +1,9 @@
 package net.renfei.services.jobs;
 
-import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 /**
@@ -10,10 +11,11 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  *
  * @author renfei
  */
-@Slf4j
 public class ExampleJob extends QuartzJobBean {
+    private static final Logger logger = LoggerFactory.getLogger(ExampleJob.class);
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        log.info("定时任务演示（net.renfei.services.jobs.ExampleJob）被运行。");
+        logger.info("定时任务演示（net.renfei.services.jobs.ExampleJob）被运行。");
     }
 }

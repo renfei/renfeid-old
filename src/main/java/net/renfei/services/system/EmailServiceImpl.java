@@ -1,8 +1,9 @@
 package net.renfei.services.system;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.services.BaseService;
 import net.renfei.services.EmailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -22,9 +23,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Service
 public class EmailServiceImpl extends BaseService implements EmailService {
+    private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
     @Value("${spring.mail.username}")
     private String FROM;
     @Value("${spring.mail.reply-to}")
@@ -124,7 +125,7 @@ public class EmailServiceImpl extends BaseService implements EmailService {
             emailSender.send(message);
             return true;
         } catch (MessagingException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             return false;
         }
     }
@@ -190,7 +191,7 @@ public class EmailServiceImpl extends BaseService implements EmailService {
             emailSender.send(message);
             return true;
         } catch (MessagingException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             return false;
         }
     }

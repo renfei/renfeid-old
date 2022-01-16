@@ -1,7 +1,5 @@
 package net.renfei.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 
 /**
@@ -10,8 +8,23 @@ import java.io.Serializable;
  *
  * @author RenFei(i @ renfei.net)
  */
-@Data
 public class ReportPublicKeyVO implements Serializable {
     private String secretKeyId;
     private String publicKey;
+
+    public String getSecretKeyId() {
+        return secretKeyId;
+    }
+
+    public void setSecretKeyId(String secretKeyId) {
+        this.secretKeyId = secretKeyId;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 }

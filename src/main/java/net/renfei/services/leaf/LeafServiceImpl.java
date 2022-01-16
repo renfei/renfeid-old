@@ -1,6 +1,5 @@
 package net.renfei.services.leaf;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
 import net.renfei.exception.BusinessException;
 import net.renfei.repositories.LeafAllocMapper;
@@ -10,6 +9,8 @@ import net.renfei.services.leaf.common.Result;
 import net.renfei.services.leaf.common.ZeroIDGen;
 import net.renfei.services.leaf.segment.SegmentIDGenImpl;
 import net.renfei.services.leaf.snowflake.SnowflakeIDGenImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,9 +18,9 @@ import org.springframework.stereotype.Service;
  *
  * @author renfei
  */
-@Slf4j
 @Service
 public class LeafServiceImpl extends BaseService implements LeafService {
+    private static final Logger logger = LoggerFactory.getLogger(LeafServiceImpl.class);
     private final IDGen idGen;
 
     public LeafServiceImpl(SystemConfig systemConfig,
@@ -30,7 +31,7 @@ public class LeafServiceImpl extends BaseService implements LeafService {
             idGen = new SegmentIDGenImpl();
             ((SegmentIDGenImpl) idGen).setMapper(mapper);
             if (idGen.init()) {
-                log.info("Segment Service Init Successfully");
+                logger.info("Segment Service Init Successfully");
             } else {
                 throw new BusinessException("Segment Service Init Fail");
             }
@@ -39,13 +40,13 @@ public class LeafServiceImpl extends BaseService implements LeafService {
             int port = systemConfig.getLeaf().getSnowflake().getPort();
             idGen = new SnowflakeIDGenImpl(zkAddress, port);
             if (idGen.init()) {
-                log.info("Snowflake Service Init Successfully");
+                logger.info("Snowflake Service Init Successfully");
             } else {
                 throw new BusinessException("Snowflake Service Init Fail");
             }
         } else {
             idGen = new ZeroIDGen();
-            log.info("Zero ID Gen Service Init Successfully");
+            logger.info("Zero ID Gen Service Init Successfully");
         }
     }
 

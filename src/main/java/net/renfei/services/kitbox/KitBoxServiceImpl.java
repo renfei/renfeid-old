@@ -133,7 +133,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
         for (KitBoxMenus kitBoxMenu : kitBoxMenus
         ) {
             if (kitBoxMenu.getElementId().equals(key)) {
-                kitBoxMenu.setIsOpen(true);
+                kitBoxMenu.setOpen(true);
                 break;
             }
         }
@@ -239,6 +239,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     }
 
     private LinkTree buildLinkTree(KitBoxTypeEnum kitBoxTypeEnum) {
+        assert SYSTEM_CONFIG != null;
         return LinkTree.builder()
                 .href(SYSTEM_CONFIG.getSiteDomainName() + kitBoxTypeEnum.getUrl())
                 .rel(kitBoxTypeEnum.getReadme())

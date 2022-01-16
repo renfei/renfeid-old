@@ -1,6 +1,5 @@
 package net.renfei.services.blog;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.blog.Category;
@@ -23,6 +22,8 @@ import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
 import net.renfei.utils.PageRankUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +37,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author renfei
  */
-@Slf4j
 @Service
 public class BlogServiceImpl extends BaseService implements BlogService {
+    private static final Logger logger = LoggerFactory.getLogger(BlogServiceImpl.class);
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "blog:";
     private static final Double DATE_WEIGHTED = 37.5D;
     private static final Double VIEW_WEIGHTED = 57.5D;
@@ -238,25 +239,24 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 hotPostList.add(link);
             });
             List<PostSidebarVO.PostSidebar> postSidebars = new ArrayList<>();
-            postSidebars.add(PostSidebarVO.PostSidebar.builder()
-                    .title("文档分类")
-                    .link(blogCategoryLinks)
-                    .build());
-            postSidebars.add(PostSidebarVO.PostSidebar.builder()
-                    .title("标签云")
-                    .link(allTagList)
-                    .build());
-            postSidebars.add(PostSidebarVO.PostSidebar.builder()
-                    .title("最新留言")
-                    .link(lastCommentList)
-                    .build());
-            postSidebars.add(PostSidebarVO.PostSidebar.builder()
-                    .title("热文排行")
-                    .link(hotPostList)
-                    .build());
-            postSidebarVO = PostSidebarVO.builder()
-                    .postSidebars(postSidebars)
-                    .build();
+            PostSidebarVO.PostSidebar catSidebar = new PostSidebarVO.PostSidebar();
+            PostSidebarVO.PostSidebar tagSidebar = new PostSidebarVO.PostSidebar();
+            PostSidebarVO.PostSidebar commentSidebar = new PostSidebarVO.PostSidebar();
+            PostSidebarVO.PostSidebar hotSidebar = new PostSidebarVO.PostSidebar();
+            catSidebar.setTitle("文档分类");
+            catSidebar.setLink(blogCategoryLinks);
+            tagSidebar.setTitle("标签云");
+            tagSidebar.setLink(allTagList);
+            commentSidebar.setTitle("最新留言");
+            commentSidebar.setLink(lastCommentList);
+            hotSidebar.setTitle("热文排行");
+            hotSidebar.setLink(hotPostList);
+            postSidebars.add(catSidebar);
+            postSidebars.add(tagSidebar);
+            postSidebars.add(commentSidebar);
+            postSidebars.add(hotSidebar);
+            postSidebarVO = new PostSidebarVO();
+            postSidebarVO.setPostSidebars(postSidebars);
             if (SYSTEM_CONFIG.isEnableRedis()) {
                 redisService.set(redisKey, postSidebarVO, SYSTEM_CONFIG.getDefaultCacheSeconds());
             }

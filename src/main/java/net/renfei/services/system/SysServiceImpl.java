@@ -346,22 +346,22 @@ public class SysServiceImpl extends BaseService implements SysService {
     @Override
     public PageHead getPageHead() {
         assert SYSTEM_CONFIG != null;
-        return PageHead.builder()
-                .title("")
-                .description("")
-                .keywords("")
-                .author(SYSTEM_CONFIG.getPageHead().getAuthor())
-                .copyright(SYSTEM_CONFIG.getPageHead().getCopyright())
-                .dnsPrefetch(SYSTEM_CONFIG.getPageHead().getDnsPrefetch())
-                .ogProtocol(null)
-                .favicon(SYSTEM_CONFIG.getPageHead().getFavicon())
-                .fbAppId(SYSTEM_CONFIG.getPageHead().getFbAppId())
-                .fbPages(SYSTEM_CONFIG.getPageHead().getFbPages())
-                .appleTouchIcon(SYSTEM_CONFIG.getPageHead().getAppleTouchIcon())
-                .css(SYSTEM_CONFIG.getPageHead().getCss())
-                .cssText("")
-                .jsText("")
-                .build();
+        PageHead pageHead = new PageHead();
+        pageHead.setTitle("");
+        pageHead.setDescription("");
+        pageHead.setKeywords("");
+        pageHead.setAuthor(SYSTEM_CONFIG.getPageHead().getAuthor());
+        pageHead.setCopyright(SYSTEM_CONFIG.getPageHead().getCopyright());
+        pageHead.setDnsPrefetch(SYSTEM_CONFIG.getPageHead().getDnsPrefetch());
+        pageHead.setOgProtocol(null);
+        pageHead.setFavicon(SYSTEM_CONFIG.getPageHead().getFavicon());
+        pageHead.setFbAppId(SYSTEM_CONFIG.getPageHead().getFbAppId());
+        pageHead.setFbPages(SYSTEM_CONFIG.getPageHead().getFbPages());
+        pageHead.setAppleTouchIcon(SYSTEM_CONFIG.getPageHead().getAppleTouchIcon());
+        pageHead.setCss(SYSTEM_CONFIG.getPageHead().getCss());
+        pageHead.setCssText("");
+        pageHead.setJsText("");
+        return pageHead;
     }
 
     @Override
@@ -421,25 +421,24 @@ public class SysServiceImpl extends BaseService implements SysService {
             example.setOrderByClause("order_number");
             example.createCriteria()
                     .andPidIsNull();
-            pageFooter = PageFooter.builder()
-                    .showFriendlyLink(SYSTEM_CONFIG.isShowFriendlyLink())
-                    .friendlyLink(this.getSysSiteFriendlyLinkList())
-                    .version(SYSTEM_CONFIG.getVersion())
-                    .buildTime(SYSTEM_CONFIG.getBuildTime())
-                    .footerMenuLinks(convertFooterMenu(siteFooterMenuMapper.selectByExample(example)))
-                    .smallMenu(smallMenuList())
-                    .jss(SYSTEM_CONFIG.getPageFooter().getJss())
-                    .jsText("var _hmt = _hmt || [];\n"
-                            + "(function() {\n"
-                            + "  var hm = document.createElement(\"script\");\n"
-                            + "  var analytics_bd = '" + SYSTEM_CONFIG.getBaidu().getTongji() + "';\n"
-                            // 为了防止爬虫扫描到统计代码的key，将URL地址打碎成数组
-                            // 原地址：hm.src = https://hm.baidu.com/hm.js?<key>
-                            + "  hm.src = ['ht','t','ps',':/','/h','m','.','ba','i','d','u.c','o','m/','h','m','.j','s?',analytics_bd].join('');\n"
-                            + "  var s = document.getElementsByTagName(\"script\")[0]; \n"
-                            + "  s.parentNode.insertBefore(hm, s);\n"
-                            + "})();\n")
-                    .build();
+            pageFooter = new PageFooter();
+            pageFooter.setShowFriendlyLink(SYSTEM_CONFIG.isShowFriendlyLink());
+            pageFooter.setFriendlyLink(this.getSysSiteFriendlyLinkList());
+            pageFooter.setVersion(SYSTEM_CONFIG.getVersion());
+            pageFooter.setBuildTime(SYSTEM_CONFIG.getBuildTime());
+            pageFooter.setFooterMenuLinks(convertFooterMenu(siteFooterMenuMapper.selectByExample(example)));
+            pageFooter.setSmallMenu(smallMenuList());
+            pageFooter.setJss(SYSTEM_CONFIG.getPageFooter().getJss());
+            pageFooter.setJsText("var _hmt = _hmt || [];\n"
+                    + "(function() {\n"
+                    + "  var hm = document.createElement(\"script\");\n"
+                    + "  var analytics_bd = '" + SYSTEM_CONFIG.getBaidu().getTongji() + "';\n"
+                    // 为了防止爬虫扫描到统计代码的key，将URL地址打碎成数组
+                    // 原地址：hm.src = https://hm.baidu.com/hm.js?<key>
+                    + "  hm.src = ['ht','t','ps',':/','/h','m','.','ba','i','d','u.c','o','m/','h','m','.j','s?',analytics_bd].join('');\n"
+                    + "  var s = document.getElementsByTagName(\"script\")[0]; \n"
+                    + "  s.parentNode.insertBefore(hm, s);\n"
+                    + "})();\n");
             if (SYSTEM_CONFIG.isEnableRedis()) {
                 redisService.set(redisKey, pageFooter, SYSTEM_CONFIG.getDefaultCacheSeconds());
             }
@@ -495,10 +494,9 @@ public class SysServiceImpl extends BaseService implements SysService {
         List<FooterMenuLinks> menus = new CopyOnWriteArrayList<>();
         for (SysSiteFooterMenu sysSiteMenu : sysSiteMenus
         ) {
-            FooterMenuLinks linkSubTree = FooterMenuLinks.builder()
-                    .title(sysSiteMenu.getMenuText())
-                    .links(setFooterMenuSubLink(sysSiteMenu.getId()))
-                    .build();
+            FooterMenuLinks linkSubTree = new FooterMenuLinks();
+            linkSubTree.setTitle(sysSiteMenu.getMenuText());
+            linkSubTree.setLinks(setFooterMenuSubLink(sysSiteMenu.getId()));
             menus.add(linkSubTree);
         }
         return menus;

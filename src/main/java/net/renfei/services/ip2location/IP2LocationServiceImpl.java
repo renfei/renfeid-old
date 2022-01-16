@@ -1,12 +1,13 @@
 package net.renfei.services.ip2location;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.exception.IP2LocationException;
 import net.renfei.ip2location.IP2Location;
 import net.renfei.ip2location.IPResult;
 import net.renfei.services.BaseService;
 import net.renfei.services.IP2LocationService;
 import net.renfei.utils.SentryUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,9 @@ import java.io.IOException;
  *
  * @author renfei
  */
-@Slf4j
 @Service
 public class IP2LocationServiceImpl extends BaseService implements IP2LocationService {
+    private static final Logger logger = LoggerFactory.getLogger(IP2LocationServiceImpl.class);
     private final IP2Location location;
     private final IP2Location locationV6;
     private static final String CLASS_PATH_RESOURCE = "classpath:/";
@@ -41,7 +42,7 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
                 locationV6.Open(SYSTEM_CONFIG.getIp2LocationBinFileV6(), true);
             }
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             SentryUtils.captureException(e);
         }
     }
@@ -58,7 +59,7 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
         try {
             rec = location.IPQuery(ip);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             SentryUtils.captureException(e);
             throw new IP2LocationException("IP2Location 服务暂时不可用。");
         }
@@ -70,7 +71,7 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
         } else if ("INVALID_IP_ADDRESS".equals(rec.getStatus())) {
             throw new IP2LocationException("无效的IP地址。");
         } else if ("MISSING_FILE".equals(rec.getStatus())) {
-            log.error("Invalid database path.");
+            logger.error("Invalid database path.");
             throw new IP2LocationException("IP2Location 服务暂时不可用。");
         } else if ("IPV6_NOT_SUPPORTED".equals(rec.getStatus())) {
             return ipQueryIpV6(ip);
@@ -84,7 +85,7 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
         try {
             rec = locationV6.IPQuery(ip);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             SentryUtils.captureException(e);
             throw new IP2LocationException("IP2Location 服务暂时不可用。");
         }
@@ -96,10 +97,10 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
         } else if ("INVALID_IP_ADDRESS".equals(rec.getStatus())) {
             throw new IP2LocationException("无效的IP地址。");
         } else if ("MISSING_FILE".equals(rec.getStatus())) {
-            log.error("Invalid database path.");
+            logger.error("Invalid database path.");
             throw new IP2LocationException("IP2Location 服务暂时不可用。");
         } else if ("IPV6_NOT_SUPPORTED".equals(rec.getStatus())) {
-            log.error("This BIN does not contain IPv6 data.");
+            logger.error("This BIN does not contain IPv6 data.");
             throw new IP2LocationException("IP2Location 服务暂时不支持IPv6。");
         } else {
             throw new IP2LocationException("IP2Location 服务暂时不可用。" + rec.getStatus());

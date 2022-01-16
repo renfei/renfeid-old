@@ -1,6 +1,5 @@
 package net.renfei.controllers.weibo;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.WeiboDomain;
@@ -26,7 +25,6 @@ import org.springframework.web.servlet.view.RedirectView;
  *
  * @author renfei
  */
-@Slf4j
 @Controller
 @RequestMapping("/weibo")
 public class WeiboController extends BaseController {

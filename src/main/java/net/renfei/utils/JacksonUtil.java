@@ -7,20 +7,18 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Jackson 工具
  * 对 Jackson 常用操作进行封装
  */
-@Slf4j
 public class JacksonUtil {
+    private static final Logger logger = LoggerFactory.getLogger(JacksonUtil.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     // 默认的日期时间格式
     private static final String STANDARD_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -51,7 +49,7 @@ public class JacksonUtil {
         try {
             return obj instanceof String ? (String) obj : OBJECT_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             return null;
         }
     }
@@ -69,7 +67,7 @@ public class JacksonUtil {
         try {
             return obj instanceof String ? (String) obj : OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             return null;
         }
     }
@@ -88,7 +86,7 @@ public class JacksonUtil {
         try {
             return clazz.equals(String.class) ? (T) str : OBJECT_MAPPER.readValue(str, clazz);
         } catch (Exception e) {
-            log.warn("Parse String to Object error : {}", e.getMessage());
+            logger.warn("Parse String to Object error : {}", e.getMessage());
             return null;
         }
     }
@@ -100,7 +98,7 @@ public class JacksonUtil {
         try {
             return (T) (typeReference.getType().equals(String.class) ? str : OBJECT_MAPPER.readValue(str, typeReference));
         } catch (IOException e) {
-            log.warn("Parse String to Object error", e);
+            logger.warn("Parse String to Object error", e);
             return null;
         }
     }
@@ -110,7 +108,7 @@ public class JacksonUtil {
         try {
             return OBJECT_MAPPER.readValue(str, javaType);
         } catch (IOException e) {
-            log.warn("Parse String to Object error : {}" + e.getMessage());
+            logger.warn("Parse String to Object error : {}" + e.getMessage());
             return null;
         }
     }

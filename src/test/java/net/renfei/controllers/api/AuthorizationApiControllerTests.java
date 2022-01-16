@@ -1,6 +1,5 @@
 package net.renfei.controllers.api;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.ApplicationTests;
 import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
@@ -10,10 +9,10 @@ import net.renfei.model.auth.SignUpVO;
 import net.renfei.utils.JacksonUtil;
 import net.renfei.utils.RSAUtils;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -28,8 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author renfei
  */
-@Slf4j
 public class AuthorizationApiControllerTests extends ApplicationTests {
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizationApiControllerTests.class);
+
     /**
      * 秘钥交换逻辑单元测试
      *
@@ -50,8 +50,8 @@ public class AuthorizationApiControllerTests extends ApplicationTests {
         // 得到服务器的公钥和公钥编号
         String keyUuid = apiResult.getMessage(),
                 publicKey = apiResult.getData().toString();
-        log.info("publicKey:" + publicKey);
-        log.info("keyUuid:" + keyUuid);
+        logger.info("publicKey:" + publicKey);
+        logger.info("keyUuid:" + keyUuid);
         // 上报客户端公钥，并下发AES秘钥
         ReportPublicKeyVO reportPublicKey = new ReportPublicKeyVO();
         reportPublicKey.setSecretKeyId(keyUuid);
@@ -70,7 +70,7 @@ public class AuthorizationApiControllerTests extends ApplicationTests {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        log.info("result:" + result);
+        logger.info("result:" + result);
     }
 
     @Test

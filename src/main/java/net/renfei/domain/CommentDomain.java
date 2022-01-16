@@ -2,8 +2,6 @@ package net.renfei.domain;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.comment.Comment;
 import net.renfei.model.system.SystemTypeEnum;
@@ -17,6 +15,8 @@ import net.renfei.services.IP2LocationService;
 import net.renfei.services.LeafService;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
@@ -28,13 +28,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author renfei
  */
-@Slf4j
 public final class CommentDomain {
+    private static final Logger logger = LoggerFactory.getLogger(CommentDomain.class);
     private final LeafService leafService;
     private final SystemConfig systemConfig;
     private final SysCommentsMapper commentsMapper;
     private final IP2LocationService ip2LocationService;
-    @Getter
     private List<Comment> commentList;
 
     {
@@ -199,26 +198,25 @@ public final class CommentDomain {
         if (sysComment.getAuthorId() != null) {
             user = new User(sysComment.getAuthorId());
         }
-        Comment comment = Comment.builder()
-                .id(sysComment.getId())
-                .objectId(sysComment.getObjectId())
-                .reply(sysComment.getParentId())
-                .author(sysComment.getAuthor())
-                .email(sysComment.getAuthorEmail())
-                .link(sysComment.getAuthorUrl())
-                .content(sysComment.getContent())
-                .datetime(sysComment.getAddtime())
-                .address(sysComment.getAuthorAddress())
-                .isOwner(false)
-                .ip(sysComment.getAuthorIp())
-                .user(user)
-                .build();
+        Comment comment = new Comment();
+        comment.setId(sysComment.getId());
+        comment.setObjectId(sysComment.getObjectId());
+        comment.setReply(sysComment.getParentId());
+        comment.setAuthor(sysComment.getAuthor());
+        comment.setEmail(sysComment.getAuthorEmail());
+        comment.setLink(sysComment.getAuthorUrl());
+        comment.setContent(sysComment.getContent());
+        comment.setDatetime(sysComment.getAddtime());
+        comment.setAddress(sysComment.getAuthorAddress());
+        comment.setOwner(false);
+        comment.setIp(sysComment.getAuthorIp());
+        comment.setUser(user);
         if (user != null) {
             comment.setAuthor(user.getUserName());
             comment.setEmail(user.getEmail());
             comment.setLink(user.getWebSite());
             if (systemConfig.getOwnerUserName().equals(user.getUserName())) {
-                comment.setIsOwner(true);
+                comment.setOwner(true);
             }
         }
         return comment;
@@ -237,7 +235,7 @@ public final class CommentDomain {
         try {
             sysComment.setAuthorAddress(ip2LocationService.ipQueryAddress(comment.getIp()));
         } catch (IP2LocationException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             SentryUtils.captureException(e);
             sysComment.setAuthorAddress("-, -, -");
         }
@@ -256,5 +254,9 @@ public final class CommentDomain {
             sysComment.setAuthorEmail(comment.getEmail());
         }
         return sysComment;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
     }
 }

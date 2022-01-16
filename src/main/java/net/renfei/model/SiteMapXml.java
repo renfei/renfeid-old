@@ -1,15 +1,14 @@
 package net.renfei.model;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Data
-@Slf4j
 public class SiteMapXml implements Serializable {
+    private static final Logger logger = LoggerFactory.getLogger(SiteMapXml.class);
     private static final long serialVersionUID = 1L;
     private String loc;
     private ChangefreqEnum changefreqEnum;
@@ -25,7 +24,7 @@ public class SiteMapXml implements Serializable {
             // https://www.sitemaps.org/protocol.html#lastmoddef
             return new SimpleDateFormat("yyyy-MM-dd").format(lastmod);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
         return "";
     }
@@ -41,5 +40,33 @@ public class SiteMapXml implements Serializable {
         this.setLoc(loc);
         this.setPriority(Float.parseFloat(priority));
         this.setLastmod(lastmod);
+    }
+
+    public String getLoc() {
+        return loc;
+    }
+
+    public void setLoc(String loc) {
+        this.loc = loc;
+    }
+
+    public ChangefreqEnum getChangefreqEnum() {
+        return changefreqEnum;
+    }
+
+    public void setChangefreqEnum(ChangefreqEnum changefreqEnum) {
+        this.changefreqEnum = changefreqEnum;
+    }
+
+    public float getPriority() {
+        return priority;
+    }
+
+    public void setPriority(float priority) {
+        this.priority = priority;
+    }
+
+    public void setLastmod(Date lastmod) {
+        this.lastmod = lastmod;
     }
 }

@@ -1,6 +1,5 @@
 package net.renfei.domain;
 
-import lombok.Getter;
 import net.renfei.domain.pages.Page;
 import net.renfei.domain.user.User;
 import net.renfei.exception.NeedPasswordException;
@@ -17,7 +16,6 @@ import org.springframework.util.ObjectUtils;
  * @author renfei
  */
 public final class PagesDomain {
-    @Getter
     private final Page page;
     private final SysPagesMapper pagesMapper;
 
@@ -75,23 +73,27 @@ public final class PagesDomain {
         if (sysPagesWithBlobs == null) {
             return null;
         }
-        return Page.builder()
-                .id(sysPagesWithBlobs.getId())
-                .pageAuthor(sysPagesWithBlobs.getPageAuthor())
-                .pageDate(sysPagesWithBlobs.getPageDate())
-                .pageStatus(PostStatusEnum.valueOf(sysPagesWithBlobs.getPageStatus()))
-                .pageViews(sysPagesWithBlobs.getPageViews())
-                .pagePassword(sysPagesWithBlobs.getPagePassword())
-                .pageModified(sysPagesWithBlobs.getPageModified())
-                .pageParent(sysPagesWithBlobs.getPageParent())
-                .thumbsUp(sysPagesWithBlobs.getThumbsUp())
-                .thumbsDown(sysPagesWithBlobs.getThumbsDown())
-                .secretLevel(SecretLevelEnum.valueOf(sysPagesWithBlobs.getSecretLevel()))
-                .featuredImage(sysPagesWithBlobs.getFeaturedImage())
-                .pageTitle(sysPagesWithBlobs.getPageTitle())
-                .pageKeyword(sysPagesWithBlobs.getPageKeyword())
-                .pageExcerpt(sysPagesWithBlobs.getPageExcerpt())
-                .pageContent(sysPagesWithBlobs.getPageContent())
-                .build();
+        Page page = new Page();
+        page.setId(sysPagesWithBlobs.getId());
+        page.setPageAuthor(sysPagesWithBlobs.getPageAuthor());
+        page.setPageDate(sysPagesWithBlobs.getPageDate());
+        page.setPageStatus(PostStatusEnum.valueOf(sysPagesWithBlobs.getPageStatus()));
+        page.setPageViews(sysPagesWithBlobs.getPageViews());
+        page.setPagePassword(sysPagesWithBlobs.getPagePassword());
+        page.setPageModified(sysPagesWithBlobs.getPageModified());
+        page.setPageParent(sysPagesWithBlobs.getPageParent());
+        page.setThumbsUp(sysPagesWithBlobs.getThumbsUp());
+        page.setThumbsDown(sysPagesWithBlobs.getThumbsDown());
+        page.setSecretLevel(SecretLevelEnum.valueOf(sysPagesWithBlobs.getSecretLevel()));
+        page.setFeaturedImage(sysPagesWithBlobs.getFeaturedImage());
+        page.setPageTitle(sysPagesWithBlobs.getPageTitle());
+        page.setPageKeyword(sysPagesWithBlobs.getPageKeyword());
+        page.setPageExcerpt(sysPagesWithBlobs.getPageExcerpt());
+        page.setPageContent(sysPagesWithBlobs.getPageContent());
+        return page;
+    }
+
+    public Page getPage() {
+        return page;
     }
 }

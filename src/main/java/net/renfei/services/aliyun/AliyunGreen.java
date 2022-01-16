@@ -3,10 +3,11 @@ package net.renfei.services.aliyun;
 import com.aliyuncs.green.model.v20180509.TextScanRequest;
 import com.aliyuncs.http.FormatType;
 import com.aliyuncs.http.HttpResponse;
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.services.aliyun.model.AliyunGreenAO;
 import net.renfei.services.aliyun.model.AliyunGreenVO;
 import net.renfei.utils.JacksonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -17,9 +18,10 @@ import java.util.*;
  *
  * @author renfei
  */
-@Slf4j
 @Service
 public class AliyunGreen extends AbstractAliyunService {
+    private static final Logger logger = LoggerFactory.getLogger(AliyunGreen.class);
+
     /**
      * @param text 待检测的文本，长度不超过10000个字符
      */
@@ -67,29 +69,29 @@ public class AliyunGreen extends AbstractAliyunService {
                                 Double rate = sceneResult.getRate();
                                 //根据scene和suggetion做相关处理
                                 //suggestion == pass 未命中垃圾  suggestion == block 命中了垃圾，可以通过label字段查看命中的垃圾分类
-                                log.info("scene = [" + scene + "]");
-                                log.info("suggestion = [" + suggestion + "]");
-                                log.info("label = [" + label + "]");
-                                log.info("rate = [" + rate + "]");
+                                logger.info("scene = [" + scene + "]");
+                                logger.info("suggestion = [" + suggestion + "]");
+                                logger.info("label = [" + label + "]");
+                                logger.info("rate = [" + rate + "]");
                                 return "pass".equals(suggestion);
                             }
                         } else {
-                            log.info("task process fail:" + taskResult.getCode());
-                            log.info("task process Msg:" + taskResult.getMsg());
+                            logger.info("task process fail:" + taskResult.getCode());
+                            logger.info("task process Msg:" + taskResult.getMsg());
                             return false;
                         }
                     }
                 } else {
-                    log.info("detect not success. code:" + aliyunGreenVO.getCode());
-                    log.info("detect not success. Msg:" + aliyunGreenVO.getMsg());
+                    logger.info("detect not success. code:" + aliyunGreenVO.getCode());
+                    logger.info("detect not success. Msg:" + aliyunGreenVO.getMsg());
                     return false;
                 }
             } else {
-                log.info("response not success. status:" + httpResponse.getStatus());
+                logger.info("response not success. status:" + httpResponse.getStatus());
                 return false;
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             return false;
         }
         return false;

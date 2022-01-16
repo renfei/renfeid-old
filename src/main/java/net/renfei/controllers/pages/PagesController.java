@@ -1,6 +1,5 @@
 package net.renfei.controllers.pages;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.PagesDomain;
 import net.renfei.exception.NeedPasswordException;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  *
  * @author renfei
  */
-@Slf4j
 @Controller
 @RequestMapping("/page")
 public class PagesController extends BaseController {

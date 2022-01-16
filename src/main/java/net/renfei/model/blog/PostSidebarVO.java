@@ -1,6 +1,5 @@
 package net.renfei.model.blog;
 
-import lombok.*;
 import net.renfei.model.LinkTree;
 
 import java.io.Serializable;
@@ -12,19 +11,35 @@ import java.util.List;
  *
  * @author RenFei(i @ renfei.net)
  */
-@Data
-@Builder
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostSidebarVO implements Serializable {
     private List<PostSidebar> postSidebars;
 
-    @Data
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PUBLIC)
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PostSidebar implements Serializable {
         private String title;
         private List<LinkTree> link;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public List<LinkTree> getLink() {
+            return link;
+        }
+
+        public void setLink(List<LinkTree> link) {
+            this.link = link;
+        }
+    }
+
+    public List<PostSidebar> getPostSidebars() {
+        return postSidebars;
+    }
+
+    public void setPostSidebars(List<PostSidebar> postSidebars) {
+        this.postSidebars = postSidebars;
     }
 }

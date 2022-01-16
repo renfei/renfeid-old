@@ -1,8 +1,9 @@
 package net.renfei.config;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
@@ -16,9 +17,9 @@ import java.util.concurrent.ThreadPoolExecutor;
  *
  * @author renfei
  */
-@Slf4j
 @Configuration
 public class ThreadPoolConfig implements AsyncConfigurer {
+    private static final Logger logger = LoggerFactory.getLogger(ThreadPoolConfig.class);
     private final SystemConfig systemConfig;
 
     public ThreadPoolConfig(SystemConfig systemConfig) {
@@ -57,8 +58,8 @@ public class ThreadPoolConfig implements AsyncConfigurer {
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (ex, method, params) -> {
-            log.error("==========================" + ex.getMessage() + "=======================", ex);
-            log.error("exception method:" + method.getName());
+            logger.error("==========================" + ex.getMessage() + "=======================", ex);
+            logger.error("exception method:" + method.getName());
             SentryUtils.captureException(ex);
         };
     }

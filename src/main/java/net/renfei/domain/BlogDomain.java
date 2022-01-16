@@ -2,7 +2,6 @@ package net.renfei.domain;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import lombok.Getter;
 import net.renfei.domain.blog.Category;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
@@ -40,13 +39,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public final class BlogDomain {
     private static final Logger logger = LoggerFactory.getLogger(BlogDomain.class);
-    @Getter
     private final Post post;
-    @Getter
     private final User author;
-    @Getter
     private final Category category;
-    @Getter
     private final List<Comment> commentList;
     private final BlogPostsMapper blogPostsMapper;
     private final BlogCategoryMapper categoryMapper;
@@ -291,30 +286,46 @@ public final class BlogDomain {
     }
 
     private Post convert(BlogPostsWithBLOBs blogPost) {
-        return Post.builder()
-                .id(blogPost.getId())
-                .title(blogPost.getPostTitle())
-                .keyword(blogPost.getPostKeyword())
-                .excerpt(blogPost.getPostExcerpt())
-                .content(blogPost.getPostContent())
-                .featuredImage(blogPost.getFeaturedImage())
-                .isOriginal(blogPost.getIsOriginal())
-                .sourceName(blogPost.getSourceName())
-                .sourceUrl(blogPost.getSourceUrl())
-                .postDate(blogPost.getPostDate())
-                .postAuthor(blogPost.getPostAuthor())
-                .categoryId(blogPost.getCategoryId())
-                .postStatus(PostStatusEnum.valueOf(blogPost.getPostStatus()))
-                .commentStatusenum(CommentStatusEnum.valueOf(blogPost.getCommentStatus()))
-                .postPassword(blogPost.getPostPassword())
-                .postModified(blogPost.getPostModified())
-                .postParent(blogPost.getPostParent())
-                .thumbsUp(blogPost.getThumbsUp())
-                .thumbsDown(blogPost.getThumbsDown())
-                .avgViews(blogPost.getAvgViews())
-                .avgComment(blogPost.getAvgComment())
-                .pageRank(blogPost.getPageRank())
-                .secretLevelEnum(SecretLevelEnum.valueOf(blogPost.getSecretLevel()))
-                .build();
+        Post post = new Post();
+        post.setId(blogPost.getId());
+        post.setTitle(blogPost.getPostTitle());
+        post.setKeyword(blogPost.getPostKeyword());
+        post.setExcerpt(blogPost.getPostExcerpt());
+        post.setContent(blogPost.getPostContent());
+        post.setFeaturedImage(blogPost.getFeaturedImage());
+        post.setOriginal(blogPost.getIsOriginal());
+        post.setSourceName(blogPost.getSourceName());
+        post.setSourceUrl(blogPost.getSourceUrl());
+        post.setPostDate(blogPost.getPostDate());
+        post.setPostAuthor(blogPost.getPostAuthor());
+        post.setCategoryId(blogPost.getCategoryId());
+        post.setPostStatus(PostStatusEnum.valueOf(blogPost.getPostStatus()));
+        post.setCommentStatusenum(CommentStatusEnum.valueOf(blogPost.getCommentStatus()));
+        post.setPostPassword(blogPost.getPostPassword());
+        post.setPostModified(blogPost.getPostModified());
+        post.setPostParent(blogPost.getPostParent());
+        post.setThumbsUp(blogPost.getThumbsUp());
+        post.setThumbsDown(blogPost.getThumbsDown());
+        post.setAvgViews(blogPost.getAvgViews());
+        post.setAvgComment(blogPost.getAvgComment());
+        post.setPageRank(blogPost.getPageRank());
+        post.setSecretLevelEnum(SecretLevelEnum.valueOf(blogPost.getSecretLevel()));
+        return post;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
     }
 }

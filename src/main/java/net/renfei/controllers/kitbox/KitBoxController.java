@@ -1,6 +1,5 @@
 package net.renfei.controllers.kitbox;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.comment.Comment;
@@ -34,7 +33,6 @@ import static net.renfei.services.kitbox.KitBoxServiceImpl.*;
  *
  * @author renfei
  */
-@Slf4j
 @Controller
 @RequestMapping("/kitbox")
 public class KitBoxController extends BaseController {

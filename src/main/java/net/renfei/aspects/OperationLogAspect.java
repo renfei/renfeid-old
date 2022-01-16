@@ -1,6 +1,5 @@
 package net.renfei.aspects;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.annotation.OperationLog;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.user.User;
@@ -34,7 +33,6 @@ import static net.renfei.services.system.LogServiceImpl.convertMap;
  *
  * @author renfei
  */
-@Slf4j
 @Aspect
 @Component
 public class OperationLogAspect {

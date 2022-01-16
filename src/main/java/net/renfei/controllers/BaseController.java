@@ -1,6 +1,5 @@
 package net.renfei.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.user.User;
 import net.renfei.model.*;
@@ -8,6 +7,8 @@ import net.renfei.services.PaginationService;
 import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
@@ -32,8 +33,8 @@ import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
  *
  * @author renfei
  */
-@Slf4j
 public abstract class BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
     public static final String SESSION_KEY = "signedUserSession";
     protected final SystemConfig SYSTEM_CONFIG;
     private SysService sysService;
@@ -129,7 +130,7 @@ public abstract class BaseController {
             constructor = clazz.getDeclaredConstructor(Object.class);
             result = constructor.newInstance(object);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            log.error("构建通用的页面返回对象时出错", e);
+            logger.error("构建通用的页面返回对象时出错", e);
             SentryUtils.captureException(e);
             return null;
         }
