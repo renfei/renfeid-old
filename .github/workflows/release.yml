@@ -66,14 +66,15 @@ jobs:
           git clone https://cd-robot:${{ secrets.cd_robot_token }}@github.com/renfei/config.git && \
           cp ./config/renfeid/application-prod.yml ./src/main/resources/
 
-      # Dockerfile 里会复制 ip2location 中的 BIN 文件
-      - name: Pull IP2Location Database BinFile
-        run: |
-          mkdir ip2location
-          wget -P ./ip2location https://raw.githubusercontent.com/renfei/ip2location/master/IP2LOCATION-LITE-DB11.BIN.ZIP
-          wget -P ./ip2location https://raw.githubusercontent.com/renfei/ip2location/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
-          unzip -o ./ip2location/IP2LOCATION-LITE-DB11.BIN.ZIP -d ./src/main/resources/ip2location/
-          unzip -o ./ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d ./src/main/resources/ip2location/
+# IP2Location 数据过大，不再随 Docker 打包
+#      # Dockerfile 里会复制 ip2location 中的 BIN 文件
+#      - name: Pull IP2Location Database BinFile
+#        run: |
+#          mkdir ip2location
+#          wget -P ./ip2location https://raw.githubusercontent.com/renfei/ip2location/master/IP2LOCATION-LITE-DB11.BIN.ZIP
+#          wget -P ./ip2location https://raw.githubusercontent.com/renfei/ip2location/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
+#          unzip -o ./ip2location/IP2LOCATION-LITE-DB11.BIN.ZIP -d ./src/main/resources/ip2location/
+#          unzip -o ./ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d ./src/main/resources/ip2location/
 
       - name: Build And Push Docker Image
         run: |

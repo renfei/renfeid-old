@@ -23,12 +23,13 @@ RUN set -ex; \
 
 ARG JAR_FILE=target/*.jar
 # git clone https://github.com/renfei/ip2location.git
-ARG IP2LocationBinFile=src/main/resources/ip2location/*.BIN
+#ARG IP2LocationBinFile=src/main/resources/ip2location/*.BIN
 
 RUN mkdir /opt/renfeid/ip2location
 
 COPY --chown=renfei:renfei ${JAR_FILE} /opt/renfeid/
-COPY --chown=renfei:renfei ${IP2LocationBinFile} /opt/renfeid/ip2location/
+# IP2Location 数据过大，不再随 Docker 打包
+#COPY --chown=renfei:renfei ${IP2LocationBinFile} /opt/renfeid/ip2location/
 
 USER renfei
 
