@@ -12,7 +12,6 @@ import org.springframework.context.ApplicationContext;
 public class ApplicationContextUtil {
     private static SystemConfig systemConfig;
     private static ApplicationContext applicationContext;
-    private static final int MAX_ATTEMPTS = 10000;
 
     public static void setApplicationContext(ApplicationContext applicationContext) {
         ApplicationContextUtil.applicationContext = applicationContext;
@@ -25,11 +24,6 @@ public class ApplicationContextUtil {
     public static Object getBean(String beanName) {
         if ("systemConfig".equals(beanName)) {
             return systemConfig;
-        }
-        for (int i = 0;
-             i < MAX_ATTEMPTS && (applicationContext == null || applicationContext.getBean(beanName) == null);
-             i++) {
-            Thread.yield();
         }
         return applicationContext != null ? applicationContext.getBean(beanName) : null;
     }
