@@ -13,6 +13,9 @@ public class Category implements Serializable {
     private String zhName;
     private SecretLevelEnum secretLevelEnum;
 
+    public Category() {
+    }
+
     private Category(Builder builder) {
         this.id = builder.id;
         this.enName = builder.enName;

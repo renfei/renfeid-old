@@ -17,6 +17,9 @@ public class KitBoxMenus implements Serializable {
     private Boolean isOpen;
     private List<LinkTree> links;
 
+    public KitBoxMenus() {
+    }
+
     private KitBoxMenus(Builder builder) {
         this.title = builder.title;
         this.elementId = builder.elementId;

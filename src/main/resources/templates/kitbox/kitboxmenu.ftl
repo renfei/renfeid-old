@@ -14,7 +14,7 @@
                         </h2>
                     </div>
 
-                    <div id="${menu.elementId}" class="collapse${menu.isOpen?string(" show","")}"
+                    <div id="${menu.elementId}" class="collapse${menu.open?string(" show","")}"
                          aria-labelledby="${menu.elementId+'s'}"
                          data-parent="#KitBoxMenus">
                         <div class="card-body">

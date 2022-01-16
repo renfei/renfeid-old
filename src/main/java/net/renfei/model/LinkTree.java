@@ -12,6 +12,9 @@ public class LinkTree implements Serializable {
     private String style;
     private List<LinkTree> subLink;
 
+    public LinkTree() {
+    }
+
     private LinkTree(Builder builder) {
         this.icon = builder.icon;
         this.href = builder.href;

@@ -50,7 +50,7 @@
                 <@share socialSharing></@share>
                 <div>
                     <hr>
-                    <#if pageView.object.post.isOriginal>
+                    <#if pageView.object.post.original>
                         <blockquote class="blockquote"
                                     style="font-size: 12px;color: #86868b;line-height: 1.33337;font-weight: 400;">
                             商业用途请联系作者获得授权。<br>
