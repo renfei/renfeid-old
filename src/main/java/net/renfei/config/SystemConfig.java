@@ -26,6 +26,18 @@ public class SystemConfig {
      * ReCaptcha 容忍最大阈值
      */
     public static final Float RE_CAPTCHA_MIN_SOURCE = 0.6F;
+    /**
+     * 允许最大长度用户名
+     */
+    public static final Integer MAX_USERNAME_LENGTH = 60;
+    /**
+     * 允许最大评论长度
+     */
+    public static final Integer MAX_COMMENT_LENGTH = 10240;
+    /**
+     * 允许最大链接长度
+     */
+    public static final Integer MAX_LINK_LENGTH = 300;
     private String active;
     private String version;
     private String buildTime;

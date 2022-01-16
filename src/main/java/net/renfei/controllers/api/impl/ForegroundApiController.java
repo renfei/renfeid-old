@@ -20,6 +20,8 @@ import net.renfei.utils.IpUtils;
 import net.renfei.utils.SentryUtils;
 import org.springframework.web.bind.annotation.RestController;
 
+import static net.renfei.config.SystemConfig.*;
+
 /**
  * 前台接口
  *
@@ -47,6 +49,30 @@ public class ForegroundApiController extends BaseController implements Foregroun
     public APIResult submitComments(SystemTypeEnum systemTypeEnum, String id, Comment comment) {
         // TODO 检查全局评论开关
         // TODO 检查被评论的对象是否允许评论
+        if (comment.getContent() != null && comment.getContent().length() >= MAX_COMMENT_LENGTH) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("评论内容长度超过系统允许最大值：" + MAX_COMMENT_LENGTH)
+                    .build();
+        }
+        if (comment.getEmail() != null && comment.getEmail().length() >= MAX_USERNAME_LENGTH) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("邮箱地址长度超过系统允许最大值：" + MAX_USERNAME_LENGTH)
+                    .build();
+        }
+        if (comment.getAuthor() != null && comment.getAuthor().length() >= MAX_USERNAME_LENGTH) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("作者昵称长度超过系统允许最大值：" + MAX_USERNAME_LENGTH)
+                    .build();
+        }
+        if (comment.getLink() != null && comment.getLink().length() >= MAX_LINK_LENGTH) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("网站链接长度超过系统允许最大值：" + MAX_LINK_LENGTH)
+                    .build();
+        }
         Long objId;
         try {
             objId = Long.parseLong(id);

@@ -23,8 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-import static net.renfei.config.SystemConfig.RE_CAPTCHA_MIN_SOURCE;
-import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
+import static net.renfei.config.SystemConfig.*;
 
 /**
  * 认证接口
@@ -157,6 +156,18 @@ public class AuthorizationApiController extends BaseController implements Author
         } else {
             // 调用失败，放弃校验，不能影响用户注册操作
             logger.error("reCaptchaService 调用失败，返回内容：{}", JacksonUtil.obj2String(verifyResponse));
+        }
+        if (signUpVO.getUserName().trim().toLowerCase().length() >= MAX_USERNAME_LENGTH) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("用户名长度超过系统允许的最大值：" + MAX_USERNAME_LENGTH)
+                    .build();
+        }
+        if (signUpVO.getEmail().length() >= MAX_USERNAME_LENGTH) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("邮箱地址长度超过系统允许最大值：" + MAX_USERNAME_LENGTH)
+                    .build();
         }
         signUpVO.setUserName(signUpVO.getUserName().trim().toLowerCase());
         signUpVO.setPassword(sysService.decrypt(signUpVO.getPassword(), signUpVO.getKeyUuid()));
