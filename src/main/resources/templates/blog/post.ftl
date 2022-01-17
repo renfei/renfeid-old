@@ -39,9 +39,6 @@
                     <img src="${pageView.object.post.featuredImage!}" alt="${pageView.object.post.title!}" width="850px" height="400px"
                          class="img-fluid shadow mb-5 bg-white rounded"/>
                 </#if>
-                <#if downloadDO??>
-                    <@download downloadDO></@download>
-                </#if>
                 <div class="renfei-content">
                     </@compress>
                     ${pageView.object.post.content!}
