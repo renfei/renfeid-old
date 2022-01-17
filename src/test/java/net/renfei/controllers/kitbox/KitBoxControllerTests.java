@@ -167,7 +167,11 @@ public class KitBoxControllerTests extends ApplicationTests {
 
     @Test
     public void plistTest() throws Exception {
-        this.mockMvc.perform(get("/kitbox/plist"))
+        Map<String, Object> csrf = new HashMap<>();
+        csrf.put("parameterName", "_csrf");
+        csrf.put("token", "token");
+        this.mockMvc.perform(get("/kitbox/plist")
+                        .sessionAttr("_csrf", csrf))
                 .andDo(print())
                 .andExpect(status().isOk());
         this.mockMvc.perform(post("/kitbox/plist")
