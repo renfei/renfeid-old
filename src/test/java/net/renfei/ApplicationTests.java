@@ -29,8 +29,8 @@ public class ApplicationTests {
     protected ApplicationContext applicationContext;
     @Autowired
     private WebApplicationContext webApplicationContext;
-    protected static MockMvc mockMvc;
-    protected static MockHttpSession session;
+    protected MockMvc mockMvc;
+    protected MockHttpSession session;
 
     @BeforeEach
     public void before() throws Exception {
