@@ -4253,6 +4253,27 @@ CREATE TABLE `sys_verification_code`  (
 -- Records of sys_verification_code
 -- ----------------------------
 
+-- ----------------------------
+-- Table structure for wechat_keyword
+-- ----------------------------
+DROP TABLE IF EXISTS `wechat_keyword`;
+CREATE TABLE `wechat_keyword` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `key_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '关键字',
+  `key_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '类型，文本还是关联内部系统',
+  `title` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图文标题',
+  `description` varchar(255) DEFAULT NULL COMMENT '图文消息描述',
+  `pic_url` varchar(255) DEFAULT NULL COMMENT '图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200',
+  `url` varchar(255) DEFAULT NULL COMMENT '点击图文消息跳转链接',
+  `media_id` varchar(255) DEFAULT NULL COMMENT '媒体ID，可以是语音或视频或图片素材',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='微信消息关键字';
+
+-- ----------------------------
+-- Records of wechat_keyword
+-- ----------------------------
+INSERT INTO `wechat_keyword` VALUES (1, '你好', 'text', '嗨！你好。今天在公司听到一句惨绝人寰骂人的话：“你TM就是一个没有对象的野指针！”', NULL, NULL, NULL, NULL);
+INSERT INTO `wechat_keyword` VALUES (2, '您好', 'test', '嗨！您好。一同学问我，软件外包是什么。解释了几句还没明白，遂想了一下：包工头知道吧？顿悟！', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for weibo_postmeta
