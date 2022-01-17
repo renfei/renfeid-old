@@ -109,6 +109,25 @@ CREATE TABLE `docs_online_documents`  (
 -- ----------------------------
 INSERT INTO `docs_online_documents` VALUES (1, 'Java', 'JavaSE', '8u281', 'en', 'https://cdn.renfei.net/docs/java/javase/8u281/en/index.html', 'Java SE 8 API 英文原版在线文档手册');
 
+-- ----------------------------
+-- Table structure for kitbox_short_url
+-- ----------------------------
+DROP TABLE IF EXISTS `kitbox_short_url`;
+CREATE TABLE `kitbox_short_url` (
+ `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+ `short_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '短网址编号',
+ `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '长网址',
+ `add_time` datetime NOT NULL COMMENT '添加时间',
+ `views` bigint(255) unsigned NOT NULL DEFAULT 0 COMMENT '访问量',
+ `state_code` int(11) NOT NULL DEFAULT 1 COMMENT '状态',
+ `add_user` bigint(20) DEFAULT NULL COMMENT '添加用户',
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='工具箱：短网址';
+
+-- ----------------------------
+-- Records of kitbox_short_url
+-- ----------------------------
+
 
 -- ----------------------------
 -- Table structure for leaf_alloc

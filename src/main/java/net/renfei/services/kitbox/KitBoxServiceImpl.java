@@ -1,24 +1,31 @@
 package net.renfei.services.kitbox;
 
+import com.github.pagehelper.PageHelper;
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
+import net.renfei.domain.user.User;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.LinkTree;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.kitbox.KitBoxMenus;
+import net.renfei.repositories.KitboxShortUrlMapper;
+import net.renfei.repositories.model.KitboxShortUrl;
+import net.renfei.repositories.model.KitboxShortUrlExample;
 import net.renfei.services.BaseService;
 import net.renfei.services.KitBoxService;
 import net.renfei.services.RedisService;
 import net.renfei.services.SysService;
+import net.renfei.utils.ListUtils;
 import net.renfei.utils.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -36,10 +43,14 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     public static final String OTHER_TOOL = "otherTool";
     private final SysService sysService;
     private final RedisService redisService;
+    private final KitboxShortUrlMapper shortUrlMapper;
 
-    public KitBoxServiceImpl(SysService sysService, RedisService redisService) {
+    public KitBoxServiceImpl(SysService sysService,
+                             RedisService redisService,
+                             KitboxShortUrlMapper kitboxShortUrlMapper) {
         this.sysService = sysService;
         this.redisService = redisService;
+        this.shortUrlMapper = kitboxShortUrlMapper;
     }
 
     /**
@@ -238,6 +249,49 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
         }
     }
 
+    /**
+     * 获取ShortUrl对象
+     *
+     * @param shortUrl 短网址
+     * @return
+     */
+    @Override
+    public KitboxShortUrl getShortUrl(String shortUrl) {
+        if (shortUrl == null || shortUrl.length() == 0) {
+            return null;
+        }
+        PageHelper.startPage(1, 1);
+        KitboxShortUrlExample shortUrlExample = new KitboxShortUrlExample();
+        shortUrlExample.setOrderByClause("add_time ASC");
+        shortUrlExample.createCriteria()
+                .andShortUrlEqualTo(shortUrl)
+                .andStateCodeEqualTo(1);
+        KitboxShortUrl shortUrl1 = ListUtils.getOne(shortUrlMapper.selectByExample(shortUrlExample));
+        if (shortUrl1 != null) {
+            shortUrl1.setViews(shortUrl1.getViews() + 1);
+            updateShortUrl(shortUrl1);
+        }
+        return shortUrl1;
+    }
+
+    @Override
+    public KitboxShortUrl createShortUrl(String url, User user) {
+        KitboxShortUrl shortUrl = new KitboxShortUrl();
+        shortUrl.setShortUrl(getShortUrl());
+        shortUrl.setUrl(url);
+        shortUrl.setAddTime(new Date(System.currentTimeMillis()));
+        shortUrl.setAddUser(user == null ? null : user.getId());
+        shortUrl.setStateCode(1);
+        shortUrl.setViews(0L);
+        shortUrlMapper.insertSelective(shortUrl);
+        return shortUrl;
+    }
+
+    @Override
+    public void updateShortUrl(KitboxShortUrl shortUrl) {
+        shortUrlMapper.updateByPrimaryKeySelective(shortUrl);
+    }
+
     private LinkTree buildLinkTree(KitBoxTypeEnum kitBoxTypeEnum) {
         assert SYSTEM_CONFIG != null;
         return LinkTree.builder()
@@ -245,5 +299,42 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
                 .rel(kitBoxTypeEnum.getReadme())
                 .text(kitBoxTypeEnum.getTitle())
                 .build();
+    }
+
+    private String getShortUrl() {
+        KitboxShortUrl lastShortUrl = getLastShortUrl();
+        int len = 4;
+        if (lastShortUrl != null) {
+            len = lastShortUrl.getShortUrl().length();
+        }
+        return getShortUrl(len);
+    }
+
+    private String getShortUrl(int len) {
+        String url = StringUtils.getRandomString(len);
+        for (int i = 0; !check(url); i++) {
+            if (i > 5) {
+                len++;
+            }
+            url = StringUtils.getRandomString(len);
+        }
+        return url;
+    }
+
+    private boolean check(String url) {
+        return getShortUrl(url) == null;
+    }
+
+    /**
+     * 查询最新的一条记录
+     *
+     * @return
+     */
+    private KitboxShortUrl getLastShortUrl() {
+        PageHelper.startPage(1, 1);
+        KitboxShortUrlExample shortUrlExample = new KitboxShortUrlExample();
+        shortUrlExample.setOrderByClause("add_time DESC");
+        shortUrlExample.createCriteria();
+        return ListUtils.getOne(shortUrlMapper.selectByExample(shortUrlExample));
     }
 }

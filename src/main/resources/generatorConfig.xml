@@ -66,6 +66,7 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_logs"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_account"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_verification_code"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="wechat_keyword"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="wechat_keyword"/>-->
+        <table schema="renfeid" delimitAllColumns="true" tableName="kitbox_short_url"/>
     </context>
 </generatorConfiguration>

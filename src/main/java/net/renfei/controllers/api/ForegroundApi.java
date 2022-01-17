@@ -70,4 +70,9 @@ public interface ForegroundApi {
     @Operation(summary = "微博点踩接口", tags = {"前台接口"})
     @OperationLog(module = SystemTypeEnum.WEIBO, desc = "微博点赞", operation = OperationTypeEnum.CREATE)
     APIResult weiboThumbsDown(@PathVariable("id") Long id);
+
+    @PostMapping("kitbox/ShortURL/do")
+    @Operation(summary = "新增短网址", description = "新增短网址", tags = "前台接口")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "新增短网址", operation = OperationTypeEnum.CREATE)
+    APIResult addShortUrl(String url);
 }

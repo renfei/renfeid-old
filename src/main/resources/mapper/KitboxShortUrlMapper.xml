@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.renfei.repositories.KitboxShortUrlMapper">
+  <resultMap id="BaseResultMap" type="net.renfei.repositories.model.KitboxShortUrl">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="short_url" jdbcType="VARCHAR" property="shortUrl" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="views" jdbcType="BIGINT" property="views" />
+    <result column="state_code" jdbcType="INTEGER" property="stateCode" />
+    <result column="add_user" jdbcType="BIGINT" property="addUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    `id`, `short_url`, `url`, `add_time`, `views`, `state_code`, `add_user`
+  </sql>
+  <select id="selectByExample" parameterType="net.renfei.repositories.model.KitboxShortUrlExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from kitbox_short_url
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from kitbox_short_url
+    where `id` = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from kitbox_short_url
+    where `id` = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="net.renfei.repositories.model.KitboxShortUrlExample">
+    delete from kitbox_short_url
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="net.renfei.repositories.model.KitboxShortUrl">
+    insert into kitbox_short_url (`id`, `short_url`, `url`, 
+      `add_time`, `views`, `state_code`, 
+      `add_user`)
+    values (#{id,jdbcType=BIGINT}, #{shortUrl,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{views,jdbcType=BIGINT}, #{stateCode,jdbcType=INTEGER}, 
+      #{addUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="net.renfei.repositories.model.KitboxShortUrl">
+    insert into kitbox_short_url
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        `id`,
+      </if>
+      <if test="shortUrl != null">
+        `short_url`,
+      </if>
+      <if test="url != null">
+        `url`,
+      </if>
+      <if test="addTime != null">
+        `add_time`,
+      </if>
+      <if test="views != null">
+        `views`,
+      </if>
+      <if test="stateCode != null">
+        `state_code`,
+      </if>
+      <if test="addUser != null">
+        `add_user`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="shortUrl != null">
+        #{shortUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="views != null">
+        #{views,jdbcType=BIGINT},
+      </if>
+      <if test="stateCode != null">
+        #{stateCode,jdbcType=INTEGER},
+      </if>
+      <if test="addUser != null">
+        #{addUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="net.renfei.repositories.model.KitboxShortUrlExample" resultType="java.lang.Long">
+    select count(*) from kitbox_short_url
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update kitbox_short_url
+    <set>
+      <if test="record.id != null">
+        `id` = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.shortUrl != null">
+        `short_url` = #{record.shortUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null">
+        `url` = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addTime != null">
+        `add_time` = #{record.addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.views != null">
+        `views` = #{record.views,jdbcType=BIGINT},
+      </if>
+      <if test="record.stateCode != null">
+        `state_code` = #{record.stateCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.addUser != null">
+        `add_user` = #{record.addUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update kitbox_short_url
+    set `id` = #{record.id,jdbcType=BIGINT},
+      `short_url` = #{record.shortUrl,jdbcType=VARCHAR},
+      `url` = #{record.url,jdbcType=VARCHAR},
+      `add_time` = #{record.addTime,jdbcType=TIMESTAMP},
+      `views` = #{record.views,jdbcType=BIGINT},
+      `state_code` = #{record.stateCode,jdbcType=INTEGER},
+      `add_user` = #{record.addUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.repositories.model.KitboxShortUrl">
+    update kitbox_short_url
+    <set>
+      <if test="shortUrl != null">
+        `short_url` = #{shortUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        `url` = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        `add_time` = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="views != null">
+        `views` = #{views,jdbcType=BIGINT},
+      </if>
+      <if test="stateCode != null">
+        `state_code` = #{stateCode,jdbcType=INTEGER},
+      </if>
+      <if test="addUser != null">
+        `add_user` = #{addUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where `id` = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.KitboxShortUrl">
+    update kitbox_short_url
+    set `short_url` = #{shortUrl,jdbcType=VARCHAR},
+      `url` = #{url,jdbcType=VARCHAR},
+      `add_time` = #{addTime,jdbcType=TIMESTAMP},
+      `views` = #{views,jdbcType=BIGINT},
+      `state_code` = #{stateCode,jdbcType=INTEGER},
+      `add_user` = #{addUser,jdbcType=BIGINT}
+    where `id` = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

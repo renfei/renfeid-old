@@ -7,15 +7,19 @@ import net.renfei.domain.kitbox.KitBoxTypeEnum;
 import net.renfei.exception.IP2LocationException;
 import net.renfei.ip2location.IPResult;
 import net.renfei.model.APIResult;
+import net.renfei.model.StateCodeEnum;
 import net.renfei.model.kitbox.KitboxPageView;
 import net.renfei.model.kitbox.PlistVO;
+import net.renfei.model.kitbox.ShortUrlVO;
 import net.renfei.model.system.SystemTypeEnum;
+import net.renfei.repositories.model.KitboxShortUrl;
 import net.renfei.services.IP2LocationService;
 import net.renfei.services.KitBoxService;
 import net.renfei.utils.IpUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -640,17 +644,27 @@ public class KitBoxController extends BaseController {
     }
 
     @ResponseBody
-    @PostMapping("ShortURL/do")
-    public APIResult setShortUrl(String url) {
-        // TODO 短网址
-        return null;
-    }
-
-    @ResponseBody
     @RequestMapping("ShortURL/do/{url}")
     public APIResult getShortUrl(@PathVariable("url") String url) {
-        // TODO 短网址
-        return null;
+        if (ObjectUtils.isEmpty(url)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("Url不合法")
+                    .build();
+        }
+        // TODO 记录日志方便统计
+        KitboxShortUrl shortUrl = kitBoxService.getShortUrl(url);
+        if (shortUrl != null) {
+            ShortUrlVO shortUrlVO = new ShortUrlVO();
+            BeanUtils.copyProperties(shortUrl, shortUrlVO);
+            shortUrlVO.setShortUrl(shortUrl.getShortUrl());
+            return new APIResult(shortUrlVO);
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("短网址不存在")
+                    .build();
+        }
     }
 
     /**

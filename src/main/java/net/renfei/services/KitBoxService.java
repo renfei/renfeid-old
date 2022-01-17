@@ -2,9 +2,11 @@ package net.renfei.services;
 
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
+import net.renfei.domain.user.User;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.kitbox.KitBoxMenus;
+import net.renfei.repositories.model.KitboxShortUrl;
 
 import java.util.List;
 
@@ -40,4 +42,23 @@ public interface KitBoxService {
     APIResult<String> execDigTrace(String domain, DnsTypeEnum dnsTypeEnum);
 
     APIResult<String> execWhois(String domain);
+
+    /**
+     * 获取ShortUrl对象
+     *
+     * @param shortUrl 短网址
+     * @return
+     */
+    KitboxShortUrl getShortUrl(String shortUrl);
+
+    /**
+     * 添加短网址
+     *
+     * @param url
+     * @param user
+     * @return
+     */
+    KitboxShortUrl createShortUrl(String url, User user);
+
+    void updateShortUrl(KitboxShortUrl shortUrl);
 }

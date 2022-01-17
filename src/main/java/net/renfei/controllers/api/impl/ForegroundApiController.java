@@ -2,11 +2,11 @@ package net.renfei.controllers.api.impl;
 
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.ForegroundApi;
-import net.renfei.domain.BlogDomain;
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.WeiboDomain;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
+import net.renfei.model.kitbox.ShortUrlVO;
 import net.renfei.model.system.BlogVO;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.exception.NeedPasswordException;
@@ -14,10 +14,14 @@ import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.APIResult;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.repositories.model.KitboxShortUrl;
 import net.renfei.services.BlogService;
 import net.renfei.services.CommentService;
+import net.renfei.services.KitBoxService;
 import net.renfei.utils.IpUtils;
 import net.renfei.utils.SentryUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import static net.renfei.config.SystemConfig.*;
@@ -30,10 +34,14 @@ import static net.renfei.config.SystemConfig.*;
 @RestController
 public class ForegroundApiController extends BaseController implements ForegroundApi {
     private final BlogService blogService;
+    private final KitBoxService kitBoxService;
     private final CommentService commentService;
 
-    public ForegroundApiController(BlogService blogService, CommentService commentService) {
+    public ForegroundApiController(BlogService blogService,
+                                   KitBoxService kitBoxService,
+                                   CommentService commentService) {
         this.blogService = blogService;
+        this.kitBoxService = kitBoxService;
         this.commentService = commentService;
     }
 
@@ -144,5 +152,34 @@ public class ForegroundApiController extends BaseController implements Foregroun
             SentryUtils.captureException(e);
         }
         return APIResult.success();
+    }
+
+    @Override
+    public APIResult addShortUrl(String url) {
+        if (ObjectUtils.isEmpty(url)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("Url不合法")
+                    .build();
+        }
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            KitboxShortUrl shortUrl = kitBoxService.createShortUrl(url, getSignUser());
+            if (shortUrl != null) {
+                ShortUrlVO shortUrlVO = new ShortUrlVO();
+                BeanUtils.copyProperties(shortUrl, shortUrlVO);
+                shortUrlVO.setShortUrl(ShortUrlVO.BASE_DOMAIN + shortUrl.getShortUrl());
+                return new APIResult(shortUrlVO);
+            } else {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Error)
+                        .message("内部服务错误")
+                        .build();
+            }
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("Url不合法，必须以 http 或 https 开头")
+                    .build();
+        }
     }
 }

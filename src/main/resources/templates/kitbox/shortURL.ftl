@@ -45,6 +45,11 @@
                                          src="/other/qrcode?content=https://www.renfei.net/kitbox/qrcode"/>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="alert alert-secondary" role="alert">
+                                    温馨提示：<a href="JavaScript:signInFun()">登录</a>以后可以管理您的短网址和查看统计数据。
+                                </div>
+                            </div>
                         </div>
                         <div class="d-none d-sm-block">
                             <@adsense "9903187829" active></@adsense>
@@ -69,7 +74,7 @@
                     msg("原始 Url 必须填写！", "error");
                 } else {
                     $.ajax({
-                        url: '/kitbox/ShortURL/do',
+                        url: '/-/api/kitbox/ShortURL/do',
                         type: 'POST',
                         async: true,
                         data: {
@@ -85,6 +90,9 @@
                             } else {
                                 msg(data.message, "error");
                             }
+                        },
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                         },
                         error: function (xhr, textStatus) {
                             $("#data").val("Error.\n" + xhr.responseText);

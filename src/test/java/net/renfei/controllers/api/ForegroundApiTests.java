@@ -1,10 +1,19 @@
 package net.renfei.controllers.api;
 
 import net.renfei.ApplicationTests;
+import net.renfei.model.APIResult;
+import net.renfei.model.kitbox.ShortUrlVO;
+import net.renfei.utils.JacksonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -70,6 +79,29 @@ public class ForegroundApiTests extends ApplicationTests {
         this.mockMvc.perform(post("/-/api/weibo/1/thumbsDown")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+    }
+
+    @Test
+    public void shortUrlTest() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        MockHttpServletResponse response = this.mockMvc.perform(post("/-/api/kitbox/ShortURL/do")
+                        .with(csrf())
+                        .param("url", "https://www.renfei.net")
+                        .content(JacksonUtil.obj2String(map))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200))
+                .andReturn().getResponse();
+        APIResult apiResult = JacksonUtil.string2Obj(response.getContentAsString(), APIResult.class);
+        Map<String, Object> shortUrlVO = (LinkedHashMap<String, Object>) apiResult.getData();
+        String url = shortUrlVO.get("shortUrl").toString().split("https://rnf.pw/")[1];
+        this.mockMvc.perform(get("/kitbox/ShortURL/do/" + url))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
