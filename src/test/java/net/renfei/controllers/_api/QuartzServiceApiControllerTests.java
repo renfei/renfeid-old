@@ -27,6 +27,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
         quartzJob.setCron("0 0 0/5 * * ? ");
         this.mockMvc.perform(post("/_/api/quartz/job")
                         .with(csrf())
+                        .session(session)
                         .content(JacksonUtil.obj2String(quartzJob))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -35,6 +36,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
                 .andExpect(jsonPath("$.code").value(200));
         this.mockMvc.perform(put("/_/api/quartz/job/pause")
                         .with(csrf())
+                        .session(session)
                         .param("jobName", "testJob")
                         .param("jobGroup", "testJobGroup"))
                 .andDo(print())
@@ -43,6 +45,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
                 .andExpect(jsonPath("$.code").value(200));
         this.mockMvc.perform(put("/_/api/quartz/job/resume")
                         .with(csrf())
+                        .session(session)
                         .param("jobName", "testJob")
                         .param("jobGroup", "testJobGroup"))
                 .andDo(print())
@@ -51,6 +54,7 @@ public class QuartzServiceApiControllerTests extends ApplicationTests {
                 .andExpect(jsonPath("$.code").value(200));
         this.mockMvc.perform(put("/_/api/quartz/job")
                         .with(csrf())
+                        .session(session)
                         .param("jobName", "testJob")
                         .param("jobGroup", "testJobGroup")
                         .param("cron", "0 0 0/5 * * ? "))
