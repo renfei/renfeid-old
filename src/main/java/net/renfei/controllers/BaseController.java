@@ -1,8 +1,10 @@
 package net.renfei.controllers;
 
 import net.renfei.config.SystemConfig;
+import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.model.*;
+import net.renfei.model.system.UserDetail;
 import net.renfei.services.PaginationService;
 import net.renfei.services.SysService;
 import net.renfei.utils.ApplicationContextUtil;
@@ -11,8 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -97,6 +101,24 @@ public abstract class BaseController {
             return (User) object;
         }
         return null;
+    }
+
+    protected void updateSignUser(User user) {
+        assert SYSTEM_CONFIG != null;
+        if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
+            request.getSession().setAttribute(SESSION_KEY, user);
+        } else {
+            UserDetail userDetails = new UserDetail(user);
+            UsernamePasswordAuthenticationToken
+                    authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null,
+                    userDetails.getAuthorities()
+            );
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
     }
 
     protected ModelAndView checkSigned() {

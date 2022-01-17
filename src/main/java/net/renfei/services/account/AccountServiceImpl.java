@@ -417,4 +417,32 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         }
         return "";
     }
+
+    @Override
+    public SysAccount getAccountByUser(User user) {
+        if (user == null) {
+            return null;
+        }
+        SysAccountExample example = new SysAccountExample();
+        example.createCriteria().andUuidEqualTo(user.getUuid());
+        return ListUtils.getOne(accountMapper.selectByExample(example));
+    }
+
+    @Override
+    public SysAccount getAccountByEmail(String email) {
+        if (ObjectUtils.isEmpty(email) || email.isEmpty()) {
+            return null;
+        }
+        if (!StringUtils.isEmail(email.trim().toLowerCase())) {
+            return null;
+        }
+        SysAccountExample example = new SysAccountExample();
+        example.createCriteria().andEmailEqualTo(email.trim().toLowerCase());
+        return ListUtils.getOne(accountMapper.selectByExample(example));
+    }
+
+    @Override
+    public void updateAccount(SysAccount account) {
+        accountMapper.updateByPrimaryKeySelective(account);
+    }
 }

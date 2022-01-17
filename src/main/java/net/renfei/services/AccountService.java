@@ -6,6 +6,7 @@ import net.renfei.exception.NeedU2FException;
 import net.renfei.model.auth.SignInVO;
 import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
+import net.renfei.repositories.model.SysAccount;
 import net.renfei.utils.PasswordUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,4 +48,10 @@ public interface AccountService {
      * @return
      */
     String signOut(User user);
+
+    SysAccount getAccountByUser(User user);
+
+    SysAccount getAccountByEmail(String email);
+
+    void updateAccount(SysAccount account);
 }

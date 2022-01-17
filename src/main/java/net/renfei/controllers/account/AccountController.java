@@ -44,4 +44,18 @@ public class AccountController extends BaseController {
         mv.setViewName("account/manage");
         return mv;
     }
+
+    @GetMapping("manage/email")
+    public ModelAndView manageEmail(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        ModelAndView modelAndView = checkSigned();
+        if (modelAndView != null) {
+            return modelAndView;
+        }
+        AccountPageView<User> pageView = buildPageView(AccountPageView.class, getSignUser());
+        mv.addObject("pageView", pageView);
+        pageView.getPageHead().setTitle("管理您的电子邮箱地址 - " + SYSTEM_CONFIG.getSiteName());
+        mv.setViewName("account/email");
+        return mv;
+    }
 }
