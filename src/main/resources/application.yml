@@ -5,6 +5,10 @@ spring:
     multipart:
       max-file-size: 32MB
       max-request-size: 64MB
+  session:
+    store-type: redis
+    redis:
+      namespace: spring:session
   datasource:
     druid:
       initial-size: 5

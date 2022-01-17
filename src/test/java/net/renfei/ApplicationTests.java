@@ -1,8 +1,6 @@
 package net.renfei;
 
-import net.renfei.domain.UserDomain;
 import net.renfei.model.auth.SignInVO;
-import net.renfei.model.system.UserDetail;
 import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.JacksonUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,9 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -28,13 +26,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ApplicationTests {
     @Autowired
-    protected MockMvc mockMvc;
-    @Autowired
     protected ApplicationContext applicationContext;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+    protected static MockMvc mockMvc;
     protected static MockHttpSession session;
 
     @BeforeEach
     public void before() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         if (session == null) {
             // 走登陆接口
             session = new MockHttpSession();
