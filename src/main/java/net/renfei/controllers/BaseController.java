@@ -99,6 +99,13 @@ public abstract class BaseController {
         return null;
     }
 
+    protected ModelAndView checkSigned() {
+        if (getSignUser() == null) {
+            return new ModelAndView("redirect:/auth/signIn?callback=" + request.getRequestURL());
+        }
+        return null;
+    }
+
     protected String getCallBack(String callback) {
         if (!ObjectUtils.isEmpty(callback)) {
             try {

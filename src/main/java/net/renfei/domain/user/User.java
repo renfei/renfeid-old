@@ -3,20 +3,26 @@ package net.renfei.domain.user;
 import net.renfei.model.SecretLevelEnum;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 用户域实体类
  *
  * @author renfei
  */
-public final class User implements Serializable {
+public class User implements Serializable {
     private Long id;
     private String userName;
     private String uuid;
     private String email;
+    private String phone;
+    private String lastName;
+    private String firstName;
     private String webSite;
     private String ucScript;
     private SecretLevelEnum secretLevelEnum;
+    private String totp;
+    private Date registrationDate;
 
     public User() {
     }
@@ -56,6 +62,30 @@ public final class User implements Serializable {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public String getWebSite() {
         return webSite;
     }
@@ -78,5 +108,21 @@ public final class User implements Serializable {
 
     public void setSecretLevelEnum(SecretLevelEnum secretLevelEnum) {
         this.secretLevelEnum = secretLevelEnum;
+    }
+
+    public String getTotp() {
+        return totp;
+    }
+
+    public void setTotp(String totp) {
+        this.totp = totp;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
     }
 }

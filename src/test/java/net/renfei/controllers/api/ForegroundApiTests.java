@@ -89,6 +89,7 @@ public class ForegroundApiTests extends ApplicationTests {
     public void shortUrlTest() throws Exception {
         Map<String, String> map = new HashMap<>();
         MockHttpServletResponse response = this.mockMvc.perform(post("/-/api/kitbox/ShortURL/do")
+                        .session(session)
                         .with(csrf())
                         .param("url", "https://www.renfei.net")
                         .content(JacksonUtil.obj2String(map))
