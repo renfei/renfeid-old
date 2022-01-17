@@ -12,6 +12,7 @@ import java.util.List;
  * @author RenFei(i @ renfei.net)
  */
 public class KitBoxMenus implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private String title;
     private String elementId;
     private Boolean isOpen;

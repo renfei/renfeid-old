@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class LeafAlloc implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
+
     private String bizTag;
 
     private Long maxId;
@@ -13,8 +15,6 @@ public class LeafAlloc implements Serializable {
     private String description;
 
     private Date updateTime;
-
-    private static final long serialVersionUID = 1L;
 
     public String getBizTag() {
         return bizTag;

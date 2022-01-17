@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SiteMapXml implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private static final Logger logger = LoggerFactory.getLogger(SiteMapXml.class);
-    private static final long serialVersionUID = 1L;
     private String loc;
     private ChangefreqEnum changefreqEnum;
     private float priority;

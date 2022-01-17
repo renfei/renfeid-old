@@ -15,7 +15,7 @@ public class SysCommentsWithBLOBs extends SysComments implements Serializable {
 
     private String content;
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -314420603322403668L;
 
     public String getAuthor() {
         return author;

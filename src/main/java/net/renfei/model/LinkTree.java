@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class LinkTree implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private String icon;
     private String href;
     private String text;

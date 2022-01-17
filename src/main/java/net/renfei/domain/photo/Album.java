@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Album implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
+
     private Long id;
 
     private Long categoryId;

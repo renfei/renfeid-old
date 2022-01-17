@@ -10,6 +10,7 @@ import java.io.Serializable;
  * @date : 2020-11-09 00:01
  */
 public class IkAnalyzeVO implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private String word;
     private String type;
 

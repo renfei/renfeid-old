@@ -12,6 +12,7 @@ import java.io.Serializable;
  * 社会化分享
  */
 public class SocialSharing implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private String title;
     private String describes;
     private String url;

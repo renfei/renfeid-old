@@ -18,6 +18,7 @@ import java.util.Date;
  */
 @Document(indexName = "searchitem")
 public class SearchItem implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     public static final String INDEX_COORDINATES = "searchitem";
     @Id
     private String uuid;

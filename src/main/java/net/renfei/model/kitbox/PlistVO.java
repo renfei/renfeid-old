@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @author RenFei(i @ renfei.net)
  */
 public class PlistVO implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private String appname;
     private String version;
     private String bundleid;

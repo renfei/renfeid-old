@@ -29,6 +29,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 
 import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 
@@ -97,8 +98,13 @@ public abstract class BaseController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             object = authentication.getPrincipal();
         }
-        if (object instanceof User) {
-            return (User) object;
+        if (object instanceof UserDetail) {
+            UserDetail userDetail = (UserDetail) object;
+            Optional<UserDetail> optUserDetail = Optional.of(userDetail);
+            return optUserDetail
+                    .flatMap(UserDetail::getUserDomain)
+                    .flatMap(UserDomain::getUser)
+                    .orElse(null);
         }
         return null;
     }

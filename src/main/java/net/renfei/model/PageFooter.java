@@ -9,6 +9,7 @@ import java.util.List;
  * @author renfei
  */
 public class PageFooter implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private List<FooterMenuLinks> footerMenuLinks;
     private boolean showFriendlyLink;
     private List<LinkTree> friendlyLink;

@@ -1,9 +1,11 @@
 package net.renfei.services.system;
 
+import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.model.*;
 import net.renfei.model.system.RegionVO;
+import net.renfei.model.system.UserDetail;
 import net.renfei.repositories.*;
 import net.renfei.repositories.model.*;
 import net.renfei.services.*;
@@ -396,8 +398,13 @@ public class SysServiceImpl extends BaseService implements SysService {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             object = authentication.getPrincipal();
         }
-        if (object instanceof User) {
-            pageHeader.setUser((User) object);
+        if (object instanceof UserDetail) {
+            UserDetail userDetail = (UserDetail) object;
+            Optional<UserDetail> optUserDetail = Optional.of(userDetail);
+            pageHeader.setUser(optUserDetail
+                    .flatMap(UserDetail::getUserDomain)
+                    .flatMap(UserDomain::getUser)
+                    .orElse(null));
         }
         return pageHeader;
     }

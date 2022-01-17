@@ -9,7 +9,7 @@ public class PhotoAlbumWithBLOBs extends PhotoAlbum implements Serializable {
 
     private String describes;
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -314420603322403668L;
 
     public String getTitle() {
         return title;

@@ -11,7 +11,7 @@ import java.util.List;
  * @author RenFei(i @ renfei.net)
  */
 public class FeedVO implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -314420603322403668L;
     private String title;
     private String author;
     private String link;
@@ -21,6 +21,7 @@ public class FeedVO implements Serializable {
     private List<Item> item;
 
     public static class Item implements Serializable {
+        private static final long serialVersionUID = -314420603322403668L;
         private String title;
         private String author;
         private String link;
@@ -96,6 +97,7 @@ public class FeedVO implements Serializable {
     }
 
     public static class Image implements Serializable {
+        private static final long serialVersionUID = -314420603322403668L;
         private String url;
         private String title;
         private String link;

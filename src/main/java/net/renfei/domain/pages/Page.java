@@ -10,6 +10,8 @@ import java.util.Date;
  * @author renfei
  */
 public class Page implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
+
     private Long id;
 
     private Long pageAuthor;

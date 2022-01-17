@@ -3,6 +3,8 @@ package net.renfei.repositories.model;
 import java.io.Serializable;
 
 public class BlogCategory implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
+
     private Long id;
 
     private String enName;
@@ -10,8 +12,6 @@ public class BlogCategory implements Serializable {
     private String zhName;
 
     private Integer secretLevel;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

@@ -11,6 +11,7 @@ import java.util.Date;
  * @author renfei
  */
 public class Post implements Serializable {
+    private static final long serialVersionUID = -7968750331702468616L;
     private Long id;
     private String title;
     private String keyword;

@@ -13,7 +13,7 @@ public class SysSiteFriendlyLinkWithBLOBs extends SysSiteFriendlyLink implements
 
     private String remarks;
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -314420603322403668L;
 
     public String getSitename() {
         return sitename;

@@ -8,6 +8,7 @@ import java.io.Serializable;
  * @author renfei
  */
 public class Category implements Serializable {
+    private static final long serialVersionUID = -1274485695901014770L;
     private Long id;
     private String enName;
     private String zhName;

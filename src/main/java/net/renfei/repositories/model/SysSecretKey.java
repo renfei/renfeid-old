@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class SysSecretKey implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
+
     private Long id;
 
     private String uuid;
@@ -11,8 +13,6 @@ public class SysSecretKey implements Serializable {
     private Date createTime;
 
     private Date updateTime;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

@@ -2,7 +2,12 @@ package net.renfei.repositories.model;
 
 import java.io.Serializable;
 
+/**
+ * @author renfei
+ */
 public class WeiboPostmeta implements Serializable {
+    private static final long serialVersionUID = -2680543383488621051L;
+
     private Long id;
 
     private Long postId;
@@ -10,8 +15,6 @@ public class WeiboPostmeta implements Serializable {
     private String metaKey;
 
     private String metaValue;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

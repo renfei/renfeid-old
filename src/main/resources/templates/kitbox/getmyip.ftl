@@ -61,7 +61,8 @@
                                     <p>如果只想查询IPv4地址可以使用：<a href="http://ipv4.renfei.net" target="_blank">http://ipv4.renfei.net</a>
                                         查看自己的互联网公网出口IP地址。</p>
                                     <p>
-                                    <h3>Linux命令行用户获取互联网公网出口IP地址</h3>Linux用户没有图形界面，例如在服务器上，可以使用 curl
+                                    <h3>Linux命令行用户获取互联网公网出口IP地址</h3>
+                                    <p>Linux用户没有图形界面，例如在服务器上，可以使用 curl
                                     命令查看自己的互联网公网出口IP地址：</p>
                                     <pre><code class="bash">curl&nbsp;ip.renfei.net</code></pre>
                                     <img src="//cdn.renfei.net/upload/image/2020/20200104134319.png" alt="获取互联网公网出口IP地址"

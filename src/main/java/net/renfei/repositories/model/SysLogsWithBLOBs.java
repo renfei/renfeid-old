@@ -2,7 +2,12 @@ package net.renfei.repositories.model;
 
 import java.io.Serializable;
 
+/**
+ * @author renfei
+ */
 public class SysLogsWithBLOBs extends SysLogs implements Serializable {
+    private static final long serialVersionUID = 5315015676769145768L;
+
     private String logDesc;
 
     private String requParam;
@@ -10,8 +15,6 @@ public class SysLogsWithBLOBs extends SysLogs implements Serializable {
     private String respParam;
 
     private String requAgent;
-
-    private static final long serialVersionUID = 1L;
 
     public String getLogDesc() {
         return logDesc;

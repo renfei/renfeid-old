@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class SysLogs implements Serializable {
+    private static final long serialVersionUID = 5315015676769145768L;
+
     private Long id;
 
     private String logLevel;
@@ -23,8 +25,6 @@ public class SysLogs implements Serializable {
     private String requIp;
 
     private Date logTime;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

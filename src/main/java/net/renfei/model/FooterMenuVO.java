@@ -10,6 +10,7 @@ import java.util.List;
  * @author RenFei(i @ renfei.net)
  */
 public class FooterMenuVO implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private String title;
     private List<LinkTree> links;
 

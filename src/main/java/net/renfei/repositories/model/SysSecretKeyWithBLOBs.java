@@ -2,12 +2,15 @@ package net.renfei.repositories.model;
 
 import java.io.Serializable;
 
+/**
+ * @author renfei
+ */
 public class SysSecretKeyWithBLOBs extends SysSecretKey implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
+
     private String publicKey;
 
     private String privateKey;
-
-    private static final long serialVersionUID = 1L;
 
     public String getPublicKey() {
         return publicKey;

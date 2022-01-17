@@ -21,6 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author renfei
  */
 public final class SysKeywordTag implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private Long id;
     private String enName;
     private String zhName;

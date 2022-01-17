@@ -2,6 +2,7 @@ package net.renfei.controllers.api.impl;
 
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.AuthorizationApi;
+import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
@@ -9,6 +10,7 @@ import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.auth.*;
+import net.renfei.model.system.UserDetail;
 import net.renfei.services.AccountService;
 import net.renfei.services.ReCaptchaService;
 import net.renfei.services.SysService;
@@ -118,8 +120,9 @@ public class AuthorizationApiController extends BaseController implements Author
         signInVO.setPassword(sysService.decrypt(signInVO.getPassword(), signInVO.getKeyUuid()));
         // 用户登陆服务
         User user = accountService.signIn(signInVO, request);
+        UserDetail userDetail = new UserDetail(new UserDomain(user));
         if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
-            request.getSession().setAttribute(SESSION_KEY, user);
+            request.getSession().setAttribute(SESSION_KEY, userDetail);
             return new APIResult<>(user.getUcScript());
         } else {
             // 签发TOKEN

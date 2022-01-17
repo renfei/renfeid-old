@@ -3,6 +3,8 @@ package net.renfei.domain.photo;
 import java.io.Serializable;
 
 public class AlbumImg implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
+
     private Long id;
 
     private Long photoId;

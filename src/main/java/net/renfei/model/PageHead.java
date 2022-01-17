@@ -9,6 +9,7 @@ import java.util.List;
  * @author renfei
  */
 public class PageHead implements Serializable {
+    private static final long serialVersionUID = 176048804132630553L;
     private String title;
     private String description;
     private String keywords;

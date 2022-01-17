@@ -11,7 +11,6 @@ public interface LeafService {
     /**
      * 发号服务
      *
-     * @param key
      * @return
      */
     Result getId();

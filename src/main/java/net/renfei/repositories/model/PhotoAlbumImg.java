@@ -2,14 +2,17 @@ package net.renfei.repositories.model;
 
 import java.io.Serializable;
 
+/**
+ * @author renfei
+ */
 public class PhotoAlbumImg implements Serializable {
+    private static final long serialVersionUID = 1016984216709422973L;
+
     private Long id;
 
     private Long photoId;
 
     private String uri;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

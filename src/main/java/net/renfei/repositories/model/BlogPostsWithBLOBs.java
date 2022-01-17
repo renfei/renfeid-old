@@ -17,7 +17,7 @@ public class BlogPostsWithBLOBs extends BlogPosts implements Serializable {
 
     private String sourceUrl;
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -314420603322403668L;
 
     public String getFeaturedImage() {
         return featuredImage;

@@ -12,6 +12,7 @@ import java.util.List;
  * @author RenFei(i @ renfei.net)
  */
 public class PostSidebarVO implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private List<PostSidebar> postSidebars;
 
     public static class PostSidebar implements Serializable {

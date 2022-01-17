@@ -43,6 +43,7 @@
                             <blockquote style="font-size: 14px;">
                                 <p>如果您想在您的网页上动态的生成二维码，您可以这样在您网页上声明一个图片：<br>
                                 <pre><code class="html">&lt;img src=&quot;https://www.renfei.net/other/qrcode?content=youtext&quot; /&gt;</code></pre>
+                                <p>
                                 其中「content=」后面跟的就是二维码的内容。
                                 </p>
                                 <footer>推荐内容控制在150字内，过多的内容可能会模糊不清。</footer>

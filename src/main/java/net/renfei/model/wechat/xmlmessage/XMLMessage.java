@@ -13,11 +13,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 public abstract class XMLMessage implements Serializable{
-	
-	private static Logger logger = LoggerFactory.getLogger(XMLMessage.class);
-
-	private static final long serialVersionUID = 8901661274548077509L;
-
+	private static final long serialVersionUID = -314420603322403668L;
+	private static final Logger logger = LoggerFactory.getLogger(XMLMessage.class);
 	protected String toUserName;
 	protected String fromUserName;
 	protected String msgType;

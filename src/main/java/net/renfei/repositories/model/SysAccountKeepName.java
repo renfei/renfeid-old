@@ -2,12 +2,14 @@ package net.renfei.repositories.model;
 
 import java.io.Serializable;
 
+/**
+ * @author renfei
+ */
 public class SysAccountKeepName implements Serializable {
+    private static final long serialVersionUID = 176048804132630553L;
     private Long id;
-
     private String userName;
 
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

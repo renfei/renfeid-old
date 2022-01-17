@@ -7,6 +7,7 @@ import java.util.Date;
  * @author renfei
  */
 public class OGProtocol implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private String title;
     private String description;
     private String type;

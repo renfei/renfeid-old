@@ -3,6 +3,8 @@ package net.renfei.repositories.model;
 import java.io.Serializable;
 
 public class DocsOnlineDocuments implements Serializable {
+    private static final long serialVersionUID = -3313594026006905529L;
+
     private Long id;
 
     private String category;
@@ -16,8 +18,6 @@ public class DocsOnlineDocuments implements Serializable {
     private String docLink;
 
     private String describe;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

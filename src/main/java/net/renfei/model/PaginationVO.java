@@ -2,7 +2,11 @@ package net.renfei.model;
 
 import java.io.Serializable;
 
+/**
+ * @author renfei
+ */
 public class PaginationVO implements Serializable {
+    private static final long serialVersionUID = 2827784018263113088L;
     private String link;
     private String page;
     private boolean active;

@@ -12,6 +12,7 @@ import java.util.List;
  * @author renfei
  */
 public final class Comment implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private Long id;
     private Long objectId;
     private Long reply;

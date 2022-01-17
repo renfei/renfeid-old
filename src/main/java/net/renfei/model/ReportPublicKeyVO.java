@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @author RenFei(i @ renfei.net)
  */
 public class ReportPublicKeyVO implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private String secretKeyId;
     private String publicKey;
 

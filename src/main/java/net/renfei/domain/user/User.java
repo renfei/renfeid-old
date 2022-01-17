@@ -11,6 +11,7 @@ import java.util.Date;
  * @author renfei
  */
 public class User implements Serializable {
+    private static final long serialVersionUID = -314420603322403668L;
     private Long id;
     private String userName;
     private String uuid;

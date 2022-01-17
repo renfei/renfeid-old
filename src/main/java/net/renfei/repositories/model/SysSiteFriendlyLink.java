@@ -20,7 +20,7 @@ public class SysSiteFriendlyLink implements Serializable {
 
     private Integer orderId;
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -314420603322403668L;
 
     public Long getId() {
         return id;
