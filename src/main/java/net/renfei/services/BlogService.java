@@ -1,5 +1,6 @@
 package net.renfei.services;
 
+import net.renfei.domain.system.SysKeywordTag;
 import net.renfei.domain.user.User;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
@@ -24,6 +25,18 @@ public interface BlogService {
      * @return
      */
     ListData<BlogVO> getAllPostList(User user, boolean isAdmin, int pages, int rows);
+
+    /**
+     * 获取所有文章列表
+     *
+     * @param sysKeywordTag
+     * @param user
+     * @param isAdmin
+     * @param pages
+     * @param rows
+     * @return
+     */
+    ListData<BlogVO> getAllPostListByTagName(SysKeywordTag sysKeywordTag, User user, boolean isAdmin, int pages, int rows);
 
     /**
      * 根据ID获取公开的博客文章

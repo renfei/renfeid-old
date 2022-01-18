@@ -136,6 +136,21 @@ public final class BlogDomain {
     /**
      * 获取全部文章列表
      *
+     * @param ids     ID列表
+     * @param user    登录用户
+     * @param isAdmin 是否是管理员操作
+     * @param pages   页码
+     * @param rows    每页容量
+     * @return
+     */
+    public static ListData<BlogDomain> allPostListInId(List<Long> ids, User user, boolean isAdmin, int pages, int rows) {
+        BlogDomain blogDomain = new BlogDomain();
+        return blogDomain.getAllPostListInId(ids, user, isAdmin, pages, rows);
+    }
+
+    /**
+     * 获取全部文章列表
+     *
      * @param user    登录用户
      * @param isAdmin 是否是管理员操作
      * @param pages   页码
@@ -146,6 +161,68 @@ public final class BlogDomain {
         BlogPostsExample example = new BlogPostsExample();
         example.setOrderByClause("post_date DESC");
         BlogPostsExample.Criteria criteria = example.createCriteria();
+        if (user != null) {
+            // 登录用户，判断保密等级
+            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevelEnum().getLevel());
+            if (isAdmin) {
+                // 管理员，除了被删除和修订版本，其他都显示
+                criteria
+                        .andPostStatusNotEqualTo(PostStatusEnum.DELETED.toString())
+                        .andPostStatusNotEqualTo(PostStatusEnum.REVISION.toString());
+            } else {
+                // 其他用户，只能查看已经发布的内容
+                criteria
+                        .andPostDateLessThanOrEqualTo(new Date())
+                        .andPostStatusEqualTo(PostStatusEnum.PUBLISH.toString());
+            }
+        } else {
+            // 未登录用户，只能查看非密内容、已经发布的内容
+            criteria
+                    .andSecretLevelLessThanOrEqualTo(SecretLevelEnum.UNCLASSIFIED.getLevel())
+                    .andPostDateLessThanOrEqualTo(new Date())
+                    .andPostStatusEqualTo(PostStatusEnum.PUBLISH.toString());
+        }
+        Page<BlogPostsWithBLOBs> page = PageHelper.startPage(pages, rows);
+        blogPostsMapper.selectByExampleWithBLOBs(example);
+        ListData<BlogDomain> blogDomainListData = new ListData<>(page);
+        List<BlogDomain> data = new CopyOnWriteArrayList<>();
+        for (BlogPostsWithBLOBs blogPostsWithBLOBs : page.getResult()
+        ) {
+            BlogDomain blogDomain;
+            try {
+                blogDomain = new BlogDomain(blogPostsWithBLOBs.getId(), user, blogPostsWithBLOBs.getPostPassword(), isAdmin);
+            } catch (NotExistException | SecretLevelException | NeedPasswordException exception) {
+                SentryUtils.captureException(exception);
+                continue;
+            }
+            if (user == null || !isAdmin) {
+                // 未登录或者不是管理员，需要密码的文章隐藏内容和概述
+                if (!ObjectUtils.isEmpty(blogPostsWithBLOBs.getPostPassword())) {
+                    blogDomain.getPost().setContent("");
+                    blogDomain.getPost().setExcerpt("");
+                }
+            }
+            data.add(blogDomain);
+        }
+        blogDomainListData.setData(data);
+        return blogDomainListData;
+    }
+
+    /**
+     * 获取全部文章列表
+     *
+     * @param ids     ID列表
+     * @param user    登录用户
+     * @param isAdmin 是否是管理员操作
+     * @param pages   页码
+     * @param rows    每页容量
+     * @return
+     */
+    public ListData<BlogDomain> getAllPostListInId(List<Long> ids, User user, boolean isAdmin, int pages, int rows) {
+        BlogPostsExample example = new BlogPostsExample();
+        example.setOrderByClause("post_date DESC");
+        BlogPostsExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIn(ids);
         if (user != null) {
             // 登录用户，判断保密等级
             criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevelEnum().getLevel());

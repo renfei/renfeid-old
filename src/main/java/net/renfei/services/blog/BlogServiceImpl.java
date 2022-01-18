@@ -58,17 +58,17 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         ListData<BlogDomain> blogDomainListData;
         String redisKey = REDIS_KEY_BLOG + "post:list_" + pages + "_" + rows;
         assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.isEnableRedis()) {
-            // 查询是否曾经缓存过对象，有缓存直接吐出去
-            if (redisService.hasKey(redisKey)) {
-                Object object = redisService.get(redisKey);
-                if (object instanceof ListData) {
-                    blogVOListData = (ListData<BlogVO>) object;
-                }
-            }
-        }
         if (user == null) {
             // 未登录用户访问，可以用缓存
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                // 查询是否曾经缓存过对象，有缓存直接吐出去
+                if (redisService.hasKey(redisKey)) {
+                    Object object = redisService.get(redisKey);
+                    if (object instanceof ListData) {
+                        blogVOListData = (ListData<BlogVO>) object;
+                    }
+                }
+            }
             if (blogVOListData == null) {
                 blogDomainListData = BlogDomain.allPostList(user, isAdmin, pages, rows);
                 blogVOListData = convert(blogDomainListData);
@@ -79,6 +79,38 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         } else {
             // 站内用户直接查最新
             blogDomainListData = BlogDomain.allPostList(user, isAdmin, pages, rows);
+            blogVOListData = convert(blogDomainListData);
+        }
+        return blogVOListData;
+    }
+
+    @Override
+    public ListData<BlogVO> getAllPostListByTagName(SysKeywordTag sysKeywordTag, User user, boolean isAdmin, int pages, int rows) {
+        ListData<BlogVO> blogVOListData = null;
+        ListData<BlogDomain> blogDomainListData;
+        String redisKey = REDIS_KEY_BLOG + "post:tag:" + sysKeywordTag.getEnName() + ":list_" + pages + "_" + rows;
+        assert SYSTEM_CONFIG != null;
+        if (user == null) {
+            // 未登录用户访问，可以用缓存
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                // 查询是否曾经缓存过对象，有缓存直接吐出去
+                if (redisService.hasKey(redisKey)) {
+                    Object object = redisService.get(redisKey);
+                    if (object instanceof ListData) {
+                        blogVOListData = (ListData<BlogVO>) object;
+                    }
+                }
+            }
+            if (blogVOListData == null) {
+                blogDomainListData = BlogDomain.allPostListInId(sysKeywordTag.selectObjectIdList(SystemTypeEnum.BLOG), user, isAdmin, pages, rows);
+                blogVOListData = convert(blogDomainListData);
+                if (SYSTEM_CONFIG.isEnableRedis()) {
+                    redisService.set(redisKey, blogVOListData, SYSTEM_CONFIG.getDefaultCacheSeconds());
+                }
+            }
+        } else {
+            // 站内用户直接查最新
+            blogDomainListData = BlogDomain.allPostListInId(sysKeywordTag.selectObjectIdList(SystemTypeEnum.BLOG), user, isAdmin, pages, rows);
             blogVOListData = convert(blogDomainListData);
         }
         return blogVOListData;

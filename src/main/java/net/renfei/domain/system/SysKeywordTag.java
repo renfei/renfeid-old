@@ -77,6 +77,17 @@ public final class SysKeywordTag implements Serializable {
         this.zhName = sysKeywordTagList.get(0).getZhName();
     }
 
+    public List<Long> selectObjectIdList(SystemTypeEnum systemTypeEnum) {
+        SysKeywordObjectExample example = new SysKeywordObjectExample();
+        example.createCriteria()
+                .andTagIdEqualTo(this.id)
+                .andObjectTypeEqualTo(systemTypeEnum.toString());
+        List<SysKeywordObject> sysKeywordObjects = keywordObjectMapper.selectByExample(example);
+        List<Long> objIds = new ArrayList<>();
+        sysKeywordObjects.forEach(sysKeywordObject -> objIds.add(sysKeywordObject.getObjectId()));
+        return objIds;
+    }
+
     /**
      * 获取所有标签
      *

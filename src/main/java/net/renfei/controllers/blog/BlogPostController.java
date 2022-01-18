@@ -3,6 +3,7 @@ package net.renfei.controllers.blog;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.BlogDomain;
+import net.renfei.domain.system.SysKeywordTag;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
@@ -132,6 +133,37 @@ public class BlogPostController extends BaseController {
         }
         mv.setViewName("blog/post");
         blogService.view(blogVO, getSignUser(), null);
+        return mv;
+    }
+
+    /**
+     * 根据标签获取所有文章列表
+     *
+     * @param page 页码
+     * @return
+     */
+    @RequestMapping("tag/{enName}")
+    public ModelAndView getAllPostsListByTag(@RequestParam(value = "page", required = false) String page,
+                                             @PathVariable("enName") String enName,
+                                             ModelAndView mv) throws NoHandlerFoundException {
+        SysKeywordTag sysKeywordTag = null;
+        try {
+            sysKeywordTag = new SysKeywordTag(enName);
+        } catch (NotExistException e) {
+            noHandlerFoundException();
+        }
+        assert sysKeywordTag != null;
+        mv.addObject("catTitle", "标签：" + sysKeywordTag.getZhName());
+        ListData<BlogVO> allPostList = blogService.getAllPostListByTagName(sysKeywordTag, getSignUser(), false, NumberUtils.parseInt(page, 1), 15);
+        PostPageView<List<BlogDomain>> postPageView = buildPageView(PostPageView.class, allPostList.getData());
+        assert SYSTEM_CONFIG != null;
+        postPageView.getPageHead().setTitle("标签：" + sysKeywordTag.getZhName() + " - 博客文章标签分类 - " + SYSTEM_CONFIG.getSiteName());
+        postPageView.getPageHead().setKeywords(sysKeywordTag.getZhName() + ",博客,blog,开发,技术,posts");
+        postPageView.getPageHead().setDescription("博客文章标签分类：" + sysKeywordTag.getZhName() + "。共同类型的文章在这里聚合等待您的查阅。");
+        mv.addObject("pageView", postPageView);
+        mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
+        setPagination(paginationService, mv, page, allPostList.getTotal(), "/posts/tag/" + sysKeywordTag.getEnName() + "?page=");
+        mv.setViewName("blog/list");
         return mv;
     }
 
