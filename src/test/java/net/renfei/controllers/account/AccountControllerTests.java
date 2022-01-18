@@ -37,4 +37,12 @@ public class AccountControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void managePasswordPageTest() throws Exception {
+        this.mockMvc.perform(get("/account/manage/password")
+                        .session(session))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

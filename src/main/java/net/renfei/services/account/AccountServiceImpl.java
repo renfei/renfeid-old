@@ -8,6 +8,7 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.SecretLevelEnum;
+import net.renfei.model.account.UpdatePasswordVO;
 import net.renfei.model.auth.SignInVO;
 import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
@@ -457,5 +458,16 @@ public class AccountServiceImpl extends BaseService implements AccountService {
     @Override
     public void updateAccount(SysAccount account) {
         accountMapper.updateByPrimaryKeySelective(account);
+    }
+
+    @Override
+    public void updatePassword(SysAccount account, UpdatePasswordVO updatePasswordVO) throws PasswordUtils.CannotPerformOperationException {
+        if (PasswordUtils.verifyPassword(updatePasswordVO.getOldPwd(), account.getPassword())) {
+            String newPwd = PasswordUtils.createHash(updatePasswordVO.getNewPwd());
+            account.setPassword(newPwd);
+            accountMapper.updateByPrimaryKeySelective(account);
+        } else {
+            throw new BusinessException("当前密码不正确");
+        }
     }
 }

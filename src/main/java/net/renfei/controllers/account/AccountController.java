@@ -72,4 +72,18 @@ public class AccountController extends BaseController {
         mv.setViewName("account/phone");
         return mv;
     }
+
+    @GetMapping("manage/password")
+    public ModelAndView managePassword(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        ModelAndView modelAndView = checkSigned();
+        if (modelAndView != null) {
+            return modelAndView;
+        }
+        AccountPageView<String> pageView = buildPageView(AccountPageView.class, null);
+        mv.addObject("pageView", pageView);
+        pageView.getPageHead().setTitle("管理您的密码 - " + SYSTEM_CONFIG.getSiteName());
+        mv.setViewName("account/password");
+        return mv;
+    }
 }

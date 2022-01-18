@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.annotation.OperationLog;
 import net.renfei.model.APIResult;
+import net.renfei.model.account.UpdatePasswordVO;
 import net.renfei.model.system.SystemTypeEnum;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,4 +39,9 @@ public interface AccountApi {
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改手机号")
     APIResult updatePhone(@RequestParam("newPhone") String newPhone,
                           @RequestParam("verCode") String verCode);
+
+    @PostMapping("manage/password")
+    @Operation(summary = "修改密码", tags = {"前台接口"})
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改密码")
+    APIResult updatePassword(@RequestBody UpdatePasswordVO updatePasswordVO);
 }

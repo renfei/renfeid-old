@@ -3,6 +3,7 @@ package net.renfei.services;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
+import net.renfei.model.account.UpdatePasswordVO;
 import net.renfei.model.auth.SignInVO;
 import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
@@ -56,4 +57,6 @@ public interface AccountService {
     SysAccount getAccountByPhone(String phone);
 
     void updateAccount(SysAccount account);
+
+    void updatePassword(SysAccount account, UpdatePasswordVO updatePasswordVO) throws PasswordUtils.CannotPerformOperationException;
 }

@@ -3,13 +3,17 @@ package net.renfei.controllers.api.impl;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.AccountApi;
 import net.renfei.domain.user.User;
+import net.renfei.exception.BusinessException;
 import net.renfei.model.APIResult;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.model.account.UpdatePasswordVO;
 import net.renfei.repositories.model.SysAccount;
 import net.renfei.repositories.model.SysVerificationCode;
 import net.renfei.services.AccountService;
+import net.renfei.services.SysService;
 import net.renfei.services.VerificationCodeService;
 import net.renfei.utils.DateUtils;
+import net.renfei.utils.PasswordUtils;
 import net.renfei.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccountApiController extends BaseController implements AccountApi {
     private static final Logger logger = LoggerFactory.getLogger(AccountApiController.class);
+    private final SysService sysService;
     private final AccountService accountService;
     private final VerificationCodeService verificationCodeService;
 
-    public AccountApiController(AccountService accountService,
+    public AccountApiController(SysService sysService,
+                                AccountService accountService,
                                 VerificationCodeService verificationCodeService) {
+        this.sysService = sysService;
         this.accountService = accountService;
         this.verificationCodeService = verificationCodeService;
     }
@@ -214,5 +221,25 @@ public class AccountApiController extends BaseController implements AccountApi {
         user.setPhone(newPhone);
         updateSignUser(user);
         return APIResult.success();
+    }
+
+    @Override
+    public APIResult updatePassword(UpdatePasswordVO updatePasswordVO) {
+        User user = getSignUser();
+        if (user == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请先登录")
+                    .build();
+        }
+        try {
+            updatePasswordVO.setOldPwd(sysService.decrypt(updatePasswordVO.getOldPwd(), updatePasswordVO.getKeyId()));
+            updatePasswordVO.setNewPwd(sysService.decrypt(updatePasswordVO.getNewPwd(), updatePasswordVO.getKeyId()));
+            SysAccount account = accountService.getAccountByUser(user);
+            accountService.updatePassword(account, updatePasswordVO);
+            return APIResult.success();
+        } catch (BusinessException | PasswordUtils.CannotPerformOperationException businessException) {
+            return APIResult.builder().code(StateCodeEnum.Failure).message(businessException.getMessage()).build();
+        }
     }
 }
