@@ -4401,6 +4401,11 @@ CREATE TABLE `discuz`.`bbs_common_member` (
 ) ENGINE=MyISAM AUTO_INCREMENT=10253 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of bbs_common_member
+-- ----------------------------
+INSERT INTO `discuz`.`bbs_common_member` (`uid`, `email`, `username`, `password`, `status`, `emailstatus`, `avatarstatus`, `videophotostatus`, `adminid`, `groupid`, `groupexpiry`, `extgroupids`, `regdate`, `credits`, `notifysound`, `timeoffset`, `newpm`, `newprompt`, `accessmasks`, `allowadmincp`, `onlyacceptfriendpm`, `conisbind`, `freeze`) VALUES (10252, 'test@qq.com', 'demo', '', 0, 1, 0, 0, 0, 10, 0, '', 1641725707, 0, 0, '9999', 0, 0, 0, 0, 0, 0, 0);
+
+-- ----------------------------
 -- Table structure for bbs_common_member_count
 -- ----------------------------
 DROP TABLE IF EXISTS `discuz`.`bbs_common_member_count`;
@@ -4437,6 +4442,11 @@ CREATE TABLE `discuz`.`bbs_common_member_count` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of bbs_common_member_count
+-- ----------------------------
+INSERT INTO `discuz`.`bbs_common_member_count` (`uid`, `extcredits1`, `extcredits2`, `extcredits3`, `extcredits4`, `extcredits5`, `extcredits6`, `extcredits7`, `extcredits8`, `friends`, `posts`, `threads`, `digestposts`, `doings`, `blogs`, `albums`, `sharings`, `attachsize`, `views`, `oltime`, `todayattachs`, `todayattachsize`, `feeds`, `follower`, `following`, `newfollower`, `blacklist`) VALUES (10252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+-- ----------------------------
 -- Table structure for bbs_common_member_field_forum
 -- ----------------------------
 DROP TABLE IF EXISTS `discuz`.`bbs_common_member_field_forum`;
@@ -4453,6 +4463,11 @@ CREATE TABLE `discuz`.`bbs_common_member_field_forum` (
   `attentiongroup` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of bbs_common_member_field_forum
+-- ----------------------------
+INSERT INTO `discuz`.`bbs_common_member_field_forum` (`uid`, `publishfeed`, `customshow`, `customstatus`, `medals`, `sightml`, `groupterms`, `authstr`, `groups`, `attentiongroup`) VALUES (10252, 0, 26, '', '', '', '', '', '', '');
 
 -- ----------------------------
 -- Table structure for bbs_common_member_field_home
@@ -4480,6 +4495,11 @@ CREATE TABLE `discuz`.`bbs_common_member_field_home` (
   PRIMARY KEY (`uid`),
   KEY `domain` (`domain`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of bbs_common_member_field_home
+-- ----------------------------
+INSERT INTO `discuz`.`bbs_common_member_field_home` (`uid`, `videophoto`, `spacename`, `spacedescription`, `domain`, `addsize`, `addfriend`, `menunum`, `theme`, `spacecss`, `blockposition`, `recentnote`, `spacenote`, `privacy`, `feedfriend`, `acceptemail`, `magicgift`, `stickblogs`) VALUES (10252, '', '', '', '', 0, 0, 0, '', '', '', '', '', '', '', '', '', '');
 
 -- ----------------------------
 -- Table structure for bbs_common_member_profile
@@ -4542,6 +4562,11 @@ CREATE TABLE `discuz`.`bbs_common_member_profile` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of bbs_common_member_profile
+-- ----------------------------
+INSERT INTO `discuz`.`bbs_common_member_profile` (`uid`, `realname`, `gender`, `birthyear`, `birthmonth`, `birthday`, `constellation`, `zodiac`, `telephone`, `mobile`, `idcardtype`, `idcard`, `address`, `zipcode`, `nationality`, `birthprovince`, `birthcity`, `birthdist`, `birthcommunity`, `resideprovince`, `residecity`, `residedist`, `residecommunity`, `residesuite`, `graduateschool`, `company`, `education`, `occupation`, `position`, `revenue`, `affectivestatus`, `lookingfor`, `bloodtype`, `height`, `weight`, `alipay`, `icq`, `qq`, `yahoo`, `msn`, `taobao`, `site`, `bio`, `interest`, `field1`, `field2`, `field3`, `field4`, `field5`, `field6`, `field7`, `field8`) VALUES (10252, '', 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+
+-- ----------------------------
 -- Table structure for bbs_common_member_status
 -- ----------------------------
 DROP TABLE IF EXISTS `discuz`.`bbs_common_member_status`;
@@ -4563,6 +4588,11 @@ CREATE TABLE `discuz`.`bbs_common_member_status` (
   PRIMARY KEY (`uid`),
   KEY `lastactivity` (`lastactivity`,`invisible`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of bbs_common_member_status
+-- ----------------------------
+INSERT INTO `discuz`.`bbs_common_member_status` (`uid`, `regip`, `lastip`, `port`, `lastvisit`, `lastactivity`, `lastpost`, `lastsendmail`, `invisible`, `buyercredit`, `sellercredit`, `favtimes`, `sharetimes`, `profileprogress`) VALUES (10252, '221.220.131.133', '221.220.131.133', 0, 1641725707, 1641725707, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- ----------------------------
 -- Table structure for bbs_common_usergroup
@@ -4589,6 +4619,30 @@ CREATE TABLE `discuz`.`bbs_common_usergroup` (
   PRIMARY KEY (`groupid`),
   KEY `creditsrange` (`creditshigher`,`creditslower`)
 ) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of bbs_common_usergroup
+-- ----------------------------
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (1, 1, 'system', 'private', '管理员', 0, 0, 9, '', '', 2, 1, 1, 1, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (2, 2, 'system', 'private', '超级版主', 0, 0, 8, '', '', 1, 1, 1, 1, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (3, 3, 'system', 'private', '版主', 0, 0, 7, '', '', 1, 1, 1, 1, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (4, 0, 'system', 'private', '禁止发言', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (5, 0, 'system', 'private', '禁止访问', 0, 0, 0, '', '', 0, 1, 0, 0, 0, 0, 0);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (6, 0, 'system', 'private', '禁止 IP', 0, 0, 0, '', '', 0, 1, 0, 0, 0, 0, 0);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (7, 0, 'system', 'private', '游客', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (8, 0, 'system', 'private', '等待验证会员', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (9, 0, 'member', 'private', '限制会员', -9999999, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (10, 0, 'member', 'private', '新手上路', 0, 50, 1, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (11, 0, 'member', 'private', '注册会员', 50, 200, 2, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (12, 0, 'member', 'private', '中级会员', 200, 500, 3, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (13, 0, 'member', 'private', '高级会员', 500, 1000, 4, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (14, 0, 'member', 'private', '金牌会员', 1000, 3000, 6, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (15, 0, 'member', 'private', '论坛元老', 3000, 9999999, 8, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (16, 3, 'special', 'private', '实习版主', 0, 0, 7, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (17, 2, 'special', 'private', '网站编辑', 0, 0, 8, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (18, 1, 'special', 'private', '信息监察员', 0, 0, 9, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (19, 3, 'special', 'private', '审核员', 0, 0, 7, '', '', 1, 1, 0, 0, 0, 0, 10);
+INSERT INTO `discuz`.`bbs_common_usergroup` (`groupid`, `radminid`, `type`, `system`, `grouptitle`, `creditshigher`, `creditslower`, `stars`, `color`, `icon`, `allowvisit`, `allowsendpm`, `allowinvite`, `allowmailinvite`, `maxinvitenum`, `inviteprice`, `maxinviteday`) VALUES (20, 0, 'special', 'private', 'VIP', 0, 0, 5, '#FF0000', '', 1, 1, 0, 0, 0, 0, 10);
 
 -- ----------------------------
 -- Table structure for bbs_forum_post
