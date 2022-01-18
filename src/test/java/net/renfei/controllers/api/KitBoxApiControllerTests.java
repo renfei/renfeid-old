@@ -1,15 +1,15 @@
 package net.renfei.controllers.api;
 
 import net.renfei.ApplicationTests;
+import net.renfei.model.kitbox.FreeMarkerAndBeanVO;
+import net.renfei.utils.JacksonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
  * @author renfei
@@ -61,20 +61,20 @@ public class KitBoxApiControllerTests extends ApplicationTests {
 
     @Test
     public void getContentByFreeMarkerAndBean() throws Exception {
-        String html = "<html>\n" +
+        FreeMarkerAndBeanVO freeMarkerAndBeanVO = new FreeMarkerAndBeanVO();
+        freeMarkerAndBeanVO.setFtl("<html>\n" +
                 "\t<body>\n" +
                 "\t\t ${demo.text}\n" +
                 "\t</body>\n" +
-                "</html>";
-        String beanJson = "{\n" +
+                "</html>");
+        freeMarkerAndBeanVO.setBeanJson("{\n" +
                 "\t\"demo\":{\n" +
                 "\t\t\"text\":\"Hello World\"\n" +
                 "\t}\n" +
-                "}";
+                "}");
         this.mockMvc.perform(post("/api/freemarker/test")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("ftl", html)
-                        .param("beanJson", beanJson))
+                        .content(JacksonUtil.obj2String(freeMarkerAndBeanVO))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
