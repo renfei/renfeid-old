@@ -6,13 +6,16 @@ import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.model.APIResult;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.model.account.SaveU2FVO;
 import net.renfei.model.account.UpdatePasswordVO;
 import net.renfei.repositories.model.SysAccount;
 import net.renfei.repositories.model.SysVerificationCode;
 import net.renfei.services.AccountService;
+import net.renfei.services.EmailService;
 import net.renfei.services.SysService;
 import net.renfei.services.VerificationCodeService;
 import net.renfei.utils.DateUtils;
+import net.renfei.utils.GoogleAuthenticator;
 import net.renfei.utils.PasswordUtils;
 import net.renfei.utils.StringUtils;
 import org.slf4j.Logger;
@@ -30,13 +33,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountApiController extends BaseController implements AccountApi {
     private static final Logger logger = LoggerFactory.getLogger(AccountApiController.class);
     private final SysService sysService;
+    private final EmailService emailService;
     private final AccountService accountService;
     private final VerificationCodeService verificationCodeService;
 
     public AccountApiController(SysService sysService,
+                                EmailService emailService,
                                 AccountService accountService,
                                 VerificationCodeService verificationCodeService) {
         this.sysService = sysService;
+        this.emailService = emailService;
         this.accountService = accountService;
         this.verificationCodeService = verificationCodeService;
     }
@@ -240,6 +246,96 @@ public class AccountApiController extends BaseController implements AccountApi {
             return APIResult.success();
         } catch (BusinessException | PasswordUtils.CannotPerformOperationException businessException) {
             return APIResult.builder().code(StateCodeEnum.Failure).message(businessException.getMessage()).build();
+        }
+    }
+
+    @Override
+    public APIResult manageU2FSave(SaveU2FVO saveU2FVO) {
+        User user = getSignUser();
+        if (user == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请先登录")
+                    .build();
+        }
+        if (ObjectUtils.isEmpty(user.getTotp()) || user.getTotp().isEmpty()) {
+            saveU2FVO.setPwd(sysService.decrypt(saveU2FVO.getPwd(), saveU2FVO.getKeyId()));
+            saveU2FVO.setSecretKey(sysService.decrypt(saveU2FVO.getSecretKey(), saveU2FVO.getKeyId()));
+            SysAccount account = accountService.getAccountByUser(user);
+            if (PasswordUtils.verifyPassword(saveU2FVO.getPwd(), account.getPassword())) {
+                if (GoogleAuthenticator.authcode(saveU2FVO.getTotp(), saveU2FVO.getSecretKey())) {
+                    account.setTotp(saveU2FVO.getSecretKey());
+                    accountService.updateAccount(account);
+                    user.setTotp(saveU2FVO.getSecretKey());
+                    updateSignUser(user);
+                    emailService.send(
+                            account.getEmail(),
+                            account.getUserName(),
+                            "操作通知：您开启了U2F两步认证",
+                            "您开启了U2F两步认证，您的账户安全性固若金汤。如果不是您本人操作，请立即登陆修改密码并联系我们，您的账户可能被盗用。"
+                    );
+                    return APIResult.success();
+                } else {
+                    return APIResult.builder()
+                            .code(StateCodeEnum.Failure)
+                            .message("您输入的两步认证码与二维码校验失败，请重试")
+                            .build();
+                }
+            } else {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Failure)
+                        .message("密码不正确")
+                        .build();
+            }
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("两步认证U2F已经是开启状态，无需再次开启")
+                    .build();
+        }
+    }
+
+    @Override
+    public APIResult closeU2F(SaveU2FVO saveU2FVO) {
+        User user = getSignUser();
+        if (user == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请先登录")
+                    .build();
+        }
+        if (ObjectUtils.isEmpty(user.getTotp()) || user.getTotp().isEmpty()) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("两步认证U2F已经是关闭状态，无需再次关闭")
+                    .build();
+        }
+        saveU2FVO.setPwd(sysService.decrypt(saveU2FVO.getPwd(), saveU2FVO.getKeyId()));
+        SysAccount account = accountService.getAccountByUser(user);
+        if (PasswordUtils.verifyPassword(saveU2FVO.getPwd(), account.getPassword())) {
+            if (GoogleAuthenticator.authcode(saveU2FVO.getTotp(), account.getTotp())) {
+                account.setTotp(null);
+                accountService.updateAccountAll(account);
+                user.setTotp(null);
+                updateSignUser(user);
+                emailService.send(
+                        account.getEmail(),
+                        account.getUserName(),
+                        "操作通知：您关闭了U2F两步认证",
+                        "您关闭了U2F两步认证，如果不是您本人操作，请立即登陆修改密码并联系我们，您的账户可能被盗用。"
+                );
+                return APIResult.success();
+            } else {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Failure)
+                        .message("您输入的两步认证码校验失败，请重试")
+                        .build();
+            }
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("密码不正确")
+                    .build();
         }
     }
 }

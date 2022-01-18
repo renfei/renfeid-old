@@ -52,6 +52,7 @@ public class SystemConfig {
     private PageHead pageHead;
     private PageFooter pageFooter;
     private boolean showFriendlyLink;
+    private String totpSecret;
     private Long defaultCacheSeconds;
     private String ip2LocationBinFile;
     private String ip2LocationBinFileV6;
@@ -706,6 +707,14 @@ public class SystemConfig {
 
     public void setShowFriendlyLink(boolean showFriendlyLink) {
         this.showFriendlyLink = showFriendlyLink;
+    }
+
+    public String getTotpSecret() {
+        return totpSecret;
+    }
+
+    public void setTotpSecret(String totpSecret) {
+        this.totpSecret = totpSecret;
     }
 
     public Long getDefaultCacheSeconds() {

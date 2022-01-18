@@ -80,6 +80,7 @@ system:
   siteName: 任霏的博客
   defaultCacheSeconds: 7200
   showFriendlyLink: true
+  totpSecret: dH6xS3rG7eS6oS3bK9aN4iW8bR2vU9nV
   footerSmallMenu:
     - 冀公网安备 13070902000275号@http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13070902000275
     - 冀ICP备12003293号-9@https://beian.miit.gov.cn/

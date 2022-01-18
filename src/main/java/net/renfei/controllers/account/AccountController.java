@@ -5,6 +5,7 @@ import net.renfei.domain.user.User;
 import net.renfei.model.account.AccountPageView;
 import net.renfei.model.discuz.DiscuzInfo;
 import net.renfei.services.DiscuzService;
+import net.renfei.utils.GoogleAuthenticator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,6 +85,24 @@ public class AccountController extends BaseController {
         mv.addObject("pageView", pageView);
         pageView.getPageHead().setTitle("管理您的密码 - " + SYSTEM_CONFIG.getSiteName());
         mv.setViewName("account/password");
+        return mv;
+    }
+
+    @GetMapping("manage/u2f")
+    public ModelAndView manageU2F(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        ModelAndView modelAndView = checkSigned();
+        if (modelAndView != null) {
+            return modelAndView;
+        }
+        User user = getSignUser();
+        AccountPageView<User> pageView = buildPageView(AccountPageView.class, user);
+        pageView.getPageHead().setTitle("管理您的两步认证(U2F) - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("pageView", pageView);
+        String secretKey = GoogleAuthenticator.generateSecretKey(SYSTEM_CONFIG.getTotpSecret());
+        mv.addObject("secretKey", secretKey);
+        mv.addObject("totpString", GoogleAuthenticator.genTotpString("RENFEI.NET", user.getUserName(), secretKey));
+        mv.setViewName("account/u2f");
         return mv;
     }
 }

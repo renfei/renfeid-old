@@ -461,6 +461,11 @@ public class AccountServiceImpl extends BaseService implements AccountService {
     }
 
     @Override
+    public void updateAccountAll(SysAccount account) {
+        accountMapper.updateByPrimaryKey(account);
+    }
+
+    @Override
     public void updatePassword(SysAccount account, UpdatePasswordVO updatePasswordVO) throws PasswordUtils.CannotPerformOperationException {
         if (PasswordUtils.verifyPassword(updatePasswordVO.getOldPwd(), account.getPassword())) {
             String newPwd = PasswordUtils.createHash(updatePasswordVO.getNewPwd());

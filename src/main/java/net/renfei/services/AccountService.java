@@ -58,5 +58,7 @@ public interface AccountService {
 
     void updateAccount(SysAccount account);
 
+    void updateAccountAll(SysAccount account);
+
     void updatePassword(SysAccount account, UpdatePasswordVO updatePasswordVO) throws PasswordUtils.CannotPerformOperationException;
 }
