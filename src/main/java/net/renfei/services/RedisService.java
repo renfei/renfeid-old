@@ -176,6 +176,14 @@ public interface RedisService {
     Long lPushAll(String key, Long time, Object... values);
 
     /**
+     * 弹出List左侧的属性
+     *
+     * @param key
+     * @return
+     */
+    Object lPop(String key);
+
+    /**
      * 从List结构中移除属性
      */
     Long lRemove(String key, long count, Object value);

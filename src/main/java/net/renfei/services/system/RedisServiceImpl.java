@@ -197,6 +197,11 @@ public class RedisServiceImpl extends BaseService implements RedisService {
     }
 
     @Override
+    public Object lPop(String key) {
+        return redisTemplate.opsForList().leftPop(key);
+    }
+
+    @Override
     public Long lRemove(String key, long count, Object value) {
         return redisTemplate.opsForList().remove(key, count, value);
     }
