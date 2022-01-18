@@ -1,5 +1,6 @@
 package net.renfei.services.system;
 
+import net.renfei.discuz.repositories.entity.DiscuzForumPostDO;
 import net.renfei.domain.BlogDomain;
 import net.renfei.domain.photo.Album;
 import net.renfei.domain.weibo.Weibo;
@@ -8,9 +9,8 @@ import net.renfei.model.ListData;
 import net.renfei.model.kitbox.KitBoxMenus;
 import net.renfei.model.search.SearchItem;
 import net.renfei.model.search.TypeEnum;
-import net.renfei.services.BaseService;
-import net.renfei.services.KitBoxService;
-import net.renfei.services.WeiboService;
+import net.renfei.repositories.model.SysPagesWithBLOBs;
+import net.renfei.services.*;
 import net.renfei.services.photo.PhotoServiceImpl;
 import net.renfei.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -28,15 +28,21 @@ import java.util.UUID;
  */
 @Service
 public class AggregateService extends BaseService {
+    private final PageService pageService;
     private final WeiboService weiboService;
     private final KitBoxService kitBoxService;
+    private final DiscuzService discuzService;
     private final PhotoServiceImpl photoService;
 
-    public AggregateService(WeiboService weiboService,
+    public AggregateService(PageService pageService,
+                            WeiboService weiboService,
                             KitBoxService kitBoxService,
+                            DiscuzService discuzService,
                             PhotoServiceImpl photoService) {
+        this.pageService = pageService;
         this.weiboService = weiboService;
         this.kitBoxService = kitBoxService;
+        this.discuzService = discuzService;
         this.photoService = photoService;
     }
 
@@ -66,7 +72,22 @@ public class AggregateService extends BaseService {
             }
         }
         // == Posts <<<< Pages >>>>
-        // TODO 获取Pages
+        List<SysPagesWithBLOBs> pageAll = pageService.getAllPageNotCache();
+        if (!ObjectUtils.isEmpty(pageAll)) {
+            for (SysPagesWithBLOBs page : pageAll
+            ) {
+                SearchItem searchItem = new SearchItem();
+                searchItem.setUuid(UUID.randomUUID().toString().toUpperCase());
+                searchItem.setType(TypeEnum.PAGES.getName());
+                searchItem.setTitle(page.getPageTitle());
+                searchItem.setContent(StringUtils.delHtmlTags(page.getPageContent()));
+                searchItem.setImage(getImgUrl(page.getFeaturedImage()));
+                searchItem.setUrl(SYSTEM_CONFIG.getSiteDomainName() + TypeEnum.PAGES.getUrl() + "/" + page.getId());
+                searchItem.setOriginalId(page.getId());
+                searchItem.setDate(page.getPageDate());
+                searchItemAll.add(searchItem);
+            }
+        }
         // == Pages <<<< Video >>>>
         // == Video <<<< Photo >>>>
         ListData<Album> albumListData = photoService.getAllAlbumList("1", "999999999");
@@ -137,7 +158,24 @@ public class AggregateService extends BaseService {
         if (searchItemAll == null) {
             searchItemAll = new ArrayList<>();
         }
-        // TODO Discuz
+        // == Discuz >>>>
+        List<DiscuzForumPostDO> discuzForumPostList = discuzService.getAllPost();
+        if (!ObjectUtils.isEmpty(discuzForumPostList)) {
+            for (DiscuzForumPostDO post : discuzForumPostList
+            ) {
+                SearchItem searchItem = new SearchItem();
+                searchItem.setUuid(UUID.randomUUID().toString().toUpperCase());
+                searchItem.setType(TypeEnum.DISCUZ.getName());
+                searchItem.setTitle(post.getSubject());
+                searchItem.setContent(StringUtils.delHtmlTags(post.getMessage()));
+                searchItem.setImage(getImgUrl(null));
+                searchItem.setUrl(TypeEnum.DISCUZ.getUrl() + "/thread-" + post.getTid() + "-1-1.html");
+                searchItem.setOriginalId(Long.valueOf(post.getTid()));
+                searchItem.setDate(new Date((long) post.getDateline() * 1000));
+                searchItemAll.add(searchItem);
+            }
+        }
+        // == Discuz <<<<
         return searchItemAll;
     }
 
