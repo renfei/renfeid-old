@@ -12,13 +12,14 @@ import net.renfei.model.account.UpdatePasswordVO;
 import net.renfei.model.auth.SignInVO;
 import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
+import net.renfei.model.log.LogLevelEnum;
+import net.renfei.model.log.OperationTypeEnum;
+import net.renfei.model.log.SysLogDTO;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.SysAccountKeepNameMapper;
 import net.renfei.repositories.SysAccountMapper;
 import net.renfei.repositories.model.*;
-import net.renfei.services.AccountService;
-import net.renfei.services.BaseService;
-import net.renfei.services.LeafService;
-import net.renfei.services.VerificationCodeService;
+import net.renfei.services.*;
 import net.renfei.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ import java.util.regex.Pattern;
 @Service
 public class AccountServiceImpl extends BaseService implements AccountService {
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
+    private final LogService logService;
     private final LeafService leafService;
     private final SysAccountMapper accountMapper;
     private final VerificationCodeService verificationCodeService;
@@ -54,7 +56,8 @@ public class AccountServiceImpl extends BaseService implements AccountService {
     private final DiscuzCommonMemberFieldForumDOMapper discuzCommonMemberFieldForumMapper;
     private static final Pattern SPECIAL_PATTERN = Pattern.compile("[ _`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]|\n|\r|\t");
 
-    public AccountServiceImpl(LeafService leafService,
+    public AccountServiceImpl(LogService logService,
+                              LeafService leafService,
                               SysAccountMapper accountMapper,
                               VerificationCodeService verificationCodeService,
                               SysAccountKeepNameMapper sysAccountKeepNameMapper,
@@ -65,6 +68,7 @@ public class AccountServiceImpl extends BaseService implements AccountService {
                               DiscuzCommonMemberProfileDOMapper discuzCommonMemberProfileMapper,
                               DiscuzCommonMemberFieldHomeDOMapper discuzCommonMemberFieldHomeMapper,
                               DiscuzCommonMemberFieldForumDOMapper discuzCommonMemberFieldForumMapper) {
+        this.logService = logService;
         this.leafService = leafService;
         this.accountMapper = accountMapper;
         this.verificationCodeService = verificationCodeService;
@@ -155,6 +159,20 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         }
         BeanUtils.copyProperties(account, user);
         user.setSecretLevelEnum(SecretLevelEnum.valueOf(account.getSecretLevel()));
+        // 记录日志
+        SysLogDTO sysLog = new SysLogDTO();
+        sysLog.setLogLevel(LogLevelEnum.INFO.toString());
+        sysLog.setLogModule(SystemTypeEnum.ACCOUNT.toString());
+        sysLog.setLogType(OperationTypeEnum.SIGNIN.toString());
+        sysLog.setUserUuid(user.getUuid());
+        sysLog.setUserName(user.getUserName());
+        sysLog.setRequUri(request.getRequestURI());
+        sysLog.setRequMethod(request.getMethod());
+        sysLog.setRequIp(IpUtils.getIpAddress(request));
+        sysLog.setLogTime(new Date());
+        sysLog.setLogDesc("成功登录系统。");
+        sysLog.setRequAgent(request.getHeader("User-Agent"));
+        logService.save(sysLog);
         // 登陆论坛
         DiscuzUcenterMembersDOExample discuzUcenterMembersExample = new DiscuzUcenterMembersDOExample();
         discuzUcenterMembersExample.createCriteria().andUsernameEqualTo(account.getUserName());

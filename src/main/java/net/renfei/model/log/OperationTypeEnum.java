@@ -21,7 +21,15 @@ public enum OperationTypeEnum {
     /**
      * 删除操作
      */
-    DELETE("删除");
+    DELETE("删除"),
+    /**
+     * 登录
+     */
+    SIGNIN("登录"),
+    /**
+     * 登出
+     */
+    SIGNUP("登出");
     private final String describe;
 
     OperationTypeEnum(String describe) {
