@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
+import net.renfei.model.kitbox.FreeMarkerAndBeanVO;
 import net.renfei.model.kitbox.IkAnalyzeVO;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public interface KitBoxApi {
 
     @PostMapping("freemarker/test")
     @Operation(summary = "FreeMarker(FTL)在线测试工具", tags = "开放接口")
-    APIResult<String> getContentByFreeMarkerAndBean(String ftl, String beanJson);
+    APIResult<String> getContentByFreeMarkerAndBean(@RequestBody FreeMarkerAndBeanVO freeMarkerAndBean);
 
     @GetMapping("dns/dig/{domain}")
     @Operation(summary = "域名 dig+trace", description = "使用该接口可以查询域名的解析过程", tags = "开放接口")

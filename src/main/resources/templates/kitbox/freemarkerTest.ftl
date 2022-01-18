@@ -19,7 +19,8 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">FreeMarker(FTL)在线测试工具</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">FreeMarker(FTL) Online Test Tools <span class="badge badge-secondary">Powered By FreeMarker ${version}</span></h6>
+                        <h6 class="card-subtitle mb-2 text-muted">FreeMarker(FTL) Online Test Tools <span
+                                    class="badge badge-secondary">Powered By FreeMarker ${version}</span></h6>
                         <div class="row">
                             <div class="col-md-6">
                                 <form>
@@ -58,7 +59,8 @@
                         <div>
                             <div class="alert alert-secondary" role="alert">
                                 我站已启用 WAF 防火墙，可能存在误拦截的情况，如有误拦截请联系我或提交
-                                <a href="https://github.com/renfei/issues/issues" target="_blank" rel="nofollow noopener">Issue</a>。
+                                <a href="https://github.com/renfei/issues/issues" target="_blank"
+                                   rel="nofollow noopener">Issue</a>。
                             </div>
                             <blockquote style="font-size: 14px;">
                                 <p>在「FreeMarker (ftl) Code」中填写FreeMarker代码；在「JavaBean (JSON)
@@ -99,14 +101,15 @@
                     msg("Error: JavaBean Code is empty!\n错误：JavaBean Code是空！", "error");
                     return;
                 }
+                let data = {};
+                data.ftl = ftl;
+                data.beanJson = json;
                 $.ajax({
                     url: '/api/freemarker/test',
                     type: 'POST',
                     async: true,
-                    data: {
-                        ftl: ftl,
-                        beanJson: json
-                    },
+                    data: JSON.stringify(data),
+                    contentType: 'application/json;charset=UTF-8',
                     timeout: 60000,
                     dataType: 'json',
                     success: function (data, textStatus, jqXHR) {

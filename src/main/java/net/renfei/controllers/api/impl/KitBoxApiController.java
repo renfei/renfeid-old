@@ -5,6 +5,7 @@ import net.renfei.controllers.api.KitBoxApi;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.model.kitbox.FreeMarkerAndBeanVO;
 import net.renfei.model.kitbox.IkAnalyzeVO;
 import net.renfei.services.KitBoxService;
 import net.renfei.services.SearchService;
@@ -41,22 +42,40 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
     }
 
     @Override
-    public APIResult<String> getContentByFreeMarkerAndBean(String ftl, String beanJson) {
+    public APIResult<String> getContentByFreeMarkerAndBean(FreeMarkerAndBeanVO freeMarkerAndBean) {
+        if (freeMarkerAndBean == null) {
+            return new APIResult<>("");
+        }
+        if (freeMarkerAndBean.getFtl() == null || freeMarkerAndBean.getFtl().isEmpty()) {
+            return new APIResult<>("");
+        }
+        if (freeMarkerAndBean.getBeanJson() == null || freeMarkerAndBean.getBeanJson().isEmpty()) {
+            return new APIResult<>("");
+        }
+        if (freeMarkerAndBean.getFtl().contains("<#include")
+                ||freeMarkerAndBean.getFtl().contains("<#setting")
+                ||freeMarkerAndBean.getFtl().contains("?api.")
+                ||freeMarkerAndBean.getFtl().contains("get_optional_template")
+                || freeMarkerAndBean.getFtl().contains("new()")) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.NoContent)
+                    .message("我们理解您的请求，出于安全考虑被被拒绝执行，请更换变量名称重试。")
+                    .data("")
+                    .build();
+        }
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.getVersion());
         freemarker.cache.StringTemplateLoader templateLoader = new freemarker.cache.StringTemplateLoader();
         configuration.setTemplateLoader(templateLoader);
+        configuration.setLocalizedLookup(false);
+        configuration.setNewBuiltinClassResolver(freemarker.core.TemplateClassResolver.SAFER_RESOLVER);
         configuration.setDefaultEncoding("UTF-8");
         APIResult<String> apiResult;
         try {
-            freemarker.template.Template template = new freemarker.template.Template("freemarkerTest", ftl, configuration);
+            freemarker.template.Template template = new freemarker.template.Template("freemarkerTest", freeMarkerAndBean.getFtl(), configuration);
             StringWriter stringWriter = new StringWriter();
-            Object object = JacksonUtil.string2Obj(beanJson, Object.class);
+            Object object = JacksonUtil.string2Obj(freeMarkerAndBean.getBeanJson(), Object.class);
             template.process(object, stringWriter);
-            apiResult = APIResult.builder()
-                    .code(StateCodeEnum.OK)
-                    .message("")
-                    .data(stringWriter.toString())
-                    .build();
+            apiResult = new APIResult<>(stringWriter.toString());
         } catch (Exception ex) {
             apiResult = APIResult.builder()
                     .code(StateCodeEnum.Error)
