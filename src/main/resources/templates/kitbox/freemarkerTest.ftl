@@ -56,6 +56,10 @@
                             </div>
                         </div>
                         <div>
+                            <div class="alert alert-secondary" role="alert">
+                                我站已启用 WAF 防火墙，可能存在误拦截的情况，如有误拦截请联系我或提交
+                                <a href="https://github.com/renfei/issues/issues" target="_blank" rel="nofollow noopener">Issue</a>。
+                            </div>
                             <blockquote style="font-size: 14px;">
                                 <p>在「FreeMarker (ftl) Code」中填写FreeMarker代码；在「JavaBean (JSON)
                                     Code」中填写入参对象的JSON字符串；「Result」将返回FreeMarker引擎的运行结果。
