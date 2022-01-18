@@ -58,4 +58,18 @@ public class AccountController extends BaseController {
         mv.setViewName("account/email");
         return mv;
     }
+
+    @GetMapping("manage/phone")
+    public ModelAndView managePhone(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        ModelAndView modelAndView = checkSigned();
+        if (modelAndView != null) {
+            return modelAndView;
+        }
+        AccountPageView<User> pageView = buildPageView(AccountPageView.class, getSignUser());
+        mv.addObject("pageView", pageView);
+        pageView.getPageHead().setTitle("管理您的手机号码 - " + SYSTEM_CONFIG.getSiteName());
+        mv.setViewName("account/phone");
+        return mv;
+    }
 }

@@ -23,5 +23,18 @@ public interface AccountApi {
     APIResult sendEmailVerCode(@RequestParam("newEmail") String newEmail);
 
     @PostMapping("manage/email")
+    @Operation(summary = "修改邮箱", tags = {"前台接口"})
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改邮箱")
     APIResult updateEmail(@RequestParam("newEmail") String newEmail, @RequestParam("verCode") String verCode);
+
+    @PostMapping("manage/phone/verCode")
+    @Operation(summary = "修改手机号，发送短信验证码", tags = {"前台接口"})
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改手机号，发送短信验证码")
+    APIResult sendPhoneVerCode(@RequestParam("newPhone") String newPhone);
+
+    @PostMapping("manage/phone")
+    @Operation(summary = "修改手机号", tags = {"前台接口"})
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改手机号")
+    APIResult updatePhone(@RequestParam("newPhone") String newPhone,
+                          @RequestParam("verCode") String verCode);
 }

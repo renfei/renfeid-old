@@ -53,5 +53,7 @@ public interface AccountService {
 
     SysAccount getAccountByEmail(String email);
 
+    SysAccount getAccountByPhone(String phone);
+
     void updateAccount(SysAccount account);
 }

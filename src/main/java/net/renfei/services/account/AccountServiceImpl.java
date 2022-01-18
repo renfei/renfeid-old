@@ -442,6 +442,19 @@ public class AccountServiceImpl extends BaseService implements AccountService {
     }
 
     @Override
+    public SysAccount getAccountByPhone(String phone) {
+        if (ObjectUtils.isEmpty(phone) || phone.isEmpty()) {
+            return null;
+        }
+        if (!StringUtils.isChinaPhone(phone.trim().toLowerCase())) {
+            return null;
+        }
+        SysAccountExample example = new SysAccountExample();
+        example.createCriteria().andPhoneEqualTo(phone.trim().toLowerCase());
+        return ListUtils.getOne(accountMapper.selectByExample(example));
+    }
+
+    @Override
     public void updateAccount(SysAccount account) {
         accountMapper.updateByPrimaryKeySelective(account);
     }

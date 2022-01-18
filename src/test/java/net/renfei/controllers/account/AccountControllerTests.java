@@ -29,4 +29,12 @@ public class AccountControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void managePhonePageTest() throws Exception {
+        this.mockMvc.perform(get("/account/manage/phone")
+                        .session(session))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
