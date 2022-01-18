@@ -105,4 +105,19 @@ public class AccountController extends BaseController {
         mv.setViewName("account/u2f");
         return mv;
     }
+
+    @GetMapping({"manage/firstName", "manage/lastName"})
+    public ModelAndView manageFirstName(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        ModelAndView modelAndView = checkSigned();
+        if (modelAndView != null) {
+            return modelAndView;
+        }
+        User user = getSignUser();
+        AccountPageView<User> pageView = buildPageView(AccountPageView.class, user);
+        pageView.getPageHead().setTitle("管理您的姓名称呼 - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("pageView", pageView);
+        mv.setViewName("account/firstName");
+        return mv;
+    }
 }

@@ -44,4 +44,18 @@ public class AccountApiControllerTests extends ApplicationTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.code").value(200));
     }
+
+    @Test
+    public void updateFirstNameTest() throws Exception {
+        this.mockMvc.perform(post("/-/api/account/manage/firstName")
+                        .with(csrf())
+                        .param("firstName", "123")
+                        .param("lastName", "456")
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+    }
 }

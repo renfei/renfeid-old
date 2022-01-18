@@ -53,4 +53,10 @@ public interface AccountApi {
     @Operation(summary = "关闭U2F两步验证", tags = {"前台接口"})
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "关闭U2F两步验证", operation = OperationTypeEnum.DELETE)
     APIResult closeU2F(@RequestBody SaveU2FVO saveU2FVO);
+
+    @PostMapping({"manage/firstName", "manage/lastName"})
+    @Operation(summary = "修改姓名称呼", tags = {"前台接口"})
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改姓名称呼", operation = OperationTypeEnum.UPDATE)
+    APIResult updateFirstName(@RequestParam(value = "firstName", required = false) String firstName,
+                              @RequestParam(value = "lastName", required = false) String lastName);
 }

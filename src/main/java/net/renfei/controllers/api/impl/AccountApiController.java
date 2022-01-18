@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccountApiController extends BaseController implements AccountApi {
     private static final Logger logger = LoggerFactory.getLogger(AccountApiController.class);
+    private static final int MAX_FIRST_NAME = 10;
+    private static final int MAX_LAST_NAME = 15;
     private final SysService sysService;
     private final EmailService emailService;
     private final AccountService accountService;
@@ -337,5 +339,36 @@ public class AccountApiController extends BaseController implements AccountApi {
                     .message("密码不正确")
                     .build();
         }
+    }
+
+    @Override
+    public APIResult updateFirstName(String firstName, String lastName) {
+        User user = getSignUser();
+        if (user == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请先登录")
+                    .build();
+        }
+        if (!ObjectUtils.isEmpty(firstName) && firstName.length() > MAX_FIRST_NAME) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("姓氏超过系统允许最大长度 " + MAX_FIRST_NAME + " 位。")
+                    .build();
+        }
+        if (!ObjectUtils.isEmpty(lastName) && lastName.length() > MAX_LAST_NAME) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("名称超过系统允许最大长度 " + MAX_LAST_NAME + " 位。")
+                    .build();
+        }
+        SysAccount account = accountService.getAccountByUser(user);
+        account.setFirstName(firstName);
+        account.setLastName(lastName);
+        accountService.updateAccountAll(account);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        updateSignUser(user);
+        return APIResult.success();
     }
 }
