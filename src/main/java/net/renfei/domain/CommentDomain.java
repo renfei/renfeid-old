@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -161,7 +162,7 @@ public final class CommentDomain {
             }
             return commentList;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     /**

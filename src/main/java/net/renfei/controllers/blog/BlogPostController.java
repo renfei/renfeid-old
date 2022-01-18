@@ -126,6 +126,10 @@ public class BlogPostController extends BaseController {
                 .url(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogVO.getPost().getId())
                 .build());
         // TODO 获取文章扩展信息
+        if (blogVO.getPost().getContent().contains("code class=")) {
+            //检测到有代码显示，需要增加代码高亮插件
+            mv.addObject("HighlightJS", 1);
+        }
         mv.setViewName("blog/post");
         blogService.view(blogVO, getSignUser(), null);
         return mv;

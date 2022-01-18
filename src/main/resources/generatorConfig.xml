@@ -5,8 +5,8 @@
 
 <generatorConfiguration>
     <!--驱动jar-->
-<!--    <classPathEntry location="/Users/renfei/Downloads/mysql-connector-java-5.1.45.jar"/>-->
-    <classPathEntry location="C:\Users\renfei\WorkSpace\bbs\target\bbs-5.4\WEB-INF\lib/mysql-connector-java-8.0.11.jar"/>
+    <classPathEntry location="/Users/renfei/Downloads/mysql-connector-java-5.1.45.jar"/>
+<!--    <classPathEntry location="C:\Users\renfei\WorkSpace\bbs\target\bbs-5.4\WEB-INF\lib/mysql-connector-java-8.0.11.jar"/>-->
 
     <context id="default" targetRuntime="MyBatis3">
         <property name="javaFileEncoding" value="UTF-8"/>
@@ -25,7 +25,7 @@
         </commentGenerator>
         <jdbcConnection
                 driverClass="com.mysql.jdbc.Driver"
-                connectionURL="jdbc:mysql://10.10.1.2/renfeid?characterEncoding=utf-8&amp;useSSL=false"
+                connectionURL="jdbc:mysql://localhost/renfei?characterEncoding=utf-8&amp;useSSL=false"
                 userId="root"
                 password="root">
         </jdbcConnection>
@@ -33,17 +33,34 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!--自动生成定义位置-->
-        <javaModelGenerator targetPackage="net.renfei.repositories.model" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="net.renfei.transfer.model" targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="false"/>
         </javaModelGenerator>
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
-        <javaClientGenerator type="XMLMAPPER" targetPackage="net.renfei.repositories"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="net.renfei.transfer"
                              targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
+        <!--OldDatabase-->
+        <table schema="renfei" delimitAllColumns="true" tableName="t_account"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_category"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_comments"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_link"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_online_documents"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_page"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_photo"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_photo_img"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_posts"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_secret_key"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_short_url"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_system_log"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_tag"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_tag_relation"/>
+        <table schema="renfei" delimitAllColumns="true" tableName="t_weibo"/>
+        <!--NewDatabase-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="leaf_alloc"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_region"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_comments"/>-->
@@ -67,6 +84,6 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_account"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_verification_code"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="wechat_keyword"/>-->
-        <table schema="renfeid" delimitAllColumns="true" tableName="kitbox_short_url"/>
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="kitbox_short_url"/>-->
     </context>
 </generatorConfiguration>

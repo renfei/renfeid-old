@@ -64,7 +64,7 @@
                             <div class="col-sm-6 col-card">
                                 <div class="card">
                                     <img src="${post.post.featuredImage!}?x-oss-process=style/992.558"
-                                         class="card-img" alt="${post.title}" width="992px" height="558px"
+                                         class="card-img" alt="${post.post.title}" width="992px" height="558px"
                                          style="width: 100%;height: auto;">
                                     <div class="card-body">
                                         <a class="stretched-link" href="/posts/${post.post.id?c}"
