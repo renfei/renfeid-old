@@ -22,6 +22,12 @@ public class BlogPostControllerTests extends ApplicationTests {
         this.mockMvc.perform(get("/posts"))
                 .andDo(print())
                 .andExpect(status().isOk());
+        this.mockMvc.perform(get("/posts/tag/usual"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/posts/tag/usual"))
+                .andDo(print())
+                .andExpect(status().isOk());
         this.mockMvc.perform(get("/posts/index.html"))
                 .andDo(print())
                 .andExpect(status().isMovedPermanently());
