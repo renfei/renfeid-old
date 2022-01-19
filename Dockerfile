@@ -27,7 +27,7 @@ ARG JAR_FILE=target/*.jar
 
 RUN mkdir /opt/renfeid/ip2location
 
-COPY --chown=renfei:renfei ${JAR_FILE} /opt/renfeid/
+COPY --chown=renfei:renfei ${JAR_FILE} /opt/
 # IP2Location 数据过大，不再随 Docker 打包
 #COPY --chown=renfei:renfei ${IP2LocationBinFile} /opt/renfeid/ip2location/
 
@@ -51,7 +51,7 @@ ENTRYPOINT [ "java", \
              "-Dfile.encoding=UTF-8", \
              "-Xverify:none", \
              "-jar", \
-             "/opt/renfeid/renfeid.jar" \
+             "/opt/renfeid.jar" \
 ]
 
 HEALTHCHECK --start-period=30s --interval=30s --timeout=3s --retries=3 \
