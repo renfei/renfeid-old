@@ -1,5 +1,6 @@
 package net.renfei.model;
 
+import net.renfei.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,9 @@ public class SiteMapXml implements Serializable {
     private ChangefreqEnum changefreqEnum;
     private float priority;
     private Date lastmod;
+
+    public SiteMapXml() {
+    }
 
     public String getLastmod() {
         if (lastmod == null) {
@@ -68,5 +72,9 @@ public class SiteMapXml implements Serializable {
 
     public void setLastmod(Date lastmod) {
         this.lastmod = lastmod;
+    }
+
+    public void setLastmod(String lastmod) {
+        this.lastmod = DateUtils.parseDate(lastmod + " 00:00:00");
     }
 }
