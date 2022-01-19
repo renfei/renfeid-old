@@ -74,7 +74,7 @@
 <#macro commentsRecursion commentsVO>
     <#if commentsVO?? && (commentsVO?size > 0)>
         <#list commentsVO as comment>
-            <div class="media mt-3" id="cmt${comment.id}">
+            <div class="media mt-3" id="cmt${comment.id!?c}">
                 <div class="media-body">
                     <h5 class="mt-0">
                         <a href="${comment.link!?html}"
@@ -94,7 +94,7 @@
                     <p style="font-size: 12px">
                         ${comment.content!?html}
                     </p>
-                    <a href="javascript:replyTo('${comment.author!?html}','${comment.id}')">
+                    <a href="javascript:replyTo('${comment.author!?html}','${comment.id!?c}')">
                     <span class="mb-2 mt-2 text-muted" style="display: block;">
                         <i class="fab fa-reply"></i>回复
                     </span>

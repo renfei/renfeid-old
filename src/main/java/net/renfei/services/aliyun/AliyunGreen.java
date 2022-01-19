@@ -92,7 +92,7 @@ public class AliyunGreen extends AbstractAliyunService {
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return false;
+            return true;
         }
         return false;
     }
