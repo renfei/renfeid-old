@@ -23,9 +23,8 @@ RUN set -ex; \
         		apt-get install -y --no-install-recommends tzdata; \
     fi; \
     rm -rf /var/lib/apt/lists/* \
-
-RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata \
+    && ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && dpkg-reconfigure -f noninteractive tzdata
 
 ENV TZ="Asia/Shanghai"
 
