@@ -35,7 +35,7 @@
 | MariaDB | DataBase | 10.6.5 | MySQL 的最佳替代者，我使用最新版本 |
 | JWT | Token | - | 我使用JWT支持无状态接口，支持分布式部署 |
 | Redis | NoSQL | 6.2.6 | 用于缓存加速，数据变化不频繁的扔到内存里 |
-| ElasticSearch | 搜索引擎 | 7.16.2 | 站内搜索就是依赖 ES 搜索引擎实现的 |
+| ElasticSearch | 搜索引擎 | 7.16.3 | 站内搜索就是依赖 ES 搜索引擎实现的 |
 | Freemarker | 视图引擎 | 2.3.31 | 我是放弃 Thymeleaf 又换回来的，不解释 |
 | Quartz | 定时任务 | 2.3.2 | 为了支持分布式部署，本地定时任务不能用 |
 | SpringSecurity | 安全框架 | 5.6.1 | Spring全家桶，各种权限判断和拦截就是基于它的 |

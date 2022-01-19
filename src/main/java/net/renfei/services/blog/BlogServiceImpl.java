@@ -116,6 +116,38 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         return blogVOListData;
     }
 
+    @Override
+    public ListData<BlogVO> getAllPostListByCatName(String catEnName, User user, boolean isAdmin, int pages, int rows) {
+        ListData<BlogVO> blogVOListData = null;
+        ListData<BlogDomain> blogDomainListData;
+        String redisKey = REDIS_KEY_BLOG + "post:cat:" + catEnName + ":list_" + pages + "_" + rows;
+        assert SYSTEM_CONFIG != null;
+        if (user == null) {
+            // 未登录用户访问，可以用缓存
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                // 查询是否曾经缓存过对象，有缓存直接吐出去
+                if (redisService.hasKey(redisKey)) {
+                    Object object = redisService.get(redisKey);
+                    if (object instanceof ListData) {
+                        blogVOListData = (ListData<BlogVO>) object;
+                    }
+                }
+            }
+            if (blogVOListData == null) {
+                blogDomainListData = BlogDomain.allPostListByCatName(catEnName, user, isAdmin, pages, rows);
+                blogVOListData = convert(blogDomainListData);
+                if (SYSTEM_CONFIG.isEnableRedis()) {
+                    redisService.set(redisKey, blogVOListData, SYSTEM_CONFIG.getDefaultCacheSeconds());
+                }
+            }
+        } else {
+            // 站内用户直接查最新
+            blogDomainListData = BlogDomain.allPostListByCatName(catEnName, user, isAdmin, pages, rows);
+            blogVOListData = convert(blogDomainListData);
+        }
+        return blogVOListData;
+    }
+
     /**
      * 根据ID获取公开的博客文章
      *

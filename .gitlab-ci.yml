@@ -41,7 +41,7 @@ test:
   services:
     - mariadb:10.6.5
     - redis:6.0.1
-    - name: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/elasticsearch:7.16.2"
+    - name: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/elasticsearch:7.16.3"
       alias: "elasticsearch"
       command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
   variables:

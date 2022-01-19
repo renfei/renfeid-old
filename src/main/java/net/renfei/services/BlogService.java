@@ -39,6 +39,18 @@ public interface BlogService {
     ListData<BlogVO> getAllPostListByTagName(SysKeywordTag sysKeywordTag, User user, boolean isAdmin, int pages, int rows);
 
     /**
+     * 获取所有文章列表
+     *
+     * @param catEnName
+     * @param user
+     * @param isAdmin
+     * @param pages
+     * @param rows
+     * @return
+     */
+    ListData<BlogVO> getAllPostListByCatName(String catEnName, User user, boolean isAdmin, int pages, int rows);
+
+    /**
      * 根据ID获取公开的博客文章
      *
      * @param id   文章ID

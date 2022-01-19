@@ -8,9 +8,9 @@
 # @author renfei
 # https://github.com/renfei/elasticsearch
 ####################################
-FROM elasticsearch:7.16.2
+FROM elasticsearch:7.16.3
 
-ENV VERSION=7.16.2
+ENV VERSION=7.16.3
 
 # https://github.com/medcl/elasticsearch-analysis-ik/releases
 ADD https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v${VERSION}/elasticsearch-analysis-ik-$VERSION.zip /tmp/

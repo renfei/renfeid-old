@@ -5,15 +5,15 @@ import com.github.pagehelper.PageHelper;
 import net.renfei.domain.blog.Category;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
-import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.CommentStatusEnum;
 import net.renfei.model.ListData;
-import net.renfei.model.blog.PostStatusEnum;
 import net.renfei.model.SecretLevelEnum;
+import net.renfei.model.blog.PostStatusEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.BlogCategoryMapper;
 import net.renfei.repositories.BlogPostsMapper;
 import net.renfei.repositories.model.BlogCategory;
@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -143,9 +144,26 @@ public final class BlogDomain {
      * @param rows    每页容量
      * @return
      */
-    public static ListData<BlogDomain> allPostListInId(List<Long> ids, User user, boolean isAdmin, int pages, int rows) {
+    public static ListData<BlogDomain> allPostListInId(List<Long> ids, User user,
+                                                       boolean isAdmin, int pages, int rows) {
         BlogDomain blogDomain = new BlogDomain();
         return blogDomain.getAllPostListInId(ids, user, isAdmin, pages, rows);
+    }
+
+    /**
+     * 获取全部文章列表
+     *
+     * @param catEnName 分类名称
+     * @param user      登录用户
+     * @param isAdmin   是否是管理员操作
+     * @param pages     页码
+     * @param rows      每页容量
+     * @return
+     */
+    public static ListData<BlogDomain> allPostListByCatName(String catEnName, User user,
+                                                            boolean isAdmin, int pages, int rows) {
+        BlogDomain blogDomain = new BlogDomain();
+        return blogDomain.getAllPostListByCatName(catEnName, user, isAdmin, pages, rows);
     }
 
     /**
@@ -247,6 +265,81 @@ public final class BlogDomain {
         Page<BlogPostsWithBLOBs> page = PageHelper.startPage(pages, rows);
         blogPostsMapper.selectByExampleWithBLOBs(example);
         ListData<BlogDomain> blogDomainListData = new ListData<>(page);
+        List<BlogDomain> data = new CopyOnWriteArrayList<>();
+        for (BlogPostsWithBLOBs blogPostsWithBLOBs : page.getResult()
+        ) {
+            BlogDomain blogDomain;
+            try {
+                blogDomain = new BlogDomain(blogPostsWithBLOBs.getId(), user, blogPostsWithBLOBs.getPostPassword(), isAdmin);
+            } catch (NotExistException | SecretLevelException | NeedPasswordException exception) {
+                SentryUtils.captureException(exception);
+                continue;
+            }
+            if (user == null || !isAdmin) {
+                // 未登录或者不是管理员，需要密码的文章隐藏内容和概述
+                if (!ObjectUtils.isEmpty(blogPostsWithBLOBs.getPostPassword())) {
+                    blogDomain.getPost().setContent("");
+                    blogDomain.getPost().setExcerpt("");
+                }
+            }
+            data.add(blogDomain);
+        }
+        blogDomainListData.setData(data);
+        return blogDomainListData;
+    }
+
+    /**
+     * 获取全部文章列表
+     *
+     * @param catEnName 分类名称
+     * @param user      登录用户
+     * @param isAdmin   是否是管理员操作
+     * @param pages     页码
+     * @param rows      每页容量
+     * @return
+     */
+    public ListData<BlogDomain> getAllPostListByCatName(String catEnName, User user, boolean isAdmin, int pages, int rows) {
+        BlogCategoryExample categoryExample = new BlogCategoryExample();
+        BlogCategoryExample.Criteria catCriteria = categoryExample.createCriteria().andEnNameEqualTo(catEnName);
+        BlogPostsExample example = new BlogPostsExample();
+        example.setOrderByClause("post_date DESC");
+        BlogPostsExample.Criteria criteria = example.createCriteria();
+        if (user != null) {
+            // 登录用户，判断保密等级
+            criteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevelEnum().getLevel());
+            catCriteria.andSecretLevelLessThanOrEqualTo(user.getSecretLevelEnum().getLevel());
+            if (isAdmin) {
+                // 管理员，除了被删除和修订版本，其他都显示
+                criteria
+                        .andPostStatusNotEqualTo(PostStatusEnum.DELETED.toString())
+                        .andPostStatusNotEqualTo(PostStatusEnum.REVISION.toString());
+            } else {
+                // 其他用户，只能查看已经发布的内容
+                criteria
+                        .andPostDateLessThanOrEqualTo(new Date())
+                        .andPostStatusEqualTo(PostStatusEnum.PUBLISH.toString());
+            }
+        } else {
+            // 未登录用户，只能查看非密内容、已经发布的内容
+            criteria
+                    .andSecretLevelLessThanOrEqualTo(SecretLevelEnum.UNCLASSIFIED.getLevel())
+                    .andPostDateLessThanOrEqualTo(new Date())
+                    .andPostStatusEqualTo(PostStatusEnum.PUBLISH.toString());
+            catCriteria.andSecretLevelLessThanOrEqualTo(SecretLevelEnum.UNCLASSIFIED.getLevel());
+        }
+        BlogCategory category = ListUtils.getOne(categoryMapper.selectByExample(categoryExample));
+        ListData<BlogDomain> blogDomainListData = new ListData<>();
+        if (category == null) {
+            blogDomainListData.setTotal(0);
+            blogDomainListData.setPages(pages);
+            blogDomainListData.setPageSize(rows);
+            blogDomainListData.setData(new ArrayList<>());
+            return blogDomainListData;
+        }
+        criteria.andCategoryIdEqualTo(category.getId());
+        Page<BlogPostsWithBLOBs> page = PageHelper.startPage(pages, rows);
+        blogPostsMapper.selectByExampleWithBLOBs(example);
+        blogDomainListData = new ListData<>(page);
         List<BlogDomain> data = new CopyOnWriteArrayList<>();
         for (BlogPostsWithBLOBs blogPostsWithBLOBs : page.getResult()
         ) {

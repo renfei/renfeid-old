@@ -3,11 +3,14 @@ package net.renfei.controllers.blog;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.BlogDomain;
+import net.renfei.domain.blog.Category;
 import net.renfei.domain.system.SysKeywordTag;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
-import net.renfei.model.*;
+import net.renfei.model.ListData;
+import net.renfei.model.OGProtocol;
+import net.renfei.model.SocialSharing;
 import net.renfei.model.blog.PostPageView;
 import net.renfei.model.system.BlogVO;
 import net.renfei.model.system.SystemTypeEnum;
@@ -16,7 +19,10 @@ import net.renfei.services.PaginationService;
 import net.renfei.utils.NumberUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.view.RedirectView;
@@ -163,6 +169,34 @@ public class BlogPostController extends BaseController {
         mv.addObject("pageView", postPageView);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
         setPagination(paginationService, mv, page, allPostList.getTotal(), "/posts/tag/" + sysKeywordTag.getEnName() + "?page=");
+        mv.setViewName("blog/list");
+        return mv;
+    }
+
+    /**
+     * 根据分类获取所有文章列表
+     *
+     * @param page 页码
+     * @return
+     */
+    @RequestMapping("cat/{enName}")
+    public ModelAndView getAllPostsListByCat(@RequestParam(value = "page", required = false) String page,
+                                             @PathVariable("enName") String enName,
+                                             ModelAndView mv) throws NoHandlerFoundException {
+        ListData<BlogVO> allPostList = blogService.getAllPostListByCatName(enName, getSignUser(), false, NumberUtils.parseInt(page, 1), 15);
+        if (allPostList.getTotal() == 0) {
+            noHandlerFoundException();
+        }
+        Category category = allPostList.getData().get(0).getCategory();
+        PostPageView<List<BlogDomain>> postPageView = buildPageView(PostPageView.class, allPostList.getData());
+        assert SYSTEM_CONFIG != null;
+        mv.addObject("catTitle", "文章分类：" + category.getZhName());
+        postPageView.getPageHead().setTitle("分类：" + category.getZhName() + " - 博客文章分类 - " + SYSTEM_CONFIG.getSiteName());
+        postPageView.getPageHead().setKeywords(category.getZhName() + ",博客,blog,开发,技术,posts");
+        postPageView.getPageHead().setDescription("博客文章分类：" + category.getZhName() + "。共同类型的文章在这里聚合等待您的查阅。");
+        mv.addObject("pageView", postPageView);
+        mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
+        setPagination(paginationService, mv, page, allPostList.getTotal(), "/posts/cat/" + enName + "?page=");
         mv.setViewName("blog/list");
         return mv;
     }
