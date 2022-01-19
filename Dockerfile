@@ -19,7 +19,15 @@ RUN set -ex; \
     if ! which curl; then \
     		apt-get install -y --no-install-recommends curl; \
     fi; \
-    rm -rf /var/lib/apt/lists/*
+    if ! which tzdata; then \
+        		apt-get install -y --no-install-recommends tzdata; \
+    fi; \
+    rm -rf /var/lib/apt/lists/* \
+
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata \
+
+ENV TZ="Asia/Shanghai"
 
 ARG JAR_FILE=target/*.jar
 # git clone https://github.com/renfei/ip2location.git
