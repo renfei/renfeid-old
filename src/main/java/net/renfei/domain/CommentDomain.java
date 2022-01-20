@@ -209,7 +209,7 @@ public final class CommentDomain {
         comment.setContent(sysComment.getContent());
         comment.setDatetime(sysComment.getAddtime());
         comment.setAddress(sysComment.getAuthorAddress());
-        comment.setOwner(false);
+        comment.setOwner(sysComment.getIsOwner());
         comment.setIp(sysComment.getAuthorIp());
         comment.setUser(user);
         if (user != null) {

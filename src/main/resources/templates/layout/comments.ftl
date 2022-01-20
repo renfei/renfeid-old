@@ -80,8 +80,8 @@
                         <a href="${comment.link!?html}"
                            style="font-size: 14px;font-weight: 700;display: block;">
                             ${comment.author!?html}
-                            <#if comment.isOwner??>
-                                ${comment.isOwner?string(
+                            <#if comment.owner??>
+                                ${comment.owner?string(
                                 "<span style=\"color: #ffb032;margin-left: 10px;font-weight: 900;\"><i style=\"color: #ffb032;margin-right: 0;\" class=\"fa fa-check-circle\"></i> 站点官方</span>",
                                 "")}
                             </#if>
