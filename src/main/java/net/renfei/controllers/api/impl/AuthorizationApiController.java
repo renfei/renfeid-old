@@ -1,5 +1,6 @@
 package net.renfei.controllers.api.impl;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.AuthorizationApi;
 import net.renfei.domain.UserDomain;
@@ -10,6 +11,8 @@ import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.auth.*;
+import net.renfei.model.log.OperationTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.model.system.UserDetail;
 import net.renfei.services.AccountService;
 import net.renfei.services.ReCaptchaService;
@@ -56,6 +59,7 @@ public class AuthorizationApiController extends BaseController implements Author
      * @return
      */
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "向服务器申请服务器公钥", operation = OperationTypeEnum.CREATE)
     public APIResult<String> getSecretKey() {
         Map<Integer, String> map = sysService.secretKey();
         if (ObjectUtils.isEmpty(map)) {
@@ -77,6 +81,7 @@ public class AuthorizationApiController extends BaseController implements Author
      * @return
      */
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "上报客户端公钥，并下发AES秘钥", operation = OperationTypeEnum.CREATE)
     public APIResult<Map<String, String>> setSecretKey(ReportPublicKeyVO reportPublicKeyVO) {
         return new APIResult<>(sysService.setSecretKey(reportPublicKeyVO));
     }
@@ -88,6 +93,7 @@ public class AuthorizationApiController extends BaseController implements Author
      * @return
      */
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问登陆接口", operation = OperationTypeEnum.SIGNIN)
     public APIResult<String> doSignIn(SignInVO signInVO) throws NeedU2FException {
         if (getSignUser() != null) {
             return APIResult.builder()
@@ -142,6 +148,7 @@ public class AuthorizationApiController extends BaseController implements Author
      * @return
      */
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问注册接口", operation = OperationTypeEnum.CREATE)
     public APIResult doSignUp(SignUpVO signUpVO) {
         if (getSignUser() != null) {
             return APIResult.builder().code(StateCodeEnum.Failure).message("您已经登录，无需重复注册。").build();
@@ -197,6 +204,7 @@ public class AuthorizationApiController extends BaseController implements Author
      * @return
      */
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问账户激活接口", operation = OperationTypeEnum.UPDATE)
     public APIResult doSignUpActivation(SignUpActivationVO signUpActivationVO) {
         try {
             accountService.activation(signUpActivationVO);

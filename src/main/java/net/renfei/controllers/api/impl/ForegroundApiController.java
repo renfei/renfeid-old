@@ -1,19 +1,21 @@
 package net.renfei.controllers.api.impl;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.ForegroundApi;
 import net.renfei.domain.CommentDomain;
 import net.renfei.domain.WeiboDomain;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
-import net.renfei.model.kitbox.ShortUrlVO;
-import net.renfei.model.system.BlogVO;
-import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.APIResult;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.model.kitbox.ShortUrlVO;
+import net.renfei.model.log.OperationTypeEnum;
+import net.renfei.model.system.BlogVO;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.model.KitboxShortUrl;
 import net.renfei.services.BlogService;
 import net.renfei.services.CommentService;
@@ -54,6 +56,7 @@ public class ForegroundApiController extends BaseController implements Foregroun
      * @return
      */
     @Override
+    @OperationLog(module = SystemTypeEnum.COMMENT, desc = "提交评论接口", operation = OperationTypeEnum.CREATE)
     public APIResult submitComments(SystemTypeEnum systemTypeEnum, String id, Comment comment) {
         // TODO 检查全局评论开关
         // TODO 检查被评论的对象是否允许评论
@@ -106,6 +109,7 @@ public class ForegroundApiController extends BaseController implements Foregroun
      * @return
      */
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问使用密码获取文章详情接口")
     public APIResult<Post> getPostInfoByPassword(Long id, String password) {
         BlogVO blogVO;
         assert blogService != null;
@@ -133,6 +137,7 @@ public class ForegroundApiController extends BaseController implements Foregroun
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问微博点赞接口", operation = OperationTypeEnum.UPDATE)
     public APIResult weiboThumbsUp(Long id) {
         try {
             WeiboDomain weiboDomain = new WeiboDomain(id);
@@ -144,6 +149,7 @@ public class ForegroundApiController extends BaseController implements Foregroun
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "访问微博点踩接口", operation = OperationTypeEnum.UPDATE)
     public APIResult weiboThumbsDown(Long id) {
         try {
             WeiboDomain weiboDomain = new WeiboDomain(id);
@@ -155,6 +161,7 @@ public class ForegroundApiController extends BaseController implements Foregroun
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "创建短网址", operation = OperationTypeEnum.CREATE)
     public APIResult addShortUrl(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return APIResult.builder()

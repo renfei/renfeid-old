@@ -1,10 +1,13 @@
 package net.renfei.controllers._api.impl;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers._api.QuartzServiceApi;
 import net.renfei.model.APIResult;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.QuartzJob;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.QuartzService;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -26,6 +29,7 @@ public class QuartzServiceApiController extends BaseController implements Quartz
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "创建一个定时任务", operation = OperationTypeEnum.CREATE)
     public APIResult addJob(QuartzJob quartzJob) {
         try {
             quartzService.addJob(quartzJob);
@@ -46,6 +50,7 @@ public class QuartzServiceApiController extends BaseController implements Quartz
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "暂停一个定时任务", operation = OperationTypeEnum.UPDATE)
     public APIResult pauseJob(String jobName, String jobGroup) {
         try {
             quartzService.pauseJob(jobName, jobGroup);
@@ -60,6 +65,7 @@ public class QuartzServiceApiController extends BaseController implements Quartz
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "继续一个定时任务", operation = OperationTypeEnum.UPDATE)
     public APIResult resumeJob(String jobName, String jobGroup) {
         try {
             quartzService.resumeJob(jobName, jobGroup);
@@ -74,6 +80,7 @@ public class QuartzServiceApiController extends BaseController implements Quartz
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "更新一个定时任务", operation = OperationTypeEnum.UPDATE)
     public APIResult updateJob(String jobName, String jobGroup, String cron) {
         try {
             quartzService.updateJob(jobName, jobGroup, cron);

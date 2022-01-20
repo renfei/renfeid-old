@@ -1,5 +1,6 @@
 package net.renfei.controllers.api.impl;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.AccountApi;
 import net.renfei.domain.user.User;
@@ -8,6 +9,8 @@ import net.renfei.model.APIResult;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.account.SaveU2FVO;
 import net.renfei.model.account.UpdatePasswordVO;
+import net.renfei.model.log.OperationTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.model.SysAccount;
 import net.renfei.repositories.model.SysVerificationCode;
 import net.renfei.services.AccountService;
@@ -50,6 +53,7 @@ public class AccountApiController extends BaseController implements AccountApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "账户修改邮箱发送邮箱验证码", operation = OperationTypeEnum.CREATE)
     public APIResult sendEmailVerCode(String newEmail) {
         if (getSignUser() == null) {
             return APIResult.builder()
@@ -78,6 +82,7 @@ public class AccountApiController extends BaseController implements AccountApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "账户修改邮箱", operation = OperationTypeEnum.UPDATE)
     public APIResult updateEmail(String newEmail, String verCode) {
         User user = getSignUser();
         if (user == null) {
@@ -138,6 +143,7 @@ public class AccountApiController extends BaseController implements AccountApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "账户修改手机发送手机验证码", operation = OperationTypeEnum.CREATE)
     public APIResult sendPhoneVerCode(String newPhone) {
         User user = getSignUser();
         if (user == null) {
@@ -167,6 +173,7 @@ public class AccountApiController extends BaseController implements AccountApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "修改账户手机", operation = OperationTypeEnum.UPDATE)
     public APIResult updatePhone(String newPhone, String verCode) {
         User user = getSignUser();
         if (user == null) {
@@ -232,6 +239,7 @@ public class AccountApiController extends BaseController implements AccountApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "账户修改密码", operation = OperationTypeEnum.UPDATE)
     public APIResult updatePassword(UpdatePasswordVO updatePasswordVO) {
         User user = getSignUser();
         if (user == null) {
@@ -252,6 +260,7 @@ public class AccountApiController extends BaseController implements AccountApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "账户开启U2F", operation = OperationTypeEnum.UPDATE)
     public APIResult manageU2FSave(SaveU2FVO saveU2FVO) {
         User user = getSignUser();
         if (user == null) {
@@ -298,6 +307,7 @@ public class AccountApiController extends BaseController implements AccountApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "账户关闭U2F", operation = OperationTypeEnum.UPDATE)
     public APIResult closeU2F(SaveU2FVO saveU2FVO) {
         User user = getSignUser();
         if (user == null) {
@@ -342,6 +352,7 @@ public class AccountApiController extends BaseController implements AccountApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "账户修改称呼", operation = OperationTypeEnum.UPDATE)
     public APIResult updateFirstName(String firstName, String lastName) {
         User user = getSignUser();
         if (user == null) {

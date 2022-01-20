@@ -1,7 +1,9 @@
 package net.renfei.controllers.api.impl;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.WeChatMpApi;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.model.wechat.message.EventMessage;
 import net.renfei.model.wechat.xmlmessage.XMLMessage;
 import net.renfei.services.WeChatService;
@@ -31,6 +33,7 @@ public class WeChatMpApiController extends BaseController implements WeChatMpApi
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.WECHAT_MP, desc = "微信公众号接口")
     public void doPost(HttpServletResponse response) throws IOException {
         ServletInputStream inputStream = request.getInputStream();
         ServletOutputStream outputStream = response.getOutputStream();

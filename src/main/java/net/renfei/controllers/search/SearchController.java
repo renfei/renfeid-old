@@ -43,6 +43,7 @@ public class SearchController extends BaseController {
     }
 
     @RequestMapping("")
+    @OperationLog(module = SystemTypeEnum.SEARCH, desc = "访问站内搜索页面")
     public ModelAndView search(ModelAndView mv,
                                @RequestParam(value = "type", required = false) String type,
                                @RequestParam(value = "w", required = false) String query,

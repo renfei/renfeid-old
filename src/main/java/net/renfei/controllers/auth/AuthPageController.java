@@ -69,6 +69,7 @@ public class AuthPageController extends BaseController {
      * 注册完成界面
      */
     @GetMapping("signUp/success")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "注册完成界面")
     public ModelAndView signUpSuccessPage(ModelAndView mv) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, null);
         assert SYSTEM_CONFIG != null;
@@ -82,6 +83,7 @@ public class AuthPageController extends BaseController {
      * 注册邮箱验证页面
      */
     @GetMapping("signUp/activation")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "注册邮箱验证页面")
     public ModelAndView signUpActivation(ModelAndView mv, @RequestParam(value = "code", required = false) String code) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, code);
         assert SYSTEM_CONFIG != null;
@@ -96,6 +98,7 @@ public class AuthPageController extends BaseController {
      * 登出界面
      */
     @GetMapping("signOut")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "登出界面")
     public ModelAndView signOut(ModelAndView mv,
                                 @RequestParam(value = "callback", required = false) String callback) {
         assert SYSTEM_CONFIG != null;

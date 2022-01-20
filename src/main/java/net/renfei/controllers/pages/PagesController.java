@@ -1,5 +1,6 @@
 package net.renfei.controllers.pages;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.PagesDomain;
 import net.renfei.exception.NeedPasswordException;
@@ -7,6 +8,7 @@ import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.HomePageView;
 import net.renfei.model.SocialSharing;
+import net.renfei.model.system.SystemTypeEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RequestMapping("/page")
 public class PagesController extends BaseController {
     @RequestMapping("{id}")
+    @OperationLog(module = SystemTypeEnum.PAGE, desc = "访问单页面")
     public ModelAndView getPage(@PathVariable("id") Long id, ModelAndView mv) throws NoHandlerFoundException {
         PagesDomain pagesDomain = null;
         try {

@@ -149,6 +149,7 @@ public class BlogPostController extends BaseController {
      * @return
      */
     @RequestMapping("tag/{enName}")
+    @OperationLog(module = SystemTypeEnum.BLOG, desc = "根据标签获取所有文章列表页面")
     public ModelAndView getAllPostsListByTag(@RequestParam(value = "page", required = false) String page,
                                              @PathVariable("enName") String enName,
                                              ModelAndView mv) throws NoHandlerFoundException {
@@ -180,6 +181,7 @@ public class BlogPostController extends BaseController {
      * @return
      */
     @RequestMapping("cat/{enName}")
+    @OperationLog(module = SystemTypeEnum.BLOG, desc = "根据分类获取所有文章列表页面")
     public ModelAndView getAllPostsListByCat(@RequestParam(value = "page", required = false) String page,
                                              @PathVariable("enName") String enName,
                                              ModelAndView mv) throws NoHandlerFoundException {

@@ -1,9 +1,11 @@
 package net.renfei.controllers.account;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.domain.user.User;
 import net.renfei.model.account.AccountPageView;
 import net.renfei.model.discuz.DiscuzInfo;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.DiscuzService;
 import net.renfei.utils.GoogleAuthenticator;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,7 @@ public class AccountController extends BaseController {
     }
 
     @GetMapping("manage")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户管理页面")
     public ModelAndView manage(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         ModelAndView modelAndView = checkSigned();
@@ -47,6 +50,7 @@ public class AccountController extends BaseController {
     }
 
     @GetMapping("manage/email")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户邮箱管理页面")
     public ModelAndView manageEmail(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         ModelAndView modelAndView = checkSigned();
@@ -61,6 +65,7 @@ public class AccountController extends BaseController {
     }
 
     @GetMapping("manage/phone")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户手机管理页面")
     public ModelAndView managePhone(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         ModelAndView modelAndView = checkSigned();
@@ -75,6 +80,7 @@ public class AccountController extends BaseController {
     }
 
     @GetMapping("manage/password")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户密码管理页面")
     public ModelAndView managePassword(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         ModelAndView modelAndView = checkSigned();
@@ -89,6 +95,7 @@ public class AccountController extends BaseController {
     }
 
     @GetMapping("manage/u2f")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户U2F管理页面")
     public ModelAndView manageU2F(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         ModelAndView modelAndView = checkSigned();
@@ -107,6 +114,7 @@ public class AccountController extends BaseController {
     }
 
     @GetMapping({"manage/firstName", "manage/lastName"})
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户称呼管理页面")
     public ModelAndView manageFirstName(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
         ModelAndView modelAndView = checkSigned();

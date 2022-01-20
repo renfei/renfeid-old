@@ -49,7 +49,15 @@ public enum SystemTypeEnum {
     /**
      * 站内搜索
      */
-    SEARCH("/search");
+    SEARCH("/search"),
+    /**
+     * 单页模块
+     */
+    PAGE("/page"),
+    /**
+     * 微信公众号接口
+     */
+    WECHAT_MP("");
 
     private final String uriPath;
 

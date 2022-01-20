@@ -1,5 +1,6 @@
 package net.renfei.controllers.api.impl;
 
+import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers.api.KitBoxApi;
 import net.renfei.model.APIResult;
@@ -7,6 +8,8 @@ import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.kitbox.FreeMarkerAndBeanVO;
 import net.renfei.model.kitbox.IkAnalyzeVO;
+import net.renfei.model.log.OperationTypeEnum;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.KitBoxService;
 import net.renfei.services.SearchService;
 import net.renfei.utils.JacksonUtil;
@@ -37,11 +40,13 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "获取系统时间接口")
     public APIResult<String> getServerDateTime() {
         return new APIResult<>(new Date().toString());
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "FreeMarker(FTL)在线测试工具", operation = OperationTypeEnum.CREATE)
     public APIResult<String> getContentByFreeMarkerAndBean(FreeMarkerAndBeanVO freeMarkerAndBean) {
         if (freeMarkerAndBean == null) {
             return new APIResult<>("");
@@ -53,9 +58,9 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
             return new APIResult<>("");
         }
         if (freeMarkerAndBean.getFtl().contains("<#include")
-                ||freeMarkerAndBean.getFtl().contains("<#setting")
-                ||freeMarkerAndBean.getFtl().contains("?api.")
-                ||freeMarkerAndBean.getFtl().contains("get_optional_template")
+                || freeMarkerAndBean.getFtl().contains("<#setting")
+                || freeMarkerAndBean.getFtl().contains("?api.")
+                || freeMarkerAndBean.getFtl().contains("get_optional_template")
                 || freeMarkerAndBean.getFtl().contains("new()")) {
             return APIResult.builder()
                     .code(StateCodeEnum.NoContent)
@@ -87,21 +92,25 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "域名 dig+trace")
     public APIResult<String> getDomainDigTrace(String domain) {
         return kitBoxService.execDigTrace(domain, null);
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "域名 dig+trace")
     public APIResult<String> getDomainDigTrace(String domain, DnsTypeEnum dnsTypeEnum) {
         return kitBoxService.execDigTrace(domain, dnsTypeEnum);
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "域名Whois信息查询工具")
     public APIResult<String> getDomainWhois(String domain) {
         return kitBoxService.execWhois(domain);
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "UUID/GUID 生成接口")
     public APIResult<List<String>> getUuid(String quantity, Boolean upperCase, Boolean hyphen) {
         int lQuantity = NumberUtils.parseInt(quantity, 1);
         if (lQuantity <= 0) {
@@ -133,6 +142,7 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
     }
 
     @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "中文分词工具API", operation = OperationTypeEnum.CREATE)
     public APIResult<List<IkAnalyzeVO>> getWordIkAnalyze(String word) {
         if (ObjectUtils.isEmpty(word)) {
             return APIResult.builder()
