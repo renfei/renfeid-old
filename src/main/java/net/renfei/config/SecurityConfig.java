@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .frameOptions().sameOrigin()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/_/**").authenticated()
+                .antMatchers("/_/api/**").authenticated()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().permitAll();
     }

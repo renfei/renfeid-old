@@ -3,6 +3,7 @@ package net.renfei.controllers._super;
 import net.renfei.controllers.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 超管系统（后台）
@@ -10,6 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author renfei
  */
 @Controller
-@RequestMapping("/_")
+@RequestMapping("/_/**")
 public class SuperTubeController extends BaseController {
+    @RequestMapping("")
+    public ModelAndView superTubePage(ModelAndView mv) {
+        mv.setViewName("_/index");
+        return mv;
+    }
 }
