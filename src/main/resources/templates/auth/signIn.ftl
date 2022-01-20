@@ -68,7 +68,7 @@
     <script>
         <#if pageView.object??>
         let signed = "1";
-        let ucScript = "${pageView.object.ucScript}";
+        let ucScript = "${pageView.object.ucScript!""}";
         <#else >
         let signed = "0";
         let ucScript = "";

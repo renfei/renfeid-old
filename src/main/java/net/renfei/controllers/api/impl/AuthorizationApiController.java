@@ -90,7 +90,11 @@ public class AuthorizationApiController extends BaseController implements Author
     @Override
     public APIResult<String> doSignIn(SignInVO signInVO) throws NeedU2FException {
         if (getSignUser() != null) {
-            return new APIResult<>("已登陆无需再次登陆。");
+            return APIResult.builder()
+                    .code(StateCodeEnum.OK)
+                    .message("已登陆无需再次登陆。")
+                    .data("")
+                    .build();
         }
         if (ObjectUtils.isEmpty(signInVO.getReCAPTCHAToken())) {
             return APIResult.builder()
