@@ -18,6 +18,8 @@ public class PageFooter implements Serializable {
     private String buildTime;
     private List<String> jss;
     private String jsText;
+    private String performanceExecTime = "0";
+    private String performanceExecCount = "0";
 
     public List<FooterMenuLinks> getFooterMenuLinks() {
         return footerMenuLinks;
@@ -81,5 +83,21 @@ public class PageFooter implements Serializable {
 
     public void setJsText(String jsText) {
         this.jsText = jsText;
+    }
+
+    public String getPerformanceExecTime() {
+        return performanceExecTime;
+    }
+
+    public void setPerformanceExecTime(String performanceExecTime) {
+        this.performanceExecTime = performanceExecTime;
+    }
+
+    public String getPerformanceExecCount() {
+        return performanceExecCount;
+    }
+
+    public void setPerformanceExecCount(String performanceExecCount) {
+        this.performanceExecCount = performanceExecCount;
     }
 }

@@ -248,6 +248,18 @@
                             © ${.now?string["yyyy"]} RENFEI.NET All rights
                             reserved.</small>
                         <ul class="float-right footer-menu-ul">
+                            <#if pageView.pageFooter.performanceExecCount??>
+                                <li class="float-right">
+                                    <small class="text-muted small float-right" style="color: #86868b;">
+                                        calls ${pageView.pageFooter.performanceExecCount} methods.</small>
+                                </li>
+                            </#if>
+                            <#if pageView.pageFooter.performanceExecTime??>
+                                <li class="float-right">
+                                    <small class="text-muted small float-right" style="color: #86868b;">
+                                        Processed in ${pageView.pageFooter.performanceExecTime} second(s),</small>
+                                </li>
+                            </#if>
                             <li class="float-right">
                                 <small class="text-muted small float-right"
                                        style="color: #86868b;">GMT+8, ${.now?string["yyyy-MM-dd HH:mm:ss"]},</small>
