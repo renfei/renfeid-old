@@ -68,6 +68,16 @@
 如果您也使用 GitLab Pipeline，注意项目可访问性，或者设置 CI/CD 的可访问性，如果都是公开的状态，
 那么每个阶段 (stage) 的制品 (artifact) 将会公开下载！其中一旦包含配置文件或相关敏感文件将被公开。
 
+## 安全漏洞修复
+
+在这个 Repo 中修复了 https://github.com/renfei/renfeid/issues/32 远程代码执行漏洞，此漏洞从2020年1月14日存在至今，是我自己干的，
+也是我自己发现的，这么多次代码扫描，都没扫描出来，漏洞存在于以下 Repo：
+
+- [https://github.com/renfei/www.renfei.net](https://github.com/renfei/www.renfei.net)
+- [https://github.com/renfei/RenFei.Net](https://github.com/renfei/RenFei.Net)
+
+所以 v2.0.0 版本还没写完，就连滚带爬的强行上线了，原本不想这么早上线的。
+
 ## License
 
 [Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0)

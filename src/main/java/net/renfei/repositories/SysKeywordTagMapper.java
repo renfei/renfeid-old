@@ -1,13 +1,13 @@
 package net.renfei.repositories;
 
-import java.util.List;
-import java.util.Map;
-
 import net.renfei.repositories.model.SysKeywordTag;
 import net.renfei.repositories.model.SysKeywordTagExample;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface SysKeywordTagMapper {
@@ -42,6 +42,6 @@ public interface SysKeywordTagMapper {
             "WHERE" +
             "    renfeid.sys_keyword_object.object_type = #{systemTypeEnum,jdbcType=VARCHAR} " +
             "GROUP BY" +
-            "    renfeid.sys_keyword_object.object_type")
+            "    renfeid.sys_keyword_tag.en_name")
     List<Map<String, Object>> getTagAndCount(@Param("systemTypeEnum") String systemTypeEnum);
 }
