@@ -17,10 +17,13 @@ RUN set -ex; \
         apt-get install -y --no-install-recommends whois; \
     fi; \
     if ! which curl; then \
-    		apt-get install -y --no-install-recommends curl; \
+    	apt-get install -y --no-install-recommends curl; \
     fi; \
     if ! which tzdata; then \
-        		apt-get install -y --no-install-recommends tzdata; \
+        apt-get install -y --no-install-recommends tzdata; \
+    fi; \
+    if ! which jq; then \
+        apt-get install -y --no-install-recommends jq; \
     fi; \
     rm -rf /var/lib/apt/lists/* \
     && ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
