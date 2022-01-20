@@ -6,15 +6,15 @@ import net.renfei.domain.blog.Category;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.system.SysKeywordTag;
-import net.renfei.model.ListData;
-import net.renfei.model.system.BlogVO;
-import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.NeedPasswordException;
 import net.renfei.exception.NotExistException;
 import net.renfei.exception.SecretLevelException;
 import net.renfei.model.LinkTree;
+import net.renfei.model.ListData;
 import net.renfei.model.blog.PostSidebarVO;
+import net.renfei.model.system.BlogVO;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.BlogPostsMapper;
 import net.renfei.repositories.model.BlogPostsExample;
 import net.renfei.repositories.model.BlogPostsWithBLOBs;
@@ -22,6 +22,7 @@ import net.renfei.services.BaseService;
 import net.renfei.services.BlogService;
 import net.renfei.services.RedisService;
 import net.renfei.utils.PageRankUtil;
+import net.renfei.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -287,7 +288,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 commentList.forEach(comment -> {
                     LinkTree link = LinkTree.builder()
                             .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + comment.getObjectId() + "#cmt" + comment.getId())
-                            .text(comment.getContent())
+                            .text(StringUtils.substring(comment.getContent(), 38, "..."))
                             .build();
                     lastCommentList.add(link);
                 });

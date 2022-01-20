@@ -386,4 +386,17 @@ public class StringUtils {
         matcher.appendTail(sb);
         return sb.toString();
     }
+
+    public static String substring(String content, int length, String endString) {
+        if (content == null || content.isEmpty()) {
+            return "";
+        }
+        if (endString == null || endString.isEmpty()) {
+            endString = "";
+        }
+        if (content.length() > length) {
+            return content.substring(0, length - endString.length() + 1) + " " + endString;
+        }
+        return content;
+    }
 }
