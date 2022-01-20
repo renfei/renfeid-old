@@ -10,6 +10,7 @@
 ## 经典网络：registry-internal.cn-hangzhou.aliyuncs.com/privately/renfei
 #########################################
 PASSWORD=$1
+PASSWORD_GITLAB=$2
 PROJECT_VERSION=$(mvn -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec -q)
 REGISTRY=ghcr.io
 NAMESPACES=renfei
@@ -40,6 +41,15 @@ echo "#########################################"
 echo "# 开始推送 Docker 镜像到仓库 >>>>"
 echo "#########################################"
 docker push $REGISTRY/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION"
+echo "#########################################"
+echo "# 登陆 Docker GitLab 仓库 >>>>"
+echo "#########################################"
+docker login --username=renfei --password="$PASSWORD_GITLAB" registry.gitlab.com
+echo "#########################################"
+echo "# 开始推送 Docker 镜像到GitLab仓库 >>>>"
+echo "#########################################"
+docker tag $REGISTRY/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION" registry.gitlab.com/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION"
+docker push registry.gitlab.com/$NAMESPACES/$REPOSITORIES:"$PROJECT_VERSION"
 echo "#########################################"
 echo "# 删除本地 Docker 镜像到仓库 >>>>"
 echo "#########################################"
