@@ -266,7 +266,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             List<Category> allCategoryList = BlogDomain.allBlogCategory(user);
             allCategoryList.forEach(blogCategory -> {
                 LinkTree link = LinkTree.builder()
-                        .href(SYSTEM_CONFIG.getSiteDomainName() + "/cat/posts/" + blogCategory.getEnName())
+                        .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/cat/" + blogCategory.getEnName())
                         .text(blogCategory.getZhName())
                         .build();
                 blogCategoryLinks.add(link);
