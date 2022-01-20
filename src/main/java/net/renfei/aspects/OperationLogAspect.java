@@ -20,8 +20,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
@@ -93,6 +95,10 @@ public class OperationLogAspect {
             operationLog.setRequUri(request.getRequestURI());
             operationLog.setRequIp(IpUtils.getIpAddress(request));
             Map<String, String> rtnMap = convertMap(request.getParameterMap());
+            if ("POST".equals(request.getMethod()) || "PUT".equals(request.getMethod())) {
+                Object object = joinPoint.getArgs()[0];
+                rtnMap.put("RequestBody", JacksonUtil.obj2String(getKeyAndValue(object)));
+            }
             // 将参数所在的数组转换成json
             String params = JacksonUtil.obj2String(rtnMap);
             operationLog.setRequParam(params);
@@ -129,5 +135,29 @@ public class OperationLogAspect {
             }
         }
         return resultMethod;
+    }
+
+    private static Map<String, Object> getKeyAndValue(Object obj) {
+        Map<String, Object> map = new HashMap<>();
+        // 得到类对象
+        Class userCla = (Class) obj.getClass();
+        /* 得到类中的所有属性集合 */
+        Field[] fs = userCla.getDeclaredFields();
+        for (int i = 0; i < fs.length; i++) {
+            Field f = fs[i];
+            f.setAccessible(true); // 设置些属性是可以访问的
+            Object val = new Object();
+            try {
+                val = f.get(obj);
+                // 得到此属性的值
+                map.put(f.getName(), val);// 设置键值
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return map;
     }
 }
