@@ -81,7 +81,7 @@
         <curator.version>5.2.0</curator.version>
         <openfeign.version>3.1.0</openfeign.version>
         <sentry.version>5.5.3</sentry.version>
-        <email.version>2.6.2</email.version>
+        <email.version>2.6.3</email.version>
         <springdoc.version>1.6.4</springdoc.version>
         <mariadb.client.version>2.7.5</mariadb.client.version>
         <!--Aliyun-->
