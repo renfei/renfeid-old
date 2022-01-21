@@ -272,7 +272,7 @@ public class KitBoxController extends BaseController {
         mv.addObject("pageView", pageView);
         setKitBoxMenus(mv, DEVELOPMENT_TOOL);
         List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST);
-        mv.addObject("version", freemarker.template.Configuration.getVersion());
+        mv.addObject("version", freemarker.template.Configuration.VERSION_2_3_31);
         mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
         mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getId());
         return mv;

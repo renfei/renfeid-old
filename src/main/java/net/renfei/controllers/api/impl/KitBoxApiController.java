@@ -68,7 +68,7 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
                     .data("")
                     .build();
         }
-        freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.getVersion());
+        freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_31);
         freemarker.cache.StringTemplateLoader templateLoader = new freemarker.cache.StringTemplateLoader();
         configuration.setTemplateLoader(templateLoader);
         configuration.setLocalizedLookup(false);
