@@ -3,7 +3,6 @@ package net.renfei.controllers.kitbox;
 import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +11,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class KitBoxControllerTests extends ApplicationTests {
     @Test
@@ -42,6 +40,13 @@ public class KitBoxControllerTests extends ApplicationTests {
     @Test
     public void freemarkerTest() throws Exception {
         this.mockMvc.perform(get("/kitbox/freemarkerTest"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void xpathTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/xpathTest"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
