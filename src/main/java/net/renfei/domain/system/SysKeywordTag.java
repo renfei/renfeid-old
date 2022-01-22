@@ -143,12 +143,12 @@ public final class SysKeywordTag implements Serializable {
                 .andObjectTypeEqualTo(systemTypeEnum.toString());
         List<SysKeywordObject> sysKeywordObjects = keywordObjectMapper.selectByExample(example);
         List<Long> ids = new ArrayList<>();
-        sysKeywordObjects.forEach(sysKeywordObject -> ids.add(sysKeywordObject.getId()));
+        sysKeywordObjects.forEach(sysKeywordObject -> ids.add(sysKeywordObject.getTagId()));
         example = new SysKeywordObjectExample();
         example.createCriteria()
                 .andObjectIdNotEqualTo(objectId)
                 .andObjectTypeEqualTo(systemTypeEnum.toString())
-                .andIdIn(ids);
+                .andTagIdIn(ids);
         sysKeywordObjects = keywordObjectMapper.selectByExample(example);
         List<Long> objIds = new ArrayList<>();
         sysKeywordObjects.forEach(sysKeywordObject -> objIds.add(sysKeywordObject.getObjectId()));

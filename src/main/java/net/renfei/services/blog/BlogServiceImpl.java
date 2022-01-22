@@ -240,6 +240,44 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         }
     }
 
+    @Override
+    public List<Post> getRelated(Post post, User user) {
+        List<Post> posts = null;
+        String redisKey = REDIS_KEY_BLOG + "post:related:" + post.getId();
+        assert SYSTEM_CONFIG != null;
+        if (user == null) {
+            // 未登录用户访问，可以用缓存
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                // 查询是否曾经缓存过对象，有缓存直接吐出去
+                if (redisService.hasKey(redisKey)) {
+                    Object object = redisService.get(redisKey);
+                    if (object instanceof ListData) {
+                        posts = (List<Post>) object;
+                    }
+                }
+            }
+        }
+        if (posts == null) {
+            List<Long> ids = SysKeywordTag.cognateIdList(SystemTypeEnum.BLOG, post.getId());
+            if (ids.size() == 0) {
+                return null;
+            }
+            ListData<BlogDomain> blogDomainListData = BlogDomain.allPostListInId(ids, user, false, 1, 10);
+            if (blogDomainListData.getData() == null || blogDomainListData.getData().size() < 1) {
+                return new ArrayList<>();
+            }
+            posts = new ArrayList<>();
+            for (BlogDomain blogDomain : blogDomainListData.getData()
+            ) {
+                posts.add(blogDomain.getPost());
+            }
+            if (SYSTEM_CONFIG.isEnableRedis()) {
+                redisService.set(redisKey, posts, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            }
+        }
+        return posts;
+    }
+
     /**
      * 构建博客侧边栏内容
      *

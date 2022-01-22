@@ -1,5 +1,6 @@
 package net.renfei.services;
 
+import net.renfei.domain.blog.Post;
 import net.renfei.domain.system.SysKeywordTag;
 import net.renfei.domain.user.User;
 import net.renfei.exception.NeedPasswordException;
@@ -8,6 +9,8 @@ import net.renfei.exception.SecretLevelException;
 import net.renfei.model.ListData;
 import net.renfei.model.blog.PostSidebarVO;
 import net.renfei.model.system.BlogVO;
+
+import java.util.List;
 
 /**
  * 博客服务
@@ -98,6 +101,8 @@ public interface BlogService {
      * @param blogVO 博文领域对象
      */
     void view(BlogVO blogVO, User user, String password);
+
+    List<Post> getRelated(Post post, User user);
 
     /**
      * 构建博客侧边栏内容

@@ -118,6 +118,7 @@ public class BlogPostController extends BaseController {
         mv.addObject("pageView", postPageView);
         mv.addObject("socialSharing", socialSharing);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
+        mv.addObject("related", blogService.getRelated(blogVO.getPost(), getSignUser()));
         assert SYSTEM_CONFIG != null;
         postPageView.getPageHead().setTitle(blogVO.getPost().getTitle() + " - Posts - " + SYSTEM_CONFIG.getSiteName());
         mv.addObject("jsonld", blogService.getJsonld(blogVO));
