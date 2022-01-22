@@ -99,6 +99,10 @@ public enum KitBoxTypeEnum {
      */
     NETWORK_CLIENV(23, "客户端环境获取", "客户端环境操作系统与浏览器版本获取工具", "/kitbox/clienv"),
     /**
+     * XPATH在线测试工具
+     */
+    DEVELOP_XPATH_TEST(24, "XPath在线测试工具", "XPath在线测试工具，在线测试XPath表达式", "/kitbox/xpathTest"),
+    /**
      * 其他
      */
     OTHER(-1, "其他", "其他", "/kitbox/");

@@ -121,12 +121,12 @@
                 let ftl = ftlEditor.getValue();
                 let json = jsonEditor.getValue();
                 if (ftl === "") {
-                    $("#data").val("Error: FreeMarker Code is empty!\n错误：FreeMarker Code是空！");
+                    dataEditor.setValue("Error: FreeMarker Code is empty!\n错误：FreeMarker Code是空！");
                     msg("Error: FreeMarker Code is empty!\n错误：FreeMarker Code是空！", "error");
                     return;
                 }
                 if (json === "") {
-                    $("#data").val("Error: JavaBean Code is empty!\n错误：JavaBean Code是空！");
+                    dataEditor.setValue("Error: JavaBean Code is empty!\n错误：JavaBean Code是空！");
                     msg("Error: JavaBean Code is empty!\n错误：JavaBean Code是空！", "error");
                     return;
                 }

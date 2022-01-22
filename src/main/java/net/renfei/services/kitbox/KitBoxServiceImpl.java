@@ -90,6 +90,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             List<LinkTree> developmentToolLinks = new ArrayList<>();
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_UUID));
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_XPATH_TEST));
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT));
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION));
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_UEDITOR));

@@ -668,6 +668,29 @@ public class KitBoxController extends BaseController {
     }
 
     /**
+     * XPath在线测试工具
+     *
+     * @param mv
+     * @return
+     */
+    @RequestMapping("xpathTest")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问XPath在线测试工具")
+    public ModelAndView xpathTest(ModelAndView mv) {
+        assert SYSTEM_CONFIG != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_XPATH_TEST.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setDescription("XPath在线测试工具");
+        pageView.getPageHead().setKeywords("XPath,xml,在线,测试,工具");
+        mv.setViewName("kitbox/xpathTest");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_XPATH_TEST);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_XPATH_TEST.getId());
+        return mv;
+    }
+
+    /**
      * ueditor配置接口
      *
      * @param action
