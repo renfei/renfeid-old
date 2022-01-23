@@ -512,6 +512,23 @@ INSERT INTO `sys_account_keep_name` VALUES (32, '阿里云');
 INSERT INTO `sys_account_keep_name` VALUES (29, '阿里巴巴');
 
 -- ----------------------------
+-- Table structure for sys_api_list
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_api_list`;
+CREATE TABLE `sys_api_list` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `url_path` varchar(255) NOT NULL COMMENT '请求地址',
+  `method_name` varchar(255) NOT NULL COMMENT '请求方法',
+  `summary` varchar(255) NOT NULL COMMENT '接口概要',
+  `description` varchar(255) DEFAULT NULL COMMENT '接口描述',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统接口列表';
+
+-- ----------------------------
+-- Records of sys_api_list
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for sys_comments
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_comments`;

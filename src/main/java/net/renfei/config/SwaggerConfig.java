@@ -61,7 +61,7 @@ public class SwaggerConfig {
     public GroupedOpenApi backgroundApi() {
         return GroupedOpenApi.builder()
                 .group("BackgroundApi")
-                .pathsToMatch("/_/api/background/**")
+                .pathsToMatch("/_/api/**")
                 .build();
     }
 }

@@ -2,12 +2,10 @@ package net.renfei.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.renfei.annotation.OperationLog;
 import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
-import net.renfei.model.log.OperationTypeEnum;
-import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.model.APIResult;
+import net.renfei.model.system.SystemTypeEnum;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +30,6 @@ public interface ForegroundApi {
      */
     @PostMapping("comments/{systemTypeEnum}/{id}")
     @Operation(summary = "提交评论接口", tags = {"前台接口"})
-    @OperationLog(module = SystemTypeEnum.COMMENT, desc = "提交评论", operation = OperationTypeEnum.CREATE)
     APIResult submitComments(@PathVariable("systemTypeEnum") SystemTypeEnum systemTypeEnum,
                              @PathVariable("id") String id,
                              Comment comment);
@@ -46,7 +43,6 @@ public interface ForegroundApi {
      */
     @PostMapping("blog/{id}/byPassword")
     @Operation(summary = "使用密码获取文章详情", tags = {"前台接口"})
-    @OperationLog(module = SystemTypeEnum.BLOG, desc = "使用密码获取文章详情")
     APIResult<Post> getPostInfoByPassword(@PathVariable("id") Long id, @RequestBody String password);
 
     /**
@@ -57,7 +53,6 @@ public interface ForegroundApi {
      */
     @PostMapping("weibo/{id}/thumbsUp")
     @Operation(summary = "微博点赞接口", tags = {"前台接口"})
-    @OperationLog(module = SystemTypeEnum.WEIBO, desc = "微博点赞", operation = OperationTypeEnum.CREATE)
     APIResult weiboThumbsUp(@PathVariable("id") Long id);
 
     /**
@@ -68,11 +63,9 @@ public interface ForegroundApi {
      */
     @PostMapping("weibo/{id}/thumbsDown")
     @Operation(summary = "微博点踩接口", tags = {"前台接口"})
-    @OperationLog(module = SystemTypeEnum.WEIBO, desc = "微博点赞", operation = OperationTypeEnum.CREATE)
     APIResult weiboThumbsDown(@PathVariable("id") Long id);
 
     @PostMapping("kitbox/ShortURL/do")
     @Operation(summary = "新增短网址", description = "新增短网址", tags = "前台接口")
-    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "新增短网址", operation = OperationTypeEnum.CREATE)
     APIResult addShortUrl(String url);
 }
