@@ -23,4 +23,17 @@ public class OtherControllerTests extends ApplicationTests {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void urlRedirectTest() throws Exception {
+        this.mockMvc.perform(get("/other/urlredirect"))
+                .andDo(print())
+                .andExpect(status().isFound());
+        this.mockMvc.perform(get("/other/urlredirect?url=aHR0cHM6Ly93d3cucmVuZmVpLm5ldC8="))
+                .andDo(print())
+                .andExpect(status().isFound());
+        this.mockMvc.perform(get("/other/urlredirect?url=aHR0cHM6Ly94aWFuaHVvLm9yZy8="))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

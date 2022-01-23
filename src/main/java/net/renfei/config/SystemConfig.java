@@ -43,6 +43,7 @@ public class SystemConfig {
     private String siteDomainName;
     private String staticDomain;
     private boolean enableRedis;
+    private String superTubeUserName;
     private String authMode;
     private String globalAesKey;
     private String leafKey;
@@ -635,6 +636,14 @@ public class SystemConfig {
 
     public void setEnableRedis(boolean enableRedis) {
         this.enableRedis = enableRedis;
+    }
+
+    public String getSuperTubeUserName() {
+        return superTubeUserName;
+    }
+
+    public void setSuperTubeUserName(String superTubeUserName) {
+        this.superTubeUserName = superTubeUserName;
     }
 
     public String getAuthMode() {

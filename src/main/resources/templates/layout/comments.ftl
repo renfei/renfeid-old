@@ -77,7 +77,7 @@
             <div class="media mt-3" id="cmt${comment.id!?c}">
                 <div class="media-body">
                     <h5 class="mt-0">
-                        <a href="${comment.link!?html}"
+                        <a href="${comment.link!?html}" target="_blank"
                            style="font-size: 14px;font-weight: 700;display: block;">
                             ${comment.author!?html}
                             <#if comment.owner??>

@@ -4,10 +4,10 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.comment.Comment;
-import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.IP2LocationException;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.SysCommentsMapper;
 import net.renfei.repositories.model.SysCommentsExample;
 import net.renfei.repositories.model.SysCommentsWithBLOBs;
@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -205,7 +206,14 @@ public final class CommentDomain {
         comment.setReply(sysComment.getParentId());
         comment.setAuthor(sysComment.getAuthor());
         comment.setEmail(sysComment.getAuthorEmail());
-        comment.setLink(sysComment.getAuthorUrl());
+        if (sysComment.getAuthorUrl() != null && !sysComment.getAuthorUrl().isEmpty()) {
+            comment.setLink("/other/urlredirect?url="
+                    + Base64.getEncoder().encodeToString(
+                    sysComment.getAuthorUrl().getBytes()
+            ));
+        } else {
+            comment.setLink("javascript:void();");
+        }
         comment.setContent(sysComment.getContent());
         comment.setDatetime(sysComment.getAddtime());
         comment.setAddress(sysComment.getAuthorAddress());
@@ -215,7 +223,14 @@ public final class CommentDomain {
         if (user != null) {
             comment.setAuthor(user.getUserName());
             comment.setEmail(user.getEmail());
-            comment.setLink(user.getWebSite());
+            if (sysComment.getAuthorUrl() != null && !sysComment.getAuthorUrl().isEmpty()) {
+                comment.setLink("/other/urlredirect?url="
+                        + Base64.getEncoder().encodeToString(
+                        sysComment.getAuthorUrl().getBytes()
+                ));
+            } else {
+                comment.setLink("javascript:void();");
+            }
             if (systemConfig.getOwnerUserName().equals(user.getUserName())) {
                 comment.setOwner(true);
             }
