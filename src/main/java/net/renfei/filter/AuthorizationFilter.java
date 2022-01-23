@@ -2,7 +2,6 @@ package net.renfei.filter;
 
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.UserDomain;
-import net.renfei.domain.user.User;
 import net.renfei.model.system.UserDetail;
 import net.renfei.utils.JwtTokenUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,8 +48,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
             HttpSession session = request.getSession();
             Object sessionObject = session.getAttribute(SESSION_KEY);
-            if (sessionObject instanceof User) {
-                userDetails = new UserDetail((User) sessionObject);
+            if (sessionObject instanceof UserDetail) {
+                userDetails = (UserDetail) sessionObject;
             } else {
                 filterChain.doFilter(request, response);
                 return;
