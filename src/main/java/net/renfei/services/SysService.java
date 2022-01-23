@@ -1,8 +1,10 @@
 package net.renfei.services;
 
 import com.aliyun.oss.ServiceException;
+import net.renfei.domain.user.User;
 import net.renfei.model.*;
 import net.renfei.model.system.RegionVO;
+import net.renfei.model.system.SysApi;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -59,4 +61,15 @@ public interface SysService {
     PageHeader getPageHeader(HttpServletRequest request);
 
     PageFooter getPageFooter();
+
+    /**
+     * 系统接口列表
+     * 用于给角色分配权限使用
+     *
+     * @param pages User
+     * @param pages 页码
+     * @param rows  每页行数
+     * @return
+     */
+    ListData<SysApi> getSysApiList(User user, String pages, String rows);
 }

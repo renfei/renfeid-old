@@ -1,14 +1,20 @@
 package net.renfei.services.system;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.model.*;
 import net.renfei.model.system.RegionVO;
+import net.renfei.model.system.SysApi;
 import net.renfei.model.system.UserDetail;
 import net.renfei.repositories.*;
 import net.renfei.repositories.model.*;
-import net.renfei.services.*;
+import net.renfei.services.BaseService;
+import net.renfei.services.LeafService;
+import net.renfei.services.RedisService;
+import net.renfei.services.SysService;
 import net.renfei.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +46,7 @@ public class SysServiceImpl extends BaseService implements SysService {
     private final LeafService leafService;
     private final RedisService redisService;
     private final SysRegionMapper regionMapper;
+    private final SysApiListMapper sysApiListMapper;
     private final SysSiteMenuMapper sysSiteMenuMapper;
     private final SysSecretKeyMapper sysSecretKeyMapper;
     private final SysSiteFooterMenuMapper siteFooterMenuMapper;
@@ -48,6 +55,7 @@ public class SysServiceImpl extends BaseService implements SysService {
     public SysServiceImpl(LeafService leafService,
                           RedisService redisService,
                           SysRegionMapper regionMapper,
+                          SysApiListMapper sysApiListMapper,
                           SysSiteMenuMapper sysSiteMenuMapper,
                           SysSecretKeyMapper sysSecretKeyMapper,
                           SysSiteFooterMenuMapper siteFooterMenuMapper,
@@ -55,6 +63,7 @@ public class SysServiceImpl extends BaseService implements SysService {
         this.leafService = leafService;
         this.redisService = redisService;
         this.regionMapper = regionMapper;
+        this.sysApiListMapper = sysApiListMapper;
         this.sysSiteMenuMapper = sysSiteMenuMapper;
         this.sysSecretKeyMapper = sysSecretKeyMapper;
         this.siteFooterMenuMapper = siteFooterMenuMapper;
@@ -451,6 +460,30 @@ public class SysServiceImpl extends BaseService implements SysService {
             }
         }
         return pageFooter;
+    }
+
+    @Override
+    public ListData<SysApi> getSysApiList(User user, String pages, String rows) {
+        assert SYSTEM_CONFIG != null;
+        ListData<SysApi> sysApiListData = null;
+        if (SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+            // 超管，不限制权限，直接查全部
+            SysApiListExample example = new SysApiListExample();
+            Page<SysApiList> page = PageHelper.startPage(
+                    NumberUtils.parseInt(pages, 1), NumberUtils.parseInt(rows, 10));
+            sysApiListMapper.selectByExample(example);
+            sysApiListData = new ListData<>(page);
+            List<SysApi> sysApiList = new ArrayList<>();
+            page.getResult().forEach(sysApi -> {
+                SysApi api = new SysApi();
+                BeanUtils.copyProperties(sysApi, api);
+                sysApiList.add(api);
+            });
+            sysApiListData.setData(sysApiList);
+        } else {
+            // TODO 判断用户权限，用户只能获取到自己拥有的权限
+        }
+        return sysApiListData;
     }
 
     private List<LinkTree> convertSiteMenu(List<SysSiteMenu> sysSiteMenus) {

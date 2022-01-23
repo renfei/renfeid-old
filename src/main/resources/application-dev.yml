@@ -73,6 +73,7 @@ system:
   siteDomainName: http://local.renfei.net:9595
   staticDomain: https://cdn.renfei.net
   enableRedis: true
+  superTubeUserName: demo
   authMode: SESSION
   globalAesKey: globalAesKey
   leafKey: leaf-segment-global
