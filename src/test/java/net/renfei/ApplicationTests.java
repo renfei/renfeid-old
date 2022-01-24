@@ -28,6 +28,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ApplicationTests {
+    protected static final String SUPER_USER = "demo";
+    protected static final String SYS_ADMIN = "sysa";
+    protected static final String SYS_SSO = "sso";
+    protected static final String SYS_AUD = "saa";
+    protected static final String USER_NAME = "testunit";
     @Autowired
     protected ApplicationContext applicationContext;
     @Autowired
@@ -43,7 +48,7 @@ public class ApplicationTests {
             session = new MockHttpSession();
             SignInVO signInVO = new SignInVO();
             signInVO.setKeyUuid("a3c2a92a-08ce-4598-80ef-55e0366b4484");
-            signInVO.setUserName("demo");
+            signInVO.setUserName(SUPER_USER);
             signInVO.setPassword("QSZv+HMaiJLT6YFS8yZrlg==");
             signInVO.setReCAPTCHAToken("03AGdBq26c-0yL1qQkAXinEUyCsN24-FMSKQFUzWe0VpxS0Uy4odaoaM-0j5_bSekK2RPleQp7mtrReoqh-JDBCCcziTOebXeQ7McgJYbsb4qQJFWJywBtJerDIdGqjojB91WHk5VfLWlLvL1I90rnDw_BIoKAdy4K60bnCvBGBF8W_vj9vLsn5cXSrF_fyYsSbb2OHS4H1TKbEKZXtyz8ByTm174RsOCItupc4JXRIeYGJUG41bhdwBnkIwNX4R9FdLes_0Ah7n_13W9b82fJ20001O2bOLTofcYXhf0jjQytdj0olW2HfCK4-sq2GLOn1GTWu0IIb870MuW3JWAByDc-jdoAeNEXQFL_E-feDfm9Y5aBgb_sbI0Id-Nn8wVOrgJZr1GEGuoTNshiV9v_yNQDfc3Gv5kof2FdphH_nkt9CqJXVVrheK1724ZFPt0ZVPu9iN0fJYGhBwLGTJhFvyuL6XVVdjEMjQ");
             signInVO.setUseVerCode(false);
