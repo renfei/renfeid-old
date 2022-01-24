@@ -81,6 +81,13 @@
 
 项目地址是：[https://github.com/renfei/renfeid-react](https://github.com/renfei/renfeid-react)
 
+## Url地址划分
+
+- /** : 默认全部是前台Html页面
+- /api/** : OpenAPI 开放接口，向外提供接口能力，无需登陆并允许 CORS 跨域请求
+- /-/api/** : 前台接口，有可能需要登陆，禁止跨域请求，不开放接口，例如评论接口
+- /_/api/** : 后台接口，必须登陆，禁止跨域请求，系统管理类的后台接口在这里
+
 ## 安全漏洞修复
 
 在这个 Repo 中修复了 https://github.com/renfei/renfeid/issues/32 远程代码执行漏洞，此漏洞从2020年1月14日存在至今，是我自己干的，
