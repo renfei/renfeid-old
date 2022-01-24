@@ -1,13 +1,3 @@
-* {
-    font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-}
-*:before,
-*:after {
-    margin: 0;
-    padding: 0;
-    box-sizing: inherit;
-}
-
 body {
     border-top: 1px solid transparent;
     margin-top: -1px;
@@ -17,6 +7,7 @@ body {
     font-weight: 400;
     background-color: #fff;
     color: #1d1d1f;
+    font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 .small {
