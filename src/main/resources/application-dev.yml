@@ -95,7 +95,6 @@ system:
     dnsPrefetch:
       - //www.renfei.net
       - //cdn.renfei.net
-      - //cdn.jsdelivr.net
       - //hm.baidu.com
       - //www.googletagmanager.com
       - //www.google-analytics.com
@@ -105,17 +104,17 @@ system:
     favicon: https://cdn.renfei.net/favicon.ico
     appleTouchIcon: https://cdn.renfei.net/Logo/logo_192.png
     css:
-      - https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css
-      - https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css
-      - /css/bs4.pop.css
+      - https://cdn.renfei.net/lib/bootstrap/4.6.1/css/bootstrap.min.css
+      - https://cdn.renfei.net/lib/fontawesome-free/5.15.4/css/all.min.css
+      - https://cdn.renfei.net/renfeid/css/bs4.pop.css
       - /css/style.css?ver=${system.version}
   pageFooter:
     jss:
-      - https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js
-      - https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js
+      - https://cdn.renfei.net/lib/jquery/3.6.0/jquery.min.js
+      - https://cdn.renfei.net/lib/bootstrap/4.6.1/js/bootstrap.bundle.min.js
       - https://cdn.renfei.net/thunder/js/popper.min.js
       - https://cdn.renfei.net/thunder/js/clipboard.min.js
-      - /js/bs4.pop.js
+      - https://cdn.renfei.net/renfeid/js/bs4.pop.js
       - /js/main.js?ver=${system.version}
       - https://www.recaptcha.net/recaptcha/api.js?render=${system.google.reCAPTCHA.clientKey}
       - https://www.googletagmanager.com/gtag/js?id=${system.google.analytics}

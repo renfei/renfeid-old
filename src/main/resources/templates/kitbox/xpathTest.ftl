@@ -83,10 +83,9 @@
         </div>
     </div>
     <@footer pageView>
-        <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.13/src-min/ace.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.13/src-min/ext-language_tools.min.js"></script>
+        <script src="https://cdn.renfei.net/lib/ace-builds/1.4.13/src-min/ace.js"></script>
         <script>
-            ace.config.set("basePath", "https://cdn.jsdelivr.net/npm/ace-builds@1.4.13/src-min");
+            ace.config.set("basePath", "https://cdn.renfei.net/lib/ace-builds/1.4.13/src-min");
             var xmlEditor = ace.edit('xml');
             var dataEditor = ace.edit('data');
             xmlEditor.session.setMode('ace/mode/xml');

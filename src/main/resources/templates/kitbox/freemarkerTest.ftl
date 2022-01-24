@@ -87,10 +87,9 @@
         </div>
     </div>
     <@footer pageView>
-        <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.13/src-min/ace.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.13/src-min/ext-language_tools.min.js"></script>
+        <script src="https://cdn.renfei.net/lib/ace-builds/1.4.13/src-min/ace.js"></script>
         <script>
-            ace.config.set("basePath", "https://cdn.jsdelivr.net/npm/ace-builds@1.4.13/src-min");
+            ace.config.set("basePath", "https://cdn.renfei.net/lib/ace-builds/1.4.13/src-min");
             var ftlEditor = ace.edit('ftl');
             var jsonEditor = ace.edit('json');
             var dataEditor = ace.edit('data');
