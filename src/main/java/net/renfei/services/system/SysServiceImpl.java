@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
+import net.renfei.exception.ForbiddenException;
 import net.renfei.model.*;
 import net.renfei.model.system.RegionVO;
 import net.renfei.model.system.SysApi;
@@ -45,27 +46,33 @@ public class SysServiceImpl extends BaseService implements SysService {
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "system:";
     private final LeafService leafService;
     private final RedisService redisService;
+    private final SysRoleMapper sysRoleMapper;
     private final SysRegionMapper regionMapper;
     private final SysApiListMapper sysApiListMapper;
     private final SysSiteMenuMapper sysSiteMenuMapper;
     private final SysSecretKeyMapper sysSecretKeyMapper;
+    private final SysAccountRoleMapper sysAccountRoleMapper;
     private final SysSiteFooterMenuMapper siteFooterMenuMapper;
     private final SysSiteFriendlyLinkMapper siteFriendlyLinkMapper;
 
     public SysServiceImpl(LeafService leafService,
                           RedisService redisService,
+                          SysRoleMapper sysRoleMapper,
                           SysRegionMapper regionMapper,
                           SysApiListMapper sysApiListMapper,
                           SysSiteMenuMapper sysSiteMenuMapper,
                           SysSecretKeyMapper sysSecretKeyMapper,
+                          SysAccountRoleMapper sysAccountRoleMapper,
                           SysSiteFooterMenuMapper siteFooterMenuMapper,
                           SysSiteFriendlyLinkMapper siteFriendlyLinkMapper) {
         this.leafService = leafService;
         this.redisService = redisService;
+        this.sysRoleMapper = sysRoleMapper;
         this.regionMapper = regionMapper;
         this.sysApiListMapper = sysApiListMapper;
         this.sysSiteMenuMapper = sysSiteMenuMapper;
         this.sysSecretKeyMapper = sysSecretKeyMapper;
+        this.sysAccountRoleMapper = sysAccountRoleMapper;
         this.siteFooterMenuMapper = siteFooterMenuMapper;
         this.siteFriendlyLinkMapper = siteFriendlyLinkMapper;
     }
@@ -466,8 +473,27 @@ public class SysServiceImpl extends BaseService implements SysService {
     public ListData<SysApi> getSysApiList(User user, String pages, String rows) {
         assert SYSTEM_CONFIG != null;
         ListData<SysApi> sysApiListData = null;
+        boolean securityAdmin = false;
         if (SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
             // 超管，不限制权限，直接查全部
+            securityAdmin = true;
+        } else {
+            // 判断角色
+            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
+            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+            if (!accountRoles.isEmpty()) {
+                for (SysAccountRole accountRole : accountRoles
+                ) {
+                    if (accountRole.getRoleId() == 2) {
+                        securityAdmin = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (securityAdmin) {
+            // 超管或安全管理员，不限制权限，直接查全部
             SysApiListExample example = new SysApiListExample();
             Page<SysApiList> page = PageHelper.startPage(
                     NumberUtils.parseInt(pages, 1), NumberUtils.parseInt(rows, 10));
@@ -484,6 +510,181 @@ public class SysServiceImpl extends BaseService implements SysService {
             // TODO 判断用户权限，用户只能获取到自己拥有的权限
         }
         return sysApiListData;
+    }
+
+    /**
+     * 获取系统角色
+     * 只能获取到登陆用户自己拥有的角色
+     * 超管和安全管理员可以获取所有角色
+     *
+     * @param user  登陆用户
+     * @param pages 页码
+     * @param rows  每页行数
+     * @return
+     */
+    @Override
+    public ListData<SysRole> getSysRoleList(User user, String pages, String rows) {
+        SysRoleExample sysRoleExample = new SysRoleExample();
+        SysRoleExample.Criteria criteria = sysRoleExample.createCriteria();
+        assert SYSTEM_CONFIG != null;
+        if (SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+            // 超管查全，除了内置的
+            criteria.andBuiltInRoleEqualTo(false);
+        } else {
+            // 判断角色
+            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
+            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+            boolean securityAdmin = false;
+            if (!accountRoles.isEmpty()) {
+                for (SysAccountRole accountRole : accountRoles
+                ) {
+                    if (accountRole.getRoleId() == 2) {
+                        securityAdmin = true;
+                        break;
+                    }
+                }
+            }
+            if (securityAdmin) {
+                // 系统内置的安全管理员，也可以查全部，除了内置的
+                criteria.andBuiltInRoleEqualTo(false);
+            } else {
+                // 只能查到自己拥有的角色列表
+                if (accountRoles.isEmpty()) {
+                    return new ListData<>();
+                }
+                List<Long> ids = new ArrayList<>();
+                accountRoles.forEach(sysAccountRole -> ids.add(sysAccountRole.getRoleId()));
+                sysRoleExample = new SysRoleExample();
+                sysRoleExample.createCriteria()
+                        .andIdIn(ids)
+                        .andBuiltInRoleEqualTo(false);
+            }
+        }
+        Page<SysRole> page = PageHelper.startPage(
+                NumberUtils.parseInt(pages, 1), NumberUtils.parseInt(rows, 10));
+        sysRoleMapper.selectByExample(sysRoleExample);
+        ListData<SysRole> listData = new ListData<>(page);
+        List<SysRole> sysRoles = new ArrayList<>();
+        if (!page.getResult().isEmpty()) {
+            sysRoles.addAll(page.getResult());
+        }
+        listData.setData(sysRoles);
+        return listData;
+    }
+
+    /**
+     * 添加系统角色
+     * 只有超管和安全管理员可以添加角色
+     *
+     * @param user    登陆用户
+     * @param sysRole 系统角色
+     */
+    @Override
+    public void addSysRole(User user, SysRole sysRole) throws ForbiddenException {
+        assert SYSTEM_CONFIG != null;
+        if (!SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+            // 不是超管，那么判断是不是安全管理员
+            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
+            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+            boolean securityAdmin = false;
+            if (!accountRoles.isEmpty()) {
+                for (SysAccountRole accountRole : accountRoles
+                ) {
+                    if (accountRole.getRoleId() == 2) {
+                        securityAdmin = true;
+                        break;
+                    }
+                }
+            }
+            if (!securityAdmin) {
+                // 不是安全管理员，抛出异常
+                throw new ForbiddenException("只有系统安全管理员才可以管理角色");
+            }
+        }
+        sysRole.setId(null);
+        sysRole.setBuiltInRole(false);
+        sysRoleMapper.insert(sysRole);
+    }
+
+    @Override
+    public void updateSysRole(User user, SysRole sysRole) throws ForbiddenException {
+        assert SYSTEM_CONFIG != null;
+        if (!SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+            // 不是超管，那么判断是不是安全管理员
+            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
+            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+            boolean securityAdmin = false;
+            if (!accountRoles.isEmpty()) {
+                for (SysAccountRole accountRole : accountRoles
+                ) {
+                    if (accountRole.getRoleId() == 2) {
+                        securityAdmin = true;
+                        break;
+                    }
+                }
+            }
+            if (!securityAdmin) {
+                // 不是安全管理员，抛出异常
+                throw new ForbiddenException("只有系统安全管理员才可以管理角色");
+            }
+        }
+        if (sysRole.getId() == null) {
+            throw new BusinessException("ID 不能为空");
+        }
+        SysRole sysRoleOld = sysRoleMapper.selectByPrimaryKey(sysRole.getId());
+        if (sysRoleOld == null) {
+            throw new BusinessException("未查询到该角色信息");
+        }
+        if (sysRoleOld.getBuiltInRole()) {
+            throw new BusinessException("内置角色，系统拒绝编辑");
+        }
+        sysRoleOld.setZhName(sysRole.getZhName());
+        sysRoleMapper.updateByPrimaryKey(sysRoleOld);
+    }
+
+    @Override
+    public void deleteSysRole(User user, Long id) throws ForbiddenException {
+        assert SYSTEM_CONFIG != null;
+        if (!SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+            // 不是超管，那么判断是不是安全管理员
+            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
+            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+            boolean securityAdmin = false;
+            if (!accountRoles.isEmpty()) {
+                for (SysAccountRole accountRole : accountRoles
+                ) {
+                    if (accountRole.getRoleId() == 2) {
+                        securityAdmin = true;
+                        break;
+                    }
+                }
+            }
+            if (!securityAdmin) {
+                // 不是安全管理员，抛出异常
+                throw new ForbiddenException("只有系统安全管理员才可以管理角色");
+            }
+        }
+        if (id == null) {
+            throw new BusinessException("ID 不能为空");
+        }
+        SysRole sysRoleOld = sysRoleMapper.selectByPrimaryKey(id);
+        if (sysRoleOld == null) {
+            throw new BusinessException("未查询到该角色信息");
+        }
+        if (sysRoleOld.getBuiltInRole()) {
+            throw new BusinessException("内置角色，系统拒绝编辑");
+        }
+        sysRoleMapper.deleteByPrimaryKey(id);
+        // 删除账户与角色关系表
+        SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+        accountRoleExample.createCriteria()
+                .andRoleIdEqualTo(id);
+        sysAccountRoleMapper.deleteByExample(accountRoleExample);
+        // TODO 删除角色与权限关系表
     }
 
     private List<LinkTree> convertSiteMenu(List<SysSiteMenu> sysSiteMenus) {

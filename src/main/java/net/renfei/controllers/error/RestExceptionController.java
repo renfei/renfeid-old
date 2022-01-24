@@ -1,6 +1,7 @@
 package net.renfei.controllers.error;
 
 import net.renfei.exception.BusinessException;
+import net.renfei.exception.ForbiddenException;
 import net.renfei.exception.IP2LocationException;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.APIResult;
@@ -33,7 +34,7 @@ public class RestExceptionController {
     @ResponseBody
     @ExceptionHandler(BusinessException.class)
     public final APIResult handleBusinessException(BusinessException exception, WebRequest request) {
-        logger.error(exception.getMessage(), exception);
+        logger.warn(exception.getMessage(), exception);
         return APIResult.builder()
                 .code(StateCodeEnum.Failure)
                 .message(exception.getLocalizedMessage())
@@ -50,7 +51,7 @@ public class RestExceptionController {
     @ResponseBody
     @ExceptionHandler(NeedU2FException.class)
     public final APIResult handleBusinessException(NeedU2FException exception, WebRequest request) {
-        logger.error(exception.getMessage(), exception);
+        logger.warn(exception.getMessage(), exception);
         return APIResult.builder()
                 .code(StateCodeEnum.NeedTOTP)
                 .message(exception.getLocalizedMessage())
@@ -70,6 +71,23 @@ public class RestExceptionController {
         logger.error(exception.getMessage(), exception);
         return APIResult.builder()
                 .code(StateCodeEnum.Failure)
+                .message(exception.getLocalizedMessage())
+                .build();
+    }
+
+    /**
+     * ForbiddenException 异常处理
+     *
+     * @param exception ForbiddenException
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @ExceptionHandler(ForbiddenException.class)
+    public final APIResult handleForbiddenException(ForbiddenException exception, WebRequest request) {
+        logger.error(exception.getMessage(), exception);
+        return APIResult.builder()
+                .code(StateCodeEnum.Forbidden)
                 .message(exception.getLocalizedMessage())
                 .build();
     }

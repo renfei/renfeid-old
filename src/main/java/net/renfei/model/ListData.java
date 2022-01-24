@@ -5,12 +5,12 @@ import com.github.pagehelper.Page;
 import java.util.List;
 
 public class ListData<T> {
-    private int pageNum;
-    private int pageSize;
-    private long startRow;
-    private long endRow;
-    private long total;
-    private int pages;
+    private int pageNum = 1;
+    private int pageSize = 10;
+    private long startRow = 0;
+    private long endRow = 0;
+    private long total = 0;
+    private int pages = 0;
     private List<T> data;
 
     public ListData() {

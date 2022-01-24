@@ -512,6 +512,21 @@ INSERT INTO `sys_account_keep_name` VALUES (32, '阿里云');
 INSERT INTO `sys_account_keep_name` VALUES (29, '阿里巴巴');
 
 -- ----------------------------
+-- Table structure for sys_account_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_account_role`;
+CREATE TABLE `sys_account_role` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `account_id` bigint(20) unsigned NOT NULL,
+  `role_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账户与角色关系表';
+
+-- ----------------------------
+-- Records of sys_account_role
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for sys_api_list
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_api_list`;
@@ -4148,6 +4163,24 @@ INSERT INTO `sys_region` VALUES (3434, 'BC10DB57-E4E0-4EC1-AF82-7B772A37E7C0', '
 INSERT INTO `sys_region` VALUES (3435, '082A7D27-D9CE-4C4B-923B-64644AC7579B', '839011', '澎湖县');
 INSERT INTO `sys_region` VALUES (3436, 'E5974B5F-62E5-4999-9446-728A7C949981', '839012', '金门县');
 INSERT INTO `sys_region` VALUES (3437, '6ED8EA95-BF61-429F-A8C7-DCEC2EFDDC23', '839013', '连江县');
+
+-- ----------------------------
+-- Table structure for sys_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role`;
+CREATE TABLE `sys_role` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `zh_name` varchar(255) NOT NULL COMMENT '角色名称',
+  `built_in_role` tinyint(1) DEFAULT 0 COMMENT '是否是内置角色（不显示）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='系统角色表';
+
+-- ----------------------------
+-- Records of sys_role
+-- ----------------------------
+INSERT INTO `sys_role` VALUES (1, '系统管理员', 1);
+INSERT INTO `sys_role` VALUES (2, '安全管理员', 1);
+INSERT INTO `sys_role` VALUES (3, '安全审计员', 1);
 
 -- ----------------------------
 -- Table structure for sys_secret_key

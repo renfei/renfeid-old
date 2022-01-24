@@ -126,4 +126,22 @@ public class User implements Serializable {
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", webSite='" + webSite + '\'' +
+                ", ucScript='" + ucScript + '\'' +
+                ", secretLevelEnum=" + secretLevelEnum +
+                ", totp='" + totp + '\'' +
+                ", registrationDate=" + registrationDate +
+                '}';
+    }
 }

@@ -57,7 +57,11 @@ public enum SystemTypeEnum {
     /**
      * 微信公众号接口
      */
-    WECHAT_MP("");
+    WECHAT_MP(""),
+    /**
+     * 系统角色与权限模块
+     */
+    SYS_ROLE("");
 
     private final String uriPath;
 
