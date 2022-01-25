@@ -9,30 +9,6 @@ jobs:
     name: building
     runs-on: ubuntu-latest
 
-    services:
-      mariadb:
-        image: mariadb:10.6.5
-        ports:
-          - 3306:3306
-        env:
-          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
-          MARIADB_DATABASE: renfeid
-          MARIADB_ROOT_PASSWORD: root
-        options:
-          --health-cmd="mariadb-admin ping"
-          --health-interval=5s
-          --health-timeout=2s
-          --health-retries=3
-      redis:
-        image: redis:6.0.1
-        ports:
-          - 6379:6379
-      elasticsearch:
-        image: ghcr.io/renfei/elasticsearch:7.16.3
-        ports:
-          - 9200:9200
-          - 9300:9300
-
     steps:
       - uses: actions/checkout@v2
 
@@ -40,19 +16,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-
-      - name: Verify MariaDB Connection and Load Data
-        env:
-          PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done
-
-      - name: Loading Database
-        env:
-          PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: mysql -h 127.0.0.1 -P $PORT -uroot -proot --default-character-set=utf8 renfeid < environment/db/renfeid.sql
 
       - name: Cache Maven packages
         uses: actions/cache@v2

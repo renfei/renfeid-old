@@ -9,6 +9,9 @@ cache:
   paths:
     - ".m2/repository/"
 
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
 initialize_JH:
   stage: initialize
   image: registry.jihulab.com/docker/hub/centos:centos7
@@ -96,7 +99,7 @@ test_JH:
     - mariadb --user=root --password="$MARIADB_ROOT_PASSWORD" --host=mariadb $MARIADB_DATABASE
       < environment/db/renfeid.sql --default-character-set=utf8
   script:
-    - ./mvnw test -P gitlab
+    - ./mvnw test -P gitlab -s environment/maven/settings.xml
 
 test:
   stage: test
