@@ -52,9 +52,9 @@ public class SiteMapService extends BaseService {
      */
     public List<SiteMapXml> getSiteMaps() {
         List<SiteMapXml> siteMapXmls = null;
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         String redisKey = REDIS_KEY + "sitemap";
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        if (systemConfig.isEnableRedis()) {
             // 查询是否曾经缓存过对象，有缓存直接吐出去
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
@@ -71,21 +71,21 @@ public class SiteMapService extends BaseService {
                 lastBlogDate = blogDomainListData.getData().get(0).getPost().getPostDate();
             }
             // 首页
-            siteMapXmls.add(new SiteMapXml(SYSTEM_CONFIG.getSiteDomainName(), ChangefreqEnum.daily, "1", lastBlogDate));
+            siteMapXmls.add(new SiteMapXml(systemConfig.getSiteDomainName(), ChangefreqEnum.daily, "1", lastBlogDate));
             // 文章
-            siteMapXmls.add(new SiteMapXml(SYSTEM_CONFIG.getSiteDomainName() + "/posts", ChangefreqEnum.daily, "1", lastBlogDate));
+            siteMapXmls.add(new SiteMapXml(systemConfig.getSiteDomainName() + "/posts", ChangefreqEnum.daily, "1", lastBlogDate));
             // 微博
             ListData<Weibo> weiboListData = weiboService.getWeiboList("1", "1");
             if (!ObjectUtils.isEmpty(weiboListData.getData()) && weiboListData.getData().size() > 0) {
-                siteMapXmls.add(new SiteMapXml(SYSTEM_CONFIG.getSiteDomainName() + "/weibo", ChangefreqEnum.daily, "1", weiboListData.getData().get(0).getReleaseTime()));
+                siteMapXmls.add(new SiteMapXml(systemConfig.getSiteDomainName() + "/weibo", ChangefreqEnum.daily, "1", weiboListData.getData().get(0).getReleaseTime()));
             }
             // 相册
             ListData<Album> albumListData = photoService.getAllAlbumList("1", "1");
             if (!ObjectUtils.isEmpty(albumListData.getData()) && albumListData.getData().size() > 0) {
-                siteMapXmls.add(new SiteMapXml(SYSTEM_CONFIG.getSiteDomainName() + "/photo", ChangefreqEnum.daily, "1", albumListData.getData().get(0).getReleaseTime()));
+                siteMapXmls.add(new SiteMapXml(systemConfig.getSiteDomainName() + "/photo", ChangefreqEnum.daily, "1", albumListData.getData().get(0).getReleaseTime()));
             }
             // 工具箱
-            siteMapXmls.add(new SiteMapXml(SYSTEM_CONFIG.getSiteDomainName() + "/kitbox", ChangefreqEnum.daily, "1", new Date()));
+            siteMapXmls.add(new SiteMapXml(systemConfig.getSiteDomainName() + "/kitbox", ChangefreqEnum.daily, "1", new Date()));
             List<SearchItem> searchItems = aggregateService.getAllDataBySearchItemSite();
             if (ObjectUtils.isEmpty(searchItems)) {
                 return siteMapXmls;
@@ -112,8 +112,8 @@ public class SiteMapService extends BaseService {
                 }
             }
         }
-        if (SYSTEM_CONFIG.isEnableRedis()) {
-            redisService.set(redisKey, siteMapXmls, SYSTEM_CONFIG.getDefaultCacheSeconds());
+        if (systemConfig.isEnableRedis()) {
+            redisService.set(redisKey, siteMapXmls, systemConfig.getDefaultCacheSeconds());
         }
         return siteMapXmls;
     }
@@ -125,16 +125,16 @@ public class SiteMapService extends BaseService {
      */
     public FeedVO getFeed() {
         FeedVO feedVO = new FeedVO();
-        assert SYSTEM_CONFIG != null;
-        feedVO.setTitle(SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        feedVO.setTitle(systemConfig.getSiteName());
         feedVO.setAuthor("i@renfei.net (RenFei)");
-        feedVO.setLink(SYSTEM_CONFIG.getSiteDomainName());
+        feedVO.setLink(systemConfig.getSiteDomainName());
         feedVO.setDescription("任霏博客是任霏的个人网站与博客，一个程序员自己写的网站，不仅仅是文章内容，还包括网站程序的代码。 对新鲜事物都十分感兴趣，利用这个站点向大家分享自己的所见所得，同时这个站点也是我的实验室。");
         feedVO.setLanguage("zh-CN");
         feedVO.setImage(FeedVO.Image.builder()
-                .link(SYSTEM_CONFIG.getSiteDomainName())
+                .link(systemConfig.getSiteDomainName())
                 .height("32")
-                .title(SYSTEM_CONFIG.getSiteName())
+                .title(systemConfig.getSiteName())
                 .url("https://cdn.renfei.net/Logo/RF_white.svg")
                 .width("32")
                 .build());
@@ -148,8 +148,8 @@ public class SiteMapService extends BaseService {
                 FeedVO.Item item = new FeedVO.Item();
                 item.setTitle(post.getTitle());
                 item.setAuthor(post.getSourceName());
-                item.setLink(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + post.getId());
-                item.setGuid(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + post.getId());
+                item.setLink(systemConfig.getSiteDomainName() + "/posts/" + post.getId());
+                item.setGuid(systemConfig.getSiteDomainName() + "/posts/" + post.getId());
                 item.setDescription(post.getExcerpt());
                 item.setCategory(category.getZhName());
                 item.setPubDate(post.getPostDate());

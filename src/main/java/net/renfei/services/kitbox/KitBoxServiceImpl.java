@@ -62,8 +62,8 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     public List<KitBoxMenus> getKitBoxMenus() {
         String redisKey = REDIS_KEY_KITBOX + "menus";
         List<KitBoxMenus> kitBoxMenus = null;
-        assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        assert systemConfig != null;
+        if (systemConfig.isEnableRedis()) {
             // 查询是否曾经缓存过对象，有缓存直接吐出去
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
@@ -126,8 +126,8 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
                     .isOpen(false)
                     .links(otherToolLinks)
                     .build());
-            if (SYSTEM_CONFIG.isEnableRedis()) {
-                redisService.set(redisKey, kitBoxMenus, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            if (systemConfig.isEnableRedis()) {
+                redisService.set(redisKey, kitBoxMenus, systemConfig.getDefaultCacheSeconds());
             }
         }
         return kitBoxMenus;
@@ -162,8 +162,8 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     public List<Comment> getCommentList(KitBoxTypeEnum kitBoxTypeEnum) {
         String redisKey = REDIS_KEY_KITBOX + "comment:" + kitBoxTypeEnum.toString();
         List<Comment> commentList = null;
-        assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        assert systemConfig != null;
+        if (systemConfig.isEnableRedis()) {
             // 查询是否曾经缓存过对象，有缓存直接吐出去
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
@@ -174,8 +174,8 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
         }
         if (commentList == null) {
             commentList = new CommentDomain(SystemTypeEnum.KITBOX, (long) kitBoxTypeEnum.getId()).getCommentList();
-            if (SYSTEM_CONFIG.isEnableRedis()) {
-                redisService.set(redisKey, commentList, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            if (systemConfig.isEnableRedis()) {
+                redisService.set(redisKey, commentList, systemConfig.getDefaultCacheSeconds());
             }
         }
         return commentList;
@@ -294,9 +294,9 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     }
 
     private LinkTree buildLinkTree(KitBoxTypeEnum kitBoxTypeEnum) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         return LinkTree.builder()
-                .href(SYSTEM_CONFIG.getSiteDomainName() + kitBoxTypeEnum.getUrl())
+                .href(systemConfig.getSiteDomainName() + kitBoxTypeEnum.getUrl())
                 .rel(kitBoxTypeEnum.getReadme())
                 .text(kitBoxTypeEnum.getTitle())
                 .build();

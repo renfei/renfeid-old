@@ -37,9 +37,9 @@ public class PagesController extends BaseController {
             // TODO 保密等级不足
         }
         HomePageView<PagesDomain> pageView = buildPageView(HomePageView.class, pagesDomain);
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         assert pagesDomain != null;
-        pageView.getPageHead().setTitle(pagesDomain.getPage().getPageTitle() + " - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(pagesDomain.getPage().getPageTitle() + " - " + systemConfig.getSiteName());
         SocialSharing socialSharing = new SocialSharing(pagesDomain);
         mv.addObject("pageView", pageView);
         mv.addObject("socialSharing", socialSharing);

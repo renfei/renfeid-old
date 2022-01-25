@@ -42,8 +42,8 @@ public class WeChatMpApiController extends BaseController implements WeChatMpApi
         String nonce = request.getParameter("nonce");
         String echostr = request.getParameter("echostr");
         //验证请求签名
-        assert SYSTEM_CONFIG != null;
-        if (!signature.equals(SignatureUtil.generateEventMessageSignature(SYSTEM_CONFIG.getWeChat().getToken(), timestamp, nonce))) {
+        assert systemConfig != null;
+        if (!signature.equals(SignatureUtil.generateEventMessageSignature(systemConfig.getWeChat().getToken(), timestamp, nonce))) {
             System.out.println("The request signature is invalid");
             return;
         }

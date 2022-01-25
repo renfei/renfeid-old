@@ -53,8 +53,8 @@ public class BlogPostController extends BaseController {
         mv.addObject("catTitle", "全部文档");
         ListData<BlogVO> allPostList = blogService.getAllPostList(getSignUser(), false, NumberUtils.parseInt(page, 1), 15);
         PostPageView<List<BlogDomain>> postPageView = buildPageView(PostPageView.class, allPostList.getData());
-        assert SYSTEM_CONFIG != null;
-        postPageView.getPageHead().setTitle("任霏的博客文章 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        postPageView.getPageHead().setTitle("任霏的博客文章 - " + systemConfig.getSiteName());
         mv.addObject("pageView", postPageView);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
         setPagination(paginationService, mv, page, allPostList.getTotal(), "/posts?page=");
@@ -79,8 +79,8 @@ public class BlogPostController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.BLOG, desc = "访问博客首页Index.html")
     public RedirectView getPostListDir() {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts");
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/posts");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }
@@ -119,8 +119,8 @@ public class BlogPostController extends BaseController {
         mv.addObject("socialSharing", socialSharing);
         mv.addObject("PostSidebar", blogService.buildPostSidebar(getSignUser()));
         mv.addObject("related", blogService.getRelated(blogVO.getPost(), getSignUser()));
-        assert SYSTEM_CONFIG != null;
-        postPageView.getPageHead().setTitle(blogVO.getPost().getTitle() + " - Posts - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        postPageView.getPageHead().setTitle(blogVO.getPost().getTitle() + " - Posts - " + systemConfig.getSiteName());
         mv.addObject("jsonld", blogService.getJsonld(blogVO));
         postPageView.getPageHead().setOgProtocol(OGProtocol.builder()
                 .author(blogVO.getPost().getSourceName())
@@ -131,7 +131,7 @@ public class BlogPostController extends BaseController {
                 .siteName("RenFei.Net")
                 .title(blogVO.getPost().getTitle())
                 .type("article")
-                .url(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogVO.getPost().getId())
+                .url(systemConfig.getSiteDomainName() + "/posts/" + blogVO.getPost().getId())
                 .build());
         // TODO 获取文章扩展信息
         if (blogVO.getPost().getContent().contains("code class=")) {
@@ -164,8 +164,8 @@ public class BlogPostController extends BaseController {
         mv.addObject("catTitle", "标签：" + sysKeywordTag.getZhName());
         ListData<BlogVO> allPostList = blogService.getAllPostListByTagName(sysKeywordTag, getSignUser(), false, NumberUtils.parseInt(page, 1), 15);
         PostPageView<List<BlogDomain>> postPageView = buildPageView(PostPageView.class, allPostList.getData());
-        assert SYSTEM_CONFIG != null;
-        postPageView.getPageHead().setTitle("标签：" + sysKeywordTag.getZhName() + " - 博客文章标签分类 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        postPageView.getPageHead().setTitle("标签：" + sysKeywordTag.getZhName() + " - 博客文章标签分类 - " + systemConfig.getSiteName());
         postPageView.getPageHead().setKeywords(sysKeywordTag.getZhName() + ",博客,blog,开发,技术,posts");
         postPageView.getPageHead().setDescription("博客文章标签分类：" + sysKeywordTag.getZhName() + "。共同类型的文章在这里聚合等待您的查阅。");
         mv.addObject("pageView", postPageView);
@@ -192,9 +192,9 @@ public class BlogPostController extends BaseController {
         }
         Category category = allPostList.getData().get(0).getCategory();
         PostPageView<List<BlogDomain>> postPageView = buildPageView(PostPageView.class, allPostList.getData());
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         mv.addObject("catTitle", "文章分类：" + category.getZhName());
-        postPageView.getPageHead().setTitle("分类：" + category.getZhName() + " - 博客文章分类 - " + SYSTEM_CONFIG.getSiteName());
+        postPageView.getPageHead().setTitle("分类：" + category.getZhName() + " - 博客文章分类 - " + systemConfig.getSiteName());
         postPageView.getPageHead().setKeywords(category.getZhName() + ",博客,blog,开发,技术,posts");
         postPageView.getPageHead().setDescription("博客文章分类：" + category.getZhName() + "。共同类型的文章在这里聚合等待您的查阅。");
         mv.addObject("pageView", postPageView);
@@ -222,8 +222,8 @@ public class BlogPostController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.BLOG, desc = "访问博客详情页Index.html")
     public RedirectView getPostInfoDir(@PathVariable("id") String id) {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + id);
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/posts/" + id);
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

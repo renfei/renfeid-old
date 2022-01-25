@@ -52,7 +52,7 @@ public class AggregateService extends BaseService {
      * @return
      */
     public List<SearchItem> getAllDataBySearchItemSite() {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         List<SearchItem> searchItemAll = new ArrayList<>();
         // == Post >>>>
         ListData<BlogDomain> blogDomainListData = BlogDomain.allPostList(null, false, 1, Integer.MAX_VALUE);
@@ -65,7 +65,7 @@ public class AggregateService extends BaseService {
                 searchItem.setTitle(blog.getPost().getTitle());
                 searchItem.setContent(StringUtils.delHtmlTags(blog.getPost().getContent()));
                 searchItem.setImage(getImgUrl(blog.getPost().getFeaturedImage()));
-                searchItem.setUrl(SYSTEM_CONFIG.getSiteDomainName() + TypeEnum.POSTS.getUrl() + "/" + blog.getPost().getId());
+                searchItem.setUrl(systemConfig.getSiteDomainName() + TypeEnum.POSTS.getUrl() + "/" + blog.getPost().getId());
                 searchItem.setOriginalId(blog.getPost().getId());
                 searchItem.setDate(blog.getPost().getPostDate());
                 searchItemAll.add(searchItem);
@@ -82,7 +82,7 @@ public class AggregateService extends BaseService {
                 searchItem.setTitle(page.getPageTitle());
                 searchItem.setContent(StringUtils.delHtmlTags(page.getPageContent()));
                 searchItem.setImage(getImgUrl(page.getFeaturedImage()));
-                searchItem.setUrl(SYSTEM_CONFIG.getSiteDomainName() + TypeEnum.PAGES.getUrl() + "/" + page.getId());
+                searchItem.setUrl(systemConfig.getSiteDomainName() + TypeEnum.PAGES.getUrl() + "/" + page.getId());
                 searchItem.setOriginalId(page.getId());
                 searchItem.setDate(page.getPageDate());
                 searchItemAll.add(searchItem);
@@ -100,7 +100,7 @@ public class AggregateService extends BaseService {
                 searchItem.setTitle(album.getTitle());
                 searchItem.setContent(StringUtils.delHtmlTags(album.getDescribes()));
                 searchItem.setImage(getImgUrl(album.getFeaturedImage()));
-                searchItem.setUrl(SYSTEM_CONFIG.getSiteDomainName() + TypeEnum.PHOTO.getUrl() + "/" + album.getId());
+                searchItem.setUrl(systemConfig.getSiteDomainName() + TypeEnum.PHOTO.getUrl() + "/" + album.getId());
                 searchItem.setOriginalId(album.getId());
                 searchItem.setDate(album.getReleaseTime());
                 searchItemAll.add(searchItem);
@@ -117,7 +117,7 @@ public class AggregateService extends BaseService {
                 searchItem.setTitle(StringUtils.delHtmlTags(weibo.getContent()));
                 searchItem.setContent(StringUtils.delHtmlTags(weibo.getContent()));
                 searchItem.setImage(getImgUrl(""));
-                searchItem.setUrl(SYSTEM_CONFIG.getSiteDomainName() + TypeEnum.WEIBO.getUrl() + "/" + weibo.getId());
+                searchItem.setUrl(systemConfig.getSiteDomainName() + TypeEnum.WEIBO.getUrl() + "/" + weibo.getId());
                 searchItem.setOriginalId(weibo.getId());
                 searchItem.setDate(weibo.getReleaseTime());
                 searchItemAll.add(searchItem);

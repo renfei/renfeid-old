@@ -1,7 +1,6 @@
 package net.renfei.controllers;
 
 import net.renfei.annotation.OperationLog;
-import net.renfei.domain.BlogDomain;
 import net.renfei.model.HomePageView;
 import net.renfei.model.ListData;
 import net.renfei.model.OGProtocol;
@@ -49,8 +48,8 @@ public class DefaultController extends BaseController {
     public ModelAndView index(ModelAndView mv) {
         ListData<BlogVO> blogDomainListData = blogService.getAllPostList(getSignUser(), false, 1, 15);
         HomePageView<ListData<BlogVO>> homePageView = buildPageView(HomePageView.class, blogDomainListData);
-        assert SYSTEM_CONFIG != null;
-        homePageView.getPageHead().setTitle("任霏 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        homePageView.getPageHead().setTitle("任霏 - " + systemConfig.getSiteName());
         homePageView.getPageHead().setDescription("任霏的博客是任霏的个人网站与博客，一个程序员自己写的网站，不仅仅是文章内容，还包括网站程序的代码。 对新鲜事物都十分感兴趣，利用这个站点向大家分享自己的所见所得，同时这个站点也是我的实验室。");
         homePageView.getPageHead().setKeywords("任霏,博客,任霏博客,RenFei,NeilRen,技术,blog");
         homePageView.getPageFooter().setShowFriendlyLink(true);
@@ -62,7 +61,7 @@ public class DefaultController extends BaseController {
                 .locale("zh-CN")
                 .releaseDate(new Date())
                 .siteName("RenFei.Net")
-                .title("任霏 - " + SYSTEM_CONFIG.getSiteName())
+                .title("任霏 - " + systemConfig.getSiteName())
                 .url("https://www.renfei.net")
                 .build());
         mv.addObject("pageView", homePageView);
@@ -101,18 +100,18 @@ public class DefaultController extends BaseController {
     @RequestMapping(value = "robots.txt", produces = "text/plain")
     @OperationLog(module = SystemTypeEnum.HOME, desc = "robots.txt")
     public String getRobotsTxt() {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         return "#\n" +
                 "# robots.txt for RENFEI.NET\n" +
-                "# Version: " + SYSTEM_CONFIG.getVersion() + "\n" +
-                "# Last Build Time: " + SYSTEM_CONFIG.getBuildTime() + "\n" +
+                "# Version: " + systemConfig.getVersion() + "\n" +
+                "# Last Build Time: " + systemConfig.getBuildTime() + "\n" +
                 "#\n" +
                 "\n" +
                 "User-agent: *\n" +
                 "\n" +
                 "Disallow: /_/\n" +
                 "\n" +
-                "Sitemap: " + SYSTEM_CONFIG.getSiteDomainName() + "/sitemap.xml";
+                "Sitemap: " + systemConfig.getSiteDomainName() + "/sitemap.xml";
     }
 
     /**
@@ -126,8 +125,8 @@ public class DefaultController extends BaseController {
     @OperationLog(module = SystemTypeEnum.HOME, desc = "ads.txt")
     public String getGoogleAds() throws NoHandlerFoundException {
         String ads;
-        assert SYSTEM_CONFIG != null;
-        ads = SYSTEM_CONFIG.getGoogle().getAds();
+        assert systemConfig != null;
+        ads = systemConfig.getGoogle().getAds();
         if (ads == null || ads.length() == 0) {
             noHandlerFoundException();
         }

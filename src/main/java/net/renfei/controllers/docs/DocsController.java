@@ -35,8 +35,8 @@ public class DocsController extends BaseController {
     @OperationLog(module = SystemTypeEnum.DOCS, desc = "访问在线文档首页")
     public ModelAndView getDocs(ModelAndView mv) {
         DocsPageView<List<KitBoxMenus>> pageView = buildPageView(DocsPageView.class, docsService.getDocs());
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("在线文档 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("在线文档 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("提供在线开发文档与手册服务，部分中文文档基于 Google Translation 机器翻译，请结合原版阅读。");
         pageView.getPageHead().setKeywords("开发,文档,手册,在线");
         mv.addObject("pageView", pageView);
@@ -61,8 +61,8 @@ public class DocsController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.DOCS, desc = "访问在线文档首页Index.html")
     public RedirectView getPostListDir() {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/docs");
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/docs");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }
@@ -79,9 +79,9 @@ public class DocsController extends BaseController {
             noHandlerFoundException();
         }
         assert docsOnlineDocuments != null;
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         DocsPageView<DocsOnlineDocuments> pageView = buildPageView(DocsPageView.class, docsOnlineDocuments);
-        pageView.getPageHead().setTitle(docsOnlineDocuments.getTitle() + " (" + docsOnlineDocuments.getVersion() + ") - 在线文档 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(docsOnlineDocuments.getTitle() + " (" + docsOnlineDocuments.getVersion() + ") - 在线文档 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("提供在线开发文档与手册服务，部分中文文档基于 Google Translation 机器翻译，请结合原版阅读。");
         pageView.getPageHead().setKeywords("开发,文档,手册,在线");
         mv.addObject("pageView", pageView);

@@ -109,8 +109,8 @@ public class AuthorizationApiController extends BaseController implements Author
                     .build();
         }
         ReCaptchaVerify reCaptchaVerify = new ReCaptchaVerify();
-        assert SYSTEM_CONFIG != null;
-        reCaptchaVerify.setSecret(SYSTEM_CONFIG.getGoogle().getReCAPTCHA().getServerKey());
+        assert systemConfig != null;
+        reCaptchaVerify.setSecret(systemConfig.getGoogle().getReCAPTCHA().getServerKey());
         reCaptchaVerify.setResponse(signInVO.getReCAPTCHAToken());
         reCaptchaVerify.setRemoteip(IpUtils.getIpAddress(request));
         ReCaptchaVerifyResponse verifyResponse = reCaptchaService.siteVerify(reCaptchaVerify);
@@ -131,7 +131,7 @@ public class AuthorizationApiController extends BaseController implements Author
         // 用户登陆服务
         User user = accountService.signIn(signInVO, request);
         UserDetail userDetail = new UserDetail(new UserDomain(user));
-        if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
+        if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
             request.getSession().setAttribute(SESSION_KEY, userDetail);
             return new APIResult<>(user.getUcScript());
         } else {
@@ -154,8 +154,8 @@ public class AuthorizationApiController extends BaseController implements Author
             return APIResult.builder().code(StateCodeEnum.Failure).message("您已经登录，无需重复注册。").build();
         }
         ReCaptchaVerify reCaptchaVerify = new ReCaptchaVerify();
-        assert SYSTEM_CONFIG != null;
-        reCaptchaVerify.setSecret(SYSTEM_CONFIG.getGoogle().getReCAPTCHA().getServerKey());
+        assert systemConfig != null;
+        reCaptchaVerify.setSecret(systemConfig.getGoogle().getReCAPTCHA().getServerKey());
         reCaptchaVerify.setResponse(signUpVO.getReCAPTCHAToken());
         reCaptchaVerify.setRemoteip(IpUtils.getIpAddress(request));
         ReCaptchaVerifyResponse verifyResponse = reCaptchaService.siteVerify(reCaptchaVerify);

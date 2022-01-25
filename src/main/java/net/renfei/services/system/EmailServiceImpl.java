@@ -110,7 +110,7 @@ public class EmailServiceImpl extends BaseService implements EmailService {
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(message, true);
-            helper.setFrom(SYSTEM_CONFIG.getSiteName() + " <" + FROM + ">");
+            helper.setFrom(systemConfig.getSiteName() + " <" + FROM + ">");
             helper.setReplyTo(name + " <" + REPLYTO + ">");
             helper.setTo(to);
             helper.setSubject(subject);
@@ -176,7 +176,7 @@ public class EmailServiceImpl extends BaseService implements EmailService {
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(message, true);
-            helper.setFrom(SYSTEM_CONFIG.getSiteName() + " <" + FROM + ">");
+            helper.setFrom(systemConfig.getSiteName() + " <" + FROM + ">");
             helper.setReplyTo(name + " <" + REPLYTO + ">");
             helper.setTo(to);
             helper.setSubject(subject);

@@ -42,15 +42,12 @@ import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 public abstract class BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
     public static final String SESSION_KEY = "signedUserSession";
-    protected final SystemConfig SYSTEM_CONFIG;
-    private SysService sysService;
+    @Autowired
+    protected SystemConfig systemConfig;
+    @Autowired
+    protected SysService sysService;
     @Autowired
     protected HttpServletRequest request;
-
-    {
-        SYSTEM_CONFIG = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
-        sysService = (SysService) ApplicationContextUtil.getBean("sysServiceImpl");
-    }
 
     /**
      * 应用到所有@RequestMapping注解方法，在其执行之前初始化数据绑定器
@@ -63,9 +60,9 @@ public abstract class BaseController {
 
     @ModelAttribute
     public void modelAttribute(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
-        checkSystemConfig(SYSTEM_CONFIG);
-        mv.addObject("active", SYSTEM_CONFIG.getActive());
+        assert systemConfig != null;
+        checkSystemConfig(systemConfig);
+        mv.addObject("active", systemConfig.getActive());
         mv.addObject("account", getSignUser());
     }
 
@@ -86,15 +83,15 @@ public abstract class BaseController {
         if (totalPage <= 0) {
             totalPage = 1;
         }
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         assert paginationService != null;
-        mv.addObject("paginationList", paginationService.getPagination(page, totalPage, SYSTEM_CONFIG.getSiteDomainName() + link));
+        mv.addObject("paginationList", paginationService.getPagination(page, totalPage, systemConfig.getSiteDomainName() + link));
     }
 
     protected User getSignUser() {
         Object object = null;
-        assert SYSTEM_CONFIG != null;
-        if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
+        assert systemConfig != null;
+        if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
             object = request.getSession().getAttribute(SESSION_KEY);
         } else {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -112,8 +109,8 @@ public abstract class BaseController {
     }
 
     protected void updateSignUser(User user) {
-        assert SYSTEM_CONFIG != null;
-        if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
+        assert systemConfig != null;
+        if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
             request.getSession().setAttribute(SESSION_KEY, user);
         } else {
             UserDetail userDetails = new UserDetail(user);
@@ -141,8 +138,8 @@ public abstract class BaseController {
             try {
                 URL url = new URL(callback);
                 String host = url.getHost();
-                assert SYSTEM_CONFIG != null;
-                if (host.endsWith(SYSTEM_CONFIG.getBaseDomainName())) {
+                assert systemConfig != null;
+                if (host.endsWith(systemConfig.getBaseDomainName())) {
                     return callback;
                 }
             } catch (MalformedURLException ignored) {

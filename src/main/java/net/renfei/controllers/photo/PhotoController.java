@@ -47,8 +47,8 @@ public class PhotoController extends BaseController {
                                         ModelAndView mv) {
         ListData<Album> albumListData = photoService.getAllAlbumList(page, "10");
         AlbumPageView<ListData<Album>> pageView = buildPageView(AlbumPageView.class, albumListData);
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("任霏的网络相册 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("任霏的网络相册 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
         setPagination(paginationService, mv, page, albumListData.getTotal(), "/photo?page=");
         mv.setViewName("photo/index");
@@ -72,8 +72,8 @@ public class PhotoController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.ALBUM, desc = "访问相册首页Index.html")
     public RedirectView getPhotoListDir() {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/photo");
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/photo");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }
@@ -86,9 +86,9 @@ public class PhotoController extends BaseController {
             noHandlerFoundException();
         }
         AlbumPageView<AlbumDomain> pageView = buildPageView(AlbumPageView.class, albumDomain);
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         assert albumDomain.getAlbum() != null;
-        pageView.getPageHead().setTitle(albumDomain.getAlbum().getTitle() + " - 任霏的网络相册 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(albumDomain.getAlbum().getTitle() + " - 任霏的网络相册 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
         mv.setViewName("photo/show");
         return mv;

@@ -74,8 +74,8 @@ public class CommentServiceImpl extends BaseService implements CommentService {
         stringList.add("很高兴能与你取得联系。您的评论留言收到了回复：");
         stringList.add(comment.getContent());
         stringList.add("----");
-        assert SYSTEM_CONFIG != null;
-        String link = SYSTEM_CONFIG.getSiteDomainName();
+        assert systemConfig != null;
+        String link = systemConfig.getSiteDomainName();
         link += systemTypeEnum.getUriPath() + "/" + comment.getObjectId();
         switch (systemTypeEnum) {
             case BLOG:

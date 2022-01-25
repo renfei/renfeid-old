@@ -58,10 +58,10 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         ListData<BlogVO> blogVOListData = null;
         ListData<BlogDomain> blogDomainListData;
         String redisKey = REDIS_KEY_BLOG + "post:list_" + pages + "_" + rows;
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         if (user == null) {
             // 未登录用户访问，可以用缓存
-            if (SYSTEM_CONFIG.isEnableRedis()) {
+            if (systemConfig.isEnableRedis()) {
                 // 查询是否曾经缓存过对象，有缓存直接吐出去
                 if (redisService.hasKey(redisKey)) {
                     Object object = redisService.get(redisKey);
@@ -73,8 +73,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             if (blogVOListData == null) {
                 blogDomainListData = BlogDomain.allPostList(user, isAdmin, pages, rows);
                 blogVOListData = convert(blogDomainListData);
-                if (SYSTEM_CONFIG.isEnableRedis()) {
-                    redisService.set(redisKey, blogVOListData, SYSTEM_CONFIG.getDefaultCacheSeconds());
+                if (systemConfig.isEnableRedis()) {
+                    redisService.set(redisKey, blogVOListData, systemConfig.getDefaultCacheSeconds());
                 }
             }
         } else {
@@ -90,10 +90,10 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         ListData<BlogVO> blogVOListData = null;
         ListData<BlogDomain> blogDomainListData;
         String redisKey = REDIS_KEY_BLOG + "post:tag:" + sysKeywordTag.getEnName() + ":list_" + pages + "_" + rows;
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         if (user == null) {
             // 未登录用户访问，可以用缓存
-            if (SYSTEM_CONFIG.isEnableRedis()) {
+            if (systemConfig.isEnableRedis()) {
                 // 查询是否曾经缓存过对象，有缓存直接吐出去
                 if (redisService.hasKey(redisKey)) {
                     Object object = redisService.get(redisKey);
@@ -105,8 +105,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             if (blogVOListData == null) {
                 blogDomainListData = BlogDomain.allPostListInId(sysKeywordTag.selectObjectIdList(SystemTypeEnum.BLOG), user, isAdmin, pages, rows);
                 blogVOListData = convert(blogDomainListData);
-                if (SYSTEM_CONFIG.isEnableRedis()) {
-                    redisService.set(redisKey, blogVOListData, SYSTEM_CONFIG.getDefaultCacheSeconds());
+                if (systemConfig.isEnableRedis()) {
+                    redisService.set(redisKey, blogVOListData, systemConfig.getDefaultCacheSeconds());
                 }
             }
         } else {
@@ -122,10 +122,10 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         ListData<BlogVO> blogVOListData = null;
         ListData<BlogDomain> blogDomainListData;
         String redisKey = REDIS_KEY_BLOG + "post:cat:" + catEnName + ":list_" + pages + "_" + rows;
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         if (user == null) {
             // 未登录用户访问，可以用缓存
-            if (SYSTEM_CONFIG.isEnableRedis()) {
+            if (systemConfig.isEnableRedis()) {
                 // 查询是否曾经缓存过对象，有缓存直接吐出去
                 if (redisService.hasKey(redisKey)) {
                     Object object = redisService.get(redisKey);
@@ -137,8 +137,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             if (blogVOListData == null) {
                 blogDomainListData = BlogDomain.allPostListByCatName(catEnName, user, isAdmin, pages, rows);
                 blogVOListData = convert(blogDomainListData);
-                if (SYSTEM_CONFIG.isEnableRedis()) {
-                    redisService.set(redisKey, blogVOListData, SYSTEM_CONFIG.getDefaultCacheSeconds());
+                if (systemConfig.isEnableRedis()) {
+                    redisService.set(redisKey, blogVOListData, systemConfig.getDefaultCacheSeconds());
                 }
             }
         } else {
@@ -199,8 +199,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             throws NotExistException, NeedPasswordException, SecretLevelException {
         BlogVO blogVO = null;
         String redisKey = REDIS_KEY_BLOG + "post:" + id;
-        assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        assert systemConfig != null;
+        if (systemConfig.isEnableRedis()) {
             // 查询是否曾经缓存过对象，有缓存直接吐出去
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
@@ -212,8 +212,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
         if (blogVO == null) {
             BlogDomain blogDomain = new BlogDomain(id, user, password, isAdmin);
             blogVO = convert(blogDomain);
-            if (SYSTEM_CONFIG.isEnableRedis()) {
-                redisService.set(redisKey, blogVO, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            if (systemConfig.isEnableRedis()) {
+                redisService.set(redisKey, blogVO, systemConfig.getDefaultCacheSeconds());
             }
         }
         return blogVO;
@@ -244,10 +244,10 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     public List<Post> getRelated(Post post, User user) {
         List<Post> posts = null;
         String redisKey = REDIS_KEY_BLOG + "post:related:" + post.getId();
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         if (user == null) {
             // 未登录用户访问，可以用缓存
-            if (SYSTEM_CONFIG.isEnableRedis()) {
+            if (systemConfig.isEnableRedis()) {
                 // 查询是否曾经缓存过对象，有缓存直接吐出去
                 if (redisService.hasKey(redisKey)) {
                     Object object = redisService.get(redisKey);
@@ -271,8 +271,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             ) {
                 posts.add(blogDomain.getPost());
             }
-            if (SYSTEM_CONFIG.isEnableRedis()) {
-                redisService.set(redisKey, posts, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            if (systemConfig.isEnableRedis()) {
+                redisService.set(redisKey, posts, systemConfig.getDefaultCacheSeconds());
             }
         }
         return posts;
@@ -287,8 +287,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     public PostSidebarVO buildPostSidebar(User user) {
         PostSidebarVO postSidebarVO = null;
         String redisKey = REDIS_KEY_BLOG + "post:sidebar";
-        assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        assert systemConfig != null;
+        if (systemConfig.isEnableRedis()) {
             // 查询是否曾经缓存过对象，有缓存直接吐出去
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
@@ -304,7 +304,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             List<Category> allCategoryList = BlogDomain.allBlogCategory(user);
             allCategoryList.forEach(blogCategory -> {
                 LinkTree link = LinkTree.builder()
-                        .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/cat/" + blogCategory.getEnName())
+                        .href(systemConfig.getSiteDomainName() + "/posts/cat/" + blogCategory.getEnName())
                         .text(blogCategory.getZhName())
                         .build();
                 blogCategoryLinks.add(link);
@@ -314,7 +314,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             List<SysKeywordTag> keywordTagList = SysKeywordTag.keywordTagList(SystemTypeEnum.BLOG);
             keywordTagList.forEach(keywordTag -> {
                 LinkTree link = LinkTree.builder()
-                        .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/tag/" + keywordTag.getEnName())
+                        .href(systemConfig.getSiteDomainName() + "/posts/tag/" + keywordTag.getEnName())
                         .text(keywordTag.getZhName() + " (" + keywordTag.getCount() + ")")
                         .build();
                 allTagList.add(link);
@@ -325,7 +325,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             if (commentList != null) {
                 commentList.forEach(comment -> {
                     LinkTree link = LinkTree.builder()
-                            .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + comment.getObjectId() + "#cmt" + comment.getId())
+                            .href(systemConfig.getSiteDomainName() + "/posts/" + comment.getObjectId() + "#cmt" + comment.getId())
                             .text(StringUtils.substring(comment.getContent(), 38, "..."))
                             .build();
                     lastCommentList.add(link);
@@ -336,7 +336,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             List<Post> postList = BlogDomain.hotPostTop10(user);
             postList.forEach(post -> {
                 LinkTree link = LinkTree.builder()
-                        .href(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + post.getId())
+                        .href(systemConfig.getSiteDomainName() + "/posts/" + post.getId())
                         .text(post.getTitle())
                         .build();
                 hotPostList.add(link);
@@ -360,8 +360,8 @@ public class BlogServiceImpl extends BaseService implements BlogService {
             postSidebars.add(hotSidebar);
             postSidebarVO = new PostSidebarVO();
             postSidebarVO.setPostSidebars(postSidebars);
-            if (SYSTEM_CONFIG.isEnableRedis()) {
-                redisService.set(redisKey, postSidebarVO, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            if (systemConfig.isEnableRedis()) {
+                redisService.set(redisKey, postSidebarVO, systemConfig.getDefaultCacheSeconds());
             }
         }
         return postSidebarVO;
@@ -370,7 +370,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
     @Override
     public String getJsonld(BlogVO blogVO) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+08:00'");
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         return getCommonTop() +
                 "\"@type\": \"NewsArticle\"," +
                 "\"dateModified\":\"" + sdf.format(blogVO.getPost().getPostDate()) + "\"," +
@@ -383,7 +383,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 "}," +
                 "\"publisher\":{" +
                 "\"@type\": \"Organization\"," +
-                "\"name\": \"" + SYSTEM_CONFIG.getSiteName() + "\"," +
+                "\"name\": \"" + systemConfig.getSiteName() + "\"," +
                 "\"logo\": {" +
                 "\"@type\": \"ImageObject\"," +
                 "\"url\": \"https://cdn.renfei.net/Logo/logo_112.png\"" +
@@ -392,7 +392,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
                 "\"description\": \"" + blogVO.getPost().getExcerpt() + "\"," +
                 "\"mainEntityOfPage\": {" +
                 "\"@type\":\"WebPage\"," +
-                "\"@id\":\"" + SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogVO.getPost().getId() + "\"" +
+                "\"@id\":\"" + systemConfig.getSiteDomainName() + "/posts/" + blogVO.getPost().getId() + "\"" +
                 "}," +
                 "\"speakable\": {" +
                 "\"@type\": \"SpeakableSpecification\"," +

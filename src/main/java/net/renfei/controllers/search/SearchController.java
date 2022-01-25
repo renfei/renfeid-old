@@ -48,12 +48,12 @@ public class SearchController extends BaseController {
                                @RequestParam(value = "type", required = false) String type,
                                @RequestParam(value = "w", required = false) String query,
                                @RequestParam(value = "p", required = false) String page) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         HomePageView<ListData<SearchItem>> pageView = buildPageView(HomePageView.class, null);
         if (ObjectUtils.isEmpty(query)) {
-            pageView.getPageHead().setTitle("站内搜索 - " + SYSTEM_CONFIG.getSiteName());
+            pageView.getPageHead().setTitle("站内搜索 - " + systemConfig.getSiteName());
         } else {
-            pageView.getPageHead().setTitle("搜索:" + query + " - " + SYSTEM_CONFIG.getSiteName());
+            pageView.getPageHead().setTitle("搜索:" + query + " - " + systemConfig.getSiteName());
             TypeEnum typeEnum = null;
             switch (type.toLowerCase().trim()) {
                 case "post":
@@ -108,9 +108,9 @@ public class SearchController extends BaseController {
     @RequestMapping(value = "search.xml")
     @OperationLog(module = SystemTypeEnum.SEARCH, desc = "search.xml")
     public ModelAndView getSearchXml(ModelAndView mv, HttpServletResponse response) {
-        assert SYSTEM_CONFIG != null;
-        mv.addObject("siteName", SYSTEM_CONFIG.getSiteName());
-        mv.addObject("domain", SYSTEM_CONFIG.getSiteDomainName());
+        assert systemConfig != null;
+        mv.addObject("siteName", systemConfig.getSiteName());
+        mv.addObject("domain", systemConfig.getSiteDomainName());
         response.setHeader("content-type", "application/xml;charset=UTF-8");
         response.setContentType("application/xml;charset=UTF-8");
         mv.setViewName("searchxml");

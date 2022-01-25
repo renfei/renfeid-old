@@ -42,8 +42,8 @@ public class WeiboController extends BaseController {
                                      ModelAndView mv) {
         WeiboPageView<ListData<Weibo>> weiboPageView = buildPageView(WeiboPageView.class, weiboService.getWeiboList(page, "10"));
         setPagination(paginationService, mv, page, weiboPageView.getObject().getTotal(), "/weibo?page=");
-        assert SYSTEM_CONFIG != null;
-        weiboPageView.getPageHead().setTitle("任霏的微博客 - Weibo - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        weiboPageView.getPageHead().setTitle("任霏的微博客 - Weibo - " + systemConfig.getSiteName());
         weiboPageView.getPageHead().setKeywords("任霏,RenFei,NeilRen,个人,博客,blog,开发,技术,posts");
         weiboPageView.getPageHead().setDescription("任霏的的微型博客和微型网志。");
         mv.addObject("pageView", weiboPageView);
@@ -68,8 +68,8 @@ public class WeiboController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.WEIBO, desc = "index.html")
     public RedirectView getWeiboListDir() {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/weibo");
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/weibo");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }
@@ -85,7 +85,7 @@ public class WeiboController extends BaseController {
             noHandlerFoundException();
         }
         assert weiboPageView != null;
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         weiboPageView.getPageHead().setOgProtocol(OGProtocol.builder()
                 .author("任霏")
                 .description(weiboPageView.getObject().getWeibo().getContent())
@@ -95,7 +95,7 @@ public class WeiboController extends BaseController {
                 .siteName("RenFei.Net")
                 .title(getTitle(weiboPageView.getObject().getWeibo().getContent()) + " - Weibo")
                 .type("article")
-                .url(SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + weiboPageView.getObject().getWeibo().getId())
+                .url(systemConfig.getSiteDomainName() + "/posts/" + weiboPageView.getObject().getWeibo().getId())
                 .build());
         weiboPageView.getPageHead().setTitle(getTitle(weiboPageView.getObject().getWeibo().getContent()) + " - 任霏的微博客");
         mv.addObject("pageView", weiboPageView);
@@ -122,8 +122,8 @@ public class WeiboController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.WEIBO, desc = "访问微博详情页Index.html")
     public RedirectView getWeiboInfoDir(@PathVariable("id") String id) {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/weibo/" + id);
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/weibo/" + id);
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

@@ -18,8 +18,8 @@ public class ErrorController extends BaseController {
     @RequestMapping("401")
     public ModelAndView error401(ModelAndView mv) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, "");
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("Error 401 (Unauthorized)!! - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("Error 401 (Unauthorized)!! - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("Error 401 (Unauthorized)!!");
         pageView.getPageHead().setKeywords("error,401,unauthorized");
         mv.addObject("pageView", pageView);
@@ -31,8 +31,8 @@ public class ErrorController extends BaseController {
     @RequestMapping("403")
     public ModelAndView error403(ModelAndView mv) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, "");
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("Error 403 (Forbidden)!! - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("Error 403 (Forbidden)!! - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("Error 403 (Forbidden)!!");
         pageView.getPageHead().setKeywords("error,403,forbidden");
         mv.addObject("pageView", pageView);
@@ -44,8 +44,8 @@ public class ErrorController extends BaseController {
     @RequestMapping("404")
     public ModelAndView error404(ModelAndView mv) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, "");
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("Error 404 (Not Found)!! - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("Error 404 (Not Found)!! - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("Error 404 (Not Found)!!");
         pageView.getPageHead().setKeywords("error,404,not found");
         mv.addObject("pageView", pageView);
@@ -57,8 +57,8 @@ public class ErrorController extends BaseController {
     @RequestMapping("405")
     public ModelAndView error405(ModelAndView mv) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, "");
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("Error 405 (Method Not Allowed)!! - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("Error 405 (Method Not Allowed)!! - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("Error 405 (Method Not Allowed)!!");
         pageView.getPageHead().setKeywords("error,405,method not allowed");
         mv.addObject("pageView", pageView);
@@ -70,8 +70,8 @@ public class ErrorController extends BaseController {
     @RequestMapping("500")
     public ModelAndView error500(ModelAndView mv) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, "");
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("Error 500 (Internal Server Error)!! - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("Error 500 (Internal Server Error)!! - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("Error 500 (Internal Server Error)!!");
         pageView.getPageHead().setKeywords("error,500,Internal Server Error");
         mv.addObject("pageView", pageView);

@@ -69,8 +69,8 @@ public class VerificationCodeServiceImpl extends BaseService implements Verifica
             throw new ServiceException("验证码发送失败发送地址不正确");
         }
         verificationCode.setSendTime(new Date());
-        assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        assert systemConfig != null;
+        if (systemConfig.isEnableRedis()) {
             // 存redis
             String key = REDIS_KEY_VERIFICATION_CODE + authType + ":" + addressee;
             redisService.set(key, verificationCode, (expires.getTime() - System.currentTimeMillis()) / 1000);
@@ -105,8 +105,8 @@ public class VerificationCodeServiceImpl extends BaseService implements Verifica
         } else {
             Sms sms = new Sms();
             sms.setPhoneNumbers(addressee);
-            sms.setSignName(SYSTEM_CONFIG.getAliyun().getSms().getSignName());
-            sms.setTemplateCode(SYSTEM_CONFIG.getAliyun().getSms().getTemplateCode());
+            sms.setSignName(systemConfig.getAliyun().getSms().getSignName());
+            sms.setTemplateCode(systemConfig.getAliyun().getSms().getTemplateCode());
             sms.setTemplateParam("{\"code\":\"" + verificationCodeString + "\"}");
             sms.setOutId(verificationCode.getUuid());
             smsService.sendSms(sms);
@@ -116,8 +116,8 @@ public class VerificationCodeServiceImpl extends BaseService implements Verifica
     @Override
     public SysVerificationCode verificationCode(String code, String addressee, String authType) {
         SysVerificationCode verificationCode;
-        assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        assert systemConfig != null;
+        if (systemConfig.isEnableRedis()) {
             // 从 Redis 里取
             String key = REDIS_KEY_VERIFICATION_CODE + authType + ":" + addressee;
             if (redisService.hasKey(key)) {

@@ -36,7 +36,7 @@ public class AliyunOSS extends AbstractAliyunService {
         // 新文件名
         fileName = UUID.randomUUID().toString().replace("-", "") + suffixName;
         uploadFile(file.getInputStream(), path + fileName);
-        return SYSTEM_CONFIG.getStaticDomain() + "/" + path + fileName;
+        return systemConfig.getStaticDomain() + "/" + path + fileName;
     }
 
     /**
@@ -48,7 +48,7 @@ public class AliyunOSS extends AbstractAliyunService {
     public String getPreSignedUrl(String objectName) {
         // 设置URL过期时间为24小时。1天(d)=86400000毫秒(ms)
         Date expiration = new Date(System.currentTimeMillis() + 86400000);
-        return getPreSignedUrl(SYSTEM_CONFIG.getAliyun().getOss().getDownloadBucketName(), objectName, expiration);
+        return getPreSignedUrl(systemConfig.getAliyun().getOss().getDownloadBucketName(), objectName, expiration);
     }
 
     /**
@@ -59,7 +59,7 @@ public class AliyunOSS extends AbstractAliyunService {
      * @return 签名URL
      */
     public String getPreSignedUrl(String objectName, Date expiration) {
-        return getPreSignedUrl(SYSTEM_CONFIG.getAliyun().getOss().getDownloadBucketName(), objectName, expiration);
+        return getPreSignedUrl(systemConfig.getAliyun().getOss().getDownloadBucketName(), objectName, expiration);
     }
 
     /**
@@ -73,12 +73,12 @@ public class AliyunOSS extends AbstractAliyunService {
     public String getPreSignedUrl(String bucketName, String objectName, Date expiration) {
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder()
-                .build(SYSTEM_CONFIG.getAliyun().getOss().getEndpoint(), SYSTEM_CONFIG.getAliyun().getAccessKeyId(), SYSTEM_CONFIG.getAliyun().getAccessKeySecret());
+                .build(systemConfig.getAliyun().getOss().getEndpoint(), systemConfig.getAliyun().getAccessKeyId(), systemConfig.getAliyun().getAccessKeySecret());
         // 生成以GET方法访问的签名URL，访客可以直接通过浏览器访问相关内容。
         URL url = ossClient.generatePresignedUrl(bucketName, objectName, expiration);
         // 关闭OSSClient。
         ossClient.shutdown();
-        return SYSTEM_CONFIG.getAliyun().getOss().getDownloadHost() + url.getPath() + "?" + url.getQuery();
+        return systemConfig.getAliyun().getOss().getDownloadHost() + url.getPath() + "?" + url.getQuery();
     }
 
     /**
@@ -95,20 +95,20 @@ public class AliyunOSS extends AbstractAliyunService {
         int limitSpeed = speed * 1024 * 8;
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder()
-                .build(SYSTEM_CONFIG.getAliyun().getOss().getEndpoint(), SYSTEM_CONFIG.getAliyun().getAccessKeyId(), SYSTEM_CONFIG.getAliyun().getAccessKeySecret());
+                .build(systemConfig.getAliyun().getOss().getEndpoint(), systemConfig.getAliyun().getAccessKeyId(), systemConfig.getAliyun().getAccessKeySecret());
         GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, objectName, HttpMethod.GET);
         request.setExpiration(expiration);
         request.setTrafficLimit(limitSpeed);
         URL url = ossClient.generatePresignedUrl(request);
         ossClient.shutdown();
-        return SYSTEM_CONFIG.getAliyun().getOss().getDownloadHost() + url.getPath() + "?" + url.getQuery();
+        return systemConfig.getAliyun().getOss().getDownloadHost() + url.getPath() + "?" + url.getQuery();
     }
 
     private void uploadFile(InputStream inputStream, String objectName) {
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder()
-                .build(SYSTEM_CONFIG.getAliyun().getOss().getEndpoint(), SYSTEM_CONFIG.getAliyun().getAccessKeyId(), SYSTEM_CONFIG.getAliyun().getAccessKeySecret());
-        ossClient.putObject(SYSTEM_CONFIG.getAliyun().getOss().getBucketName(), objectName, inputStream);
+                .build(systemConfig.getAliyun().getOss().getEndpoint(), systemConfig.getAliyun().getAccessKeyId(), systemConfig.getAliyun().getAccessKeySecret());
+        ossClient.putObject(systemConfig.getAliyun().getOss().getBucketName(), objectName, inputStream);
         // 关闭OSSClient。
         ossClient.shutdown();
     }

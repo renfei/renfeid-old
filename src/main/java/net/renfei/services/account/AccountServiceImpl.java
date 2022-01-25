@@ -113,9 +113,9 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         }
         if (account.getStateCode() < 1) {
             // 发送激活邮件
-            assert SYSTEM_CONFIG != null;
+            assert systemConfig != null;
             verificationCodeService.sendVerificationCode(true, DateUtils.nextHours(2),
-                    account.getEmail(), "SIGN_UP", account, SYSTEM_CONFIG.getSiteDomainName() + "/auth/signUp/activation");
+                    account.getEmail(), "SIGN_UP", account, systemConfig.getSiteDomainName() + "/auth/signUp/activation");
             throw new BusinessException("当前账户邮箱未激活，我们已经为您发送了一封激活邮件");
         } else if (StringUtils.isChinaPhone(signInVO.getUserName()) && account.getStateCode() < 2) {
             // 邮件登陆，那状态码必须大于等于1，1邮箱验证；2手机验证；3邮箱和手机都验证
@@ -179,13 +179,13 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         DiscuzUcenterMembersDO discuzUcenterMembers = ListUtils.getOne(discuzUcenterMembersMapper.selectByExample(discuzUcenterMembersExample));
         if (discuzUcenterMembers != null) {
             try {
-                assert SYSTEM_CONFIG != null;
+                assert systemConfig != null;
                 Client client =
-                        new Client(SYSTEM_CONFIG.getuCenter().getApi(),
+                        new Client(systemConfig.getuCenter().getApi(),
                                 null,
-                                SYSTEM_CONFIG.getuCenter().getKey(),
-                                SYSTEM_CONFIG.getuCenter().getAppId(),
-                                SYSTEM_CONFIG.getuCenter().getConnect());
+                                systemConfig.getuCenter().getKey(),
+                                systemConfig.getuCenter().getAppId(),
+                                systemConfig.getuCenter().getConnect());
                 String script = client.ucUserSynlogin(discuzUcenterMembers.getUid());
                 logger.info("uc script:{}", script);
                 if (!ObjectUtils.isEmpty(script)) {
@@ -283,13 +283,13 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         account.setStateCode(0);
         accountMapper.insertSelective(account);
         try {
-            assert SYSTEM_CONFIG != null;
+            assert systemConfig != null;
             Client client =
-                    new Client(SYSTEM_CONFIG.getuCenter().getApi(),
+                    new Client(systemConfig.getuCenter().getApi(),
                             null,
-                            SYSTEM_CONFIG.getuCenter().getKey(),
-                            SYSTEM_CONFIG.getuCenter().getAppId(),
-                            SYSTEM_CONFIG.getuCenter().getConnect());
+                            systemConfig.getuCenter().getKey(),
+                            systemConfig.getuCenter().getAppId(),
+                            systemConfig.getuCenter().getConnect());
             client.ucUserRegister(account.getUserName(), UUID.randomUUID().toString(), account.getEmail());
             // 向Discuz表里插入用户
             DiscuzUcenterMembersDOExample discuzUcenterMembersExample = new DiscuzUcenterMembersDOExample();
@@ -360,7 +360,7 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         }
         // 发送激活邮件
         verificationCodeService.sendVerificationCode(true, DateUtils.nextHours(2),
-                account.getEmail(), "SIGN_UP", account, SYSTEM_CONFIG.getSiteDomainName() + "/auth/signUp/activation");
+                account.getEmail(), "SIGN_UP", account, systemConfig.getSiteDomainName() + "/auth/signUp/activation");
     }
 
     /**
@@ -420,15 +420,15 @@ public class AccountServiceImpl extends BaseService implements AccountService {
             DiscuzUcenterMembersDOExample discuzUcenterMembersExample = new DiscuzUcenterMembersDOExample();
             discuzUcenterMembersExample.createCriteria().andUsernameEqualTo(user.getUserName());
             DiscuzUcenterMembersDO discuzUcenterMembers = ListUtils.getOne(discuzUcenterMembersMapper.selectByExample(discuzUcenterMembersExample));
-            assert SYSTEM_CONFIG != null;
+            assert systemConfig != null;
             if (discuzUcenterMembers != null) {
                 try {
                     Client client =
-                            new Client(SYSTEM_CONFIG.getuCenter().getApi(),
+                            new Client(systemConfig.getuCenter().getApi(),
                                     null,
-                                    SYSTEM_CONFIG.getuCenter().getKey(),
-                                    SYSTEM_CONFIG.getuCenter().getAppId(),
-                                    SYSTEM_CONFIG.getuCenter().getConnect());
+                                    systemConfig.getuCenter().getKey(),
+                                    systemConfig.getuCenter().getAppId(),
+                                    systemConfig.getuCenter().getConnect());
                     return client.ucUserSynlogout();
                 } catch (Exception ignored) {
                 }

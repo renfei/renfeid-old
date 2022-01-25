@@ -23,8 +23,8 @@ public class SponsorsController extends BaseController {
     @OperationLog(module = SystemTypeEnum.HOME, desc = "访问赞助页面")
     public ModelAndView sponsors(ModelAndView mv) {
         HomePageView<String> homePageView = buildPageView(HomePageView.class, "");
-        assert SYSTEM_CONFIG != null;
-        homePageView.getPageHead().setTitle("赞助 - Sponsors - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        homePageView.getPageHead().setTitle("赞助 - Sponsors - " + systemConfig.getSiteName());
         mv.addObject("pageView", homePageView);
         mv.setViewName("sponsors");
         return mv;
@@ -47,8 +47,8 @@ public class SponsorsController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.HOME, desc = "访问赞助页面Index.html")
     public RedirectView getAboutDir() {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/sponsors");
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/sponsors");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

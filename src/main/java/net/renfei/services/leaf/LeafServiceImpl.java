@@ -57,7 +57,7 @@ public class LeafServiceImpl extends BaseService implements LeafService {
      */
     @Override
     public Result getId() {
-        return idGen.get(SYSTEM_CONFIG.getLeafKey());
+        return idGen.get(systemConfig.getLeafKey());
     }
 
     /**

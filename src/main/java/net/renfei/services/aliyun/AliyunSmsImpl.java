@@ -53,7 +53,7 @@ public class AliyunSmsImpl extends AbstractAliyunService implements SmsService {
         request.setSysDomain("dysmsapi.aliyuncs.com");
         request.setSysVersion("2017-05-25");
         request.setSysAction("SendSms");
-        request.putQueryParameter("RegionId", SYSTEM_CONFIG.getAliyun().getSms().getRegionId());
+        request.putQueryParameter("RegionId", systemConfig.getAliyun().getSms().getRegionId());
         request.putQueryParameter("PhoneNumbers", sms.getPhoneNumbers());
         request.putQueryParameter("SignName", sms.getSignName());
         request.putQueryParameter("TemplateCode", sms.getTemplateCode());

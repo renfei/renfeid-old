@@ -41,7 +41,7 @@ public class AliyunGreen extends AbstractAliyunService {
         // 指定请求方法
         textScanRequest.setSysMethod(com.aliyuncs.http.MethodType.POST);
         textScanRequest.setSysEncoding("UTF-8");
-        textScanRequest.setSysRegionId(SYSTEM_CONFIG.getAliyun().getGreen().getRegionId());
+        textScanRequest.setSysRegionId(systemConfig.getAliyun().getGreen().getRegionId());
 
         List<AliyunGreenAO.Task> tasks = new ArrayList<>();
         AliyunGreenAO.Task task = new AliyunGreenAO.Task();

@@ -42,11 +42,11 @@ public class OtherController extends BaseController {
         if (ObjectUtils.isEmpty(url) || url.isEmpty()) {
             return new ModelAndView("redirect:/");
         }
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         HomePageView<String> pageView = buildPageView(HomePageView.class, null);
         try {
             byte[] asBytes = Base64.getDecoder().decode(url);
-            mv.addObject("siteName", SYSTEM_CONFIG.getSiteName());
+            mv.addObject("siteName", systemConfig.getSiteName());
             String uri = new String(asBytes, StandardCharsets.UTF_8);
             if (!uri.startsWith("http://") && !uri.startsWith("https://")) {
                 uri = "http://" + uri;
@@ -54,7 +54,7 @@ public class OtherController extends BaseController {
             try{
                 URL urlObj = new URL(uri);
                 String host = urlObj.getHost();
-                if (host.endsWith(SYSTEM_CONFIG.getBaseDomainName())) {
+                if (host.endsWith(systemConfig.getBaseDomainName())) {
                     return new ModelAndView("redirect:" + uri);
                 }
             }catch (Exception exception){

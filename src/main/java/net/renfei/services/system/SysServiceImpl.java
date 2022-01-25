@@ -363,20 +363,20 @@ public class SysServiceImpl extends BaseService implements SysService {
 
     @Override
     public PageHead getPageHead() {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         PageHead pageHead = new PageHead();
         pageHead.setTitle("");
         pageHead.setDescription("");
         pageHead.setKeywords("");
-        pageHead.setAuthor(SYSTEM_CONFIG.getPageHead().getAuthor());
-        pageHead.setCopyright(SYSTEM_CONFIG.getPageHead().getCopyright());
-        pageHead.setDnsPrefetch(SYSTEM_CONFIG.getPageHead().getDnsPrefetch());
+        pageHead.setAuthor(systemConfig.getPageHead().getAuthor());
+        pageHead.setCopyright(systemConfig.getPageHead().getCopyright());
+        pageHead.setDnsPrefetch(systemConfig.getPageHead().getDnsPrefetch());
         pageHead.setOgProtocol(null);
-        pageHead.setFavicon(SYSTEM_CONFIG.getPageHead().getFavicon());
-        pageHead.setFbAppId(SYSTEM_CONFIG.getPageHead().getFbAppId());
-        pageHead.setFbPages(SYSTEM_CONFIG.getPageHead().getFbPages());
-        pageHead.setAppleTouchIcon(SYSTEM_CONFIG.getPageHead().getAppleTouchIcon());
-        pageHead.setCss(SYSTEM_CONFIG.getPageHead().getCss());
+        pageHead.setFavicon(systemConfig.getPageHead().getFavicon());
+        pageHead.setFbAppId(systemConfig.getPageHead().getFbAppId());
+        pageHead.setFbPages(systemConfig.getPageHead().getFbPages());
+        pageHead.setAppleTouchIcon(systemConfig.getPageHead().getAppleTouchIcon());
+        pageHead.setCss(systemConfig.getPageHead().getCss());
         pageHead.setCssText("");
         pageHead.setJsText("");
         return pageHead;
@@ -386,8 +386,8 @@ public class SysServiceImpl extends BaseService implements SysService {
     public PageHeader getPageHeader(HttpServletRequest request) {
         PageHeader pageHeader = null;
         String redisKey = REDIS_KEY_BLOG + "PageHeader";
-        assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        assert systemConfig != null;
+        if (systemConfig.isEnableRedis()) {
             // 查询是否曾经缓存过对象，有缓存直接吐出去
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
@@ -403,12 +403,12 @@ public class SysServiceImpl extends BaseService implements SysService {
             example.createCriteria()
                     .andPidIsNull();
             pageHeader.setMenus(convertSiteMenu(sysSiteMenuMapper.selectByExample(example)));
-            if (SYSTEM_CONFIG.isEnableRedis()) {
-                redisService.set(redisKey, pageHeader, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            if (systemConfig.isEnableRedis()) {
+                redisService.set(redisKey, pageHeader, systemConfig.getDefaultCacheSeconds());
             }
         }
         Object object;
-        if (SESSION_AUTH_MODE.equals(SYSTEM_CONFIG.getAuthMode())) {
+        if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
             object = request.getSession().getAttribute(SESSION_KEY);
         } else {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -427,10 +427,10 @@ public class SysServiceImpl extends BaseService implements SysService {
 
     @Override
     public PageFooter getPageFooter() {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         PageFooter pageFooter = null;
         String redisKey = REDIS_KEY_BLOG + "PageFooter";
-        if (SYSTEM_CONFIG.isEnableRedis()) {
+        if (systemConfig.isEnableRedis()) {
             // 查询是否曾经缓存过对象，有缓存直接吐出去
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
@@ -445,25 +445,25 @@ public class SysServiceImpl extends BaseService implements SysService {
             example.createCriteria()
                     .andPidIsNull();
             pageFooter = new PageFooter();
-            pageFooter.setShowFriendlyLink(SYSTEM_CONFIG.isShowFriendlyLink());
+            pageFooter.setShowFriendlyLink(systemConfig.isShowFriendlyLink());
             pageFooter.setFriendlyLink(this.getSysSiteFriendlyLinkList());
-            pageFooter.setVersion(SYSTEM_CONFIG.getVersion());
-            pageFooter.setBuildTime(SYSTEM_CONFIG.getBuildTime());
+            pageFooter.setVersion(systemConfig.getVersion());
+            pageFooter.setBuildTime(systemConfig.getBuildTime());
             pageFooter.setFooterMenuLinks(convertFooterMenu(siteFooterMenuMapper.selectByExample(example)));
             pageFooter.setSmallMenu(smallMenuList());
-            pageFooter.setJss(SYSTEM_CONFIG.getPageFooter().getJss());
+            pageFooter.setJss(systemConfig.getPageFooter().getJss());
             pageFooter.setJsText("var _hmt = _hmt || [];\n"
                     + "(function() {\n"
                     + "  var hm = document.createElement(\"script\");\n"
-                    + "  var analytics_bd = '" + SYSTEM_CONFIG.getBaidu().getTongji() + "';\n"
+                    + "  var analytics_bd = '" + systemConfig.getBaidu().getTongji() + "';\n"
                     // 为了防止爬虫扫描到统计代码的key，将URL地址打碎成数组
                     // 原地址：hm.src = https://hm.baidu.com/hm.js?<key>
                     + "  hm.src = ['ht','t','ps',':/','/h','m','.','ba','i','d','u.c','o','m/','h','m','.j','s?',analytics_bd].join('');\n"
                     + "  var s = document.getElementsByTagName(\"script\")[0]; \n"
                     + "  s.parentNode.insertBefore(hm, s);\n"
                     + "})();\n");
-            if (SYSTEM_CONFIG.isEnableRedis()) {
-                redisService.set(redisKey, pageFooter, SYSTEM_CONFIG.getDefaultCacheSeconds());
+            if (systemConfig.isEnableRedis()) {
+                redisService.set(redisKey, pageFooter, systemConfig.getDefaultCacheSeconds());
             }
         }
         return pageFooter;
@@ -471,10 +471,10 @@ public class SysServiceImpl extends BaseService implements SysService {
 
     @Override
     public ListData<SysApi> getSysApiList(User user, String pages, String rows) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         ListData<SysApi> sysApiListData = null;
         boolean securityAdmin = false;
-        if (SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+        if (systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
             // 超管，不限制权限，直接查全部
             securityAdmin = true;
         } else {
@@ -526,8 +526,8 @@ public class SysServiceImpl extends BaseService implements SysService {
     public ListData<SysRole> getSysRoleList(User user, String pages, String rows) {
         SysRoleExample sysRoleExample = new SysRoleExample();
         SysRoleExample.Criteria criteria = sysRoleExample.createCriteria();
-        assert SYSTEM_CONFIG != null;
-        if (SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+        assert systemConfig != null;
+        if (systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
             // 超管查全，除了内置的
             criteria.andBuiltInRoleEqualTo(false);
         } else {
@@ -582,8 +582,8 @@ public class SysServiceImpl extends BaseService implements SysService {
      */
     @Override
     public void addSysRole(User user, SysRole sysRole) throws ForbiddenException {
-        assert SYSTEM_CONFIG != null;
-        if (!SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+        assert systemConfig != null;
+        if (!systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
             // 不是超管，那么判断是不是安全管理员
             SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
             accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
@@ -610,8 +610,8 @@ public class SysServiceImpl extends BaseService implements SysService {
 
     @Override
     public void updateSysRole(User user, SysRole sysRole) throws ForbiddenException {
-        assert SYSTEM_CONFIG != null;
-        if (!SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+        assert systemConfig != null;
+        if (!systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
             // 不是超管，那么判断是不是安全管理员
             SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
             accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
@@ -647,8 +647,8 @@ public class SysServiceImpl extends BaseService implements SysService {
 
     @Override
     public void deleteSysRole(User user, Long id) throws ForbiddenException {
-        assert SYSTEM_CONFIG != null;
-        if (!SYSTEM_CONFIG.getSuperTubeUserName().equals(user.getUserName())) {
+        assert systemConfig != null;
+        if (!systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
             // 不是超管，那么判断是不是安全管理员
             SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
             accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
@@ -719,11 +719,11 @@ public class SysServiceImpl extends BaseService implements SysService {
         List<LinkTree> menus = new CopyOnWriteArrayList<>();
         String split = "@";
         // 前端是居右，这里需要倒序输出
-        assert SYSTEM_CONFIG != null;
-        for (int i = SYSTEM_CONFIG.getFooterSmallMenu().size() - 1; i >= 0; i--) {
+        assert systemConfig != null;
+        for (int i = systemConfig.getFooterSmallMenu().size() - 1; i >= 0; i--) {
             LinkTree linkTree = LinkTree.builder()
-                    .href(SYSTEM_CONFIG.getFooterSmallMenu().get(i).split(split)[1])
-                    .text(SYSTEM_CONFIG.getFooterSmallMenu().get(i).split(split)[0])
+                    .href(systemConfig.getFooterSmallMenu().get(i).split(split)[1])
+                    .text(systemConfig.getFooterSmallMenu().get(i).split(split)[0])
                     .target("_blank")
                     .build();
             menus.add(linkTree);

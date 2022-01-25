@@ -21,8 +21,8 @@ public class OldUriController extends BaseController {
      */
     @RequestMapping("/cat/posts/{enName}")
     public RedirectView catUri(@PathVariable(value = "enName") String enName) {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/posts/cat/" + enName);
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/posts/cat/" + enName);
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

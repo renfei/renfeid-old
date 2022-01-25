@@ -23,8 +23,8 @@ public class AboutController extends BaseController {
     @OperationLog(module = SystemTypeEnum.HOME, desc = "访问关于页面")
     public ModelAndView getAbout(ModelAndView mv) {
         HomePageView<String> homePageView = buildPageView(HomePageView.class, "");
-        assert SYSTEM_CONFIG != null;
-        homePageView.getPageHead().setTitle("关于任霏 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        homePageView.getPageHead().setTitle("关于任霏 - " + systemConfig.getSiteName());
         homePageView.getPageHead().setDescription("任霏，软件开发工程师。一只90后程序猿，大学是 C#.NET 专业毕业，后自学 Java 进行技术转型。你现在看到的这个网站就是我从后端到前端完整的手写的。");
         homePageView.getPageHead().setKeywords("任霏,renfei,关于");
         mv.addObject("pageView", homePageView);
@@ -49,8 +49,8 @@ public class AboutController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.HOME, desc = "访问关于页面Index.html")
     public RedirectView getAboutDir() {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/about");
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/about");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }

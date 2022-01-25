@@ -51,9 +51,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问开发者工具箱首页")
     public ModelAndView kitbox(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<Object> pageView = buildPageView(KitboxPageView.class, null);
-        pageView.getPageHead().setTitle("开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("免费的开发者与站长工具箱小工具，包含网络工具、加解密工具、测试工具等，工欲善其事，必先利其器。");
         pageView.getPageHead().setKeywords("开发,开发者,工具,工具箱");
         mv.addObject("KitBoxMenus", kitBoxService.getKitBoxMenus());
@@ -79,8 +79,8 @@ public class KitBoxController extends BaseController {
     })
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问开发者工具箱首页Index.html")
     public RedirectView getKitBoxDir() {
-        assert SYSTEM_CONFIG != null;
-        RedirectView redirectView = new RedirectView(SYSTEM_CONFIG.getSiteDomainName() + "/kitbox");
+        assert systemConfig != null;
+        RedirectView redirectView = new RedirectView(systemConfig.getSiteDomainName() + "/kitbox");
         redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         return redirectView;
     }
@@ -94,7 +94,7 @@ public class KitBoxController extends BaseController {
     @RequestMapping("ip")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问IP地址信息查询工具")
     public ModelAndView ip(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         String ip = IpUtils.getIpAddress(request);
         IPResult ipInfoDTO = null;
         try {
@@ -104,7 +104,7 @@ public class KitBoxController extends BaseController {
         }
         mv.addObject("myip", ip);
         KitboxPageView<IPResult> pageView = buildPageView(KitboxPageView.class, ipInfoDTO);
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_IP.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_IP.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("免费的开发者与站长工具箱小工具，包含网络工具、加解密工具、测试工具等，工欲善其事，必先利其器。");
         pageView.getPageHead().setKeywords("IP,地址,信息,查询,工具,地理,位置");
         mv.setViewName("kitbox/ipinfo");
@@ -125,9 +125,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("digtrace")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问Dig+trace命令检测DNS状态工具")
     public ModelAndView getDigTrace(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_DIGTRACE.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_DIGTRACE.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("域名解析信息查询工具，开放服务接口实现dig+trace域名解析过程查询。");
         pageView.getPageHead().setKeywords("域名,解析,信息,查询,工具,Dig,trace,DNS");
         mv.setViewName("kitbox/digtrace");
@@ -148,9 +148,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("dnsqps")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问域名解析QPS压力测试工具")
     public ModelAndView getDnsQps(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_DNSQPSE.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_DNSQPSE.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("域名解析QPS压力测试工具，仅限测试域名DNS抗压能力，请勿用于发动DNS攻击");
         pageView.getPageHead().setKeywords("域名,解析,QPS,压力,测试,工具,DNS");
         mv.setViewName("kitbox/dnsqps");
@@ -171,9 +171,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("whois")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问域名Whois信息查询工具")
     public ModelAndView getWhois(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_WHOIS.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_WHOIS.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("域名Whois信息查询工具，查询域名是否已经被注册，以及注册域名的详细信息的数据库（如域名所有人、域名注册商、域名注册日期和过期日期等）。通过域名Whois服务器查询，可以查询域名归属者联系方式，以及注册和到期时间。");
         pageView.getPageHead().setKeywords("域名,whois,信息,查询,工具");
         mv.setViewName("kitbox/whois");
@@ -194,9 +194,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("getmyip")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问公网IP获取工具")
     public ModelAndView getMyIp(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_GETMYIP.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_GETMYIP.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("公网IP获取工具支持Linux、Windows、API");
         pageView.getPageHead().setKeywords("IP,公网,出口,地址,工具");
         mv.setViewName("kitbox/getmyip");
@@ -217,9 +217,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("clienv")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问客户端环境获取工具")
     public ModelAndView getCliEnvPage(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_CLIENV.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_CLIENV.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("客户端环境获取工具，获取操作系统与浏览器版本环境信息");
         pageView.getPageHead().setKeywords("客户端,环境,系统,浏览器,版本,探针,获取client,env,environment");
         mv.setViewName("kitbox/clienv");
@@ -240,9 +240,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping({"uuid", "guid", "UUID", "GUID"})
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问在线批量生成 UUID/GUID 工具")
     public ModelAndView getUUID(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_UUID.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_UUID.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("在线批量生成 UUID/GUID 工具");
         pageView.getPageHead().setKeywords("UUID,GUID,在线,批量,生成,工具");
         mv.setViewName("kitbox/uuid");
@@ -263,9 +263,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping({"freemarkerTest", "FtlTest"})
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问FreeMarker(FTL)在线测试工具")
     public ModelAndView freemarkerTest(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("FreeMarker(FTL)在线测试工具");
         pageView.getPageHead().setKeywords("FreeMarker,ftl,在线,测试,工具");
         mv.setViewName("kitbox/freemarkerTest");
@@ -287,9 +287,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("strHumpLineConvert")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问下划线(Line)与驼峰(Hump)命名风格的相互转换工具")
     public ModelAndView strHumpLineConvert(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_STR_HUMP_LINE_CONVERT.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("下划线(Line)与驼峰(Hump)命名风格的相互转换工具，例如：test_test/testTest的相互转换");
         pageView.getPageHead().setKeywords("驼峰,下划线,命名,风格,转换,互转,在线,工具,Hump,line");
         mv.setViewName("kitbox/strHumpLineConvert");
@@ -310,9 +310,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("byteUnitConversion")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问计算机字节(Byte)单位之间的转换换算工具")
     public ModelAndView byteUnitConversion(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("计算机字节(Byte)单位之间的转换换算工具：bit、Byte、KB、MB、GB、TB、PB、EB之间的转换计算工具");
         pageView.getPageHead().setKeywords("字节,单位,比特,转换,换算,工具,bit,Byte,KB,MB,GB,TB,PB,EB");
         mv.setViewName("kitbox/byteUnitConversion");
@@ -333,9 +333,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("ueditor")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问UEditor工具")
     public ModelAndView ueditor(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_UEDITOR.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_UEDITOR.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("UEditor是由百度web前端研发部开发所见即所得富文本web编辑器，具有轻量，可定制，注重用户体验等特点，开源基于MIT协议，允许自由使用和修改代码。");
         pageView.getPageHead().setKeywords("ueditor,百度,在线,测试,demo,富文本,编辑器");
         mv.setViewName("kitbox/ueditor");
@@ -356,9 +356,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("wordIkAnalyze")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问在线分词工具")
     public ModelAndView wordIkAnalyze(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("在线分词工具与API接口(IK Analyze)，提供免费的在线文字分词与切词API接口服务，基于IKAnalyzer同时提供了对Lucene的默认优化实现。");
         pageView.getPageHead().setKeywords("分词,切词,中文,ik,analyze,api,接口,在线");
         mv.setViewName("kitbox/wordIkAnalyze");
@@ -379,9 +379,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("portNumberList")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问计算机 TCP/UDP 端口号注册列表大全工具")
     public ModelAndView portNumberList(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle("计算机 TCP/UDP 端口号注册列表大全 - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("计算机 TCP/UDP 端口号注册列表大全 - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("计算机之间依照互联网传输层TCP/IP协议的协议通信，不同的协议都对应不同的端口。并且，利用数据报文的UDP也不一定和TCP采用相同的端口号码。");
         pageView.getPageHead().setKeywords("tcp,udp,port,端口,计算机,注册,列表,大全");
         mv.setViewName("kitbox/portNumberList");
@@ -402,9 +402,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("randomPassword")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问随机密码生成工具")
     public ModelAndView randomPassword(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_RANDOM_PASSWORD.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("用户可根据自身需要选择生成密码所包含的字符以及密码长度，随机密码一键生成，简单易用，生成安全、随机的密码以保证网络账号的安全。");
         pageView.getPageHead().setKeywords("随机,密码,生成");
         mv.setViewName("kitbox/randomPassword");
@@ -425,9 +425,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("md5")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问MD5在线加密工具")
     public ModelAndView md5Tools(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_MD5.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_MD5.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("MD5在线加密工具，对字符串进行MD5计算得出MD5加密字符串");
         pageView.getPageHead().setKeywords("MD5,在线,加密,解密,字符串");
         mv.setViewName("kitbox/md5");
@@ -448,9 +448,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("sha1")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问SHA-1散列函数加密算法工具")
     public ModelAndView sha1Tools(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA1.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA1.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("SHA-1 散列函数加密算法输出的散列值为40位十六进制数字串，可用于验证信息的一致性，防止被篡改。本页面的 SHA-1 在线加密工具可对字符串进行 SHA-1 加密，并可转换散列值中字母的大小写。");
         pageView.getPageHead().setKeywords("SHA-1,在线,加密,解密,字符串");
         mv.setViewName("kitbox/sha1");
@@ -471,9 +471,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("sha256")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问SHA-256散列函数加密算法工具")
     public ModelAndView sha256Tools(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA256.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA256.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("SHA-256 散列函数加密算法输出的散列值可用于验证信息的一致性，防止被篡改。本页面的 SHA-256 在线加密工具可对字符串进行 SHA-256 加密，并可转换散列值中字母的大小写。");
         pageView.getPageHead().setKeywords("SHA-256,在线,加密,解密,字符串");
         mv.setViewName("kitbox/sha256");
@@ -494,9 +494,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("sha512")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问SHA-512散列函数加密算法工具")
     public ModelAndView sha512Tools(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA512.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_SHA512.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("SHA-512 散列函数加密算法输出的散列值可用于验证信息的一致性，防止被篡改。本页面的 SHA-256 在线加密工具可对字符串进行 SHA-256 加密，并可转换散列值中字母的大小写。");
         pageView.getPageHead().setKeywords("SHA-256,在线,加密,解密,字符串");
         mv.setViewName("kitbox/sha512");
@@ -517,9 +517,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("url16")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问URL16进制加密")
     public ModelAndView url16Tools(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_URL16.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.ENCRYPTION_URL16.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("URL编码形式表示的ASCII字符(十六进制格式)。把URL网址转换成16进制代码形式,加密后可直接复制到地址栏访问。");
         pageView.getPageHead().setKeywords("URL,网址,加密,16进制,hex");
         mv.setViewName("kitbox/url16");
@@ -540,9 +540,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping({"qrcode", "QRCode"})
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问二维码在线生成工具")
     public ModelAndView qrCode(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.OTHER_QRCODE.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.OTHER_QRCODE.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("二维码在线生成工具");
         pageView.getPageHead().setKeywords("二维码,qrcode,在线,生成,工具");
         mv.setViewName("kitbox/qrcode");
@@ -563,9 +563,9 @@ public class KitBoxController extends BaseController {
     @GetMapping("plist")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问苹果iOSPlist文件在线生成制作工具")
     public ModelAndView plist(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle("苹果 iOS Plist 文件在线生成制作工具 - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("苹果 iOS Plist 文件在线生成制作工具 - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("苹果 iOS Plist 文件在线生成制作工具，在服务器上部署 Plist 文件，用户即可通过自己的服务器下载 IPA 安装文件");
         pageView.getPageHead().setKeywords("苹果,iOS,Plist,文件,在线,生成,制作,工具");
         mv.setViewName("kitbox/plist");
@@ -606,9 +606,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping({"ShortUrl", "ShortURL"})
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问短网址在线生成工具")
     public ModelAndView shortUrl(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.OTHER_SHORT_URL.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.OTHER_SHORT_URL.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("短网址在线生成工具");
         pageView.getPageHead().setKeywords("短网址,Short,Url,生成,工具");
         mv.setViewName("kitbox/shortURL");
@@ -629,9 +629,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping({"indexing", "Indexing"})
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问Indexing站长推送工具")
     public ModelAndView indexing(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle("Indexing - 站长推送工具 - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("Indexing - 站长推送工具 - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("Indexing - 百度/必应/谷歌-站长推送工具");
         pageView.getPageHead().setKeywords("百度必应,bing,谷歌,google,推送,工具,站长");
         mv.setViewName("kitbox/indexing");
@@ -676,9 +676,9 @@ public class KitBoxController extends BaseController {
     @RequestMapping("xpathTest")
     @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问XPath在线测试工具")
     public ModelAndView xpathTest(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
-        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_XPATH_TEST.getTitle() + " - 开发者工具箱 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_XPATH_TEST.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
         pageView.getPageHead().setDescription("XPath在线测试工具");
         pageView.getPageHead().setKeywords("XPath,xml,在线,测试,工具");
         mv.setViewName("kitbox/xpathTest");

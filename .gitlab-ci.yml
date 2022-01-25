@@ -168,7 +168,7 @@ release_JH:
     - docker login --username=$CI_REGISTRY_USER --password=$CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
   dependencies:
-    - package
+    - package_JH
   environment:
     name: production
     url: https://www.renfei.net/

@@ -36,12 +36,12 @@ public class AuthPageController extends BaseController {
     public ModelAndView signInPage(ModelAndView mv,
                                    @RequestParam(value = "callback", required = false) String callback) {
         HomePageView<User> pageView = buildPageView(HomePageView.class, getSignUser());
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("登录 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("登录 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
         mv.addObject("callback", getCallBack(callback));
-        mv.addObject("ReCAPTCHA_Client_Key", SYSTEM_CONFIG.getGoogle().getReCAPTCHA().getClientKey());
-        mv.addObject("title", "登录 - " + SYSTEM_CONFIG.getSiteName());
+        mv.addObject("ReCAPTCHA_Client_Key", systemConfig.getGoogle().getReCAPTCHA().getClientKey());
+        mv.addObject("title", "登录 - " + systemConfig.getSiteName());
         mv.setViewName("auth/signIn");
         return mv;
     }
@@ -56,10 +56,10 @@ public class AuthPageController extends BaseController {
             return new ModelAndView("redirect:/");
         }
         HomePageView<User> pageView = buildPageView(HomePageView.class, getSignUser());
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("创建您的账户 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("创建您的账户 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
-        mv.addObject("ReCAPTCHA_Client_Key", SYSTEM_CONFIG.getGoogle().getReCAPTCHA().getClientKey());
+        mv.addObject("ReCAPTCHA_Client_Key", systemConfig.getGoogle().getReCAPTCHA().getClientKey());
         mv.addObject("pageView", pageView);
         mv.setViewName("auth/signUp");
         return mv;
@@ -72,8 +72,8 @@ public class AuthPageController extends BaseController {
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "注册完成界面")
     public ModelAndView signUpSuccessPage(ModelAndView mv) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, null);
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("您已成功创建了账户 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("您已成功创建了账户 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
         mv.setViewName("auth/signUpSuccess");
         return mv;
@@ -86,10 +86,10 @@ public class AuthPageController extends BaseController {
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "注册邮箱验证页面")
     public ModelAndView signUpActivation(ModelAndView mv, @RequestParam(value = "code", required = false) String code) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, code);
-        assert SYSTEM_CONFIG != null;
-        pageView.getPageHead().setTitle("激活您的账户 - " + SYSTEM_CONFIG.getSiteName());
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("激活您的账户 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
-        mv.addObject("ReCAPTCHA_Client_Key", SYSTEM_CONFIG.getGoogle().getReCAPTCHA().getClientKey());
+        mv.addObject("ReCAPTCHA_Client_Key", systemConfig.getGoogle().getReCAPTCHA().getClientKey());
         mv.setViewName("auth/signUpActivation");
         return mv;
     }
@@ -101,7 +101,7 @@ public class AuthPageController extends BaseController {
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "登出界面")
     public ModelAndView signOut(ModelAndView mv,
                                 @RequestParam(value = "callback", required = false) String callback) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         User user = getSignUser();
         String script = "";
         if (user != null) {
@@ -111,13 +111,13 @@ public class AuthPageController extends BaseController {
         SecurityContextHolder.clearContext();
         String callBack = getCallBack(callback);
         if (ObjectUtils.isEmpty(callBack) || "".equals(callBack)) {
-            callBack = SYSTEM_CONFIG.getSiteDomainName();
+            callBack = systemConfig.getSiteDomainName();
         }
         if (!callBack.startsWith("http") && !callBack.startsWith("https")) {
             callBack = "http://" + callBack;
         }
         HomePageView<String> pageView = buildPageView(HomePageView.class, callBack);
-        pageView.getPageHead().setTitle("您已安全登出我们的系统 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("您已安全登出我们的系统 - " + systemConfig.getSiteName());
         mv.addObject("script", script);
         mv.addObject("pageView", pageView);
         mv.setViewName("auth/signOut");

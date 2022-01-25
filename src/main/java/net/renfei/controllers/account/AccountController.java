@@ -35,7 +35,7 @@ public class AccountController extends BaseController {
     @GetMapping("manage")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户管理页面")
     public ModelAndView manage(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         ModelAndView modelAndView = checkSigned();
         if (modelAndView != null) {
             return modelAndView;
@@ -43,7 +43,7 @@ public class AccountController extends BaseController {
         DiscuzInfo discuzInfo = discuzService.getDiscuzInfo(getSignUser().getUserName());
         AccountPageView<User> pageView = buildPageView(AccountPageView.class, getSignUser());
         pageView.setDiscuzInfo(discuzInfo);
-        pageView.getPageHead().setTitle("管理您的账户 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("管理您的账户 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
         mv.setViewName("account/manage");
         return mv;
@@ -52,14 +52,14 @@ public class AccountController extends BaseController {
     @GetMapping("manage/email")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户邮箱管理页面")
     public ModelAndView manageEmail(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         ModelAndView modelAndView = checkSigned();
         if (modelAndView != null) {
             return modelAndView;
         }
         AccountPageView<User> pageView = buildPageView(AccountPageView.class, getSignUser());
         mv.addObject("pageView", pageView);
-        pageView.getPageHead().setTitle("管理您的电子邮箱地址 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("管理您的电子邮箱地址 - " + systemConfig.getSiteName());
         mv.setViewName("account/email");
         return mv;
     }
@@ -67,14 +67,14 @@ public class AccountController extends BaseController {
     @GetMapping("manage/phone")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户手机管理页面")
     public ModelAndView managePhone(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         ModelAndView modelAndView = checkSigned();
         if (modelAndView != null) {
             return modelAndView;
         }
         AccountPageView<User> pageView = buildPageView(AccountPageView.class, getSignUser());
         mv.addObject("pageView", pageView);
-        pageView.getPageHead().setTitle("管理您的手机号码 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("管理您的手机号码 - " + systemConfig.getSiteName());
         mv.setViewName("account/phone");
         return mv;
     }
@@ -82,14 +82,14 @@ public class AccountController extends BaseController {
     @GetMapping("manage/password")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户密码管理页面")
     public ModelAndView managePassword(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         ModelAndView modelAndView = checkSigned();
         if (modelAndView != null) {
             return modelAndView;
         }
         AccountPageView<String> pageView = buildPageView(AccountPageView.class, null);
         mv.addObject("pageView", pageView);
-        pageView.getPageHead().setTitle("管理您的密码 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("管理您的密码 - " + systemConfig.getSiteName());
         mv.setViewName("account/password");
         return mv;
     }
@@ -97,16 +97,16 @@ public class AccountController extends BaseController {
     @GetMapping("manage/u2f")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户U2F管理页面")
     public ModelAndView manageU2F(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         ModelAndView modelAndView = checkSigned();
         if (modelAndView != null) {
             return modelAndView;
         }
         User user = getSignUser();
         AccountPageView<User> pageView = buildPageView(AccountPageView.class, user);
-        pageView.getPageHead().setTitle("管理您的两步认证(U2F) - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("管理您的两步认证(U2F) - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
-        String secretKey = GoogleAuthenticator.generateSecretKey(SYSTEM_CONFIG.getTotpSecret());
+        String secretKey = GoogleAuthenticator.generateSecretKey(systemConfig.getTotpSecret());
         mv.addObject("secretKey", secretKey);
         mv.addObject("totpString", GoogleAuthenticator.genTotpString("RENFEI.NET", user.getUserName(), secretKey));
         mv.setViewName("account/u2f");
@@ -116,14 +116,14 @@ public class AccountController extends BaseController {
     @GetMapping({"manage/firstName", "manage/lastName"})
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "访问账户称呼管理页面")
     public ModelAndView manageFirstName(ModelAndView mv) {
-        assert SYSTEM_CONFIG != null;
+        assert systemConfig != null;
         ModelAndView modelAndView = checkSigned();
         if (modelAndView != null) {
             return modelAndView;
         }
         User user = getSignUser();
         AccountPageView<User> pageView = buildPageView(AccountPageView.class, user);
-        pageView.getPageHead().setTitle("管理您的姓名称呼 - " + SYSTEM_CONFIG.getSiteName());
+        pageView.getPageHead().setTitle("管理您的姓名称呼 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
         mv.setViewName("account/firstName");
         return mv;

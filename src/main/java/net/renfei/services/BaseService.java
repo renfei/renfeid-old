@@ -1,7 +1,7 @@
 package net.renfei.services;
 
 import net.renfei.config.SystemConfig;
-import net.renfei.application.ApplicationContextUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Service 基类
@@ -10,9 +10,6 @@ import net.renfei.application.ApplicationContextUtil;
  */
 public abstract class BaseService {
     protected static final String REDIS_KEY = "renfeid:";
-    protected final SystemConfig SYSTEM_CONFIG;
-
-    {
-        SYSTEM_CONFIG = (SystemConfig) ApplicationContextUtil.getBean("systemConfig");
-    }
+    @Autowired
+    protected SystemConfig systemConfig;
 }
