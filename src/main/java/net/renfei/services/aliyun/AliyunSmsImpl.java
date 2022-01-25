@@ -5,6 +5,7 @@ import com.aliyuncs.CommonResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
+import net.renfei.config.SystemConfig;
 import net.renfei.exception.BusinessException;
 import net.renfei.model.system.Sms;
 import net.renfei.services.RedisService;
@@ -30,7 +31,8 @@ public class AliyunSmsImpl extends AbstractAliyunService implements SmsService {
     private final RedisService redisService;
     private static final Logger logger = LoggerFactory.getLogger(AliyunSmsImpl.class);
 
-    public AliyunSmsImpl(RedisService redisService) {
+    public AliyunSmsImpl(RedisService redisService, SystemConfig systemConfig) {
+        super(systemConfig);
         this.redisService = redisService;
     }
 

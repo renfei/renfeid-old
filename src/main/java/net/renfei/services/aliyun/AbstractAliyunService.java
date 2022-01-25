@@ -4,6 +4,7 @@ import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import net.renfei.config.SystemConfig;
 import net.renfei.services.BaseService;
 
 /**
@@ -14,11 +15,11 @@ import net.renfei.services.BaseService;
 public abstract class AbstractAliyunService extends BaseService {
     protected IAcsClient client;
 
-    protected AbstractAliyunService() {
+    protected AbstractAliyunService(SystemConfig systemConfig) {
         client = new DefaultAcsClient(DefaultProfile.getProfile(
-                SYSTEM_CONFIG.getAliyun().getGreen().getRegionId(),
-                SYSTEM_CONFIG.getAliyun().getAccessKeyId(),
-                SYSTEM_CONFIG.getAliyun().getAccessKeySecret()));
+                systemConfig.getAliyun().getGreen().getRegionId(),
+                systemConfig.getAliyun().getAccessKeyId(),
+                systemConfig.getAliyun().getAccessKeySecret()));
     }
 
     protected AbstractAliyunService(IClientProfile profile) {

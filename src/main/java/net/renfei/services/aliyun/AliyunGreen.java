@@ -3,6 +3,7 @@ package net.renfei.services.aliyun;
 import com.aliyuncs.green.model.v20180509.TextScanRequest;
 import com.aliyuncs.http.FormatType;
 import com.aliyuncs.http.HttpResponse;
+import net.renfei.config.SystemConfig;
 import net.renfei.services.aliyun.model.AliyunGreenAO;
 import net.renfei.services.aliyun.model.AliyunGreenVO;
 import net.renfei.utils.JacksonUtil;
@@ -11,7 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 阿里云绿网
@@ -21,6 +25,10 @@ import java.util.*;
 @Service
 public class AliyunGreen extends AbstractAliyunService {
     private static final Logger logger = LoggerFactory.getLogger(AliyunGreen.class);
+
+    protected AliyunGreen(SystemConfig systemConfig) {
+        super(systemConfig);
+    }
 
     /**
      * @param text 待检测的文本，长度不超过10000个字符

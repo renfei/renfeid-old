@@ -4,6 +4,7 @@ import com.aliyun.oss.HttpMethod;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
+import net.renfei.config.SystemConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,10 @@ import java.util.UUID;
  */
 @Service
 public class AliyunOSS extends AbstractAliyunService {
+    protected AliyunOSS(SystemConfig systemConfig) {
+        super(systemConfig);
+    }
+
     public String upload(String path, MultipartFile file) throws Exception {
         if (file.isEmpty()) {
             throw new RuntimeException("文件为空!");
