@@ -2,8 +2,6 @@ package net.renfei.application;
 
 import net.renfei.config.SystemConfig;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
 /**
  * 应用程序上下文工具
@@ -11,13 +9,11 @@ import org.springframework.stereotype.Component;
  *
  * @author renfei
  */
-@Component
-public class ApplicationContextUtil implements ApplicationContextAware {
+public class ApplicationContextUtil {
     private static SystemConfig systemConfig;
     private static ApplicationContext applicationContext;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public static void setApplicationContext(ApplicationContext applicationContext) {
         ApplicationContextUtil.applicationContext = applicationContext;
     }
 
