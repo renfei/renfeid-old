@@ -3,7 +3,6 @@ package net.renfei;
 import net.renfei.domain.UserDomain;
 import net.renfei.model.auth.SignInVO;
 import net.renfei.model.system.UserDetail;
-import net.renfei.utils.ApplicationContextUtil;
 import net.renfei.utils.JacksonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +68,7 @@ public class ApplicationTests {
                 userDetails.getAuthorities()
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        ApplicationContextUtil.setApplicationContext(applicationContext);
+//        ApplicationContextUtil.setApplicationContext(applicationContext);
     }
 
     @Test
