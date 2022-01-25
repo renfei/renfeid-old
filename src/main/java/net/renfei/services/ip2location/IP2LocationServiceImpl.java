@@ -1,5 +1,6 @@
 package net.renfei.services.ip2location;
 
+import net.renfei.config.SystemConfig;
 import net.renfei.exception.IP2LocationException;
 import net.renfei.ip2location.IP2Location;
 import net.renfei.ip2location.IPResult;
@@ -25,27 +26,21 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
     private final IP2Location locationV6;
     private static final String CLASS_PATH_RESOURCE = "classpath:/";
 
-    {
+    public IP2LocationServiceImpl(SystemConfig systemConfig) {
         location = new IP2Location();
         locationV6 = new IP2Location();
-        while (SYSTEM_CONFIG == null) {
-            System.out.println("SYSTEM_CONFIG==null");
-        }
-        if (SYSTEM_CONFIG.getIp2LocationBinFile() == null) {
-            System.out.println("SYSTEM_CONFIG.getIp2LocationBinFile()==null");
-        }
         try {
-            if (SYSTEM_CONFIG.getIp2LocationBinFile().startsWith(CLASS_PATH_RESOURCE)) {
+            if (systemConfig.getIp2LocationBinFile().startsWith(CLASS_PATH_RESOURCE)) {
                 location.Open(new ClassPathResource(
-                        SYSTEM_CONFIG.getIp2LocationBinFile().split(CLASS_PATH_RESOURCE)[1]).getFile().getPath(), true);
+                        systemConfig.getIp2LocationBinFile().split(CLASS_PATH_RESOURCE)[1]).getFile().getPath(), true);
             } else {
-                location.Open(SYSTEM_CONFIG.getIp2LocationBinFile(), true);
+                location.Open(systemConfig.getIp2LocationBinFile(), true);
             }
-            if (SYSTEM_CONFIG.getIp2LocationBinFileV6().startsWith(CLASS_PATH_RESOURCE)) {
+            if (systemConfig.getIp2LocationBinFileV6().startsWith(CLASS_PATH_RESOURCE)) {
                 locationV6.Open(new ClassPathResource(
-                        SYSTEM_CONFIG.getIp2LocationBinFileV6().split(CLASS_PATH_RESOURCE)[1]).getFile().getPath(), true);
+                        systemConfig.getIp2LocationBinFileV6().split(CLASS_PATH_RESOURCE)[1]).getFile().getPath(), true);
             } else {
-                locationV6.Open(SYSTEM_CONFIG.getIp2LocationBinFileV6(), true);
+                locationV6.Open(systemConfig.getIp2LocationBinFileV6(), true);
             }
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
