@@ -1,4 +1,4 @@
-package net.renfei.utils;
+package net.renfei.application;
 
 import net.renfei.config.SystemConfig;
 import org.springframework.context.ApplicationContext;

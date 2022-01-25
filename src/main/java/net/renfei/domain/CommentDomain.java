@@ -13,7 +13,7 @@ import net.renfei.repositories.model.SysCommentsExample;
 import net.renfei.repositories.model.SysCommentsWithBLOBs;
 import net.renfei.services.IP2LocationService;
 import net.renfei.services.LeafService;
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

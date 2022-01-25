@@ -11,7 +11,7 @@ import net.renfei.repositories.model.PhotoAlbumExample;
 import net.renfei.repositories.model.PhotoAlbumImg;
 import net.renfei.repositories.model.PhotoAlbumImgExample;
 import net.renfei.repositories.model.PhotoAlbumWithBLOBs;
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 import net.renfei.utils.ListUtils;
 import org.springframework.beans.BeanUtils;
 

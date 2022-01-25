@@ -9,7 +9,7 @@ import net.renfei.model.SecretLevelEnum;
 import net.renfei.model.blog.PostStatusEnum;
 import net.renfei.repositories.SysPagesMapper;
 import net.renfei.repositories.model.SysPagesWithBLOBs;
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 import org.springframework.util.ObjectUtils;
 
 /**

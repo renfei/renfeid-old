@@ -1,7 +1,7 @@
 package net.renfei.services;
 
 import net.renfei.config.SystemConfig;
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 
 /**
  * Service 基类

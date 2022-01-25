@@ -7,7 +7,7 @@ import net.renfei.repositories.SysKeywordTagMapper;
 import net.renfei.repositories.model.SysKeywordObject;
 import net.renfei.repositories.model.SysKeywordObjectExample;
 import net.renfei.repositories.model.SysKeywordTagExample;
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;

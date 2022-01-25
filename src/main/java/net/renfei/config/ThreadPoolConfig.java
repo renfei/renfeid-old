@@ -1,6 +1,6 @@
 package net.renfei.config;
 
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

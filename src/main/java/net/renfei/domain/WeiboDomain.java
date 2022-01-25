@@ -13,7 +13,7 @@ import net.renfei.repositories.model.WeiboPostmeta;
 import net.renfei.repositories.model.WeiboPostmetaExample;
 import net.renfei.repositories.model.WeiboPosts;
 import net.renfei.repositories.model.WeiboPostsExample;
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 import net.renfei.utils.ListUtils;
 
 import java.util.Date;

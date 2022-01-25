@@ -1,10 +1,9 @@
 package net.renfei.model;
 
 import net.renfei.config.SystemConfig;
-import net.renfei.domain.BlogDomain;
 import net.renfei.domain.PagesDomain;
 import net.renfei.model.system.BlogVO;
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 
 import java.io.Serializable;
 

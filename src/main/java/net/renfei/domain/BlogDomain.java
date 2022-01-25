@@ -20,7 +20,7 @@ import net.renfei.repositories.model.BlogCategory;
 import net.renfei.repositories.model.BlogCategoryExample;
 import net.renfei.repositories.model.BlogPostsExample;
 import net.renfei.repositories.model.BlogPostsWithBLOBs;
-import net.renfei.utils.ApplicationContextUtil;
+import net.renfei.application.ApplicationContextUtil;
 import net.renfei.utils.ListUtils;
 import net.renfei.utils.SentryUtils;
 import org.slf4j.Logger;
