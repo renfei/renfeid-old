@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 
+import static net.renfei.application.ApplicationContextUtil.checkSystemConfig;
 import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
 
 /**
@@ -63,6 +64,7 @@ public abstract class BaseController {
     @ModelAttribute
     public void modelAttribute(ModelAndView mv) {
         assert SYSTEM_CONFIG != null;
+        checkSystemConfig(SYSTEM_CONFIG);
         mv.addObject("active", SYSTEM_CONFIG.getActive());
         mv.addObject("account", getSignUser());
     }

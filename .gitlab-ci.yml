@@ -156,15 +156,30 @@ package:
     paths:
       - target/
 
+release_JH:
+  stage: release
+  image: docker:latest
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/'
+  services:
+    - docker:dind
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG .
+    - docker login --username=$CI_REGISTRY_USER --password=$CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+  dependencies:
+    - package
+  environment:
+    name: production
+    url: https://www.renfei.net/
+
 release:
   stage: release
   image: docker:latest
   rules:
-    - if: $CI_COMMIT_TAG
+    - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   services:
     - docker:dind
-  before_script:
-    - docker info
   script:
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG .
     - docker login --username=$CI_REGISTRY_USER --password=$CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE

@@ -27,4 +27,10 @@ public class ApplicationContextUtil {
         }
         return applicationContext != null ? applicationContext.getBean(beanName) : null;
     }
+
+    public static void checkSystemConfig(SystemConfig systemConfig){
+        if(systemConfig==null){
+            systemConfig = (SystemConfig) applicationContext.getBean("systemConfig");
+        }
+    }
 }
