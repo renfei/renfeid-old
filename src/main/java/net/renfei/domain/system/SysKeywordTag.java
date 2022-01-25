@@ -142,6 +142,9 @@ public final class SysKeywordTag implements Serializable {
                 .andObjectIdEqualTo(objectId)
                 .andObjectTypeEqualTo(systemTypeEnum.toString());
         List<SysKeywordObject> sysKeywordObjects = keywordObjectMapper.selectByExample(example);
+        if (sysKeywordObjects.isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Long> ids = new ArrayList<>();
         sysKeywordObjects.forEach(sysKeywordObject -> ids.add(sysKeywordObject.getTagId()));
         example = new SysKeywordObjectExample();
