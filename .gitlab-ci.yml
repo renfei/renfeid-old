@@ -15,9 +15,9 @@ initialize_JH:
   rules:
     - if: "$CI_SERVER_URL =~ /jihulab.com/"
   script:
-    - sed -e 's|^mirrorlist=|#mirrorlist=|g' \
-      -e 's|^#baseurl=http://mirror.centos.org|baseurl=https://mirrors.tuna.tsinghua.edu.cn|g' \
-      -i.bak \
+    - sed -e 's|^mirrorlist=|#mirrorlist=|g'
+      -e 's|^#baseurl=http://mirror.centos.org|baseurl=https://mirrors.tuna.tsinghua.edu.cn|g'
+      -i.bak
       /etc/yum.repos.d/CentOS-*.repo
     - yum makecache
     - yum install -y wget unzip git
@@ -25,7 +25,7 @@ initialize_JH:
     - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
     - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
     - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
-    - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
+    - git clone https://renfei:$JH_TOKEN@jihulab.com/renfei/config.git
     - cp -rf ./config/renfeid/* ./src/main/resources/
   artifacts:
     expire_in: 1d
