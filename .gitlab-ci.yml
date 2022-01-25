@@ -133,6 +133,7 @@ package_JH:
   before_script:
     - rm -rf src/main/resources/ip2location
   script:
+    - cp -rf environment/maven/settings.xml /usr/share/maven/conf/settings.xml
     - mvn clean package -Dmaven.test.skip=true -P prod
   artifacts:
     expire_in: 1d

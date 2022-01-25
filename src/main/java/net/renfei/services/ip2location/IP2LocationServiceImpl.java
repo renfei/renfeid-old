@@ -28,6 +28,12 @@ public class IP2LocationServiceImpl extends BaseService implements IP2LocationSe
     {
         location = new IP2Location();
         locationV6 = new IP2Location();
+        while (SYSTEM_CONFIG == null) {
+            System.out.println("SYSTEM_CONFIG==null");
+        }
+        if (SYSTEM_CONFIG.getIp2LocationBinFile() == null) {
+            System.out.println("SYSTEM_CONFIG.getIp2LocationBinFile()==null");
+        }
         try {
             if (SYSTEM_CONFIG.getIp2LocationBinFile().startsWith(CLASS_PATH_RESOURCE)) {
                 location.Open(new ClassPathResource(
