@@ -30,6 +30,8 @@ public class SocialSharing implements Serializable {
         this.url = SYSTEM_CONFIG.getSiteDomainName() + "/posts/" + blogVO.getPost().getId();
         this.describes = blogVO.getPost().getExcerpt();
         this.pics = blogVO.getPost().getFeaturedImage();
+        this.views = blogVO.getPost().getPostViews() == null ?
+                "0" : blogVO.getPost().getPostViews().toString();
     }
 
     public SocialSharing(PagesDomain pagesDomain) {
@@ -39,6 +41,8 @@ public class SocialSharing implements Serializable {
         this.describes = pagesDomain.getPage().getPageExcerpt();
         this.pics = pagesDomain.getPage().getFeaturedImage() == null ?
                 "https://cdn.renfei.net/Logo/ogimage.png" : pagesDomain.getPage().getFeaturedImage();
+        this.views = pagesDomain.getPage().getPageViews() == null ?
+                "0" : pagesDomain.getPage().getPageViews().toString();
     }
 
     public String getTitle() {

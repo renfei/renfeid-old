@@ -474,6 +474,7 @@ public final class BlogDomain {
         post.setPostPassword(blogPost.getPostPassword());
         post.setPostModified(blogPost.getPostModified());
         post.setPostParent(blogPost.getPostParent());
+        post.setPostViews(blogPost.getPostViews());
         post.setThumbsUp(blogPost.getThumbsUp());
         post.setThumbsDown(blogPost.getThumbsDown());
         post.setAvgViews(blogPost.getAvgViews());
