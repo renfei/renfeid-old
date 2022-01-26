@@ -40,29 +40,6 @@ public class AliyunOSS extends AbstractAliyunService {
     }
 
     /**
-     * 获取签名URL进行临时授权，默认有效期24小时
-     *
-     * @param objectName 对象地址
-     * @return 签名URL
-     */
-    public String getPreSignedUrl(String objectName) {
-        // 设置URL过期时间为24小时。1天(d)=86400000毫秒(ms)
-        Date expiration = new Date(System.currentTimeMillis() + 86400000);
-        return getPreSignedUrl(systemConfig.getAliyun().getOss().getDownloadBucketName(), objectName, expiration);
-    }
-
-    /**
-     * 获取签名URL进行临时授权
-     *
-     * @param objectName 对象地址
-     * @param expiration 授权过期时间
-     * @return 签名URL
-     */
-    public String getPreSignedUrl(String objectName, Date expiration) {
-        return getPreSignedUrl(systemConfig.getAliyun().getOss().getDownloadBucketName(), objectName, expiration);
-    }
-
-    /**
      * 获取签名URL进行临时授权
      *
      * @param bucketName 储存桶
@@ -78,7 +55,7 @@ public class AliyunOSS extends AbstractAliyunService {
         URL url = ossClient.generatePresignedUrl(bucketName, objectName, expiration);
         // 关闭OSSClient。
         ossClient.shutdown();
-        return systemConfig.getAliyun().getOss().getDownloadHost() + url.getPath() + "?" + url.getQuery();
+        return url.getPath() + "?" + url.getQuery();
     }
 
     /**
@@ -101,7 +78,7 @@ public class AliyunOSS extends AbstractAliyunService {
         request.setTrafficLimit(limitSpeed);
         URL url = ossClient.generatePresignedUrl(request);
         ossClient.shutdown();
-        return systemConfig.getAliyun().getOss().getDownloadHost() + url.getPath() + "?" + url.getQuery();
+        return url.getPath() + "?" + url.getQuery();
     }
 
     private void uploadFile(InputStream inputStream, String objectName) {

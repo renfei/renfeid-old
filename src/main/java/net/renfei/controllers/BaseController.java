@@ -95,6 +95,9 @@ public abstract class BaseController {
             object = request.getSession().getAttribute(SESSION_KEY);
         } else {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null) {
+                return null;
+            }
             object = authentication.getPrincipal();
         }
         if (object instanceof UserDetail) {
