@@ -1,7 +1,5 @@
 package net.renfei.repositories;
 
-import java.util.List;
-
 import net.renfei.repositories.model.HotSearch;
 import net.renfei.repositories.model.SysLogs;
 import net.renfei.repositories.model.SysLogsExample;
@@ -9,9 +7,15 @@ import net.renfei.repositories.model.SysLogsWithBLOBs;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface SysLogsMapper {
     long countByExample(SysLogsExample example);
+
+    int deleteByExample(SysLogsExample example);
+
+    int deleteByPrimaryKey(Long id);
 
     int insert(SysLogsWithBLOBs record);
 
@@ -22,6 +26,18 @@ public interface SysLogsMapper {
     List<SysLogs> selectByExample(SysLogsExample example);
 
     SysLogsWithBLOBs selectByPrimaryKey(Long id);
+
+    int updateByExampleSelective(@Param("record") SysLogsWithBLOBs record, @Param("example") SysLogsExample example);
+
+    int updateByExampleWithBLOBs(@Param("record") SysLogsWithBLOBs record, @Param("example") SysLogsExample example);
+
+    int updateByExample(@Param("record") SysLogs record, @Param("example") SysLogsExample example);
+
+    int updateByPrimaryKeySelective(SysLogsWithBLOBs record);
+
+    int updateByPrimaryKeyWithBLOBs(SysLogsWithBLOBs record);
+
+    int updateByPrimaryKey(SysLogs record);
 
     List<HotSearch> selectHotSearchList();
 }

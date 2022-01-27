@@ -3,15 +3,16 @@
 <mapper namespace="net.renfei.repositories.SysLogsMapper">
   <resultMap id="BaseResultMap" type="net.renfei.repositories.model.SysLogs">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
     <result column="log_level" jdbcType="VARCHAR" property="logLevel" />
     <result column="log_module" jdbcType="VARCHAR" property="logModule" />
     <result column="log_type" jdbcType="VARCHAR" property="logType" />
-    <result column="user_uuid" jdbcType="VARCHAR" property="userUuid" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="requ_method" jdbcType="VARCHAR" property="requMethod" />
     <result column="requ_uri" jdbcType="VARCHAR" property="requUri" />
+    <result column="requ_referrer" jdbcType="VARCHAR" property="requReferrer" />
+    <result column="user_uuid" jdbcType="VARCHAR" property="userUuid" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="requ_ip" jdbcType="VARCHAR" property="requIp" />
-    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="net.renfei.repositories.model.SysLogsWithBLOBs">
     <result column="log_desc" jdbcType="LONGVARCHAR" property="logDesc" />
@@ -78,8 +79,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    `id`, `log_level`, `log_module`, `log_type`, `user_uuid`, `user_name`, `requ_method`, 
-    `requ_uri`, `requ_ip`, `log_time`
+    `id`, `log_time`, `log_level`, `log_module`, `log_type`, `requ_method`, `requ_uri`, 
+    `requ_referrer`, `user_uuid`, `user_name`, `requ_ip`
   </sql>
   <sql id="Blob_Column_List">
     `log_desc`, `requ_param`, `resp_param`, `requ_agent`
@@ -122,23 +123,38 @@
     from sys_logs
     where `id` = #{id,jdbcType=BIGINT}
   </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_logs
+    where `id` = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="net.renfei.repositories.model.SysLogsExample">
+    delete from sys_logs
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
   <insert id="insert" parameterType="net.renfei.repositories.model.SysLogsWithBLOBs">
-    insert into sys_logs (`id`, `log_level`, `log_module`, 
-      `log_type`, `user_uuid`, `user_name`, 
-      `requ_method`, `requ_uri`, `requ_ip`, 
-      `log_time`, `log_desc`, `requ_param`, 
-      `resp_param`, `requ_agent`)
-    values (#{id,jdbcType=BIGINT}, #{logLevel,jdbcType=VARCHAR}, #{logModule,jdbcType=VARCHAR}, 
-      #{logType,jdbcType=VARCHAR}, #{userUuid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
-      #{requMethod,jdbcType=VARCHAR}, #{requUri,jdbcType=VARCHAR}, #{requIp,jdbcType=VARCHAR}, 
-      #{logTime,jdbcType=TIMESTAMP}, #{logDesc,jdbcType=LONGVARCHAR}, #{requParam,jdbcType=LONGVARCHAR}, 
-      #{respParam,jdbcType=LONGVARCHAR}, #{requAgent,jdbcType=LONGVARCHAR})
+    insert into sys_logs (`id`, `log_time`, `log_level`, 
+      `log_module`, `log_type`, `requ_method`, 
+      `requ_uri`, `requ_referrer`, `user_uuid`, 
+      `user_name`, `requ_ip`, `log_desc`, 
+      `requ_param`, `resp_param`, `requ_agent`
+      )
+    values (#{id,jdbcType=BIGINT}, #{logTime,jdbcType=TIMESTAMP}, #{logLevel,jdbcType=VARCHAR}, 
+      #{logModule,jdbcType=VARCHAR}, #{logType,jdbcType=VARCHAR}, #{requMethod,jdbcType=VARCHAR}, 
+      #{requUri,jdbcType=VARCHAR}, #{requReferrer,jdbcType=VARCHAR}, #{userUuid,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{requIp,jdbcType=VARCHAR}, #{logDesc,jdbcType=LONGVARCHAR}, 
+      #{requParam,jdbcType=LONGVARCHAR}, #{respParam,jdbcType=LONGVARCHAR}, #{requAgent,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.repositories.model.SysLogsWithBLOBs">
     insert into sys_logs
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         `id`,
+      </if>
+      <if test="logTime != null">
+        `log_time`,
       </if>
       <if test="logLevel != null">
         `log_level`,
@@ -149,23 +165,23 @@
       <if test="logType != null">
         `log_type`,
       </if>
-      <if test="userUuid != null">
-        `user_uuid`,
-      </if>
-      <if test="userName != null">
-        `user_name`,
-      </if>
       <if test="requMethod != null">
         `requ_method`,
       </if>
       <if test="requUri != null">
         `requ_uri`,
       </if>
+      <if test="requReferrer != null">
+        `requ_referrer`,
+      </if>
+      <if test="userUuid != null">
+        `user_uuid`,
+      </if>
+      <if test="userName != null">
+        `user_name`,
+      </if>
       <if test="requIp != null">
         `requ_ip`,
-      </if>
-      <if test="logTime != null">
-        `log_time`,
       </if>
       <if test="logDesc != null">
         `log_desc`,
@@ -184,6 +200,9 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="logTime != null">
+        #{logTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="logLevel != null">
         #{logLevel,jdbcType=VARCHAR},
       </if>
@@ -193,23 +212,23 @@
       <if test="logType != null">
         #{logType,jdbcType=VARCHAR},
       </if>
-      <if test="userUuid != null">
-        #{userUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
       <if test="requMethod != null">
         #{requMethod,jdbcType=VARCHAR},
       </if>
       <if test="requUri != null">
         #{requUri,jdbcType=VARCHAR},
       </if>
+      <if test="requReferrer != null">
+        #{requReferrer,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null">
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
       <if test="requIp != null">
         #{requIp,jdbcType=VARCHAR},
-      </if>
-      <if test="logTime != null">
-        #{logTime,jdbcType=TIMESTAMP},
       </if>
       <if test="logDesc != null">
         #{logDesc,jdbcType=LONGVARCHAR},
@@ -237,6 +256,9 @@
       <if test="record.id != null">
         `id` = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.logTime != null">
+        `log_time` = #{record.logTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.logLevel != null">
         `log_level` = #{record.logLevel,jdbcType=VARCHAR},
       </if>
@@ -246,23 +268,23 @@
       <if test="record.logType != null">
         `log_type` = #{record.logType,jdbcType=VARCHAR},
       </if>
-      <if test="record.userUuid != null">
-        `user_uuid` = #{record.userUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="record.userName != null">
-        `user_name` = #{record.userName,jdbcType=VARCHAR},
-      </if>
       <if test="record.requMethod != null">
         `requ_method` = #{record.requMethod,jdbcType=VARCHAR},
       </if>
       <if test="record.requUri != null">
         `requ_uri` = #{record.requUri,jdbcType=VARCHAR},
       </if>
+      <if test="record.requReferrer != null">
+        `requ_referrer` = #{record.requReferrer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userUuid != null">
+        `user_uuid` = #{record.userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null">
+        `user_name` = #{record.userName,jdbcType=VARCHAR},
+      </if>
       <if test="record.requIp != null">
         `requ_ip` = #{record.requIp,jdbcType=VARCHAR},
-      </if>
-      <if test="record.logTime != null">
-        `log_time` = #{record.logTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.logDesc != null">
         `log_desc` = #{record.logDesc,jdbcType=LONGVARCHAR},
@@ -280,6 +302,124 @@
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update sys_logs
+    set `id` = #{record.id,jdbcType=BIGINT},
+      `log_time` = #{record.logTime,jdbcType=TIMESTAMP},
+      `log_level` = #{record.logLevel,jdbcType=VARCHAR},
+      `log_module` = #{record.logModule,jdbcType=VARCHAR},
+      `log_type` = #{record.logType,jdbcType=VARCHAR},
+      `requ_method` = #{record.requMethod,jdbcType=VARCHAR},
+      `requ_uri` = #{record.requUri,jdbcType=VARCHAR},
+      `requ_referrer` = #{record.requReferrer,jdbcType=VARCHAR},
+      `user_uuid` = #{record.userUuid,jdbcType=VARCHAR},
+      `user_name` = #{record.userName,jdbcType=VARCHAR},
+      `requ_ip` = #{record.requIp,jdbcType=VARCHAR},
+      `log_desc` = #{record.logDesc,jdbcType=LONGVARCHAR},
+      `requ_param` = #{record.requParam,jdbcType=LONGVARCHAR},
+      `resp_param` = #{record.respParam,jdbcType=LONGVARCHAR},
+      `requ_agent` = #{record.requAgent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sys_logs
+    set `id` = #{record.id,jdbcType=BIGINT},
+      `log_time` = #{record.logTime,jdbcType=TIMESTAMP},
+      `log_level` = #{record.logLevel,jdbcType=VARCHAR},
+      `log_module` = #{record.logModule,jdbcType=VARCHAR},
+      `log_type` = #{record.logType,jdbcType=VARCHAR},
+      `requ_method` = #{record.requMethod,jdbcType=VARCHAR},
+      `requ_uri` = #{record.requUri,jdbcType=VARCHAR},
+      `requ_referrer` = #{record.requReferrer,jdbcType=VARCHAR},
+      `user_uuid` = #{record.userUuid,jdbcType=VARCHAR},
+      `user_name` = #{record.userName,jdbcType=VARCHAR},
+      `requ_ip` = #{record.requIp,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.repositories.model.SysLogsWithBLOBs">
+    update sys_logs
+    <set>
+      <if test="logTime != null">
+        `log_time` = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logLevel != null">
+        `log_level` = #{logLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="logModule != null">
+        `log_module` = #{logModule,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null">
+        `log_type` = #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="requMethod != null">
+        `requ_method` = #{requMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="requUri != null">
+        `requ_uri` = #{requUri,jdbcType=VARCHAR},
+      </if>
+      <if test="requReferrer != null">
+        `requ_referrer` = #{requReferrer,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null">
+        `user_uuid` = #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        `user_name` = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="requIp != null">
+        `requ_ip` = #{requIp,jdbcType=VARCHAR},
+      </if>
+      <if test="logDesc != null">
+        `log_desc` = #{logDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="requParam != null">
+        `requ_param` = #{requParam,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="respParam != null">
+        `resp_param` = #{respParam,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="requAgent != null">
+        `requ_agent` = #{requAgent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where `id` = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="net.renfei.repositories.model.SysLogsWithBLOBs">
+    update sys_logs
+    set `log_time` = #{logTime,jdbcType=TIMESTAMP},
+      `log_level` = #{logLevel,jdbcType=VARCHAR},
+      `log_module` = #{logModule,jdbcType=VARCHAR},
+      `log_type` = #{logType,jdbcType=VARCHAR},
+      `requ_method` = #{requMethod,jdbcType=VARCHAR},
+      `requ_uri` = #{requUri,jdbcType=VARCHAR},
+      `requ_referrer` = #{requReferrer,jdbcType=VARCHAR},
+      `user_uuid` = #{userUuid,jdbcType=VARCHAR},
+      `user_name` = #{userName,jdbcType=VARCHAR},
+      `requ_ip` = #{requIp,jdbcType=VARCHAR},
+      `log_desc` = #{logDesc,jdbcType=LONGVARCHAR},
+      `requ_param` = #{requParam,jdbcType=LONGVARCHAR},
+      `resp_param` = #{respParam,jdbcType=LONGVARCHAR},
+      `requ_agent` = #{requAgent,jdbcType=LONGVARCHAR}
+    where `id` = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.SysLogs">
+    update sys_logs
+    set `log_time` = #{logTime,jdbcType=TIMESTAMP},
+      `log_level` = #{logLevel,jdbcType=VARCHAR},
+      `log_module` = #{logModule,jdbcType=VARCHAR},
+      `log_type` = #{logType,jdbcType=VARCHAR},
+      `requ_method` = #{requMethod,jdbcType=VARCHAR},
+      `requ_uri` = #{requUri,jdbcType=VARCHAR},
+      `requ_referrer` = #{requReferrer,jdbcType=VARCHAR},
+      `user_uuid` = #{userUuid,jdbcType=VARCHAR},
+      `user_name` = #{userName,jdbcType=VARCHAR},
+      `requ_ip` = #{requIp,jdbcType=VARCHAR}
+    where `id` = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectHotSearchList" resultType="net.renfei.repositories.model.HotSearch">
     SELECT

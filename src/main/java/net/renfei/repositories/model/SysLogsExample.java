@@ -165,6 +165,66 @@ public class SysLogsExample {
             return (Criteria) this;
         }
 
+        public Criteria andLogTimeIsNull() {
+            addCriterion("`log_time` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeIsNotNull() {
+            addCriterion("`log_time` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeEqualTo(Date value) {
+            addCriterion("`log_time` =", value, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeNotEqualTo(Date value) {
+            addCriterion("`log_time` <>", value, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeGreaterThan(Date value) {
+            addCriterion("`log_time` >", value, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("`log_time` >=", value, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeLessThan(Date value) {
+            addCriterion("`log_time` <", value, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeLessThanOrEqualTo(Date value) {
+            addCriterion("`log_time` <=", value, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeIn(List<Date> values) {
+            addCriterion("`log_time` in", values, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeNotIn(List<Date> values) {
+            addCriterion("`log_time` not in", values, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeBetween(Date value1, Date value2) {
+            addCriterion("`log_time` between", value1, value2, "logTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTimeNotBetween(Date value1, Date value2) {
+            addCriterion("`log_time` not between", value1, value2, "logTime");
+            return (Criteria) this;
+        }
+
         public Criteria andLogLevelIsNull() {
             addCriterion("`log_level` is null");
             return (Criteria) this;
@@ -375,146 +435,6 @@ public class SysLogsExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserUuidIsNull() {
-            addCriterion("`user_uuid` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidIsNotNull() {
-            addCriterion("`user_uuid` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidEqualTo(String value) {
-            addCriterion("`user_uuid` =", value, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidNotEqualTo(String value) {
-            addCriterion("`user_uuid` <>", value, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidGreaterThan(String value) {
-            addCriterion("`user_uuid` >", value, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidGreaterThanOrEqualTo(String value) {
-            addCriterion("`user_uuid` >=", value, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidLessThan(String value) {
-            addCriterion("`user_uuid` <", value, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidLessThanOrEqualTo(String value) {
-            addCriterion("`user_uuid` <=", value, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidLike(String value) {
-            addCriterion("`user_uuid` like", value, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidNotLike(String value) {
-            addCriterion("`user_uuid` not like", value, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidIn(List<String> values) {
-            addCriterion("`user_uuid` in", values, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidNotIn(List<String> values) {
-            addCriterion("`user_uuid` not in", values, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidBetween(String value1, String value2) {
-            addCriterion("`user_uuid` between", value1, value2, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserUuidNotBetween(String value1, String value2) {
-            addCriterion("`user_uuid` not between", value1, value2, "userUuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameIsNull() {
-            addCriterion("`user_name` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameIsNotNull() {
-            addCriterion("`user_name` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameEqualTo(String value) {
-            addCriterion("`user_name` =", value, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameNotEqualTo(String value) {
-            addCriterion("`user_name` <>", value, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameGreaterThan(String value) {
-            addCriterion("`user_name` >", value, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameGreaterThanOrEqualTo(String value) {
-            addCriterion("`user_name` >=", value, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameLessThan(String value) {
-            addCriterion("`user_name` <", value, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameLessThanOrEqualTo(String value) {
-            addCriterion("`user_name` <=", value, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameLike(String value) {
-            addCriterion("`user_name` like", value, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameNotLike(String value) {
-            addCriterion("`user_name` not like", value, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameIn(List<String> values) {
-            addCriterion("`user_name` in", values, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameNotIn(List<String> values) {
-            addCriterion("`user_name` not in", values, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameBetween(String value1, String value2) {
-            addCriterion("`user_name` between", value1, value2, "userName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserNameNotBetween(String value1, String value2) {
-            addCriterion("`user_name` not between", value1, value2, "userName");
-            return (Criteria) this;
-        }
-
         public Criteria andRequMethodIsNull() {
             addCriterion("`requ_method` is null");
             return (Criteria) this;
@@ -655,6 +575,216 @@ public class SysLogsExample {
             return (Criteria) this;
         }
 
+        public Criteria andRequReferrerIsNull() {
+            addCriterion("`requ_referrer` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerIsNotNull() {
+            addCriterion("`requ_referrer` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerEqualTo(String value) {
+            addCriterion("`requ_referrer` =", value, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerNotEqualTo(String value) {
+            addCriterion("`requ_referrer` <>", value, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerGreaterThan(String value) {
+            addCriterion("`requ_referrer` >", value, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerGreaterThanOrEqualTo(String value) {
+            addCriterion("`requ_referrer` >=", value, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerLessThan(String value) {
+            addCriterion("`requ_referrer` <", value, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerLessThanOrEqualTo(String value) {
+            addCriterion("`requ_referrer` <=", value, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerLike(String value) {
+            addCriterion("`requ_referrer` like", value, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerNotLike(String value) {
+            addCriterion("`requ_referrer` not like", value, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerIn(List<String> values) {
+            addCriterion("`requ_referrer` in", values, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerNotIn(List<String> values) {
+            addCriterion("`requ_referrer` not in", values, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerBetween(String value1, String value2) {
+            addCriterion("`requ_referrer` between", value1, value2, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequReferrerNotBetween(String value1, String value2) {
+            addCriterion("`requ_referrer` not between", value1, value2, "requReferrer");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidIsNull() {
+            addCriterion("`user_uuid` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidIsNotNull() {
+            addCriterion("`user_uuid` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidEqualTo(String value) {
+            addCriterion("`user_uuid` =", value, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidNotEqualTo(String value) {
+            addCriterion("`user_uuid` <>", value, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidGreaterThan(String value) {
+            addCriterion("`user_uuid` >", value, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidGreaterThanOrEqualTo(String value) {
+            addCriterion("`user_uuid` >=", value, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidLessThan(String value) {
+            addCriterion("`user_uuid` <", value, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidLessThanOrEqualTo(String value) {
+            addCriterion("`user_uuid` <=", value, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidLike(String value) {
+            addCriterion("`user_uuid` like", value, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidNotLike(String value) {
+            addCriterion("`user_uuid` not like", value, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidIn(List<String> values) {
+            addCriterion("`user_uuid` in", values, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidNotIn(List<String> values) {
+            addCriterion("`user_uuid` not in", values, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidBetween(String value1, String value2) {
+            addCriterion("`user_uuid` between", value1, value2, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserUuidNotBetween(String value1, String value2) {
+            addCriterion("`user_uuid` not between", value1, value2, "userUuid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameIsNull() {
+            addCriterion("`user_name` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameIsNotNull() {
+            addCriterion("`user_name` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameEqualTo(String value) {
+            addCriterion("`user_name` =", value, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameNotEqualTo(String value) {
+            addCriterion("`user_name` <>", value, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameGreaterThan(String value) {
+            addCriterion("`user_name` >", value, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("`user_name` >=", value, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameLessThan(String value) {
+            addCriterion("`user_name` <", value, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameLessThanOrEqualTo(String value) {
+            addCriterion("`user_name` <=", value, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameLike(String value) {
+            addCriterion("`user_name` like", value, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameNotLike(String value) {
+            addCriterion("`user_name` not like", value, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameIn(List<String> values) {
+            addCriterion("`user_name` in", values, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameNotIn(List<String> values) {
+            addCriterion("`user_name` not in", values, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameBetween(String value1, String value2) {
+            addCriterion("`user_name` between", value1, value2, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNameNotBetween(String value1, String value2) {
+            addCriterion("`user_name` not between", value1, value2, "userName");
+            return (Criteria) this;
+        }
+
         public Criteria andRequIpIsNull() {
             addCriterion("`requ_ip` is null");
             return (Criteria) this;
@@ -722,66 +852,6 @@ public class SysLogsExample {
 
         public Criteria andRequIpNotBetween(String value1, String value2) {
             addCriterion("`requ_ip` not between", value1, value2, "requIp");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeIsNull() {
-            addCriterion("`log_time` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeIsNotNull() {
-            addCriterion("`log_time` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeEqualTo(Date value) {
-            addCriterion("`log_time` =", value, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeNotEqualTo(Date value) {
-            addCriterion("`log_time` <>", value, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeGreaterThan(Date value) {
-            addCriterion("`log_time` >", value, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("`log_time` >=", value, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeLessThan(Date value) {
-            addCriterion("`log_time` <", value, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeLessThanOrEqualTo(Date value) {
-            addCriterion("`log_time` <=", value, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeIn(List<Date> values) {
-            addCriterion("`log_time` in", values, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeNotIn(List<Date> values) {
-            addCriterion("`log_time` not in", values, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeBetween(Date value1, Date value2) {
-            addCriterion("`log_time` between", value1, value2, "logTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogTimeNotBetween(Date value1, Date value2) {
-            addCriterion("`log_time` not between", value1, value2, "logTime");
             return (Criteria) this;
         }
     }

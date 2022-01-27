@@ -89,6 +89,7 @@ public class LogServiceImpl extends BaseService implements LogService {
             } catch (Exception exception) {
                 logger.error(exception.getMessage(), exception);
             }
+            sysLogs.setRequReferrer(request.getHeader("referer"));
         }
         return sysLogsMapper.insertSelective(sysLogs);
     }
