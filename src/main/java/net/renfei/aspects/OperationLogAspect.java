@@ -103,6 +103,7 @@ public class OperationLogAspect {
             String params = JacksonUtil.obj2String(rtnMap);
             operationLog.setRequParam(params);
             operationLog.setRequAgent(request.getHeader("User-Agent"));
+            operationLog.setRequReferrer(request.getHeader("Referer"));
         }
         if (retObj != null) {
             if (!(retObj instanceof ModelAndView)) {

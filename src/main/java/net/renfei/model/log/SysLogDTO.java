@@ -34,6 +34,8 @@ public class SysLogDTO {
 
     private String requAgent;
 
+    private String requReferrer;
+
     public Long getId() {
         return id;
     }
@@ -144,5 +146,13 @@ public class SysLogDTO {
 
     public void setRequAgent(String requAgent) {
         this.requAgent = requAgent;
+    }
+
+    public String getRequReferrer() {
+        return requReferrer;
+    }
+
+    public void setRequReferrer(String requReferrer) {
+        this.requReferrer = requReferrer;
     }
 }
