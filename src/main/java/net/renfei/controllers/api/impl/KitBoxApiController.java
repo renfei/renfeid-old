@@ -58,7 +58,6 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
             return new APIResult<>("");
         }
         if (freeMarkerAndBean.getFtl().contains("<#include")
-                || freeMarkerAndBean.getFtl().contains("<#setting")
                 || freeMarkerAndBean.getFtl().contains("?api.")
                 || freeMarkerAndBean.getFtl().contains("get_optional_template")
                 || freeMarkerAndBean.getFtl().contains("new()")) {
