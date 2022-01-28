@@ -4,8 +4,10 @@ import com.aliyun.oss.ServiceException;
 import net.renfei.domain.user.User;
 import net.renfei.exception.ForbiddenException;
 import net.renfei.model.*;
+import net.renfei.model.system.MenuDataItemVo;
 import net.renfei.model.system.RegionVO;
 import net.renfei.model.system.SysApi;
+import net.renfei.repositories.model.SysMenu;
 import net.renfei.repositories.model.SysRole;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,7 +97,7 @@ public interface SysService {
      * @param sysRole 系统角色
      * @throws ForbiddenException 只有系统安全管理员才可以管理角色
      */
-    void addSysRole(User user, SysRole sysRole) throws ForbiddenException;
+    void addSysRole(User user, SysRole sysRole);
 
     /**
      * 修改系统角色
@@ -105,7 +107,7 @@ public interface SysService {
      * @param sysRole 系统角色
      * @throws ForbiddenException 只有系统安全管理员才可以管理角色
      */
-    void updateSysRole(User user, SysRole sysRole) throws ForbiddenException;
+    void updateSysRole(User user, SysRole sysRole);
 
     /**
      * 删除系统角色
@@ -115,5 +117,58 @@ public interface SysService {
      * @param id   系统角色ID
      * @throws ForbiddenException 只有系统安全管理员才可以管理角色
      */
-    void deleteSysRole(User user, Long id) throws ForbiddenException;
+    void deleteSysRole(User user, Long id);
+
+    /**
+     * 根据用户获取用户的角色列表
+     *
+     * @param user 登陆用户
+     * @return
+     */
+    List<SysRole> getRoleListByUser(User user);
+
+    /**
+     * 根据用户获取菜单树
+     *
+     * @param user 登陆用户
+     * @return
+     */
+    List<MenuDataItemVo> getMenuTreeByUser(User user);
+
+    /**
+     * 获取系统菜单列表
+     * 超管和安全管理员可以获取全部，用分配权限，其他人只能获取到自己拥有的菜单
+     *
+     * @param user  登陆用户
+     * @param pages 页码
+     * @param rows  每页行数
+     * @return
+     */
+    ListData<SysMenu> getSysMenuList(User user, String pages, String rows);
+
+    /**
+     * 添加系统菜单
+     *
+     * @param user    登陆用户
+     * @param sysMenu 系统菜单
+     */
+    void addSysMenu(User user, SysMenu sysMenu);
+
+    /**
+     * 修改系统菜单
+     *
+     * @param user    登陆用户
+     * @param sysMenu 系统菜单
+     */
+    void updateSysMenu(User user, SysMenu sysMenu);
+
+    /**
+     * 删除系统菜单
+     * 下面的子菜单不会被删除，而是会断开树形链接
+     *
+     * @param user 登陆用户
+     * @param id   删除的ID
+     * @return
+     */
+    void deleteSysMenu(User user, Long id);
 }

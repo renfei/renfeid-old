@@ -72,5 +72,7 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_api_list"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_role"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_account_role"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_menu"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_role_permission"/>-->
     </context>
 </generatorConfiguration>

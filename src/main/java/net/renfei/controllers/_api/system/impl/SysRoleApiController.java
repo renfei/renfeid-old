@@ -3,16 +3,12 @@ package net.renfei.controllers._api.system.impl;
 import net.renfei.annotation.OperationLog;
 import net.renfei.controllers.BaseController;
 import net.renfei.controllers._api.system.SysRoleApi;
-import net.renfei.exception.ForbiddenException;
 import net.renfei.model.APIResult;
 import net.renfei.model.ListData;
-import net.renfei.model.StateCodeEnum;
 import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.repositories.model.SysRole;
 import net.renfei.services.SysService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -22,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class SysRoleApiController extends BaseController implements SysRoleApi {
-    private static final Logger logger = LoggerFactory.getLogger(SysRoleApiController.class);
     private final SysService sysService;
 
     public SysRoleApiController(SysService sysService) {
@@ -38,15 +33,7 @@ public class SysRoleApiController extends BaseController implements SysRoleApi {
     @Override
     @OperationLog(module = SystemTypeEnum.SYS_ROLE, desc = "添加系统角色", operation = OperationTypeEnum.CREATE)
     public APIResult addSysRole(SysRole sysRole) {
-        try {
-            sysService.addSysRole(getSignUser(), sysRole);
-        } catch (ForbiddenException e) {
-            logger.warn("当前用户：{}，告警信息：{}", getSignUser(), e.getMessage());
-            return APIResult.builder()
-                    .code(StateCodeEnum.Forbidden)
-                    .message(e.getMessage())
-                    .build();
-        }
+        sysService.addSysRole(getSignUser(), sysRole);
         return APIResult.success();
     }
 
@@ -54,30 +41,14 @@ public class SysRoleApiController extends BaseController implements SysRoleApi {
     @OperationLog(module = SystemTypeEnum.SYS_ROLE, desc = "修改系统角色", operation = OperationTypeEnum.UPDATE)
     public APIResult updateSysRole(Long id, SysRole sysRole) {
         sysRole.setId(id);
-        try {
-            sysService.updateSysRole(getSignUser(), sysRole);
-        } catch (ForbiddenException e) {
-            logger.warn("当前用户：{}，告警信息：{}", getSignUser(), e.getMessage());
-            return APIResult.builder()
-                    .code(StateCodeEnum.Forbidden)
-                    .message(e.getMessage())
-                    .build();
-        }
+        sysService.updateSysRole(getSignUser(), sysRole);
         return APIResult.success();
     }
 
     @Override
     @OperationLog(module = SystemTypeEnum.SYS_ROLE, desc = "删除系统角色", operation = OperationTypeEnum.DELETE)
     public APIResult deleteSysRole(Long id) {
-        try {
-            sysService.deleteSysRole(getSignUser(), id);
-        } catch (ForbiddenException e) {
-            logger.warn("当前用户：{}，告警信息：{}", getSignUser(), e.getMessage());
-            return APIResult.builder()
-                    .code(StateCodeEnum.Forbidden)
-                    .message(e.getMessage())
-                    .build();
-        }
+        sysService.deleteSysRole(getSignUser(), id);
         return APIResult.success();
     }
 }

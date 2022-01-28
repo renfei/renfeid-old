@@ -61,7 +61,11 @@ public enum SystemTypeEnum {
     /**
      * 系统角色与权限模块
      */
-    SYS_ROLE("");
+    SYS_ROLE(""),
+    /**
+     * 系统菜单模块
+     */
+    SYS_MENU("");
 
     private final String uriPath;
 

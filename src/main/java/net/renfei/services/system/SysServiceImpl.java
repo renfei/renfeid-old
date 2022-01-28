@@ -5,8 +5,8 @@ import com.github.pagehelper.PageHelper;
 import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
-import net.renfei.exception.ForbiddenException;
 import net.renfei.model.*;
+import net.renfei.model.system.MenuDataItemVo;
 import net.renfei.model.system.RegionVO;
 import net.renfei.model.system.SysApi;
 import net.renfei.model.system.UserDetail;
@@ -23,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,33 +48,39 @@ public class SysServiceImpl extends BaseService implements SysService {
     private final LeafService leafService;
     private final RedisService redisService;
     private final SysRoleMapper sysRoleMapper;
+    private final SysMenuMapper sysMenuMapper;
     private final SysRegionMapper regionMapper;
     private final SysApiListMapper sysApiListMapper;
     private final SysSiteMenuMapper sysSiteMenuMapper;
     private final SysSecretKeyMapper sysSecretKeyMapper;
     private final SysAccountRoleMapper sysAccountRoleMapper;
     private final SysSiteFooterMenuMapper siteFooterMenuMapper;
+    private final SysRolePermissionMapper sysRolePermissionMapper;
     private final SysSiteFriendlyLinkMapper siteFriendlyLinkMapper;
 
     public SysServiceImpl(LeafService leafService,
                           RedisService redisService,
                           SysRoleMapper sysRoleMapper,
+                          SysMenuMapper sysMenuMapper,
                           SysRegionMapper regionMapper,
                           SysApiListMapper sysApiListMapper,
                           SysSiteMenuMapper sysSiteMenuMapper,
                           SysSecretKeyMapper sysSecretKeyMapper,
                           SysAccountRoleMapper sysAccountRoleMapper,
                           SysSiteFooterMenuMapper siteFooterMenuMapper,
+                          SysRolePermissionMapper sysRolePermissionMapper,
                           SysSiteFriendlyLinkMapper siteFriendlyLinkMapper) {
         this.leafService = leafService;
         this.redisService = redisService;
         this.sysRoleMapper = sysRoleMapper;
+        this.sysMenuMapper = sysMenuMapper;
         this.regionMapper = regionMapper;
         this.sysApiListMapper = sysApiListMapper;
         this.sysSiteMenuMapper = sysSiteMenuMapper;
         this.sysSecretKeyMapper = sysSecretKeyMapper;
         this.sysAccountRoleMapper = sysAccountRoleMapper;
         this.siteFooterMenuMapper = siteFooterMenuMapper;
+        this.sysRolePermissionMapper = sysRolePermissionMapper;
         this.siteFriendlyLinkMapper = siteFriendlyLinkMapper;
     }
 
@@ -469,11 +476,21 @@ public class SysServiceImpl extends BaseService implements SysService {
         return pageFooter;
     }
 
+    /**
+     * 系统接口列表
+     * 用于给角色分配权限使用
+     *
+     * @param user  登陆用户
+     * @param pages 页码
+     * @param rows  每页行数
+     * @return
+     */
     @Override
     public ListData<SysApi> getSysApiList(User user, String pages, String rows) {
         assert systemConfig != null;
         ListData<SysApi> sysApiListData = null;
         boolean securityAdmin = false;
+        List<SysAccountRole> accountRoles = null;
         if (systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
             // 超管，不限制权限，直接查全部
             securityAdmin = true;
@@ -481,7 +498,7 @@ public class SysServiceImpl extends BaseService implements SysService {
             // 判断角色
             SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
             accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
-            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+            accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
             if (!accountRoles.isEmpty()) {
                 for (SysAccountRole accountRole : accountRoles
                 ) {
@@ -507,7 +524,35 @@ public class SysServiceImpl extends BaseService implements SysService {
             });
             sysApiListData.setData(sysApiList);
         } else {
-            // TODO 判断用户权限，用户只能获取到自己拥有的权限
+            // 判断用户权限，用户只能获取到自己拥有权限的 API列表
+            List<Long> roleIds = new ArrayList<>();
+            if (!accountRoles.isEmpty()) {
+                accountRoles.forEach(sysAccountRole -> roleIds.add(sysAccountRole.getRoleId()));
+                SysRolePermissionExample rolePermissionExample = new SysRolePermissionExample();
+                rolePermissionExample.createCriteria()
+                        .andPermissionTypeEqualTo("API")
+                        .andRoleIdIn(roleIds);
+                List<SysRolePermission> sysRolePermissions =
+                        sysRolePermissionMapper.selectByExample(rolePermissionExample);
+                if (!sysRolePermissions.isEmpty()) {
+                    List<Long> apiIds = new ArrayList<>();
+                    sysRolePermissions.forEach(sysRolePermission -> apiIds.add(sysRolePermission.getPermissionId()));
+                    SysApiListExample example = new SysApiListExample();
+                    example.createCriteria()
+                            .andIdIn(apiIds);
+                    Page<SysApiList> page = PageHelper.startPage(
+                            NumberUtils.parseInt(pages, 1), NumberUtils.parseInt(rows, 10));
+                    sysApiListMapper.selectByExample(example);
+                    sysApiListData = new ListData<>(page);
+                    List<SysApi> sysApiList = new ArrayList<>();
+                    page.getResult().forEach(sysApi -> {
+                        SysApi api = new SysApi();
+                        BeanUtils.copyProperties(sysApi, api);
+                        sysApiList.add(api);
+                    });
+                    sysApiListData.setData(sysApiList);
+                }
+            }
         }
         return sysApiListData;
     }
@@ -581,56 +626,21 @@ public class SysServiceImpl extends BaseService implements SysService {
      * @param sysRole 系统角色
      */
     @Override
-    public void addSysRole(User user, SysRole sysRole) throws ForbiddenException {
-        assert systemConfig != null;
-        if (!systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
-            // 不是超管，那么判断是不是安全管理员
-            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
-            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
-            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
-            boolean securityAdmin = false;
-            if (!accountRoles.isEmpty()) {
-                for (SysAccountRole accountRole : accountRoles
-                ) {
-                    if (accountRole.getRoleId() == 2) {
-                        securityAdmin = true;
-                        break;
-                    }
-                }
-            }
-            if (!securityAdmin) {
-                // 不是安全管理员，抛出异常
-                throw new ForbiddenException("只有系统安全管理员才可以管理角色");
-            }
-        }
+    public void addSysRole(User user, SysRole sysRole) {
         sysRole.setId(null);
         sysRole.setBuiltInRole(false);
         sysRoleMapper.insert(sysRole);
     }
 
+    /**
+     * 修改系统角色
+     * 只有超管和安全管理员可以修改角色
+     *
+     * @param user    登陆用户
+     * @param sysRole 系统角色
+     */
     @Override
-    public void updateSysRole(User user, SysRole sysRole) throws ForbiddenException {
-        assert systemConfig != null;
-        if (!systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
-            // 不是超管，那么判断是不是安全管理员
-            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
-            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
-            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
-            boolean securityAdmin = false;
-            if (!accountRoles.isEmpty()) {
-                for (SysAccountRole accountRole : accountRoles
-                ) {
-                    if (accountRole.getRoleId() == 2) {
-                        securityAdmin = true;
-                        break;
-                    }
-                }
-            }
-            if (!securityAdmin) {
-                // 不是安全管理员，抛出异常
-                throw new ForbiddenException("只有系统安全管理员才可以管理角色");
-            }
-        }
+    public void updateSysRole(User user, SysRole sysRole) {
         if (sysRole.getId() == null) {
             throw new BusinessException("ID 不能为空");
         }
@@ -645,29 +655,16 @@ public class SysServiceImpl extends BaseService implements SysService {
         sysRoleMapper.updateByPrimaryKey(sysRoleOld);
     }
 
+    /**
+     * 删除系统角色
+     * 只有超管和安全管理员可以删除系统角色
+     *
+     * @param user 登陆用户
+     * @param id   系统角色ID
+     */
     @Override
-    public void deleteSysRole(User user, Long id) throws ForbiddenException {
-        assert systemConfig != null;
-        if (!systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
-            // 不是超管，那么判断是不是安全管理员
-            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
-            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
-            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
-            boolean securityAdmin = false;
-            if (!accountRoles.isEmpty()) {
-                for (SysAccountRole accountRole : accountRoles
-                ) {
-                    if (accountRole.getRoleId() == 2) {
-                        securityAdmin = true;
-                        break;
-                    }
-                }
-            }
-            if (!securityAdmin) {
-                // 不是安全管理员，抛出异常
-                throw new ForbiddenException("只有系统安全管理员才可以管理角色");
-            }
-        }
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteSysRole(User user, Long id) {
         if (id == null) {
             throw new BusinessException("ID 不能为空");
         }
@@ -684,7 +681,266 @@ public class SysServiceImpl extends BaseService implements SysService {
         accountRoleExample.createCriteria()
                 .andRoleIdEqualTo(id);
         sysAccountRoleMapper.deleteByExample(accountRoleExample);
-        // TODO 删除角色与权限关系表
+        // 删除角色与权限关系表
+        SysRolePermissionExample rolePermissionExample = new SysRolePermissionExample();
+        rolePermissionExample.createCriteria()
+                .andRoleIdEqualTo(id);
+        sysRolePermissionMapper.deleteByExample(rolePermissionExample);
+    }
+
+    /**
+     * 根据用户获取用户的角色列表
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public List<SysRole> getRoleListByUser(User user) {
+        if (user == null) {
+            return new ArrayList<>();
+        }
+        SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+        accountRoleExample.createCriteria()
+                .andAccountIdEqualTo(user.getId());
+        List<SysAccountRole> sysAccountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+        if (sysAccountRoles.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Long> ids = new ArrayList<>();
+        sysAccountRoles.forEach(sysAccountRole -> ids.add(sysAccountRole.getRoleId()));
+        SysRoleExample example = new SysRoleExample();
+        example.createCriteria()
+                .andIdIn(ids);
+        return sysRoleMapper.selectByExample(example);
+    }
+
+    /**
+     * 根据用户获取菜单树
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public List<MenuDataItemVo> getMenuTreeByUser(User user) {
+        assert systemConfig != null;
+        SysMenuExample example = new SysMenuExample();
+        if (systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
+            // 超管获取全部菜单树
+            example.createCriteria()
+                    .andParentIdIsNull();
+            List<MenuDataItemVo> menuDataItemVos = convert(sysMenuMapper.selectByExample(example));
+            settingMenuDataItemChildren(user, menuDataItemVos, null);
+            return menuDataItemVos;
+        } else {
+            // 不是超管，那就得看权限了
+            List<SysRole> sysRoles = getRoleListByUser(user);
+            if (sysRoles.isEmpty()) {
+                return new ArrayList<>();
+            }
+            List<Long> ids = new ArrayList<>();
+            sysRoles.forEach(sysRole -> ids.add(sysRole.getId()));
+            SysRolePermissionExample rolePermissionExample = new SysRolePermissionExample();
+            rolePermissionExample.createCriteria()
+                    .andPermissionTypeEqualTo("MENU")
+                    .andRoleIdIn(ids);
+            List<SysRolePermission> sysRolePermissions = sysRolePermissionMapper.selectByExample(rolePermissionExample);
+            if (sysRolePermissions.isEmpty()) {
+                return new ArrayList<>();
+            }
+            List<Long> menuIds = new ArrayList<>();
+            sysRolePermissions.forEach(sysRolePermission -> menuIds.add(sysRolePermission.getPermissionId()));
+            example.createCriteria()
+                    .andParentIdIsNull()
+                    .andIdIn(menuIds);
+            List<MenuDataItemVo> menuDataItemVos = convert(sysMenuMapper.selectByExample(example));
+            settingMenuDataItemChildren(user, menuDataItemVos, menuIds);
+            return menuDataItemVos;
+        }
+    }
+
+    /**
+     * 获取系统菜单列表
+     * 超管和安全管理员可以获取全部，用分配权限，其他人只能获取到自己拥有的菜单
+     *
+     * @param user  登陆用户
+     * @param pages 页码
+     * @param rows  每页行数
+     * @return
+     */
+    @Override
+    public ListData<SysMenu> getSysMenuList(User user, String pages, String rows) {
+        SysMenuExample example = new SysMenuExample();
+        assert systemConfig != null;
+        if (systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
+            // 超管查全部
+            example.createCriteria();
+        } else {
+            // 判断角色
+            SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+            accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
+            List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+            boolean securityAdmin = false;
+            if (!accountRoles.isEmpty()) {
+                for (SysAccountRole accountRole : accountRoles
+                ) {
+                    if (accountRole.getRoleId() == 2) {
+                        securityAdmin = true;
+                        break;
+                    }
+                }
+            }
+            if (securityAdmin) {
+                // 系统内置的安全管理员，可以查全部，用分配权限
+                example.createCriteria();
+            } else {
+                // 只能查到自己拥有的菜单列表
+                if (accountRoles.isEmpty()) {
+                    return new ListData<>();
+                }
+                List<Long> ids = new ArrayList<>();
+                accountRoles.forEach(sysAccountRole -> ids.add(sysAccountRole.getRoleId()));
+                SysRolePermissionExample rolePermissionExample = new SysRolePermissionExample();
+                rolePermissionExample.createCriteria()
+                        .andPermissionTypeEqualTo("MENU")
+                        .andRoleIdIn(ids);
+                List<SysRolePermission> sysRolePermissions = sysRolePermissionMapper.selectByExample(rolePermissionExample);
+                if (sysRolePermissions.isEmpty()) {
+                    return new ListData<>();
+                }
+                List<Long> menuIds = new ArrayList<>();
+                sysRolePermissions.forEach(sysRolePermission -> menuIds.add(sysRolePermission.getPermissionId()));
+                example.createCriteria()
+                        .andParentIdIsNull()
+                        .andIdIn(menuIds);
+            }
+        }
+        Page<SysMenu> page = PageHelper.startPage(NumberUtils.parseInt(pages, 1),
+                NumberUtils.parseInt(rows, 10));
+        sysMenuMapper.selectByExample(example);
+        ListData<SysMenu> listData = new ListData<>(page);
+        listData.setData(page.getResult());
+        return listData;
+    }
+
+    /**
+     * 添加系统菜单
+     *
+     * @param user    登陆用户
+     * @param sysMenu 系统菜单
+     */
+    @Override
+    public void addSysMenu(User user, SysMenu sysMenu) {
+        sysMenu.setId(null);
+        if (sysMenu.getParentId() == null || sysMenu.getParentId() == -1) {
+            sysMenu.setParentId(null);
+        } else {
+            if (sysMenuMapper.selectByPrimaryKey(sysMenu.getParentId()) == null) {
+                throw new BusinessException("ParentId 不正确");
+            }
+        }
+        sysMenuMapper.insertSelective(sysMenu);
+    }
+
+    /**
+     * 修改系统菜单
+     *
+     * @param user    登陆用户
+     * @param sysMenu 系统菜单
+     */
+    @Override
+    public void updateSysMenu(User user, SysMenu sysMenu) {
+        SysMenu sysMenuOld = sysMenuMapper.selectByPrimaryKey(sysMenu.getId());
+        if (sysMenuOld == null) {
+            throw new BusinessException("根据ID未查询到菜单数据");
+        }
+        sysMenuOld.setMenuIcon(sysMenu.getMenuIcon());
+        sysMenuOld.setMenuLink(sysMenu.getMenuLink());
+        sysMenuOld.setMenuText(sysMenu.getMenuText());
+        sysMenuOld.setNewWindow(sysMenu.getNewWindow());
+        sysMenuOld.setOrderNumber(sysMenu.getOrderNumber());
+        if (sysMenu.getParentId() != null) {
+            if (sysMenu.getParentId() == -1) {
+                sysMenuOld.setParentId(null);
+            } else if (!sysMenu.getParentId().equals(sysMenuOld.getParentId())) {
+                // 修改了 ParentId，进行校验
+                if (sysMenuMapper.selectByPrimaryKey(sysMenu.getParentId()) == null) {
+                    throw new BusinessException("ParentId 不正确");
+                }
+            }
+        }
+        sysMenuOld.setParentId(sysMenu.getParentId());
+        sysMenuMapper.updateByPrimaryKey(sysMenuOld);
+    }
+
+    /**
+     * 删除系统菜单
+     * 下面的子菜单不会被删除，而是会断开树形链接
+     *
+     * @param user 登陆用户
+     * @param id   删除的ID
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteSysMenu(User user, Long id) {
+        sysMenuMapper.deleteByPrimaryKey(id);
+        // 删除与菜单关联的表
+        SysRolePermissionExample example = new SysRolePermissionExample();
+        example.createCriteria()
+                .andPermissionTypeEqualTo("MENU")
+                .andPermissionIdEqualTo(id);
+        sysRolePermissionMapper.deleteByExample(example);
+    }
+
+    /**
+     * 递归查询子菜单
+     *
+     * @param user            当前用户
+     * @param menuDataItemVos 父菜单们
+     * @param menuIds         用户拥有的菜单ID
+     * @return
+     */
+    private List<MenuDataItemVo> settingMenuDataItemChildren(User user,
+                                                             List<MenuDataItemVo> menuDataItemVos,
+                                                             List<Long> menuIds) {
+        if (user == null || menuDataItemVos == null || menuDataItemVos.isEmpty()) {
+            return null;
+        }
+        for (MenuDataItemVo menuDataItemVo : menuDataItemVos
+        ) {
+            SysMenuExample example = new SysMenuExample();
+            if (systemConfig.getSuperTubeUserName().equals(user.getUserName())) {
+                // 超管获取全部菜单树
+                example.createCriteria()
+                        .andParentIdEqualTo(menuDataItemVo.getId());
+            } else {
+                // 不是超管，看权限了
+                example.createCriteria()
+                        .andParentIdEqualTo(menuDataItemVo.getId())
+                        .andIdIn(menuIds);
+            }
+            menuDataItemVo.setChildren(convert(sysMenuMapper.selectByExample(example)));
+        }
+        return menuDataItemVos;
+    }
+
+    private List<MenuDataItemVo> convert(List<SysMenu> sysMenus) {
+        if (sysMenus == null || sysMenus.isEmpty()) {
+            return null;
+        }
+        List<MenuDataItemVo> menuDataItemVos = new ArrayList<>();
+        for (SysMenu sysMenu : sysMenus
+        ) {
+            MenuDataItemVo menuDataItemVo = new MenuDataItemVo();
+            menuDataItemVo.setId(sysMenu.getId());
+            menuDataItemVo.setHideInMenu(false);
+            menuDataItemVo.setHideChildrenInMenu(false);
+            menuDataItemVo.setIcon(sysMenu.getMenuIcon());
+            menuDataItemVo.setName(sysMenu.getMenuText());
+            menuDataItemVo.setPath(sysMenu.getMenuLink());
+            menuDataItemVos.add(menuDataItemVo);
+        }
+        return menuDataItemVos;
     }
 
     private List<LinkTree> convertSiteMenu(List<SysSiteMenu> sysSiteMenus) {

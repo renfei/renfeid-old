@@ -685,6 +685,29 @@ CREATE TABLE `sys_logs` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for sys_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_menu`;
+CREATE TABLE `sys_menu` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint(20) unsigned DEFAULT NULL COMMENT '父级ID',
+  `menu_text` varchar(255) NOT NULL COMMENT '菜单名称',
+  `menu_link` varchar(255) NOT NULL COMMENT '菜单链接',
+  `menu_icon` varchar(255) DEFAULT NULL COMMENT '菜单图标',
+  `new_window` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否新页面打开',
+  `order_number` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='系统后台菜单';
+
+-- ----------------------------
+-- Records of sys_menu
+-- ----------------------------
+INSERT INTO `sys_menu` VALUES (1, NULL, '首页', '/_/dashboard', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (2, 1, '分析页', '/_/dashboard/analysis', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (3, 1, '监控页', '/_/dashboard/monitor', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (4, 1, '工作台', '/_/dashboard/workplace', NULL, 0, 0);
+
+-- ----------------------------
 -- Table structure for sys_pages
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_pages`;
@@ -4189,6 +4212,22 @@ CREATE TABLE `sys_role` (
 INSERT INTO `sys_role` VALUES (1, '系统管理员', 1);
 INSERT INTO `sys_role` VALUES (2, '安全管理员', 1);
 INSERT INTO `sys_role` VALUES (3, '安全审计员', 1);
+
+-- ----------------------------
+-- Table structure for sys_role_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role_permission`;
+CREATE TABLE `sys_role_permission` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `permission_type` varchar(255) NOT NULL COMMENT '权限类型：API接口，MENU菜单',
+  `permission_id` bigint(20) NOT NULL COMMENT '对应的权限ID',
+  `role_id` bigint(20) unsigned NOT NULL COMMENT '角色ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统角色权限表';
+
+-- ----------------------------
+-- Records of sys_role_permission
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_secret_key
