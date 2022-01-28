@@ -79,7 +79,7 @@
 
 后台前端就可以前后端分离了，我选择了现成的 [Ant Design Pro](https://pro.ant.design/) 来构建。
 
-项目地址是：[https://github.com/renfei/renfeid-react](https://github.com/renfei/renfeid-react)
+项目地址是：[https://github.com/renfei/renfeidesign](https://github.com/renfei/renfeidesign)
 
 ## Url地址划分
 

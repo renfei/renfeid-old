@@ -14,7 +14,7 @@
     如果你在线上看到这个页面，说明 Nginx 部署错误，没有指向前端项目地址。
 </p>
 <p>
-    前端项目见：<a href="https://github.com/renfei/renfeid-react" target="_blank">https://github.com/renfei/renfeid-react</a>
+    前端项目见：<a href="https://github.com/renfei/renfeidesign" target="_blank">https://github.com/renfei/renfeidesign</a>
 </p>
 </body>
 </html>
