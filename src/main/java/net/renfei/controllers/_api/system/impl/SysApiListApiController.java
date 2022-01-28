@@ -1,7 +1,7 @@
-package net.renfei.controllers._api.impl;
+package net.renfei.controllers._api.system.impl;
 
 import net.renfei.controllers.BaseController;
-import net.renfei.controllers._api.SysApiListApi;
+import net.renfei.controllers._api.system.SysApiListApi;
 import net.renfei.model.APIResult;
 import net.renfei.model.ListData;
 import net.renfei.model.system.SysApi;

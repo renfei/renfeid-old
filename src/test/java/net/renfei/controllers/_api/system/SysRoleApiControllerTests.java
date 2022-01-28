@@ -1,4 +1,4 @@
-package net.renfei.controllers._api;
+package net.renfei.controllers._api.system;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import net.renfei.ApplicationTests;

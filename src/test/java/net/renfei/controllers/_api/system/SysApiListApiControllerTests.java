@@ -1,4 +1,4 @@
-package net.renfei.controllers._api;
+package net.renfei.controllers._api.system;
 
 import net.renfei.ApplicationTests;
 import org.junit.jupiter.api.Test;
