@@ -102,11 +102,12 @@ public class SysRoleApiControllerTests extends ApplicationTests {
     }
 
     private void sysRoleTest() throws Exception {
-        String testRoleName = "单元测试角色";
+        String testRoleZhName = "单元测试角色";
+        String testRoleEnName = "UnitTestRole";
         SysRole sysRole = new SysRole();
         sysRole.setBuiltInRole(true);
-        sysRole.setId(1L);
-        sysRole.setZhName(testRoleName);
+        sysRole.setZhName(testRoleZhName);
+        sysRole.setEnName(testRoleEnName);
         this.mockMvc.perform(post("/_/api/sys/role")
                         .with(csrf())
                         .session(session)
@@ -133,7 +134,7 @@ public class SysRoleApiControllerTests extends ApplicationTests {
         });
         for (SysRole sysRoleData : apiResult.getData().getData()
         ) {
-            if (sysRoleData.getZhName().equals(testRoleName)) {
+            if (sysRoleData.getZhName().equals(testRoleZhName)) {
                 sysRole = sysRoleData;
                 break;
             }

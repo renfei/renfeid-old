@@ -1,11 +1,13 @@
 package net.renfei.services.system;
 
 import net.renfei.config.SystemConfig;
+import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.model.log.LogLevelEnum;
 import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.log.SysLogDTO;
 import net.renfei.model.system.SystemTypeEnum;
+import net.renfei.model.system.UserDetail;
 import net.renfei.repositories.SysLogsMapper;
 import net.renfei.repositories.model.SysLogsWithBLOBs;
 import net.renfei.services.BaseService;
@@ -68,8 +70,10 @@ public class LogServiceImpl extends BaseService implements LogService {
                 }
             } else {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if (authentication != null && authentication.getPrincipal() instanceof User) {
-                    user = (User) authentication.getPrincipal();
+                if (authentication != null && authentication.getPrincipal() instanceof UserDetail) {
+                    UserDetail userDetail = (UserDetail) authentication.getPrincipal();
+                    UserDomain userDomain = userDetail.getUserDomain().orElse(null);
+                    user = userDomain == null ? null : userDomain.getUser().orElse(null);
                 }
             }
             if (user != null) {

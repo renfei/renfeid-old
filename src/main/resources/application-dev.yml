@@ -132,6 +132,8 @@ system:
       zk:
         address: xxx
       port: 1111
+  authIgnore:
+    - /_/api/test
   threadPool:
     corePoolSize: 10
     maxPoolSize: 20

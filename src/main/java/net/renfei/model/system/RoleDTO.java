@@ -1,17 +1,18 @@
-package net.renfei.repositories.model;
+package net.renfei.model.system;
+
+import org.springframework.security.access.ConfigAttribute;
 
 import java.io.Serializable;
 
-public class SysRole implements Serializable {
+/**
+ * @author renfei
+ */
+public class RoleDTO implements ConfigAttribute, Serializable {
+    private static final long serialVersionUID = -68998808633462737L;
     private Long id;
-
     private String zhName;
-
     private String enName;
-
     private Boolean builtInRole;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -46,17 +47,13 @@ public class SysRole implements Serializable {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", zhName=").append(zhName);
-        sb.append(", enName=").append(enName);
-        sb.append(", builtInRole=").append(builtInRole);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public String getAttribute() {
+        if (enName == null) {
+            return null;
+        } else if (enName.startsWith("ROLE_")) {
+            return enName;
+        } else {
+            return "ROLE_" + enName;
+        }
     }
 }

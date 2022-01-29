@@ -4202,6 +4202,7 @@ DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `zh_name` varchar(255) NOT NULL COMMENT '角色名称',
+  `en_name` varchar(255) NOT NULL COMMENT '英文名称，编程中自动增加前缀ROLE_',
   `built_in_role` tinyint(1) DEFAULT 0 COMMENT '是否是内置角色（不显示）',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='系统角色表';
@@ -4209,9 +4210,9 @@ CREATE TABLE `sys_role` (
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (1, '系统管理员', 1);
-INSERT INTO `sys_role` VALUES (2, '安全管理员', 1);
-INSERT INTO `sys_role` VALUES (3, '安全审计员', 1);
+INSERT INTO `sys_role` VALUES (1, '系统管理员', 'SYSTEM_ADMINISTRATOR', 1);
+INSERT INTO `sys_role` VALUES (2, '系统安全保密管理员', 'SYSTEM_SECURITY_OFFICER', 1);
+INSERT INTO `sys_role` VALUES (3, '系统安全审计员', 'SYSTEM_SAFETY_AUDITOR', 1);
 
 -- ----------------------------
 -- Table structure for sys_role_permission

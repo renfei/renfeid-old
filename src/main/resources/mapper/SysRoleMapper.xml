@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="net.renfei.repositories.model.SysRole">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="zh_name" jdbcType="VARCHAR" property="zhName" />
+    <result column="en_name" jdbcType="VARCHAR" property="enName" />
     <result column="built_in_role" jdbcType="BIT" property="builtInRole" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -65,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    `id`, `zh_name`, `built_in_role`
+    `id`, `zh_name`, `en_name`, `built_in_role`
   </sql>
   <select id="selectByExample" parameterType="net.renfei.repositories.model.SysRoleExample" resultMap="BaseResultMap">
     select
@@ -98,10 +99,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="net.renfei.repositories.model.SysRole">
-    insert into sys_role (`id`, `zh_name`, `built_in_role`
-      )
-    values (#{id,jdbcType=BIGINT}, #{zhName,jdbcType=VARCHAR}, #{builtInRole,jdbcType=BIT}
-      )
+    insert into sys_role (`id`, `zh_name`, `en_name`, 
+      `built_in_role`)
+    values (#{id,jdbcType=BIGINT}, #{zhName,jdbcType=VARCHAR}, #{enName,jdbcType=VARCHAR}, 
+      #{builtInRole,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.repositories.model.SysRole">
     insert into sys_role
@@ -111,6 +112,9 @@
       </if>
       <if test="zhName != null">
         `zh_name`,
+      </if>
+      <if test="enName != null">
+        `en_name`,
       </if>
       <if test="builtInRole != null">
         `built_in_role`,
@@ -122,6 +126,9 @@
       </if>
       <if test="zhName != null">
         #{zhName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null">
+        #{enName,jdbcType=VARCHAR},
       </if>
       <if test="builtInRole != null">
         #{builtInRole,jdbcType=BIT},
@@ -143,6 +150,9 @@
       <if test="record.zhName != null">
         `zh_name` = #{record.zhName,jdbcType=VARCHAR},
       </if>
+      <if test="record.enName != null">
+        `en_name` = #{record.enName,jdbcType=VARCHAR},
+      </if>
       <if test="record.builtInRole != null">
         `built_in_role` = #{record.builtInRole,jdbcType=BIT},
       </if>
@@ -155,6 +165,7 @@
     update sys_role
     set `id` = #{record.id,jdbcType=BIGINT},
       `zh_name` = #{record.zhName,jdbcType=VARCHAR},
+      `en_name` = #{record.enName,jdbcType=VARCHAR},
       `built_in_role` = #{record.builtInRole,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -166,6 +177,9 @@
       <if test="zhName != null">
         `zh_name` = #{zhName,jdbcType=VARCHAR},
       </if>
+      <if test="enName != null">
+        `en_name` = #{enName,jdbcType=VARCHAR},
+      </if>
       <if test="builtInRole != null">
         `built_in_role` = #{builtInRole,jdbcType=BIT},
       </if>
@@ -175,6 +189,7 @@
   <update id="updateByPrimaryKey" parameterType="net.renfei.repositories.model.SysRole">
     update sys_role
     set `zh_name` = #{zhName,jdbcType=VARCHAR},
+      `en_name` = #{enName,jdbcType=VARCHAR},
       `built_in_role` = #{builtInRole,jdbcType=BIT}
     where `id` = #{id,jdbcType=BIGINT}
   </update>

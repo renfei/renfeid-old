@@ -234,6 +234,76 @@ public class SysRoleExample {
             return (Criteria) this;
         }
 
+        public Criteria andEnNameIsNull() {
+            addCriterion("`en_name` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameIsNotNull() {
+            addCriterion("`en_name` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameEqualTo(String value) {
+            addCriterion("`en_name` =", value, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameNotEqualTo(String value) {
+            addCriterion("`en_name` <>", value, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameGreaterThan(String value) {
+            addCriterion("`en_name` >", value, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameGreaterThanOrEqualTo(String value) {
+            addCriterion("`en_name` >=", value, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameLessThan(String value) {
+            addCriterion("`en_name` <", value, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameLessThanOrEqualTo(String value) {
+            addCriterion("`en_name` <=", value, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameLike(String value) {
+            addCriterion("`en_name` like", value, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameNotLike(String value) {
+            addCriterion("`en_name` not like", value, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameIn(List<String> values) {
+            addCriterion("`en_name` in", values, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameNotIn(List<String> values) {
+            addCriterion("`en_name` not in", values, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameBetween(String value1, String value2) {
+            addCriterion("`en_name` between", value1, value2, "enName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnNameNotBetween(String value1, String value2) {
+            addCriterion("`en_name` not between", value1, value2, "enName");
+            return (Criteria) this;
+        }
+
         public Criteria andBuiltInRoleIsNull() {
             addCriterion("`built_in_role` is null");
             return (Criteria) this;

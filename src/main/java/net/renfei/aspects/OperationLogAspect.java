@@ -2,8 +2,10 @@ package net.renfei.aspects;
 
 import net.renfei.annotation.OperationLog;
 import net.renfei.config.SystemConfig;
+import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.model.log.SysLogDTO;
+import net.renfei.model.system.UserDetail;
 import net.renfei.services.LogService;
 import net.renfei.utils.IpUtils;
 import net.renfei.utils.JacksonUtil;
@@ -83,8 +85,10 @@ public class OperationLogAspect {
                 }
             } else {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if (authentication != null && authentication.getPrincipal() instanceof User) {
-                    user = (User) authentication.getPrincipal();
+                if (authentication != null && authentication.getPrincipal() instanceof UserDetail) {
+                    UserDetail userDetail = (UserDetail) authentication.getPrincipal();
+                    UserDomain userDomain = userDetail.getUserDomain().orElse(null);
+                    user = userDomain == null ? null : userDomain.getUser().orElse(null);
                 }
             }
             if (user != null) {

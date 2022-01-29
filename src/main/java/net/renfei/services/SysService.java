@@ -6,7 +6,9 @@ import net.renfei.exception.ForbiddenException;
 import net.renfei.model.*;
 import net.renfei.model.system.MenuDataItemVo;
 import net.renfei.model.system.RegionVO;
+import net.renfei.model.system.RoleDTO;
 import net.renfei.model.system.SysApi;
+import net.renfei.repositories.model.SysApiList;
 import net.renfei.repositories.model.SysMenu;
 import net.renfei.repositories.model.SysRole;
 
@@ -78,6 +80,13 @@ public interface SysService {
     ListData<SysApi> getSysApiList(User user, String pages, String rows);
 
     /**
+     * 获取全部接口列表
+     *
+     * @return
+     */
+    List<SysApiList> getSysApiAllList();
+
+    /**
      * 获取系统角色
      * 只能获取到登陆用户自己拥有的角色
      * 超管和安全管理员可以获取所有角色
@@ -126,6 +135,14 @@ public interface SysService {
      * @return
      */
     List<SysRole> getRoleListByUser(User user);
+
+    /**
+     * 根据API接口地址获取所需的角色列表
+     *
+     * @param sysApiList
+     * @return
+     */
+    List<RoleDTO> getRoleDtoBySysApi(SysApiList sysApiList);
 
     /**
      * 根据用户获取菜单树

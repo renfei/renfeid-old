@@ -13,52 +13,52 @@ import java.util.Optional;
  */
 public class UserDetail implements UserDetails {
     private static final long serialVersionUID = -5194970536302876575L;
-    private final UserDomain userDomain;
+    private final User user;
 
     public UserDetail(User user) {
-        this.userDomain = new UserDomain(user);
+        this.user = user;
     }
 
     public UserDetail(UserDomain userDomain) {
-        this.userDomain = userDomain;
+        this.user = userDomain.getUser().orElse(null);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.userDomain.getAuthorities();
+        return new UserDomain(this.user).getAuthorities();
     }
 
     @Override
     public String getPassword() {
-        return this.userDomain.getPassword();
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return this.userDomain.getUsername();
+        return this.user.getUserName();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.userDomain.isAccountNonExpired();
+        return false;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.userDomain.isAccountNonLocked();
+        return false;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.userDomain.isCredentialsNonExpired();
+        return false;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.userDomain.isEnabled();
+        return true;
     }
 
     public Optional<UserDomain> getUserDomain() {
-        return Optional.ofNullable(userDomain);
+        return Optional.ofNullable(new UserDomain(this.user));
     }
 }

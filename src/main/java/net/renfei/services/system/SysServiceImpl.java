@@ -6,10 +6,7 @@ import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.model.*;
-import net.renfei.model.system.MenuDataItemVo;
-import net.renfei.model.system.RegionVO;
-import net.renfei.model.system.SysApi;
-import net.renfei.model.system.UserDetail;
+import net.renfei.model.system.*;
 import net.renfei.repositories.*;
 import net.renfei.repositories.model.*;
 import net.renfei.services.BaseService;
@@ -557,6 +554,12 @@ public class SysServiceImpl extends BaseService implements SysService {
         return sysApiListData;
     }
 
+    @Override
+    public List<SysApiList> getSysApiAllList() {
+        SysApiListExample example = new SysApiListExample();
+        return sysApiListMapper.selectByExample(example);
+    }
+
     /**
      * 获取系统角色
      * 只能获取到登陆用户自己拥有的角色
@@ -627,6 +630,7 @@ public class SysServiceImpl extends BaseService implements SysService {
      */
     @Override
     public void addSysRole(User user, SysRole sysRole) {
+        // TODO 检查 EnName 重复
         sysRole.setId(null);
         sysRole.setBuiltInRole(false);
         sysRoleMapper.insert(sysRole);
@@ -652,6 +656,8 @@ public class SysServiceImpl extends BaseService implements SysService {
             throw new BusinessException("内置角色，系统拒绝编辑");
         }
         sysRoleOld.setZhName(sysRole.getZhName());
+        // TODO 检查 EnName 重复
+        sysRoleOld.setEnName(sysRole.getEnName());
         sysRoleMapper.updateByPrimaryKey(sysRoleOld);
     }
 
@@ -712,6 +718,41 @@ public class SysServiceImpl extends BaseService implements SysService {
         example.createCriteria()
                 .andIdIn(ids);
         return sysRoleMapper.selectByExample(example);
+    }
+
+    /**
+     * 根据API接口地址获取所需的角色列表
+     *
+     * @param sysApiList
+     * @return
+     */
+    @Override
+    public List<RoleDTO> getRoleDtoBySysApi(SysApiList sysApiList) {
+        SysRolePermissionExample example = new SysRolePermissionExample();
+        example.createCriteria()
+                .andPermissionTypeEqualTo("API")
+                .andPermissionIdEqualTo(sysApiList.getId());
+        List<SysRolePermission> sysRolePermissions = sysRolePermissionMapper.selectByExample(example);
+        if (sysRolePermissions.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Long> ids = new ArrayList<>();
+        sysRolePermissions.forEach(sysRolePermission -> ids.add(sysRolePermission.getRoleId()));
+        SysRoleExample sysRoleExample = new SysRoleExample();
+        sysRoleExample.createCriteria()
+                .andIdIn(ids);
+        List<SysRole> sysRoles = sysRoleMapper.selectByExample(sysRoleExample);
+        if (sysRoles.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<RoleDTO> roleDTOList = new ArrayList<>();
+        for (SysRole sysRole : sysRoles
+        ) {
+            RoleDTO roleDTO = new RoleDTO();
+            BeanUtils.copyProperties(sysRole, roleDTO);
+            roleDTOList.add(roleDTO);
+        }
+        return roleDTOList;
     }
 
     /**

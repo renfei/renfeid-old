@@ -58,6 +58,7 @@ public class SystemConfig {
     private String ip2LocationBinFile;
     private String ip2LocationBinFileV6;
     private Leaf leaf;
+    private List<String> authIgnore;
     private ThreadPool threadPool;
     private Aliyun aliyun;
     private WeChat weChat;
@@ -226,6 +227,14 @@ public class SystemConfig {
         public void setSnowflake(Snowflake snowflake) {
             this.snowflake = snowflake;
         }
+    }
+
+    public List<String> getAuthIgnore() {
+        return authIgnore;
+    }
+
+    public void setAuthIgnore(List<String> authIgnore) {
+        this.authIgnore = authIgnore;
     }
 
     public static class ThreadPool {
