@@ -94,7 +94,7 @@ public class AuthorizationApiController extends BaseController implements Author
      */
     @Override
     @OperationLog(module = SystemTypeEnum.API, desc = "访问登陆接口", operation = OperationTypeEnum.SIGNIN)
-    public APIResult<String> doSignIn(SignInVO signInVO) throws NeedU2FException {
+    public APIResult<SignInSuccessVO> doSignIn(SignInVO signInVO) throws NeedU2FException {
         if (getSignUser() != null) {
             return APIResult.builder()
                     .code(StateCodeEnum.OK)
@@ -131,14 +131,13 @@ public class AuthorizationApiController extends BaseController implements Author
         // 用户登陆服务
         User user = accountService.signIn(signInVO, request);
         UserDetail userDetail = new UserDetail(new UserDomain(user));
-        if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
-            request.getSession().setAttribute(SESSION_KEY, userDetail);
-            return new APIResult<>(user.getUcScript());
-        } else {
-            // 签发TOKEN
-            String token = jwtUtils.createJWT(user.getUserName(), request);
-            return new APIResult<>(token);
-        }
+        request.getSession().setAttribute(SESSION_KEY, userDetail);
+        // 签发TOKEN
+        String token = jwtUtils.createJWT(user.getUserName(), request);
+        SignInSuccessVO signInSuccessVO = new SignInSuccessVO();
+        signInSuccessVO.setAccessToken(token);
+        signInSuccessVO.setUcScript(user.getUcScript());
+        return new APIResult<>(signInSuccessVO);
     }
 
     /**

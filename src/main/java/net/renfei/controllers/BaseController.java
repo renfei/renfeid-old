@@ -1,22 +1,19 @@
 package net.renfei.controllers;
 
+import net.renfei.application.ApplicationContextUtil;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
-import net.renfei.model.*;
+import net.renfei.model.PageView;
 import net.renfei.model.system.UserDetail;
 import net.renfei.services.PaginationService;
 import net.renfei.services.SysService;
-import net.renfei.application.ApplicationContextUtil;
 import net.renfei.utils.SentryUtils;
+import net.renfei.utils.UserDetailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -48,6 +45,8 @@ public abstract class BaseController {
     protected SysService sysService;
     @Autowired
     protected HttpServletRequest request;
+    @Autowired
+    protected UserDetailUtils userDetailUtils;
 
     /**
      * 应用到所有@RequestMapping注解方法，在其执行之前初始化数据绑定器
@@ -89,43 +88,18 @@ public abstract class BaseController {
     }
 
     protected User getSignUser() {
-        Object object = null;
-        assert systemConfig != null;
-        if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
-            object = request.getSession().getAttribute(SESSION_KEY);
-        } else {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null) {
-                return null;
-            }
-            object = authentication.getPrincipal();
-        }
-        if (object instanceof UserDetail) {
-            UserDetail userDetail = (UserDetail) object;
-            Optional<UserDetail> optUserDetail = Optional.of(userDetail);
-            return optUserDetail
-                    .flatMap(UserDetail::getUserDomain)
-                    .flatMap(UserDomain::getUser)
-                    .orElse(null);
-        }
-        return null;
+        UserDetail userDetail = userDetailUtils.getUserDetail(request);
+        Optional<UserDetail> optUserDetail = Optional.ofNullable(userDetail);
+        return optUserDetail
+                .flatMap(UserDetail::getUserDomain)
+                .flatMap(UserDomain::getUser)
+                .orElse(null);
     }
 
     protected void updateSignUser(User user) {
         assert systemConfig != null;
         if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
             request.getSession().setAttribute(SESSION_KEY, user);
-        } else {
-            UserDetail userDetails = new UserDetail(user);
-            UsernamePasswordAuthenticationToken
-                    authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null,
-                    userDetails.getAuthorities()
-            );
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
     }
 

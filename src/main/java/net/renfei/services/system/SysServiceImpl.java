@@ -17,8 +17,6 @@ import net.renfei.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -30,9 +28,6 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
-import static net.renfei.controllers.BaseController.SESSION_KEY;
-
 /**
  * 系统基础服务
  *
@@ -43,10 +38,12 @@ public class SysServiceImpl extends BaseService implements SysService {
     private static final Logger logger = LoggerFactory.getLogger(SysServiceImpl.class);
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "system:";
     private final LeafService leafService;
+
     private final RedisService redisService;
     private final SysRoleMapper sysRoleMapper;
     private final SysMenuMapper sysMenuMapper;
     private final SysRegionMapper regionMapper;
+    private final UserDetailUtils userDetailUtils;
     private final SysApiListMapper sysApiListMapper;
     private final SysSiteMenuMapper sysSiteMenuMapper;
     private final SysSecretKeyMapper sysSecretKeyMapper;
@@ -60,6 +57,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                           SysRoleMapper sysRoleMapper,
                           SysMenuMapper sysMenuMapper,
                           SysRegionMapper regionMapper,
+                          UserDetailUtils userDetailUtils,
                           SysApiListMapper sysApiListMapper,
                           SysSiteMenuMapper sysSiteMenuMapper,
                           SysSecretKeyMapper sysSecretKeyMapper,
@@ -72,6 +70,7 @@ public class SysServiceImpl extends BaseService implements SysService {
         this.sysRoleMapper = sysRoleMapper;
         this.sysMenuMapper = sysMenuMapper;
         this.regionMapper = regionMapper;
+        this.userDetailUtils = userDetailUtils;
         this.sysApiListMapper = sysApiListMapper;
         this.sysSiteMenuMapper = sysSiteMenuMapper;
         this.sysSecretKeyMapper = sysSecretKeyMapper;
@@ -411,21 +410,13 @@ public class SysServiceImpl extends BaseService implements SysService {
                 redisService.set(redisKey, pageHeader, systemConfig.getDefaultCacheSeconds());
             }
         }
-        Object object;
-        if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
-            object = request.getSession().getAttribute(SESSION_KEY);
-        } else {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            object = authentication.getPrincipal();
-        }
-        if (object instanceof UserDetail) {
-            UserDetail userDetail = (UserDetail) object;
-            Optional<UserDetail> optUserDetail = Optional.of(userDetail);
-            pageHeader.setUser(optUserDetail
-                    .flatMap(UserDetail::getUserDomain)
-                    .flatMap(UserDomain::getUser)
-                    .orElse(null));
-        }
+        UserDetail userDetail = userDetailUtils.getUserDetail(request);
+        Optional<UserDetail> optUserDetail = Optional.ofNullable(userDetail);
+        User user = optUserDetail
+                .flatMap(UserDetail::getUserDomain)
+                .flatMap(UserDomain::getUser)
+                .orElse(null);
+        pageHeader.setUser(user);
         return pageHeader;
     }
 

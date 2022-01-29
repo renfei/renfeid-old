@@ -9,13 +9,12 @@ import net.renfei.model.system.UserDetail;
 import net.renfei.services.LogService;
 import net.renfei.utils.IpUtils;
 import net.renfei.utils.JacksonUtil;
+import net.renfei.utils.UserDetailUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -27,9 +26,8 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
-import static net.renfei.controllers.BaseController.SESSION_KEY;
 import static net.renfei.services.system.LogServiceImpl.convertMap;
 
 /**
@@ -42,11 +40,14 @@ import static net.renfei.services.system.LogServiceImpl.convertMap;
 public class OperationLogAspect {
     private final SystemConfig systemConfig;
     private final LogService logService;
+    private final UserDetailUtils userDetailUtils;
 
     public OperationLogAspect(SystemConfig systemConfig,
-                              LogService logService) {
+                              LogService logService,
+                              UserDetailUtils userDetailUtils) {
         this.systemConfig = systemConfig;
         this.logService = logService;
+        this.userDetailUtils = userDetailUtils;
     }
 
     /**
@@ -77,20 +78,12 @@ public class OperationLogAspect {
         assert servletRequestAttributes != null;
         HttpServletRequest request = servletRequestAttributes.getRequest();
         if (request != null) {
-            User user = null;
-            if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
-                Object session = request.getSession().getAttribute(SESSION_KEY);
-                if (session instanceof User) {
-                    user = (User) session;
-                }
-            } else {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if (authentication != null && authentication.getPrincipal() instanceof UserDetail) {
-                    UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-                    UserDomain userDomain = userDetail.getUserDomain().orElse(null);
-                    user = userDomain == null ? null : userDomain.getUser().orElse(null);
-                }
-            }
+            UserDetail userDetail = userDetailUtils.getUserDetail(request);
+            Optional<UserDetail> optUserDetail = Optional.ofNullable(userDetail);
+            User user = optUserDetail
+                    .flatMap(UserDetail::getUserDomain)
+                    .flatMap(UserDomain::getUser)
+                    .orElse(null);
             if (user != null) {
                 operationLog.setUserUuid(user.getUuid());
                 operationLog.setUserName(user.getUserName());

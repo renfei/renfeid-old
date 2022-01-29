@@ -6,6 +6,7 @@ import net.renfei.annotation.OperationLog;
 import net.renfei.exception.NeedU2FException;
 import net.renfei.model.APIResult;
 import net.renfei.model.ReportPublicKeyVO;
+import net.renfei.model.auth.SignInSuccessVO;
 import net.renfei.model.auth.SignInVO;
 import net.renfei.model.auth.SignUpActivationVO;
 import net.renfei.model.auth.SignUpVO;
@@ -53,7 +54,7 @@ public interface AuthorizationApi {
      */
     @PostMapping("signIn")
     @Operation(summary = "登陆接口", tags = {"认证接口"})
-    APIResult<String> doSignIn(@RequestBody SignInVO signInVO) throws NeedU2FException;
+    APIResult<SignInSuccessVO> doSignIn(@RequestBody SignInVO signInVO) throws NeedU2FException;
 
     /**
      * 注册接口

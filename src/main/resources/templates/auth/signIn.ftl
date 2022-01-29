@@ -196,7 +196,7 @@
                             $("#signInBtn").val('登 录');
                             $("#signInBtn").attr('disabled', false);
                             if (data.code === 200) {
-                                if (data.data !== "") {
+                                if (data.data.ucScript !== undefined && data.data.ucScript !== "") {
                                     let datas = data.data.split("|");
                                     if (datas.length === 2) {
                                         loadJS(datas[0], function () {
@@ -216,19 +216,15 @@
                                                 window.location.href = oauthCallback;
                                             }
                                         });
-                                    } else {
-                                        if (oauthCallback === "") {
-                                            window.location.href = "/";
-                                        } else {
-                                            window.location.href = oauthCallback;
-                                        }
                                     }
+                                }
+                                if(data.data.accessToken !== undefined && data.data.accessToken !== ""){
+                                    setStore("AccessToken",data.data.accessToken);
+                                }
+                                if (oauthCallback === "") {
+                                    window.location.href = "/";
                                 } else {
-                                    if (oauthCallback === "") {
-                                        window.location.href = "/";
-                                    } else {
-                                        window.location.href = oauthCallback;
-                                    }
+                                    window.location.href = oauthCallback;
                                 }
                             } else if (data.code === 402) {
                                 $("#u2fInput").show();

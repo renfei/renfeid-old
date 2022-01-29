@@ -14,20 +14,17 @@ import net.renfei.services.BaseService;
 import net.renfei.services.LogService;
 import net.renfei.utils.IpUtils;
 import net.renfei.utils.JacksonUtil;
+import net.renfei.utils.UserDetailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import static net.renfei.config.SystemConfig.SESSION_AUTH_MODE;
-import static net.renfei.controllers.BaseController.SESSION_KEY;
+import java.util.Optional;
 
 /**
  * 日志服务
@@ -39,11 +36,14 @@ public class LogServiceImpl extends BaseService implements LogService {
     private static final Logger logger = LoggerFactory.getLogger(LogServiceImpl.class);
     private final SysLogsMapper sysLogsMapper;
     private final SystemConfig systemConfig;
+    private final UserDetailUtils userDetailUtils;
 
     public LogServiceImpl(SysLogsMapper sysLogsMapper,
-                          SystemConfig systemConfig) {
+                          SystemConfig systemConfig,
+                          UserDetailUtils userDetailUtils) {
         this.sysLogsMapper = sysLogsMapper;
         this.systemConfig = systemConfig;
+        this.userDetailUtils = userDetailUtils;
     }
 
     @Override
@@ -62,20 +62,12 @@ public class LogServiceImpl extends BaseService implements LogService {
         sysLogs.setLogDesc(desc);
         sysLogs.setLogTime(new Date());
         if (request != null) {
-            User user = null;
-            if (SESSION_AUTH_MODE.equals(systemConfig.getAuthMode())) {
-                Object session = request.getSession().getAttribute(SESSION_KEY);
-                if (session instanceof User) {
-                    user = (User) session;
-                }
-            } else {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if (authentication != null && authentication.getPrincipal() instanceof UserDetail) {
-                    UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-                    UserDomain userDomain = userDetail.getUserDomain().orElse(null);
-                    user = userDomain == null ? null : userDomain.getUser().orElse(null);
-                }
-            }
+            UserDetail userDetail = userDetailUtils.getUserDetail(request);
+            Optional<UserDetail> optUserDetail = Optional.ofNullable(userDetail);
+            User user = optUserDetail
+                    .flatMap(UserDetail::getUserDomain)
+                    .flatMap(UserDomain::getUser)
+                    .orElse(null);
             if (user != null) {
                 sysLogs.setUserUuid(user.getUuid());
                 sysLogs.setUserName(user.getUserName());
