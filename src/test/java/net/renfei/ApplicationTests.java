@@ -42,6 +42,7 @@ public class ApplicationTests {
 
     @BeforeEach
     public void before() throws Exception {
+        ApplicationContextUtil.setApplicationContext(applicationContext);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         if (session == null) {
             // 走登陆接口
@@ -69,7 +70,6 @@ public class ApplicationTests {
                 userDetails.getAuthorities()
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        ApplicationContextUtil.setApplicationContext(applicationContext);
     }
 
     @Test
