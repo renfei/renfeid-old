@@ -2,12 +2,14 @@ package net.renfei.domain;
 
 import net.renfei.application.ApplicationContextUtil;
 import net.renfei.domain.user.User;
+import net.renfei.exception.BusinessException;
+import net.renfei.repositories.SysAccountMapper;
 import net.renfei.repositories.SysAccountRoleMapper;
 import net.renfei.repositories.SysRoleMapper;
-import net.renfei.repositories.model.SysAccountRole;
-import net.renfei.repositories.model.SysAccountRoleExample;
-import net.renfei.repositories.model.SysRole;
-import net.renfei.repositories.model.SysRoleExample;
+import net.renfei.repositories.model.*;
+import net.renfei.utils.ListUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
@@ -20,13 +22,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author renfei
  */
 public final class UserDomain implements Serializable {
+    private static final Logger logger = LoggerFactory.getLogger(UserDomain.class);
     private static final long serialVersionUID = 5692684305054750477L;
     private final User user;
     private final SysRoleMapper sysRoleMapper;
+    private final SysAccountMapper sysAccountMapper;
     private final SysAccountRoleMapper sysAccountRoleMapper;
 
     {
         sysRoleMapper = (SysRoleMapper) ApplicationContextUtil.getBean("sysRoleMapper");
+        sysAccountMapper = (SysAccountMapper) ApplicationContextUtil.getBean("sysAccountMapper");
         sysAccountRoleMapper = (SysAccountRoleMapper) ApplicationContextUtil.getBean("sysAccountRoleMapper");
     }
 
@@ -35,7 +40,7 @@ public final class UserDomain implements Serializable {
     }
 
     public UserDomain(String userName) {
-        this.user = null;
+        this.user = getUserByUserName(userName);
     }
 
     public List<GrantedAuthority> getAuthorities() {
@@ -107,5 +112,22 @@ public final class UserDomain implements Serializable {
         public String getAuthority() {
             return this.authority;
         }
+    }
+
+    private User getUserByUserName(String userName) {
+        SysAccountExample example = new SysAccountExample();
+        example.createCriteria()
+                .andUserNameEqualTo(userName);
+        SysAccount account = ListUtils.getOne(sysAccountMapper.selectByExample(example));
+        if (account == null) {
+            logger.error("根据用户名 {} 查询用户不存在。", userName);
+            throw new BusinessException("用户不存在");
+        }
+        // 检查用户状态
+        if(account.getStateCode()<0){
+            logger.error("根据用户名 {} 查询账户已被冻结。", userName);
+            throw new BusinessException("账户已被冻结");
+        }
+        return new User(account);
     }
 }

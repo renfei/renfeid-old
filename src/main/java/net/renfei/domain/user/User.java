@@ -1,6 +1,7 @@
 package net.renfei.domain.user;
 
 import net.renfei.model.SecretLevelEnum;
+import net.renfei.repositories.model.SysAccount;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -29,6 +30,21 @@ public class User implements Serializable {
     }
 
     public User(Long id) {
+    }
+
+    public User(SysAccount account) {
+        this.id = account.getId();
+        this.userName = account.getUserName();
+        this.uuid = account.getUuid();
+        this.email = account.getEmail();
+        this.phone = account.getPhone();
+        this.lastName = account.getLastName();
+        this.firstName = account.getFirstName();
+        this.webSite = "";
+        this.ucScript = "";
+        this.secretLevelEnum = SecretLevelEnum.valueOf(account.getSecretLevel());
+        this.totp = account.getTotp();
+        this.registrationDate = account.getRegistrationDate();
     }
 
     public Long getId() {
