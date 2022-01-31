@@ -697,15 +697,17 @@ CREATE TABLE `sys_menu` (
   `new_window` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否新页面打开',
   `order_number` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='系统后台菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='系统后台菜单';
 
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
-INSERT INTO `sys_menu` VALUES (1, NULL, '首页', '/_/dashboard', NULL, 0, 0);
-INSERT INTO `sys_menu` VALUES (2, 1, '分析页', '/_/dashboard/analysis', NULL, 0, 0);
-INSERT INTO `sys_menu` VALUES (3, 1, '监控页', '/_/dashboard/monitor', NULL, 0, 0);
-INSERT INTO `sys_menu` VALUES (4, 1, '工作台', '/_/dashboard/workplace', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (1, NULL, '首页', '/dashboard', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (2, 1, '分析页', '/dashboard/analysis', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (3, 1, '监控页', '/dashboard/monitor', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (4, 1, '工作台', '/dashboard/workplace', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (5, NULL, '系统设置', ' ', NULL, 0, 0);
+INSERT INTO `sys_menu` VALUES (6, 5, '菜单管理', '/sys-setting/menu-setting', NULL, 0, 0);
 
 -- ----------------------------
 -- Table structure for sys_pages
