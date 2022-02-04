@@ -37,7 +37,7 @@ public class ApiSync extends ApplicationTests {
      */
     @Test
     public void sync() throws Exception {
-        MockHttpServletResponse response = this.mockMvc.perform(get("/v3/api-docs/BackgroundApi")
+        MockHttpServletResponse response = this.mockMvc.perform(get("/v3/api-docs/InternalApi")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse();

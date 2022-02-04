@@ -9,10 +9,9 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.ArrayList;
 
 /**
  * Swagger接口配置
@@ -25,17 +24,10 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
-                .components(new Components().addSecuritySchemes("basicScheme",
-                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").name("JWT").in(SecurityScheme.In.HEADER)))
                 .info(new Info().title("RENFEI.NET Free Open API")
                         .description("任霏的免费开放API程序接口")
                         .license(new License().name("Apache 2.0").url("https://github.com/renfei/renfeid/blob/master/LICENSE"))
                         .contact(new Contact().name("RenFei").email("i@renfei.net").url("https://www.renfei.net")))
-                .security(new ArrayList<SecurityRequirement>() {{
-                    SecurityRequirement securityRequirement = new SecurityRequirement();
-                    securityRequirement.addList("JWT");
-                    this.add(securityRequirement);
-                }})
                 .externalDocs(new ExternalDocumentation()
                         .description("Open Source")
                         .url("https://github.com/renfei/renfeid"));
@@ -46,22 +38,76 @@ public class SwaggerConfig {
         return GroupedOpenApi.builder()
                 .group("FreeOpenApi")
                 .pathsToMatch("/api/**")
+                .addOpenApiCustomiser(openApiCustomizer())
                 .build();
     }
 
     @Bean
-    public GroupedOpenApi foregroundApi() {
+    public GroupedOpenApi internalForegroundApi() {
         return GroupedOpenApi.builder()
-                .group("ForegroundApi")
+                .group("InternalForegroundApi")
                 .pathsToMatch("/-/api/**")
+                .addOpenApiCustomiser(internalForegroundApiCustomizer())
                 .build();
     }
 
     @Bean
-    public GroupedOpenApi backgroundApi() {
+    public GroupedOpenApi internalApi() {
         return GroupedOpenApi.builder()
-                .group("BackgroundApi")
+                .group("InternalAPI")
                 .pathsToMatch("/_/api/**")
+                .addOpenApiCustomiser(internalApiCustomizer())
                 .build();
+    }
+
+    @Bean
+    public OpenApiCustomiser openApiCustomizer() {
+        return openApi -> openApi
+                .info(new Info()
+                        .title("RENFEI.NET Free Open API")
+                        .description("任霏的免费开放API程序接口，提供对外开放能力，无需登录认证。")
+                        .license(new License().name("Apache 2.0").url("https://github.com/renfei/renfeid/blob/master/LICENSE"))
+                        .contact(new Contact().name("RenFei").email("i@renfei.net").url("https://www.renfei.net")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Open Source")
+                        .url("https://github.com/renfei/renfeid"));
+    }
+
+    @Bean
+    public OpenApiCustomiser internalForegroundApiCustomizer() {
+        return openApi -> openApi.addSecurityItem(new SecurityRequirement().addList("Authorization"))
+                .components(new Components()
+                        .addSecuritySchemes("bearer-key", new SecurityScheme()
+                                .in(SecurityScheme.In.HEADER)
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT"))
+                )
+                .info(new Info()
+                        .title("RENFEI.NET Internal Foreground API")
+                        .description("RENFEI.NET 前台前端 API 接口，不对外开放，可能要求登录认证以后使用。")
+                        .contact(new Contact().name("RenFei").email("i@renfei.net").url("https://www.renfei.net")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Contact Us")
+                        .url("https://www.renfei.net"));
+    }
+
+    @Bean
+    public OpenApiCustomiser internalApiCustomizer() {
+        return openApi -> openApi.addSecurityItem(new SecurityRequirement().addList("Authorization"))
+                .components(new Components()
+                        .addSecuritySchemes("bearer-key", new SecurityScheme()
+                                .in(SecurityScheme.In.HEADER)
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT"))
+                )
+                .info(new Info()
+                        .title("RENFEI.NET Internal API")
+                        .description("RENFEI.NET 内部程序 API 接口，不对外开放，必须登录认证。")
+                        .contact(new Contact().name("RenFei").email("i@renfei.net").url("https://www.renfei.net")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Contact Us")
+                        .url("https://www.renfei.net"));
     }
 }

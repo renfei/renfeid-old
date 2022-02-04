@@ -66,7 +66,7 @@ springdoc:
   swagger-ui:
     enabled: true
     display-request-duration: true
-    groups-order: DESC
+    groups-order: ASC
     operationsSorter: method
     disable-swagger-default-url: true
     use-root-path: false
