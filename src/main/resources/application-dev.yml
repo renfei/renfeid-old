@@ -175,6 +175,12 @@ system:
     key: <key>
     appId: 3
     connect:
+  druid:
+    urlMappings: /druid/* # 注意！修改此地址以后，需要到 net.renfei.config.SecurityConfig.configure 中修改 ignoringAntMatchers 忽略CSRF校验
+    userName: admin
+    password: admin
+    allow:
+    deny: 123.123.123.123
 sentry:
   dsn: https://8843a97fdea6415bae0f696f3749eaf6@o1071939.ingest.sentry.io/6069834
   environment: development

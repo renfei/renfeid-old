@@ -66,6 +66,7 @@ public class SystemConfig {
     private Google google;
     private Jwt jwt;
     private UCenter uCenter;
+    private Druid druid;
 
     public static class PageHead {
         private String author;
@@ -591,6 +592,54 @@ public class SystemConfig {
         }
     }
 
+    public static class Druid{
+        private String urlMappings;
+        private String userName;
+        private String password;
+        private String allow;
+        private String deny;
+
+        public String getUrlMappings() {
+            return urlMappings;
+        }
+
+        public void setUrlMappings(String urlMappings) {
+            this.urlMappings = urlMappings;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getAllow() {
+            return allow;
+        }
+
+        public void setAllow(String allow) {
+            this.allow = allow;
+        }
+
+        public String getDeny() {
+            return deny;
+        }
+
+        public void setDeny(String deny) {
+            this.deny = deny;
+        }
+    }
+
     public String getActive() {
         return active;
     }
@@ -821,5 +870,13 @@ public class SystemConfig {
 
     public void setuCenter(UCenter uCenter) {
         this.uCenter = uCenter;
+    }
+
+    public Druid getDruid() {
+        return druid;
+    }
+
+    public void setDruid(Druid druid) {
+        this.druid = druid;
     }
 }

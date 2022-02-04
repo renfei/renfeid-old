@@ -54,7 +54,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().csrfTokenRepository(new HttpSessionCsrfTokenRepository())
-                .ignoringAntMatchers("/api/**")
+                // 此处忽略开放接口地址和Druid监控接口
+                .ignoringAntMatchers(
+                        "/api/**",
+                        "/druid/**"
+                )
                 .and()
                 .headers()
                 .frameOptions().sameOrigin()

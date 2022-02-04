@@ -18,6 +18,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * 主数据源配置
@@ -31,8 +33,29 @@ public class PrimaryDataSourceConfig {
     @Primary
     @Bean(name = "primaryDataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource primaryDataSource() {
-        return new DruidDataSource();
+    public DataSource primaryDataSource() throws SQLException {
+        DruidDataSource druidDataSource = new DruidDataSource();
+        // 由于此处的配置几乎不怎么修改，所以直接在代码里硬编码了，懒得写入配置文件中
+        druidDataSource.setInitialSize(5);
+        druidDataSource.setMinIdle(5);
+        druidDataSource.setMaxActive(20);
+        druidDataSource.setMaxWait(60000);
+        druidDataSource.setTestOnBorrow(false);
+        druidDataSource.setTestWhileIdle(true);
+        druidDataSource.setTestOnReturn(false);
+        druidDataSource.setValidationQuery("SELECT 1");
+        druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
+        druidDataSource.setMinEvictableIdleTimeMillis(300000);
+        druidDataSource.setPoolPreparedStatements(true);
+        druidDataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
+        druidDataSource.setFilters("stat,wall");
+        druidDataSource.setUseGlobalDataSourceStat(true);
+        // Properties
+        Properties properties = new Properties();
+        properties.setProperty("druid.stat.mergeSql","true");
+        properties.setProperty("druid.stat.slowSqlMillis","5000");
+        druidDataSource.setConnectProperties(properties);
+        return druidDataSource;
     }
 
     @Value("${mybatis.mapper-locations}")
