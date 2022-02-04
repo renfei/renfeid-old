@@ -5,11 +5,15 @@ import net.renfei.ApplicationTests;
 import net.renfei.model.APIResult;
 import net.renfei.model.ListData;
 import net.renfei.model.auth.SignInVO;
-import net.renfei.repositories.model.SysRole;
+import net.renfei.model.system.SysRoleVO;
+import net.renfei.repositories.model.SysRolePermission;
 import net.renfei.utils.JacksonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -104,10 +108,16 @@ public class SysRoleApiControllerTests extends ApplicationTests {
     private void sysRoleTest() throws Exception {
         String testRoleZhName = "单元测试角色";
         String testRoleEnName = "UnitTestRole";
-        SysRole sysRole = new SysRole();
+        SysRoleVO sysRole = new SysRoleVO();
         sysRole.setBuiltInRole(true);
         sysRole.setZhName(testRoleZhName);
         sysRole.setEnName(testRoleEnName);
+        List<SysRolePermission> sysRolePermissionList = new ArrayList<>();
+        SysRolePermission sysRolePermission = new SysRolePermission();
+        sysRolePermission.setPermissionType("MENU");
+        sysRolePermission.setPermissionId(1L);
+        sysRolePermissionList.add(sysRolePermission);
+        sysRole.setRolePermissions(sysRolePermissionList);
         this.mockMvc.perform(post("/_/api/sys/role")
                         .with(csrf())
                         .session(session)
@@ -127,12 +137,12 @@ public class SysRoleApiControllerTests extends ApplicationTests {
                 .andExpect(jsonPath("$.code").value(200))
                 .andReturn().getResponse();
         response.setCharacterEncoding("UTF-8");
-        APIResult<ListData<SysRole>> apiResult = JacksonUtil.string2Obj(response.getContentAsString(), new TypeReference<APIResult<ListData<SysRole>>>() {
-            public int compareTo(TypeReference<APIResult<ListData<SysRole>>> o) {
+        APIResult<ListData<SysRoleVO>> apiResult = JacksonUtil.string2Obj(response.getContentAsString(), new TypeReference<APIResult<ListData<SysRoleVO>>>() {
+            public int compareTo(TypeReference<APIResult<ListData<SysRoleVO>>> o) {
                 return super.compareTo(o);
             }
         });
-        for (SysRole sysRoleData : apiResult.getData().getData()
+        for (SysRoleVO sysRoleData : apiResult.getData().getData()
         ) {
             if (sysRoleData.getZhName().equals(testRoleZhName)) {
                 sysRole = sysRoleData;

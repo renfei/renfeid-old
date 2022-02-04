@@ -562,7 +562,7 @@ public class SysServiceImpl extends BaseService implements SysService {
      * @return
      */
     @Override
-    public ListData<SysRole> getSysRoleList(User user, String pages, String rows) {
+    public ListData<SysRoleVO> getSysRoleList(User user, String pages, String rows) {
         SysRoleExample sysRoleExample = new SysRoleExample();
         SysRoleExample.Criteria criteria = sysRoleExample.createCriteria();
         assert systemConfig != null;
@@ -603,10 +603,20 @@ public class SysServiceImpl extends BaseService implements SysService {
         Page<SysRole> page = PageHelper.startPage(
                 NumberUtils.parseInt(pages, 1), NumberUtils.parseInt(rows, 10));
         sysRoleMapper.selectByExample(sysRoleExample);
-        ListData<SysRole> listData = new ListData<>(page);
-        List<SysRole> sysRoles = new ArrayList<>();
+        ListData<SysRoleVO> listData = new ListData<>(page);
+        List<SysRoleVO> sysRoles = new ArrayList<>();
         if (!page.getResult().isEmpty()) {
-            sysRoles.addAll(page.getResult());
+            for (SysRole sysRole : page.getResult()
+            ) {
+                SysRoleVO sysRoleVO = new SysRoleVO();
+                BeanUtils.copyProperties(sysRole, sysRoleVO);
+                // 查询角色下的权限列表
+                SysRolePermissionExample rolePermissionExample = new SysRolePermissionExample();
+                rolePermissionExample.createCriteria()
+                        .andRoleIdEqualTo(sysRole.getId());
+                sysRoleVO.setRolePermissions(sysRolePermissionMapper.selectByExample(rolePermissionExample));
+                sysRoles.add(sysRoleVO);
+            }
         }
         listData.setData(sysRoles);
         return listData;
@@ -620,11 +630,32 @@ public class SysServiceImpl extends BaseService implements SysService {
      * @param sysRole 系统角色
      */
     @Override
-    public void addSysRole(User user, SysRole sysRole) {
-        // TODO 检查 EnName 重复
-        sysRole.setId(null);
-        sysRole.setBuiltInRole(false);
-        sysRoleMapper.insert(sysRole);
+    @Transactional(rollbackFor = Exception.class)
+    public void addSysRole(User user, SysRoleVO sysRole) {
+        // 检查 EnName 重复
+        if (sysRole.getEnName() == null || sysRole.getEnName().isEmpty()) {
+            throw new BusinessException("EnName 不能为空");
+        }
+        SysRoleExample example = new SysRoleExample();
+        example.createCriteria().andEnNameEqualTo(sysRole.getEnName());
+        if (sysRoleMapper.selectByExample(example).isEmpty()) {
+            sysRole.setId(null);
+            sysRole.setBuiltInRole(false);
+            SysRole sysRoleDO = new SysRole();
+            BeanUtils.copyProperties(sysRole, sysRoleDO);
+            sysRoleMapper.insert(sysRoleDO);
+            if (!sysRole.getRolePermissions().isEmpty()) {
+                // 插入权限列表
+                for (SysRolePermission sysRolePermission : sysRole.getRolePermissions()
+                ) {
+                    sysRolePermission.setId(null);
+                    sysRolePermission.setRoleId(sysRoleDO.getId());
+                    sysRolePermissionMapper.insertSelective(sysRolePermission);
+                }
+            }
+        } else {
+            throw new BusinessException("EnName:[" + sysRole.getEnName() + "]已经存在，不能设置重复的。");
+        }
     }
 
     /**
@@ -635,7 +666,8 @@ public class SysServiceImpl extends BaseService implements SysService {
      * @param sysRole 系统角色
      */
     @Override
-    public void updateSysRole(User user, SysRole sysRole) {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateSysRole(User user, SysRoleVO sysRole) {
         if (sysRole.getId() == null) {
             throw new BusinessException("ID 不能为空");
         }
@@ -647,9 +679,33 @@ public class SysServiceImpl extends BaseService implements SysService {
             throw new BusinessException("内置角色，系统拒绝编辑");
         }
         sysRoleOld.setZhName(sysRole.getZhName());
-        // TODO 检查 EnName 重复
+        if (sysRoleOld.getEnName() != null && !sysRoleOld.getEnName().equals(sysRole.getEnName())) {
+            // 检查 EnName 重复
+            if (sysRole.getEnName() == null || sysRole.getEnName().isEmpty()) {
+                throw new BusinessException("EnName 不能为空");
+            }
+            SysRoleExample sysRoleExample = new SysRoleExample();
+            sysRoleExample.createCriteria().andEnNameEqualTo(sysRole.getEnName());
+            if (!sysRoleMapper.selectByExample(sysRoleExample).isEmpty()) {
+                throw new BusinessException("EnName:[" + sysRole.getEnName() + "]已经存在，不能设置重复的。");
+            }
+        }
         sysRoleOld.setEnName(sysRole.getEnName());
         sysRoleMapper.updateByPrimaryKey(sysRoleOld);
+        // 先删除角色下面的权限列表，再插入
+        SysRolePermissionExample rolePermissionExample = new SysRolePermissionExample();
+        rolePermissionExample.createCriteria().andRoleIdEqualTo(sysRoleOld.getId());
+        sysRolePermissionMapper.deleteByExample(rolePermissionExample);
+        // 再插入
+        if (!sysRole.getRolePermissions().isEmpty()) {
+            // 插入权限列表
+            for (SysRolePermission sysRolePermission : sysRole.getRolePermissions()
+            ) {
+                sysRolePermission.setId(null);
+                sysRolePermission.setRoleId(sysRoleOld.getId());
+                sysRolePermissionMapper.insertSelective(sysRolePermission);
+            }
+        }
     }
 
     /**
@@ -692,7 +748,7 @@ public class SysServiceImpl extends BaseService implements SysService {
      * @return
      */
     @Override
-    public List<SysRole> getRoleListByUser(User user) {
+    public List<SysRoleVO> getRoleListByUser(User user) {
         if (user == null) {
             return new ArrayList<>();
         }
@@ -708,7 +764,20 @@ public class SysServiceImpl extends BaseService implements SysService {
         SysRoleExample example = new SysRoleExample();
         example.createCriteria()
                 .andIdIn(ids);
-        return sysRoleMapper.selectByExample(example);
+        List<SysRole> sysRoles = sysRoleMapper.selectByExample(example);
+        List<SysRoleVO> sysRoleVOS = new CopyOnWriteArrayList<>();
+        for (SysRole sysRole : sysRoles
+        ) {
+            SysRoleVO sysRoleVO = new SysRoleVO();
+            BeanUtils.copyProperties(sysRole, sysRoleVO);
+            // 查询角色下的权限列表
+            SysRolePermissionExample rolePermissionExample = new SysRolePermissionExample();
+            rolePermissionExample.createCriteria()
+                    .andRoleIdEqualTo(sysRole.getId());
+            sysRoleVO.setRolePermissions(sysRolePermissionMapper.selectByExample(rolePermissionExample));
+            sysRoleVOS.add(sysRoleVO);
+        }
+        return sysRoleVOS;
     }
 
     /**
@@ -765,22 +834,20 @@ public class SysServiceImpl extends BaseService implements SysService {
             return menuDataItemVos;
         } else {
             // 不是超管，那就得看权限了
-            List<SysRole> sysRoles = getRoleListByUser(user);
+            List<SysRoleVO> sysRoles = getRoleListByUser(user);
             if (sysRoles.isEmpty()) {
                 return new ArrayList<>();
             }
-            List<Long> ids = new ArrayList<>();
-            sysRoles.forEach(sysRole -> ids.add(sysRole.getId()));
-            SysRolePermissionExample rolePermissionExample = new SysRolePermissionExample();
-            rolePermissionExample.createCriteria()
-                    .andPermissionTypeEqualTo("MENU")
-                    .andRoleIdIn(ids);
-            List<SysRolePermission> sysRolePermissions = sysRolePermissionMapper.selectByExample(rolePermissionExample);
-            if (sysRolePermissions.isEmpty()) {
-                return new ArrayList<>();
-            }
             List<Long> menuIds = new ArrayList<>();
-            sysRolePermissions.forEach(sysRolePermission -> menuIds.add(sysRolePermission.getPermissionId()));
+            for (SysRoleVO sysRoleVO : sysRoles
+            ) {
+                for (SysRolePermission sysRolePermission : sysRoleVO.getRolePermissions()
+                ) {
+                    if ("MENU".equals(sysRolePermission.getPermissionType())) {
+                        menuIds.add(sysRolePermission.getPermissionId());
+                    }
+                }
+            }
             example.createCriteria()
                     .andParentIdIsNull()
                     .andIdIn(menuIds);

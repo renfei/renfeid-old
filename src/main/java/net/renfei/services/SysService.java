@@ -4,13 +4,9 @@ import com.aliyun.oss.ServiceException;
 import net.renfei.domain.user.User;
 import net.renfei.exception.ForbiddenException;
 import net.renfei.model.*;
-import net.renfei.model.system.MenuDataItemVo;
-import net.renfei.model.system.RegionVO;
-import net.renfei.model.system.RoleDTO;
-import net.renfei.model.system.SysApi;
+import net.renfei.model.system.*;
 import net.renfei.repositories.model.SysApiList;
 import net.renfei.repositories.model.SysMenu;
-import net.renfei.repositories.model.SysRole;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -96,7 +92,7 @@ public interface SysService {
      * @param rows  每页行数
      * @return
      */
-    ListData<SysRole> getSysRoleList(User user, String pages, String rows);
+    ListData<SysRoleVO> getSysRoleList(User user, String pages, String rows);
 
     /**
      * 添加系统角色
@@ -106,7 +102,7 @@ public interface SysService {
      * @param sysRole 系统角色
      * @throws ForbiddenException 只有系统安全管理员才可以管理角色
      */
-    void addSysRole(User user, SysRole sysRole);
+    void addSysRole(User user, SysRoleVO sysRole);
 
     /**
      * 修改系统角色
@@ -116,7 +112,7 @@ public interface SysService {
      * @param sysRole 系统角色
      * @throws ForbiddenException 只有系统安全管理员才可以管理角色
      */
-    void updateSysRole(User user, SysRole sysRole);
+    void updateSysRole(User user, SysRoleVO sysRole);
 
     /**
      * 删除系统角色
@@ -134,7 +130,7 @@ public interface SysService {
      * @param user 登陆用户
      * @return
      */
-    List<SysRole> getRoleListByUser(User user);
+    List<SysRoleVO> getRoleListByUser(User user);
 
     /**
      * 根据API接口地址获取所需的角色列表

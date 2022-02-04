@@ -98,13 +98,13 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="net.renfei.repositories.model.SysRole">
+  <insert id="insert" parameterType="net.renfei.repositories.model.SysRole" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
     insert into sys_role (`id`, `zh_name`, `en_name`, 
       `built_in_role`)
     values (#{id,jdbcType=BIGINT}, #{zhName,jdbcType=VARCHAR}, #{enName,jdbcType=VARCHAR}, 
       #{builtInRole,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="net.renfei.repositories.model.SysRole">
+  <insert id="insertSelective" parameterType="net.renfei.repositories.model.SysRole" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
     insert into sys_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
