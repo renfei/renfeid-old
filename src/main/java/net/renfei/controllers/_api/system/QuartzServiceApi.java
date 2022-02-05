@@ -1,4 +1,4 @@
-package net.renfei.controllers._api;
+package net.renfei.controllers._api.system;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
