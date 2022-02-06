@@ -43,7 +43,8 @@ public class SearchController extends BaseController {
     }
 
     @RequestMapping("")
-    @OperationLog(module = SystemTypeEnum.SEARCH, desc = "访问站内搜索页面")
+    // 为了跟搜索动作进行区别，访问页面的就不记录了
+    // @OperationLog(module = SystemTypeEnum.SEARCH, desc = "访问站内搜索页面")
     public ModelAndView search(ModelAndView mv,
                                @RequestParam(value = "type", required = false) String type,
                                @RequestParam(value = "w", required = false) String query,
