@@ -28,7 +28,7 @@ jobs:
         ports:
           - 6379:6379
       elasticsearch:
-        image: ghcr.io/renfei/elasticsearch:7.16.3
+        image: ghcr.io/renfei/elasticsearch:7.17.0
         ports:
           - 9200:9200
           - 9300:9300

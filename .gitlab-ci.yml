@@ -83,7 +83,7 @@ test_JH:
       alias: "mariadb"
     - name: registry.jihulab.com/docker/hub/redis:6.0.1
       alias: "redis"
-    - name: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/elasticsearch:7.16.3"
+    - name: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/elasticsearch:7.17.0"
       alias: "elasticsearch"
       command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
   variables:
@@ -109,7 +109,7 @@ test:
   services:
     - mariadb:10.6.5
     - redis:6.0.1
-    - name: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/elasticsearch:7.16.3"
+    - name: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/elasticsearch:7.17.0"
       alias: "elasticsearch"
       command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
   variables:
