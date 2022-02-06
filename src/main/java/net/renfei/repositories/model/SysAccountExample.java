@@ -1094,6 +1094,66 @@ public class SysAccountExample {
             addCriterion("`secret_level` not between", value1, value2, "secretLevel");
             return (Criteria) this;
         }
+
+        public Criteria andBuiltInUserIsNull() {
+            addCriterion("`built_in_user` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserIsNotNull() {
+            addCriterion("`built_in_user` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserEqualTo(Boolean value) {
+            addCriterion("`built_in_user` =", value, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserNotEqualTo(Boolean value) {
+            addCriterion("`built_in_user` <>", value, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserGreaterThan(Boolean value) {
+            addCriterion("`built_in_user` >", value, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("`built_in_user` >=", value, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserLessThan(Boolean value) {
+            addCriterion("`built_in_user` <", value, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserLessThanOrEqualTo(Boolean value) {
+            addCriterion("`built_in_user` <=", value, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserIn(List<Boolean> values) {
+            addCriterion("`built_in_user` in", values, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserNotIn(List<Boolean> values) {
+            addCriterion("`built_in_user` not in", values, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserBetween(Boolean value1, Boolean value2) {
+            addCriterion("`built_in_user` between", value1, value2, "builtInUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuiltInUserNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("`built_in_user` not between", value1, value2, "builtInUser");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

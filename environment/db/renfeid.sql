@@ -453,17 +453,18 @@ CREATE TABLE `sys_account`  (
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '姓氏',
   `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名字',
   `secret_level` int(255) UNSIGNED NOT NULL DEFAULT 1 COMMENT '保密等级（1:非密/2:秘密/3:机密）',
+  `built_in_user` tinyint(1) DEFAULT 0 COMMENT '是否是内置账号（不显示）',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户账户' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_account
 -- ----------------------------
-INSERT INTO `sys_account` VALUES (1, 'B358EB124DF0445D90BFD3BCC36D8FB0', 'demo', 'demo@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1);
-INSERT INTO `sys_account` VALUES (2, '149480F02C874749AFD6F4C0776D2E14', 'sysa', 'sysa@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1);
-INSERT INTO `sys_account` VALUES (3, 'F34DD6643795476284A38FB670525349', 'sso', 'sso@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1);
-INSERT INTO `sys_account` VALUES (4, 'BCAB993F0856488D8F1048AAE8815A85', 'saa', 'saa@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1);
-INSERT INTO `sys_account` VALUES (5, '18E030D9BF14428492BF06AF944FB04E', 'testunit', 'testunit@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1);
+INSERT INTO `sys_account` VALUES (1, 'B358EB124DF0445D90BFD3BCC36D8FB0', 'demo', 'demo@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1, 0);
+INSERT INTO `sys_account` VALUES (2, '149480F02C874749AFD6F4C0776D2E14', 'sysa', 'sysa@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1, 1);
+INSERT INTO `sys_account` VALUES (3, 'F34DD6643795476284A38FB670525349', 'sso', 'sso@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1, 1);
+INSERT INTO `sys_account` VALUES (4, 'BCAB993F0856488D8F1048AAE8815A85', 'saa', 'saa@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1, 1);
+INSERT INTO `sys_account` VALUES (5, '18E030D9BF14428492BF06AF944FB04E', 'testunit', 'testunit@renfei.net', NULL, '2022-01-09 18:55:06', 'sha256:64000:18:84syjopnskYwZf7c167fnfIMYz+p7OxE:/XTa+4mx3sKDAMZ9Ec6ZOfAj', NULL, '127.0.0.1', 0, NULL, 1, NULL, NULL, 1, 0);
 
 -- ----------------------------
 -- Table structure for sys_account_keep_name

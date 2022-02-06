@@ -34,7 +34,9 @@ public class SysAccount implements Serializable {
 
     private Integer secretLevel;
 
-    private static final long serialVersionUID = -314420603322403668L;
+    private Boolean builtInUser;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -156,6 +158,14 @@ public class SysAccount implements Serializable {
         this.secretLevel = secretLevel;
     }
 
+    public Boolean getBuiltInUser() {
+        return builtInUser;
+    }
+
+    public void setBuiltInUser(Boolean builtInUser) {
+        this.builtInUser = builtInUser;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -177,6 +187,7 @@ public class SysAccount implements Serializable {
         sb.append(", lastName=").append(lastName);
         sb.append(", firstName=").append(firstName);
         sb.append(", secretLevel=").append(secretLevel);
+        sb.append(", builtInUser=").append(builtInUser);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

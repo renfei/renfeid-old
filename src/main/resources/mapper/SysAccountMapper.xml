@@ -17,6 +17,7 @@
     <result column="last_name" jdbcType="VARCHAR" property="lastName" />
     <result column="first_name" jdbcType="VARCHAR" property="firstName" />
     <result column="secret_level" jdbcType="INTEGER" property="secretLevel" />
+    <result column="built_in_user" jdbcType="BIT" property="builtInUser" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -79,7 +80,7 @@
   <sql id="Base_Column_List">
     `id`, `uuid`, `user_name`, `email`, `phone`, `registration_date`, `password`, `totp`, 
     `registration_ip`, `trial_error_times`, `lock_time`, `state_code`, `last_name`, `first_name`, 
-    `secret_level`
+    `secret_level`, `built_in_user`
   </sql>
   <select id="selectByExample" parameterType="net.renfei.repositories.model.SysAccountExample" resultMap="BaseResultMap">
     select
@@ -116,14 +117,14 @@
       `email`, `phone`, `registration_date`, 
       `password`, `totp`, `registration_ip`, 
       `trial_error_times`, `lock_time`, `state_code`, 
-      `last_name`, `first_name`, `secret_level`
-      )
+      `last_name`, `first_name`, `secret_level`, 
+      `built_in_user`)
     values (#{id,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{registrationDate,jdbcType=TIMESTAMP}, 
       #{password,jdbcType=VARCHAR}, #{totp,jdbcType=VARCHAR}, #{registrationIp,jdbcType=VARCHAR}, 
       #{trialErrorTimes,jdbcType=INTEGER}, #{lockTime,jdbcType=TIMESTAMP}, #{stateCode,jdbcType=INTEGER}, 
-      #{lastName,jdbcType=VARCHAR}, #{firstName,jdbcType=VARCHAR}, #{secretLevel,jdbcType=INTEGER}
-      )
+      #{lastName,jdbcType=VARCHAR}, #{firstName,jdbcType=VARCHAR}, #{secretLevel,jdbcType=INTEGER}, 
+      #{builtInUser,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.repositories.model.SysAccount">
     insert into sys_account
@@ -173,6 +174,9 @@
       <if test="secretLevel != null">
         `secret_level`,
       </if>
+      <if test="builtInUser != null">
+        `built_in_user`,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -219,6 +223,9 @@
       </if>
       <if test="secretLevel != null">
         #{secretLevel,jdbcType=INTEGER},
+      </if>
+      <if test="builtInUser != null">
+        #{builtInUser,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -276,6 +283,9 @@
       <if test="record.secretLevel != null">
         `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
       </if>
+      <if test="record.builtInUser != null">
+        `built_in_user` = #{record.builtInUser,jdbcType=BIT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -297,7 +307,8 @@
       `state_code` = #{record.stateCode,jdbcType=INTEGER},
       `last_name` = #{record.lastName,jdbcType=VARCHAR},
       `first_name` = #{record.firstName,jdbcType=VARCHAR},
-      `secret_level` = #{record.secretLevel,jdbcType=INTEGER}
+      `secret_level` = #{record.secretLevel,jdbcType=INTEGER},
+      `built_in_user` = #{record.builtInUser,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -347,6 +358,9 @@
       <if test="secretLevel != null">
         `secret_level` = #{secretLevel,jdbcType=INTEGER},
       </if>
+      <if test="builtInUser != null">
+        `built_in_user` = #{builtInUser,jdbcType=BIT},
+      </if>
     </set>
     where `id` = #{id,jdbcType=BIGINT}
   </update>
@@ -365,7 +379,8 @@
       `state_code` = #{stateCode,jdbcType=INTEGER},
       `last_name` = #{lastName,jdbcType=VARCHAR},
       `first_name` = #{firstName,jdbcType=VARCHAR},
-      `secret_level` = #{secretLevel,jdbcType=INTEGER}
+      `secret_level` = #{secretLevel,jdbcType=INTEGER},
+      `built_in_user` = #{builtInUser,jdbcType=BIT}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
