@@ -1,13 +1,18 @@
 package net.renfei.domain;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import net.renfei.application.ApplicationContextUtil;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
+import net.renfei.model.ListData;
+import net.renfei.model.SecretLevelEnum;
 import net.renfei.repositories.SysAccountMapper;
 import net.renfei.repositories.SysAccountRoleMapper;
 import net.renfei.repositories.SysRoleMapper;
 import net.renfei.repositories.model.*;
 import net.renfei.utils.ListUtils;
+import net.renfei.utils.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,17 +34,24 @@ public final class UserDomain implements Serializable {
     private final SysAccountMapper sysAccountMapper;
     private final SysAccountRoleMapper sysAccountRoleMapper;
 
-    {
+    private UserDomain() {
         sysRoleMapper = (SysRoleMapper) ApplicationContextUtil.getBean("sysRoleMapper");
         sysAccountMapper = (SysAccountMapper) ApplicationContextUtil.getBean("sysAccountMapper");
         sysAccountRoleMapper = (SysAccountRoleMapper) ApplicationContextUtil.getBean("sysAccountRoleMapper");
+        user = null;
     }
 
     public UserDomain(User user) {
+        sysRoleMapper = (SysRoleMapper) ApplicationContextUtil.getBean("sysRoleMapper");
+        sysAccountMapper = (SysAccountMapper) ApplicationContextUtil.getBean("sysAccountMapper");
+        sysAccountRoleMapper = (SysAccountRoleMapper) ApplicationContextUtil.getBean("sysAccountRoleMapper");
         this.user = user;
     }
 
     public UserDomain(String userName) {
+        sysRoleMapper = (SysRoleMapper) ApplicationContextUtil.getBean("sysRoleMapper");
+        sysAccountMapper = (SysAccountMapper) ApplicationContextUtil.getBean("sysAccountMapper");
+        sysAccountRoleMapper = (SysAccountRoleMapper) ApplicationContextUtil.getBean("sysAccountRoleMapper");
         this.user = getUserByUserName(userName);
     }
 
@@ -114,6 +126,12 @@ public final class UserDomain implements Serializable {
         }
     }
 
+    public static ListData<User> queryUserList(String userName, String email, String phone, Integer stateCode,
+                                               SecretLevelEnum secretLevelEnum, String pages, String rows) {
+        UserDomain userDomain = new UserDomain();
+        return userDomain.selectUserList(userName, email, phone, stateCode, secretLevelEnum, pages, rows);
+    }
+
     private User getUserByUserName(String userName) {
         SysAccountExample example = new SysAccountExample();
         example.createCriteria()
@@ -124,10 +142,43 @@ public final class UserDomain implements Serializable {
             throw new BusinessException("用户不存在");
         }
         // 检查用户状态
-        if(account.getStateCode()<0){
+        if (account.getStateCode() < 0) {
             logger.error("根据用户名 {} 查询账户已被冻结。", userName);
             throw new BusinessException("账户已被冻结");
         }
         return new User(account);
+    }
+
+    private ListData<User> selectUserList(String userName, String email, String phone, Integer stateCode,
+                                          SecretLevelEnum secretLevelEnum, String pages, String rows) {
+        SysAccountExample example = new SysAccountExample();
+        SysAccountExample.Criteria criteria = example.createCriteria()
+                .andBuiltInUserEqualTo(false);
+        if (userName != null && !userName.isEmpty()) {
+            criteria.andUserNameLike("%" + userName + "%");
+        }
+        if (email != null && !email.isEmpty()) {
+            criteria.andEmailLike("%" + email + "%");
+        }
+        if (phone != null && !phone.isEmpty()) {
+            criteria.andPhoneLike("%" + phone + "%");
+        }
+        if (stateCode != null) {
+            criteria.andStateCodeEqualTo(stateCode);
+        }
+        if (secretLevelEnum != null) {
+            criteria.andSecretLevelEqualTo(secretLevelEnum.getLevel());
+        }
+        Page<SysAccount> page = PageHelper.startPage(
+                NumberUtils.parseInt(pages, 1), NumberUtils.parseInt(rows, 10));
+        sysAccountMapper.selectByExample(example);
+        ListData<User> userListData = new ListData<>(page);
+        List<User> users = new CopyOnWriteArrayList<>();
+        for (SysAccount sysAccount : page.getResult()
+        ) {
+            users.add(new User(sysAccount));
+        }
+        userListData.setData(users);
+        return userListData;
     }
 }
