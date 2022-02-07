@@ -47,12 +47,6 @@ public final class BlogDomain {
     private final BlogPostsMapper blogPostsMapper;
     private final BlogCategoryMapper categoryMapper;
 
-    {
-        blogPostsMapper = (BlogPostsMapper) ApplicationContextUtil.getBean("blogPostsMapper");
-        categoryMapper = (BlogCategoryMapper) ApplicationContextUtil.getBean("blogCategoryMapper");
-
-    }
-
     /**
      * 私有的默认构造，禁止外部直接实例化默认配置
      */
@@ -61,6 +55,8 @@ public final class BlogDomain {
         author = null;
         category = null;
         commentList = null;
+        blogPostsMapper = (BlogPostsMapper) ApplicationContextUtil.getBean("blogPostsMapper");
+        categoryMapper = (BlogCategoryMapper) ApplicationContextUtil.getBean("blogCategoryMapper");
     }
 
     /**
@@ -74,6 +70,8 @@ public final class BlogDomain {
      */
     public BlogDomain(Long id, User user, String password, boolean isAdmin)
             throws NotExistException, NeedPasswordException, SecretLevelException {
+        blogPostsMapper = (BlogPostsMapper) ApplicationContextUtil.getBean("blogPostsMapper");
+        categoryMapper = (BlogCategoryMapper) ApplicationContextUtil.getBean("blogCategoryMapper");
         if (id == null) {
             throw new NotExistException("博客文章不存在");
         }

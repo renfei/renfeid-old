@@ -74,5 +74,6 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_account_role"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_menu"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_role_permission"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_setting"/>-->
     </context>
 </generatorConfiguration>

@@ -65,7 +65,11 @@ public enum SystemTypeEnum {
     /**
      * 系统菜单模块
      */
-    SYS_MENU("");
+    SYS_MENU(""),
+    /**
+     * 系统设置模块
+     */
+    SYS_SETTING("");
 
     private final String uriPath;
 

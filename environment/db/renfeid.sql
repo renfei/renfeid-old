@@ -4254,6 +4254,22 @@ CREATE TABLE `sys_secret_key`  (
 INSERT INTO `sys_secret_key` VALUES (10000, 'a3c2a92a-08ce-4598-80ef-55e0366b4484', NULL, '94xIh1Mxx0LY7dLT', '2022-01-09 19:25:41', NULL);
 
 -- ----------------------------
+-- Table structure for sys_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_setting`;
+CREATE TABLE `sys_setting` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `setting_key` varchar(255) NOT NULL COMMENT '键值',
+  `setting_value` varchar(2048) NOT NULL COMMENT '内容',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='系统设置（KV键值对结构）';
+
+-- ----------------------------
+-- Records of sys_setting
+-- ----------------------------
+INSERT INTO `sys_setting` VALUES (1, 'SYSTEM_OPERATION_STATUS', 'OPENED');
+
+-- ----------------------------
 -- Table structure for sys_site_footer_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_site_footer_menu`;

@@ -184,4 +184,18 @@ public interface SysService {
      * @return
      */
     void deleteSysMenu(User user, Long id);
+
+    /**
+     * 查询系统运行状态
+     *
+     * @return
+     */
+    SystemOperationStatusEnum querySystemOperationStatus();
+
+    /**
+     * 设置系统运行状态
+     *
+     * @param systemOperationStatusEnum 系统运行状态
+     */
+    void settingSystemOperationStatus(SystemOperationStatusEnum systemOperationStatusEnum);
 }

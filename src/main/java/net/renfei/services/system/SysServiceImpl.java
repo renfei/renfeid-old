@@ -37,6 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SysServiceImpl extends BaseService implements SysService {
     private static final Logger logger = LoggerFactory.getLogger(SysServiceImpl.class);
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "system:";
+    private static final String SYSTEM_OPERATION_STATUS_KEY = "SYSTEM_OPERATION_STATUS";
     private final LeafService leafService;
 
     private final RedisService redisService;
@@ -45,6 +46,7 @@ public class SysServiceImpl extends BaseService implements SysService {
     private final SysRegionMapper regionMapper;
     private final UserDetailUtils userDetailUtils;
     private final SysApiListMapper sysApiListMapper;
+    private final SysSettingMapper sysSettingMapper;
     private final SysSiteMenuMapper sysSiteMenuMapper;
     private final SysSecretKeyMapper sysSecretKeyMapper;
     private final SysAccountRoleMapper sysAccountRoleMapper;
@@ -59,6 +61,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                           SysRegionMapper regionMapper,
                           UserDetailUtils userDetailUtils,
                           SysApiListMapper sysApiListMapper,
+                          SysSettingMapper sysSettingMapper,
                           SysSiteMenuMapper sysSiteMenuMapper,
                           SysSecretKeyMapper sysSecretKeyMapper,
                           SysAccountRoleMapper sysAccountRoleMapper,
@@ -72,6 +75,7 @@ public class SysServiceImpl extends BaseService implements SysService {
         this.regionMapper = regionMapper;
         this.userDetailUtils = userDetailUtils;
         this.sysApiListMapper = sysApiListMapper;
+        this.sysSettingMapper = sysSettingMapper;
         this.sysSiteMenuMapper = sysSiteMenuMapper;
         this.sysSecretKeyMapper = sysSecretKeyMapper;
         this.sysAccountRoleMapper = sysAccountRoleMapper;
@@ -992,6 +996,28 @@ public class SysServiceImpl extends BaseService implements SysService {
     }
 
     /**
+     * 查询系统运行状态
+     *
+     * @return
+     */
+    @Override
+    public SystemOperationStatusEnum querySystemOperationStatus() {
+        String status = this.querySystemSetting(SYSTEM_OPERATION_STATUS_KEY)
+                .orElse(SystemOperationStatusEnum.OPENED.toString());
+        return SystemOperationStatusEnum.valueOf(status);
+    }
+
+    /**
+     * 设置系统运行状态
+     *
+     * @param systemOperationStatusEnum 系统运行状态
+     */
+    @Override
+    public void settingSystemOperationStatus(SystemOperationStatusEnum systemOperationStatusEnum) {
+        this.settingSystemSetting(SYSTEM_OPERATION_STATUS_KEY, systemOperationStatusEnum.toString());
+    }
+
+    /**
      * 递归查询子菜单
      *
      * @param user            当前用户
@@ -1119,5 +1145,43 @@ public class SysServiceImpl extends BaseService implements SysService {
             menus.add(linkSubTree);
         }
         return menus;
+    }
+
+    /**
+     * 查询系统设置
+     *
+     * @param key 键值
+     * @return
+     */
+    private Optional<String> querySystemSetting(String key) {
+        SysSettingExample example = new SysSettingExample();
+        example.createCriteria()
+                .andSettingKeyEqualTo(key);
+        List<SysSetting> sysSettings = sysSettingMapper.selectByExample(example);
+        if (sysSettings.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(ListUtils.getOne(sysSettings).getSettingValue());
+    }
+
+    /**
+     * 设置系统设置
+     *
+     * @param key   键值对
+     * @param value 键值对
+     */
+    private void settingSystemSetting(String key, String value) {
+        SysSetting sysSetting = new SysSetting();
+        sysSetting.setSettingValue(value);
+        if (this.querySystemSetting(key).isPresent()) {
+            SysSettingExample example = new SysSettingExample();
+            example.createCriteria()
+                    .andSettingKeyEqualTo(key);
+            sysSettingMapper.updateByExampleSelective(sysSetting, example);
+        } else {
+            sysSetting.setSettingKey(key);
+            sysSettingMapper.insertSelective(sysSetting);
+        }
+
     }
 }
