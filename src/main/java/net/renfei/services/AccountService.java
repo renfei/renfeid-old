@@ -3,6 +3,8 @@ package net.renfei.services;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
+import net.renfei.model.ListData;
+import net.renfei.model.SecretLevelEnum;
 import net.renfei.model.account.UpdatePasswordVO;
 import net.renfei.model.auth.SignInVO;
 import net.renfei.model.auth.SignUpActivationVO;
@@ -61,4 +63,27 @@ public interface AccountService {
     void updateAccountAll(SysAccount account);
 
     void updatePassword(SysAccount account, UpdatePasswordVO updatePasswordVO) throws PasswordUtils.CannotPerformOperationException;
+
+    /**
+     * 查询账户信息列表
+     *
+     * @param userName        用户名
+     * @param email           邮箱地址
+     * @param phone           电话号码
+     * @param stateCode       状态
+     * @param secretLevelEnum 保密等级
+     * @param pages           页码
+     * @param rows            每页行数
+     * @return
+     */
+    ListData<User> queryAccountList(String userName, String email, String phone, Integer stateCode,
+                                    SecretLevelEnum secretLevelEnum, String pages, String rows);
+
+    /**
+     * 给用户定密级
+     *
+     * @param userName        用户名
+     * @param secretLevelEnum 密级
+     */
+    void settingAccountSecretLevel(String userName, SecretLevelEnum secretLevelEnum);
 }

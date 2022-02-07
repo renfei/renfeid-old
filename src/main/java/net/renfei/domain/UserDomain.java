@@ -112,6 +112,12 @@ public final class UserDomain implements Serializable {
         return Optional.ofNullable(user);
     }
 
+    public void settingSecretLevel(SecretLevelEnum secretLevelEnum) {
+        SysAccount sysAccount = getSysAccount();
+        sysAccount.setSecretLevel(secretLevelEnum.getLevel());
+        sysAccountMapper.updateByPrimaryKey(sysAccount);
+    }
+
     public static class GrantedAuthorityImpl implements GrantedAuthority {
         private static final long serialVersionUID = 1068092439492540925L;
         private final String authority;
@@ -180,5 +186,9 @@ public final class UserDomain implements Serializable {
         }
         userListData.setData(users);
         return userListData;
+    }
+
+    private SysAccount getSysAccount() {
+        return sysAccountMapper.selectByPrimaryKey(this.user.getId());
     }
 }

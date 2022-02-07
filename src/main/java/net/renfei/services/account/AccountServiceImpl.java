@@ -4,9 +4,11 @@ import com.aliyun.oss.ServiceException;
 import net.renfei.discuz.repositories.*;
 import net.renfei.discuz.repositories.entity.*;
 import net.renfei.discuz.ucenter.client.Client;
+import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.exception.NeedU2FException;
+import net.renfei.model.ListData;
 import net.renfei.model.SecretLevelEnum;
 import net.renfei.model.account.UpdatePasswordVO;
 import net.renfei.model.auth.SignInVO;
@@ -492,5 +494,34 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         } else {
             throw new BusinessException("当前密码不正确");
         }
+    }
+
+    /**
+     * 查询账户信息列表
+     *
+     * @param userName        用户名
+     * @param email           邮箱地址
+     * @param phone           电话号码
+     * @param stateCode       状态
+     * @param secretLevelEnum 保密等级
+     * @param pages           页码
+     * @param rows            每页行数
+     * @return
+     */
+    @Override
+    public ListData<User> queryAccountList(String userName, String email, String phone, Integer stateCode, SecretLevelEnum secretLevelEnum, String pages, String rows) {
+        return UserDomain.queryUserList(userName, email, phone, stateCode, secretLevelEnum, pages, rows);
+    }
+
+    /**
+     * 给用户定密级
+     *
+     * @param userName        用户名
+     * @param secretLevelEnum 密级
+     */
+    @Override
+    public void settingAccountSecretLevel(String userName, SecretLevelEnum secretLevelEnum) {
+        UserDomain userDomain = new UserDomain(userName);
+        userDomain.settingSecretLevel(secretLevelEnum);
     }
 }

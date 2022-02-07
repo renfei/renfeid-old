@@ -6,9 +6,7 @@ import net.renfei.domain.user.User;
 import net.renfei.model.APIResult;
 import net.renfei.model.ListData;
 import net.renfei.model.SecretLevelEnum;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户管理API
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/_/api")
 public interface AccountManageApi {
     /**
-     * 查询账户列表
+     * 查询账户信息列表
      *
      * @param userName        用户名
      * @param email           邮箱地址
@@ -39,4 +37,15 @@ public interface AccountManageApi {
                                                @RequestParam(value = "secretLevel", required = false) SecretLevelEnum secretLevelEnum,
                                                @RequestParam(value = "pages", required = false) String pages,
                                                @RequestParam(value = "rows", required = false) String rows);
+
+    /**
+     * 用户定密接口
+     *
+     * @param userName        用户名
+     * @param secretLevelEnum 密级
+     * @return
+     */
+    @PutMapping("/account/{userName}/SecretLevel")
+    @Operation(summary = "用户定密", tags = {"账户管理接口"}, description = "用户定密级")
+    APIResult settingSecretLevel(@PathVariable("userName") String userName, @RequestParam("SecretLevel") SecretLevelEnum secretLevelEnum);
 }
