@@ -128,7 +128,7 @@ public class KitBoxController extends BaseController {
         assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
         pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_DIGTRACE.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
-        pageView.getPageHead().setDescription("域名解析信息查询工具，开放服务接口实现dig+trace域名解析过程查询。");
+        pageView.getPageHead().setDescription("域名解析信息查询工具，开放服务接口实现dig+trace域名解析过程查询");
         pageView.getPageHead().setKeywords("域名,解析,信息,查询,工具,Dig,trace,DNS");
         mv.setViewName("kitbox/digtrace");
         mv.addObject("pageView", pageView);
@@ -197,7 +197,7 @@ public class KitBoxController extends BaseController {
         assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
         pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_GETMYIP.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
-        pageView.getPageHead().setDescription("公网IP获取工具支持Linux、Windows、API");
+        pageView.getPageHead().setDescription("公网IP获取工具，获取公网IP地址，支持Linux、Windows、API调用");
         pageView.getPageHead().setKeywords("IP,公网,出口,地址,工具");
         mv.setViewName("kitbox/getmyip");
         mv.addObject("pageView", pageView);
@@ -243,7 +243,7 @@ public class KitBoxController extends BaseController {
         assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
         pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_UUID.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
-        pageView.getPageHead().setDescription("在线批量生成 UUID/GUID 工具");
+        pageView.getPageHead().setDescription("在线批量生成 UUID/GUID 工具，可批量生成 UUID/GUID，字母大小写和连词符可选择");
         pageView.getPageHead().setKeywords("UUID,GUID,在线,批量,生成,工具");
         mv.setViewName("kitbox/uuid");
         mv.addObject("pageView", pageView);
@@ -266,7 +266,7 @@ public class KitBoxController extends BaseController {
         assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
         pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_FREEMARKER_TEST.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
-        pageView.getPageHead().setDescription("FreeMarker(FTL)在线测试工具");
+        pageView.getPageHead().setDescription("FreeMarker(FTL)在线测试工具，在线运行FreeMarker(FTL)代码，测试FreeMarker(FTL)代码语法与运算符");
         pageView.getPageHead().setKeywords("FreeMarker,ftl,在线,测试,工具");
         mv.setViewName("kitbox/freemarkerTest");
         mv.addObject("pageView", pageView);
