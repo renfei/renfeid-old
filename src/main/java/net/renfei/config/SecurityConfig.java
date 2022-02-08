@@ -57,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 此处忽略开放接口地址和Druid监控接口
                 .ignoringAntMatchers(
                         "/api/**",
+                        "/graphql/**",
                         "/druid/**"
                 )
                 .and()

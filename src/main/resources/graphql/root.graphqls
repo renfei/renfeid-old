@@ -1,0 +1,13 @@
+#GraphQL查询入口
+type Query{
+    #获取顶级行政区划代码
+    rootRegion:[RegionVO]
+    #获取子级行政区划代码
+    region(regionCode:String):[RegionVO]
+    #查询IP地址信息
+    ipInfo(ip:String):IPResult
+    #IK分词
+    wordIkAnalyze(word:String):[IkAnalyzeVO]
+    #查询ICP备案信息
+    icpInfo(domain:String):IcpInfo
+}
