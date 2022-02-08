@@ -40,6 +40,7 @@
 | Quartz | 定时任务 | 2.3.2 | 为了支持分布式部署，本地定时任务不能用 |
 | SpringSecurity | 安全框架 | 5.6.1 | Spring全家桶，各种权限判断和拦截就是基于它的 |
 | Leaf | 全局发号器 | - | 美团技术团队的开源分布式ID生成，参考雪花算法 |
+| GraphQL | Graph查询语言 | - | 初步尝试探索GraphQL [www.renfei.net/Graphiql](https://www.renfei.net/Graphiql) |
 
 ### 一些计划和主张
 
