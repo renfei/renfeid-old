@@ -5,21 +5,32 @@ import net.renfei.domain.CommentDomain;
 import net.renfei.domain.comment.Comment;
 import net.renfei.domain.kitbox.KitBoxTypeEnum;
 import net.renfei.domain.user.User;
-import net.renfei.model.system.SystemTypeEnum;
+import net.renfei.exception.BusinessException;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.LinkTree;
 import net.renfei.model.StateCodeEnum;
+import net.renfei.model.kitbox.IcpQueryVo;
 import net.renfei.model.kitbox.KitBoxMenus;
+import net.renfei.model.system.SystemTypeEnum;
+import net.renfei.repositories.KitboxIcpCacheMapper;
 import net.renfei.repositories.KitboxShortUrlMapper;
+import net.renfei.repositories.model.KitboxIcpCache;
+import net.renfei.repositories.model.KitboxIcpCacheExample;
 import net.renfei.repositories.model.KitboxShortUrl;
 import net.renfei.repositories.model.KitboxShortUrlExample;
 import net.renfei.services.BaseService;
 import net.renfei.services.KitBoxService;
 import net.renfei.services.RedisService;
 import net.renfei.services.SysService;
+import net.renfei.utils.DateUtils;
+import net.renfei.utils.IcpQueryUtil;
 import net.renfei.utils.ListUtils;
 import net.renfei.utils.StringUtils;
+import org.apache.hc.core5.http.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -36,6 +47,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @Service
 public class KitBoxServiceImpl extends BaseService implements KitBoxService {
+    private static final Logger logger = LoggerFactory.getLogger(KitBoxServiceImpl.class);
     private static final String REDIS_KEY_KITBOX = REDIS_KEY + "kitbox:";
     public static final String NETWORK_TOOL = "networkTool";
     public static final String DEVELOPMENT_TOOL = "developmentTool";
@@ -44,13 +56,16 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     private final SysService sysService;
     private final RedisService redisService;
     private final KitboxShortUrlMapper shortUrlMapper;
+    private final KitboxIcpCacheMapper icpCacheMapper;
 
     public KitBoxServiceImpl(SysService sysService,
                              RedisService redisService,
-                             KitboxShortUrlMapper kitboxShortUrlMapper) {
+                             KitboxShortUrlMapper kitboxShortUrlMapper,
+                             KitboxIcpCacheMapper kitboxIcpCacheMapper) {
         this.sysService = sysService;
         this.redisService = redisService;
         this.shortUrlMapper = kitboxShortUrlMapper;
+        this.icpCacheMapper = kitboxIcpCacheMapper;
     }
 
     /**
@@ -79,6 +94,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_DIGTRACE));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_DNSQPSE));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_WHOIS));
+            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_ICP));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_GETMYIP));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_CLIENV));
             kitBoxMenus.add(KitBoxMenus.builder()
@@ -291,6 +307,89 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     @Override
     public void updateShortUrl(KitboxShortUrl shortUrl) {
         shortUrlMapper.updateByPrimaryKeySelective(shortUrl);
+    }
+
+    @Override
+    public IcpQueryVo.IcpInfo queryIcpInfo(String domain, Boolean refresh) {
+        domain = domain.toLowerCase();
+        if (!StringUtils.isDomain(domain)) {
+            throw new BusinessException("请输入正确的域名格式");
+        }
+        String redisKey = REDIS_KEY_KITBOX + "icp:" + domain;
+        IcpQueryVo.IcpInfo icpInfo = null;
+        assert systemConfig != null;
+        if (refresh != null && refresh) {
+            // 强制刷新，删除缓存
+            if (systemConfig.isEnableRedis()) {
+                redisService.del(redisKey);
+            }
+        }
+        if (systemConfig.isEnableRedis()) {
+            // 查询是否曾经缓存过对象，有缓存直接吐出去
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof List) {
+                    icpInfo = (IcpQueryVo.IcpInfo) object;
+                }
+            }
+        }
+        if (icpInfo == null) {
+            // 在 Redis 中没查到
+            if (refresh == null || !refresh) {
+                // 去数据库查
+                KitboxIcpCacheExample example = new KitboxIcpCacheExample();
+                example.createCriteria()
+                        .andDomainEqualTo(domain);
+                KitboxIcpCache kitboxIcpCache = ListUtils.getOne(icpCacheMapper.selectByExample(example));
+                if (kitboxIcpCache != null) {
+                    icpInfo = new IcpQueryVo.IcpInfo();
+                    BeanUtils.copyProperties(kitboxIcpCache, icpInfo);
+                }
+            }
+        }
+        if (icpInfo == null) {
+            // 去工信部查询，并更新数据库
+            try {
+                icpInfo = queryIcpInfo(domain);
+            } catch (IOException | ParseException e) {
+                logger.error("ICP查询服务暂时不可用", e);
+                throw new BusinessException("服务暂时不可用");
+            }
+            if (icpInfo != null) {
+                // 更新数据库
+                KitboxIcpCacheExample example = new KitboxIcpCacheExample();
+                example.createCriteria()
+                        .andDomainEqualTo(domain);
+                KitboxIcpCache kitboxIcpCache = ListUtils.getOne(icpCacheMapper.selectByExample(example));
+                if (kitboxIcpCache != null) {
+                    BeanUtils.copyProperties(icpInfo, kitboxIcpCache);
+                    kitboxIcpCache.setCacheTime(DateUtils.getDate("yyyy-MM-dd hh:mm:ss"));
+                    icpInfo.setCacheTime(DateUtils.getDate("yyyy-MM-dd hh:mm:ss"));
+                    icpCacheMapper.updateByPrimaryKey(kitboxIcpCache);
+                } else {
+                    kitboxIcpCache = new KitboxIcpCache();
+                    BeanUtils.copyProperties(icpInfo, kitboxIcpCache);
+                    kitboxIcpCache.setCacheTime(DateUtils.getDate("yyyy-MM-dd hh:mm:ss"));
+                    icpInfo.setCacheTime(DateUtils.getDate("yyyy-MM-dd hh:mm:ss"));
+                    icpCacheMapper.insertSelective(kitboxIcpCache);
+                }
+            }
+        }
+        return icpInfo;
+    }
+
+    private IcpQueryVo.IcpInfo queryIcpInfo(String domain) throws IOException, ParseException {
+        IcpQueryUtil icpQueryUtil = new IcpQueryUtil();
+        IcpQueryVo icpQueryVo = icpQueryUtil.queryIcpInfo(domain);
+        if (icpQueryVo != null && icpQueryVo.getCode() == 200 && icpQueryVo.getSuccess()) {
+            if (icpQueryVo.getParams().getList().isEmpty()) {
+                return null;
+            }
+            return icpQueryVo.getParams().getList().get(0);
+        } else {
+            logger.error("ICP查询服务暂时不可用");
+            throw new BusinessException("服务暂时不可用");
+        }
     }
 
     private LinkTree buildLinkTree(KitBoxTypeEnum kitBoxTypeEnum) {

@@ -103,6 +103,10 @@ public enum KitBoxTypeEnum {
      */
     DEVELOP_XPATH_TEST(24, "XPath在线测试工具", "XPath在线测试工具，在线测试XPath表达式", "/kitbox/xpathTest"),
     /**
+     * 域名ICP备案查询工具
+     */
+    NETWORK_ICP(25, "域名ICP备案查询工具", "查询域名是否已经ICP备案，查询ICP备案的详细信息", "/kitbox/icp"),
+    /**
      * 其他
      */
     OTHER(-1, "其他", "其他", "/kitbox/");

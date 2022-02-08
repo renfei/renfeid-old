@@ -73,6 +73,13 @@ public class KitBoxControllerTests extends ApplicationTests {
     }
 
     @Test
+    public void getIcpTest() throws Exception {
+        this.mockMvc.perform(get("/kitbox/icp"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void getMyIpTest() throws Exception {
         this.mockMvc.perform(get("/kitbox/getmyip"))
                 .andDo(print())

@@ -186,6 +186,29 @@ public class KitBoxController extends BaseController {
     }
 
     /**
+     * 域名ICP信息查询工具
+     *
+     * @param mv
+     * @return
+     */
+    @RequestMapping("icp")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问域名ICP信息查询工具")
+    public ModelAndView getIcp(ModelAndView mv) {
+        assert systemConfig != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_ICP.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
+        pageView.getPageHead().setDescription("域名ICP备案信息查询工具，查询域名是否已经ICP备案，ICP备案详细信息。");
+        pageView.getPageHead().setKeywords("域名,ICP,ICP备案,备案,信息,查询,工具");
+        mv.setViewName("kitbox/icp");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, NETWORK_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.NETWORK_ICP);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.NETWORK_ICP.getId());
+        return mv;
+    }
+
+    /**
      * 公网IP获取工具
      *
      * @param mv

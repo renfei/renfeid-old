@@ -7,6 +7,7 @@ import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.kitbox.FreeMarkerAndBeanVO;
+import net.renfei.model.kitbox.IcpQueryVo;
 import net.renfei.model.kitbox.IkAnalyzeVO;
 import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.SystemTypeEnum;
@@ -157,5 +158,11 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
                     .message("中文分词服务暂时不可用，请稍后再试。")
                     .build();
         }
+    }
+
+    @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "ICP备案查询接口", operation = OperationTypeEnum.RETRIEVE)
+    public APIResult<IcpQueryVo.IcpInfo> getDomainIcpInfo(String domain, Boolean refresh) {
+        return new APIResult<>(kitBoxService.queryIcpInfo(domain, refresh));
     }
 }

@@ -5,6 +5,7 @@ import net.renfei.domain.kitbox.KitBoxTypeEnum;
 import net.renfei.domain.user.User;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
+import net.renfei.model.kitbox.IcpQueryVo;
 import net.renfei.model.kitbox.KitBoxMenus;
 import net.renfei.repositories.model.KitboxShortUrl;
 
@@ -61,4 +62,6 @@ public interface KitBoxService {
     KitboxShortUrl createShortUrl(String url, User user);
 
     void updateShortUrl(KitboxShortUrl shortUrl);
+
+    IcpQueryVo.IcpInfo queryIcpInfo(String domain, Boolean refresh);
 }

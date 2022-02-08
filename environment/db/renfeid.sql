@@ -110,17 +110,43 @@ CREATE TABLE `docs_online_documents`  (
 INSERT INTO `docs_online_documents` VALUES (1, 'Java', 'JavaSE', '8u281', 'en', 'https://cdn.renfei.net/docs/java/javase/8u281/en/index.html', 'Java SE 8 API 英文原版在线文档手册');
 
 -- ----------------------------
+-- Table structure for kitbox_icp_cache
+-- ----------------------------
+DROP TABLE IF EXISTS `kitbox_icp_cache`;
+CREATE TABLE `kitbox_icp_cache` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `content_type_name` varchar(2048) DEFAULT NULL,
+  `domain` varchar(2048) DEFAULT NULL COMMENT '域名',
+  `domain_id` bigint(20) DEFAULT NULL COMMENT '域名ID',
+  `leaderName` varchar(2048) DEFAULT NULL COMMENT '负责人名称',
+  `limitAccess` varchar(255) DEFAULT NULL COMMENT '是否限制接入',
+  `main_id` bigint(20) DEFAULT NULL COMMENT '主体ID',
+  `main_licence` varchar(255) DEFAULT NULL COMMENT '主体备案号',
+  `nature_name` varchar(255) DEFAULT NULL COMMENT '主办单位性质',
+  `service_id` bigint(20) DEFAULT NULL COMMENT '网站ID',
+  `service_licence` varchar(255) DEFAULT NULL COMMENT '网站备案号',
+  `unit_name` varchar(2048) DEFAULT NULL COMMENT '主办单位名称',
+  `update_record_time` varchar(255) DEFAULT NULL COMMENT '审核日期',
+  `cache_time` varchar(255) NOT NULL COMMENT '缓存时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='工具箱-ICP信息缓存表';
+
+-- ----------------------------
+-- Records of kitbox_icp_cache
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for kitbox_short_url
 -- ----------------------------
 DROP TABLE IF EXISTS `kitbox_short_url`;
 CREATE TABLE `kitbox_short_url` (
- `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
- `short_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '短网址编号',
- `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '长网址',
- `add_time` datetime NOT NULL COMMENT '添加时间',
- `views` bigint(255) unsigned NOT NULL DEFAULT 0 COMMENT '访问量',
- `state_code` int(11) NOT NULL DEFAULT 1 COMMENT '状态',
- `add_user` bigint(20) DEFAULT NULL COMMENT '添加用户',
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `short_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '短网址编号',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '长网址',
+  `add_time` datetime NOT NULL COMMENT '添加时间',
+  `views` bigint(255) unsigned NOT NULL DEFAULT 0 COMMENT '访问量',
+  `state_code` int(11) NOT NULL DEFAULT 1 COMMENT '状态',
+  `add_user` bigint(20) DEFAULT NULL COMMENT '添加用户',
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='工具箱：短网址';
 

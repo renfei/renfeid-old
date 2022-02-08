@@ -91,4 +91,24 @@ public class KitBoxApiControllerTests extends ApplicationTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.code").value(200));
     }
+
+    @Test
+    public void getDomainIcpInfoTest() throws Exception {
+        this.mockMvc.perform(get("/api/domain/icp/renfei.net"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+        this.mockMvc.perform(get("/api/domain/icp/renfei.net"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+        this.mockMvc.perform(get("/api/domain/icp/renfei.net")
+                        .param("refresh", "true"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.code").value(200));
+    }
 }
