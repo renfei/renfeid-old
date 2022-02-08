@@ -90,6 +90,8 @@
         <aliyun.green.verson>3.6.5</aliyun.green.verson>
         <jjwt.version>0.11.2</jjwt.version>
         <httpclient5.version>5.1.3</httpclient5.version>
+        <graphql.version>5.0.2</graphql.version>
+        <graphql-java-tools.version>5.2.4</graphql-java-tools.version>
         <sonar.organization>renfei</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
@@ -307,6 +309,21 @@
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>${httpclient5.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-spring-boot-starter</artifactId>
+            <version>${graphql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphiql-spring-boot-starter</artifactId>
+            <version>${graphql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java-tools</artifactId>
+            <version>${graphql-java-tools.version}</version>
         </dependency>
     </dependencies>
 
