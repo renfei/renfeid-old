@@ -50,6 +50,14 @@
                                 </div>
                                 <div class="form-group row">
                                     <label for="countryShort"
+                                           class="col-sm-2 col-form-label col-form-label-sm">主办单位性质</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" readonly class="form-control form-control-sm"
+                                               id="natureName" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="countryShort"
                                            class="col-sm-2 col-form-label col-form-label-sm">主体备案号</label>
                                     <div class="col-sm-10">
                                         <input type="text" readonly class="form-control form-control-sm"
@@ -62,6 +70,14 @@
                                     <div class="col-sm-10">
                                         <input type="text" readonly class="form-control form-control-sm"
                                                id="serviceLicence" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="countryShort"
+                                           class="col-sm-2 col-form-label col-form-label-sm">网站前置审批项</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" readonly class="form-control form-control-sm"
+                                               id="contentTypeName" value="">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -133,12 +149,14 @@
                     url += "?refresh=true";
                 }
                 $("#unitName").val("");
+                $("#natureName").val("");
                 $("#mainLicence").val("");
                 $("#serviceLicence").val("");
                 $("#updateRecordTime").val("");
                 $("#limitAccess").val("");
                 $("#leaderName").val("");
                 $("#cacheTime").val("");
+                $("#contentTypeName").val("");
                 $.ajax({
                     url: url,
                     type: 'GET',
@@ -152,12 +170,14 @@
                                 msg("未查询到备案信息", "error");
                             } else {
                                 $("#unitName").val(data.data.unitName);
+                                $("#natureName").val(data.data.natureName);
                                 $("#mainLicence").val(data.data.mainLicence);
                                 $("#serviceLicence").val(data.data.serviceLicence);
                                 $("#updateRecordTime").val(data.data.updateRecordTime);
                                 $("#limitAccess").val(data.data.limitAccess);
                                 $("#leaderName").val(data.data.leaderName);
                                 $("#cacheTime").val(data.data.cacheTime);
+                                $("#contentTypeName").val(data.data.contentTypeName);
                                 $("#btn").html("查询");
                             }
                         } else {
