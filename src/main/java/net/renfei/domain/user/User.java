@@ -1,6 +1,8 @@
 package net.renfei.domain.user;
 
+import net.renfei.application.ApplicationContextUtil;
 import net.renfei.model.SecretLevelEnum;
+import net.renfei.repositories.SysAccountMapper;
 import net.renfei.repositories.model.SysAccount;
 
 import java.io.Serializable;
@@ -30,6 +32,21 @@ public class User implements Serializable {
     }
 
     public User(Long id) {
+        SysAccountMapper sysAccountMapper = (SysAccountMapper) ApplicationContextUtil.getBean("sysAccountMapper");
+        assert sysAccountMapper != null;
+        SysAccount account = sysAccountMapper.selectByPrimaryKey(id);
+        this.id = account.getId();
+        this.userName = account.getUserName();
+        this.uuid = account.getUuid();
+        this.email = account.getEmail();
+        this.phone = account.getPhone();
+        this.lastName = account.getLastName();
+        this.firstName = account.getFirstName();
+        this.webSite = "";
+        this.ucScript = "";
+        this.secretLevelEnum = SecretLevelEnum.valueOf(account.getSecretLevel());
+        this.totp = account.getTotp();
+        this.registrationDate = account.getRegistrationDate();
     }
 
     public User(SysAccount account) {
