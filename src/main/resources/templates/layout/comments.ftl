@@ -56,7 +56,7 @@
                             <div class="form-group row">
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-10">
-                                    <button type="button" onclick="comment('${commentsTypeId}',${commentsObjId})"
+                                    <button type="button" onclick="comment('${commentsTypeId}',${commentsObjId!?c})"
                                             class="btn btn-primary btn-lg btn-block">
                                         提 交
                                     </button>
