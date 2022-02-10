@@ -40,7 +40,6 @@ public class AuthPageController extends BaseController {
         pageView.getPageHead().setTitle("登录 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
         mv.addObject("callback", getCallBack(callback));
-        mv.addObject("ReCAPTCHA_Client_Key", systemConfig.getGoogle().getReCAPTCHA().getClientKey());
         mv.addObject("title", "登录 - " + systemConfig.getSiteName());
         mv.setViewName("auth/signIn");
         return mv;
@@ -59,7 +58,6 @@ public class AuthPageController extends BaseController {
         assert systemConfig != null;
         pageView.getPageHead().setTitle("创建您的账户 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
-        mv.addObject("ReCAPTCHA_Client_Key", systemConfig.getGoogle().getReCAPTCHA().getClientKey());
         mv.addObject("pageView", pageView);
         mv.setViewName("auth/signUp");
         return mv;
@@ -89,7 +87,6 @@ public class AuthPageController extends BaseController {
         assert systemConfig != null;
         pageView.getPageHead().setTitle("激活您的账户 - " + systemConfig.getSiteName());
         mv.addObject("pageView", pageView);
-        mv.addObject("ReCAPTCHA_Client_Key", systemConfig.getGoogle().getReCAPTCHA().getClientKey());
         mv.setViewName("auth/signUpActivation");
         return mv;
     }

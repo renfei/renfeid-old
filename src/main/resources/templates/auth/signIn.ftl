@@ -181,81 +181,76 @@
             }
             $("#signInBtn").attr('disabled', true);
             $("#signInBtn").val('登录中...');
-            grecaptcha.ready(function () {
-                grecaptcha.execute('${ReCAPTCHA_Client_Key}', {action: 'signIn'}).then(function (token) {
-                    signInVo.reCAPTCHAToken = token;
-                    $.ajax({
-                        url: '/-/api/auth/signIn',
-                        type: 'POST',
-                        async: true,
-                        data: JSON.stringify(signInVo),
-                        timeout: 20000,
-                        dataType: 'JSON',
-                        contentType: "application/json;charset=utf-8",
-                        success: function (data, textStatus, jqXHR) {
-                            $("#signInBtn").val('登 录');
-                            $("#signInBtn").attr('disabled', false);
-                            if (data.code === 200) {
-                                if (data.data.ucScript !== undefined && data.data.ucScript !== "") {
-                                    let datas = data.data.split("|");
-                                    if (datas.length === 2) {
-                                        loadJS(datas[0], function () {
-                                            loadJS(datas[1], function () {
-                                                if (oauthCallback === "") {
-                                                    window.location.href = "/";
-                                                } else {
-                                                    window.location.href = oauthCallback;
-                                                }
-                                            });
-                                        });
-                                    } else if (datas.length === 1) {
-                                        loadJS(datas[0], function () {
-                                            if (oauthCallback === "") {
-                                                window.location.href = "/";
-                                            } else {
-                                                window.location.href = oauthCallback;
-                                            }
-                                        });
+            $.ajax({
+                url: '/-/api/auth/signIn',
+                type: 'POST',
+                async: true,
+                data: JSON.stringify(signInVo),
+                timeout: 20000,
+                dataType: 'JSON',
+                contentType: "application/json;charset=utf-8",
+                success: function (data, textStatus, jqXHR) {
+                    $("#signInBtn").val('登 录');
+                    $("#signInBtn").attr('disabled', false);
+                    if (data.code === 200) {
+                        if (data.data.ucScript !== undefined && data.data.ucScript !== "") {
+                            let datas = data.data.split("|");
+                            if (datas.length === 2) {
+                                loadJS(datas[0], function () {
+                                    loadJS(datas[1], function () {
+                                        if (oauthCallback === "") {
+                                            window.location.href = "/";
+                                        } else {
+                                            window.location.href = oauthCallback;
+                                        }
+                                    });
+                                });
+                            } else if (datas.length === 1) {
+                                loadJS(datas[0], function () {
+                                    if (oauthCallback === "") {
+                                        window.location.href = "/";
+                                    } else {
+                                        window.location.href = oauthCallback;
                                     }
-                                }
-                                if(data.data.accessToken !== undefined && data.data.accessToken !== ""){
-                                    setStore("AccessToken",data.data.accessToken);
-                                }
-                                if (oauthCallback === "") {
-                                    window.location.href = "/";
-                                } else {
-                                    window.location.href = oauthCallback;
-                                }
-                            } else if (data.code === 402) {
-                                $("#u2fInput").show();
-                                errorMsg("账户开启了两步认证（U2F），请输入U2F验证码");
-                                $("#signInBtn").val('登 录');
-                                $("#signInBtn").attr('disabled', false);
-                                return false;
-                            } else {
-                                if ("AESKeyId不存在" === data.message) {
-                                    removeStore("ClientPublicKey");
-                                    removeStore("ClientPrivateKey");
-                                    removeStore("aesKey");
-                                    removeStore("aesKeyId");
-                                    return signIn();
-                                } else {
-                                    errorMsg(data.message);
-                                    $("#signInBtn").val('登 录');
-                                    $("#signInBtn").attr('disabled', false);
-                                    return false;
-                                }
+                                });
                             }
-                        },
-                        error: function (xhr, textStatus) {
+                        }
+                        if(data.data.accessToken !== undefined && data.data.accessToken !== ""){
+                            setStore("AccessToken",data.data.accessToken);
+                        }
+                        if (oauthCallback === "") {
+                            window.location.href = "/";
+                        } else {
+                            window.location.href = oauthCallback;
+                        }
+                    } else if (data.code === 402) {
+                        $("#u2fInput").show();
+                        errorMsg("账户开启了两步认证（U2F），请输入U2F验证码");
+                        $("#signInBtn").val('登 录');
+                        $("#signInBtn").attr('disabled', false);
+                        return false;
+                    } else {
+                        if ("AESKeyId不存在" === data.message) {
+                            removeStore("ClientPublicKey");
+                            removeStore("ClientPrivateKey");
+                            removeStore("aesKey");
+                            removeStore("aesKeyId");
+                            return signIn();
+                        } else {
+                            errorMsg(data.message);
                             $("#signInBtn").val('登 录');
                             $("#signInBtn").attr('disabled', false);
-                        },
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                            return false;
                         }
-                    });
-                });
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    $("#signInBtn").val('登 录');
+                    $("#signInBtn").attr('disabled', false);
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                }
             });
         }
     </script>

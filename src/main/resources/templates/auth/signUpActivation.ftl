@@ -99,35 +99,30 @@
                 activationVo.code = $("#code").val();
                 $("#activationBtn").attr('disabled', true);
                 $("#activationBtn").val('激活中...');
-                grecaptcha.ready(function () {
-                    grecaptcha.execute('${ReCAPTCHA_Client_Key}', {action: 'activation'}).then(function (token) {
-                        activationVo.reCAPTCHAToken = token;
-                        $.ajax({
-                            url: '/-/api/auth/signUp/activation',
-                            type: 'POST',
-                            async: true,
-                            data: JSON.stringify(activationVo),
-                            timeout: 5000,
-                            dataType: 'JSON',
-                            contentType: "application/json;charset=utf-8",
-                            success: function (data, textStatus, jqXHR) {
-                                if (data.code === 200) {
-                                    $("#form").hide();
-                                    $("#success").show();
-                                } else {
-                                    $("#form").hide();
-                                    $("#fail").show();
-                                }
-                            },
-                            error: function (xhr, textStatus) {
-                                $("#signInBtn").val('创 建');
-                                $("#signInBtn").attr('disabled', false);
-                            },
-                            beforeSend: function (xhr) {
-                                xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
-                            }
-                        });
-                    });
+                $.ajax({
+                    url: '/-/api/auth/signUp/activation',
+                    type: 'POST',
+                    async: true,
+                    data: JSON.stringify(activationVo),
+                    timeout: 5000,
+                    dataType: 'JSON',
+                    contentType: "application/json;charset=utf-8",
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.code === 200) {
+                            $("#form").hide();
+                            $("#success").show();
+                        } else {
+                            $("#form").hide();
+                            $("#fail").show();
+                        }
+                    },
+                    error: function (xhr, textStatus) {
+                        $("#signInBtn").val('创 建');
+                        $("#signInBtn").attr('disabled', false);
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    }
                 });
             }
         </script>

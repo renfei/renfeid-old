@@ -88,36 +88,31 @@
             signUpVo.keyUuid = getStore("aesKeyId");
             $("#signUpBtn").attr('disabled', true);
             $("#signUpBtn").val('创建中...');
-            grecaptcha.ready(function () {
-                grecaptcha.execute('${ReCAPTCHA_Client_Key}', {action: 'signUp'}).then(function (token) {
-                    signUpVo.reCAPTCHAToken = token;
-                    $.ajax({
-                        url: '/-/api/auth/signUp',
-                        type: 'POST',
-                        async: true,
-                        data: JSON.stringify(signUpVo),
-                        timeout: 5000,
-                        dataType: 'JSON',
-                        contentType: "application/json;charset=utf-8",
-                        success: function (data, textStatus, jqXHR) {
-                            $("#signUpBtn").val('创 建');
-                            $("#signUpBtn").attr('disabled', false);
-                            if (data.code === 200) {
-                                window.location.href = '/auth/signUp/success';
-                            } else {
-                                errorMsg(data.message);
-                                return false;
-                            }
-                        },
-                        error: function (xhr, textStatus) {
-                            $("#signInBtn").val('创 建');
-                            $("#signInBtn").attr('disabled', false);
-                        },
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
-                        }
-                    });
-                });
+            $.ajax({
+                url: '/-/api/auth/signUp',
+                type: 'POST',
+                async: true,
+                data: JSON.stringify(signUpVo),
+                timeout: 5000,
+                dataType: 'JSON',
+                contentType: "application/json;charset=utf-8",
+                success: function (data, textStatus, jqXHR) {
+                    $("#signUpBtn").val('创 建');
+                    $("#signUpBtn").attr('disabled', false);
+                    if (data.code === 200) {
+                        window.location.href = '/auth/signUp/success';
+                    } else {
+                        errorMsg(data.message);
+                        return false;
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    $("#signInBtn").val('创 建');
+                    $("#signInBtn").attr('disabled', false);
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                }
             });
         }
     </script>

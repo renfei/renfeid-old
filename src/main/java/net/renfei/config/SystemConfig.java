@@ -475,28 +475,6 @@ public class SystemConfig {
     public static class Google {
         private String ads;
         private String analytics;
-        private ReCAPTCHA reCAPTCHA;
-
-        public static class ReCAPTCHA {
-            private String clientKey;
-            private String serverKey;
-
-            public String getClientKey() {
-                return clientKey;
-            }
-
-            public void setClientKey(String clientKey) {
-                this.clientKey = clientKey;
-            }
-
-            public String getServerKey() {
-                return serverKey;
-            }
-
-            public void setServerKey(String serverKey) {
-                this.serverKey = serverKey;
-            }
-        }
 
         public String getAds() {
             return ads;
@@ -512,14 +490,6 @@ public class SystemConfig {
 
         public void setAnalytics(String analytics) {
             this.analytics = analytics;
-        }
-
-        public ReCAPTCHA getReCAPTCHA() {
-            return reCAPTCHA;
-        }
-
-        public void setReCAPTCHA(ReCAPTCHA reCAPTCHA) {
-            this.reCAPTCHA = reCAPTCHA;
         }
     }
 
@@ -592,7 +562,7 @@ public class SystemConfig {
         }
     }
 
-    public static class Druid{
+    public static class Druid {
         private String urlMappings;
         private String userName;
         private String password;

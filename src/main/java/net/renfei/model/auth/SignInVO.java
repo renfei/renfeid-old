@@ -12,7 +12,6 @@ public class SignInVO {
     private String tOtp;
     private String keyUuid;
     private Boolean useVerCode;
-    private String reCAPTCHAToken;
 
     public String getUserName() {
         return userName;
@@ -52,13 +51,5 @@ public class SignInVO {
 
     public void setUseVerCode(Boolean useVerCode) {
         this.useVerCode = useVerCode;
-    }
-
-    public String getReCAPTCHAToken() {
-        return reCAPTCHAToken;
-    }
-
-    public void setReCAPTCHAToken(String reCAPTCHAToken) {
-        this.reCAPTCHAToken = reCAPTCHAToken;
     }
 }

@@ -98,7 +98,6 @@ system:
       - //hm.baidu.com
       - //www.googletagmanager.com
       - //www.google-analytics.com
-      - //www.recaptcha.net
     fbAppId: 205704373959112
     fbPages: 108842630700746
     favicon: https://cdn.renfei.net/favicon.ico
@@ -116,7 +115,6 @@ system:
       - https://cdn.renfei.net/thunder/js/clipboard.min.js
       - https://cdn.renfei.net/renfeid/js/bs4.pop.js
       - /js/main.js?ver=${system.version}
-      - https://www.recaptcha.net/recaptcha/api.js?render=${system.google.reCAPTCHA.clientKey}
       - https://www.googletagmanager.com/gtag/js?id=${system.google.analytics}
       - https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
   # https://github.com/renfei/ip2location/releases
@@ -163,9 +161,6 @@ system:
   google:
     analytics: 1
     ads: 1
-    reCAPTCHA:
-      clientKey: 6Le3eAsaAAAAAJ5P-m7D9tCEZbu2WLpKRoS6_Lw5
-      serverKey: 6Le3eAsaAAAAAMUFrytHPgKkMlLeWR7s1YAFrOMW
   jwt:
     secret: zL4pC7mP4vH4nY2cK1kE6lC3bJ0yC5wI4kB0kZ2wK4tW3nQ9vP1hO6vZ5jA7wP7ulN6vY3mQ7uI5wU5sE6yP0hP6pK0tF5tT1oO0nO2mL4nO8uP3kJ3rV3iJ4aD5iB5h
     issuer: RENFEI.NET
