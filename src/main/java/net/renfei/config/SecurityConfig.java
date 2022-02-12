@@ -23,13 +23,16 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final SystemConfig systemConfig;
     private final AuthorizationFilter authorizationFilter;
     private final AccessDecisionManagerImpl accessDecisionManager;
     private final FilterInvocationSecurityMetadataSourceImpl filterInvocationSecurityMetadataSource;
 
-    public SecurityConfig(AuthorizationFilter authorizationFilter,
+    public SecurityConfig(SystemConfig systemConfig,
+                          AuthorizationFilter authorizationFilter,
                           AccessDecisionManagerImpl accessDecisionManager,
                           FilterInvocationSecurityMetadataSourceImpl filterInvocationSecurityMetadataSource) {
+        this.systemConfig = systemConfig;
         this.authorizationFilter = authorizationFilter;
         this.accessDecisionManager = accessDecisionManager;
         this.filterInvocationSecurityMetadataSource = filterInvocationSecurityMetadataSource;
@@ -52,16 +55,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().csrfTokenRepository(new HttpSessionCsrfTokenRepository())
-                // 此处忽略开放接口地址和Druid监控接口
-                .ignoringAntMatchers(
-                        "/api/**",
-                        "/graphql/**",
-                        "/druid/**"
-                )
-                .and()
-                .headers()
+        if ("prod".equals(systemConfig.getActive())) {
+            http.csrf()
+                    .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+                    // 此处忽略开放接口地址和Druid监控接口
+                    .ignoringAntMatchers(
+                            "/api/**",
+                            "/graphql/**",
+                            "/druid/**"
+                    );
+        } else {
+            // 非生产环境，禁用 csrf
+            http.csrf().disable();
+        }
+        http.headers()
                 .frameOptions().sameOrigin()
                 .and()
                 .authorizeRequests()
