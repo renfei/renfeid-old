@@ -460,7 +460,14 @@ public class SysServiceImpl extends BaseService implements SysService {
                     + "  hm.src = ['ht','t','ps',':/','/h','m','.','ba','i','d','u.c','o','m/','h','m','.j','s?',analytics_bd].join('');\n"
                     + "  var s = document.getElementsByTagName(\"script\")[0]; \n"
                     + "  s.parentNode.insertBefore(hm, s);\n"
-                    + "})();\n");
+                    + "})();\n"
+                    + "\n"
+                    // Google Analytics
+                    + "window.dataLayer = window.dataLayer || [];\n" +
+                    "  function gtag(){dataLayer.push(arguments);}\n" +
+                    "  gtag('js', new Date());\n" +
+                    "\n" +
+                    "  gtag('config', '" + systemConfig.getGoogle().getAnalytics() + "');");
             if (systemConfig.isEnableRedis()) {
                 redisService.set(redisKey, pageFooter, systemConfig.getDefaultCacheSeconds());
             }
