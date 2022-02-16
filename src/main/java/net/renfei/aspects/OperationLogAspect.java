@@ -5,6 +5,7 @@ import net.renfei.config.SystemConfig;
 import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.model.log.SysLogDTO;
+import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.model.system.UserDetail;
 import net.renfei.services.LogService;
 import net.renfei.utils.IpUtils;
@@ -102,9 +103,12 @@ public class OperationLogAspect {
             operationLog.setRequAgent(request.getHeader("User-Agent"));
             operationLog.setRequReferrer(request.getHeader("Referer"));
         }
-        if (retObj != null) {
-            if (!(retObj instanceof ModelAndView)) {
-                operationLog.setRespParam(JacksonUtil.obj2String(retObj));
+        if (!SystemTypeEnum.SYS_LOGS.equals(annotation.module())) {
+            // 如果是查看日志请求，那么不记录返回内容，否则返回内容会刷新一次大一倍
+            if (retObj != null) {
+                if (!(retObj instanceof ModelAndView)) {
+                    operationLog.setRespParam(JacksonUtil.obj2String(retObj));
+                }
             }
         }
         operationLog.setLogTime(new Date());

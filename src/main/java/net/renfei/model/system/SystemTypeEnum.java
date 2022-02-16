@@ -69,7 +69,11 @@ public enum SystemTypeEnum {
     /**
      * 系统设置模块
      */
-    SYS_SETTING("");
+    SYS_SETTING(""),
+    /**
+     * 系统日志
+     */
+    SYS_LOGS("");
 
     private final String uriPath;
 

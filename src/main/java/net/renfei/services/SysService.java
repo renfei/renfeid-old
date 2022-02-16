@@ -4,12 +4,16 @@ import com.aliyun.oss.ServiceException;
 import net.renfei.domain.user.User;
 import net.renfei.exception.ForbiddenException;
 import net.renfei.model.*;
+import net.renfei.model.log.LogLevelEnum;
+import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.*;
 import net.renfei.repositories.model.SysApiList;
+import net.renfei.repositories.model.SysLogsWithBLOBs;
 import net.renfei.repositories.model.SysMenu;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -198,4 +202,27 @@ public interface SysService {
      * @param systemOperationStatusEnum 系统运行状态
      */
     void settingSystemOperationStatus(SystemOperationStatusEnum systemOperationStatusEnum);
+
+    /**
+     * 系统操作日志审计
+     * 涉密三员要求：
+     * 系统管理员：看不到另外两员的行为日志（排除另外两员的操作日志）
+     * 安全保密管理员：查看用户行为日志和安全审计员的行为日志（排除系统管理员）
+     * 安全审计员：查看另外两员的行为日志
+     *
+     * @param user          登陆的用户
+     * @param startTime     开始时间
+     * @param endTime       结束时间
+     * @param logLevel      日志等级
+     * @param systemType    系统模块
+     * @param operationType 操作类型
+     * @param userName      用户名
+     * @param ip            IP地址
+     * @param pages         页码
+     * @param rows          每页容量
+     * @return
+     */
+    ListData<SysLogsWithBLOBs> querySystemLog(User user, Date startTime, Date endTime, LogLevelEnum logLevel,
+                                              SystemTypeEnum systemType, OperationTypeEnum operationType,
+                                              String userName, String ip, String pages, String rows);
 }

@@ -6,6 +6,8 @@ import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
 import net.renfei.exception.BusinessException;
 import net.renfei.model.*;
+import net.renfei.model.log.LogLevelEnum;
+import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.*;
 import net.renfei.repositories.*;
 import net.renfei.repositories.model.*;
@@ -41,6 +43,7 @@ public class SysServiceImpl extends BaseService implements SysService {
     private final LeafService leafService;
 
     private final RedisService redisService;
+    private final SysLogsMapper sysLogsMapper;
     private final SysRoleMapper sysRoleMapper;
     private final SysMenuMapper sysMenuMapper;
     private final SysRegionMapper regionMapper;
@@ -56,6 +59,7 @@ public class SysServiceImpl extends BaseService implements SysService {
 
     public SysServiceImpl(LeafService leafService,
                           RedisService redisService,
+                          SysLogsMapper sysLogsMapper,
                           SysRoleMapper sysRoleMapper,
                           SysMenuMapper sysMenuMapper,
                           SysRegionMapper regionMapper,
@@ -70,6 +74,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                           SysSiteFriendlyLinkMapper siteFriendlyLinkMapper) {
         this.leafService = leafService;
         this.redisService = redisService;
+        this.sysLogsMapper = sysLogsMapper;
         this.sysRoleMapper = sysRoleMapper;
         this.sysMenuMapper = sysMenuMapper;
         this.regionMapper = regionMapper;
@@ -1022,6 +1027,122 @@ public class SysServiceImpl extends BaseService implements SysService {
     @Override
     public void settingSystemOperationStatus(SystemOperationStatusEnum systemOperationStatusEnum) {
         this.settingSystemSetting(SYSTEM_OPERATION_STATUS_KEY, systemOperationStatusEnum.toString());
+    }
+
+    /**
+     * 系统操作日志审计
+     * 涉密三员要求：
+     * 系统管理员：看不到另外两员的行为日志（排除另外两员的操作日志）
+     * 安全保密管理员：查看用户行为日志和安全审计员的行为日志（排除系统管理员）
+     * 安全审计员：查看另外两员的行为日志
+     *
+     * @param user          登陆的用户
+     * @param startTime     开始时间
+     * @param endTime       结束时间
+     * @param logLevel      日志等级
+     * @param systemType    系统模块
+     * @param operationType 操作类型
+     * @param userName      用户名
+     * @param ip            IP地址
+     * @param pages         页码
+     * @param rows          每页容量
+     * @return
+     */
+    @Override
+    public ListData<SysLogsWithBLOBs> querySystemLog(User user, Date startTime, Date endTime, LogLevelEnum logLevel,
+                                                     SystemTypeEnum systemType, OperationTypeEnum operationType,
+                                                     String userName, String ip, String pages, String rows) {
+        // 判断角色
+        SysAccountRoleExample accountRoleExample = new SysAccountRoleExample();
+        accountRoleExample.createCriteria().andAccountIdEqualTo(user.getId());
+        List<SysAccountRole> accountRoles = sysAccountRoleMapper.selectByExample(accountRoleExample);
+        boolean securityAdmin = false, administrator = false, safetyAuditor = false;
+        if (!accountRoles.isEmpty()) {
+            for (SysAccountRole accountRole : accountRoles
+            ) {
+                if (accountRole.getRoleId() == 1) {
+                    administrator = true;
+                }
+                if (accountRole.getRoleId() == 2) {
+                    securityAdmin = true;
+                }
+                if (accountRole.getRoleId() == 3) {
+                    safetyAuditor = true;
+                }
+            }
+        }
+        SysLogsExample example = new SysLogsExample();
+        example.setOrderByClause("log_time DESC");
+        SysLogsExample.Criteria criteria = example.createCriteria();
+        if (administrator) {
+            // 系统管理员：看不到另外两员的行为日志（排除另外两员的操作日志）
+            criteria.andUserNameNotIn(new ArrayList<String>() {
+                private static final long serialVersionUID = 3556126187980141694L;
+
+                {
+                    this.add("sso");
+                    this.add("saa");
+                }
+            });
+        } else if (securityAdmin) {
+            // 安全保密管理员：查看用户行为日志和安全审计员的行为日志（排除系统管理员）
+            criteria.andUserNameNotIn(new ArrayList<String>() {
+                private static final long serialVersionUID = 3556126187980141694L;
+
+                {
+                    this.add("sysa");
+                }
+            });
+        }
+        if (safetyAuditor) {
+            // 安全审计员：查看另外两员的行为日志
+            criteria.andUserNameIn(new ArrayList<String>() {
+                private static final long serialVersionUID = 3556126187980141694L;
+
+                {
+                    this.add("sysa");
+                    this.add("sso");
+                }
+            });
+        } else {
+            // 其他，排除内置三员的日志
+            criteria.andUserNameNotIn(new ArrayList<String>() {
+                private static final long serialVersionUID = 3556126187980141694L;
+
+                {
+                    this.add("sysa");
+                    this.add("sso");
+                    this.add("saa");
+                }
+            });
+        }
+        if (startTime != null) {
+            criteria.andLogTimeGreaterThanOrEqualTo(startTime);
+        }
+        if (endTime != null) {
+            criteria.andLogTimeLessThanOrEqualTo(endTime);
+        }
+        if (logLevel != null) {
+            criteria.andLogLevelEqualTo(logLevel.toString());
+        }
+        if (systemType != null) {
+            criteria.andLogModuleEqualTo(systemType.toString());
+        }
+        if (operationType != null) {
+            criteria.andLogTypeEqualTo(operationType.toString());
+        }
+        if (userName != null) {
+            criteria.andUserNameLike("%" + userName + "%");
+        }
+        if (ip != null) {
+            criteria.andRequIpLike("%" + ip + "%");
+        }
+        Page<SysLogsWithBLOBs> page =
+                PageHelper.startPage(NumberUtils.parseInt(pages, 1), NumberUtils.parseInt(rows, 10));
+        sysLogsMapper.selectByExampleWithBLOBs(example);
+        ListData<SysLogsWithBLOBs> sysLogsListData = new ListData<>(page);
+        sysLogsListData.setData(page.getResult());
+        return sysLogsListData;
     }
 
     /**
