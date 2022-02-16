@@ -81,7 +81,11 @@ function comment(typeid, id) {
             }
         },
         beforeSend: function (xhr) {
-            xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+            let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+            let csrf = $("meta[name='_csrf']").attr("content");
+            if (csrfHeader !== '') {
+                xhr.setRequestHeader(csrfHeader, csrf);
+            }
         },
         error: function (xhr, textStatus) {
             msg("Error - 错误:" + xhr.responseText, "error");
@@ -119,7 +123,11 @@ function getJiSuDownloadLink() {
             $("#downloadfile_jisu_btn").html(downloadfile_jisu_btn);
         },
         beforeSend: function (xhr) {
-            xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+            let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+            let csrf = $("meta[name='_csrf']").attr("content");
+            if (csrfHeader !== '') {
+                xhr.setRequestHeader(csrfHeader, csrf);
+            }
         },
         error: function (xhr, textStatus) {
             $("#downloadfile_jisu_btn").html(downloadfile_jisu_btn);
@@ -238,7 +246,11 @@ function getAESKey() {
                 }
             },
             beforeSend: function (xhr) {
-                xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                let csrf = $("meta[name='_csrf']").attr("content");
+                if (csrfHeader !== '') {
+                    xhr.setRequestHeader(csrfHeader, csrf);
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 msg("请求发生了异常，请联系管理员", "error");
@@ -277,7 +289,11 @@ function getAESKey() {
                     }
                 },
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                    let csrf = $("meta[name='_csrf']").attr("content");
+                    if (csrfHeader !== '') {
+                        xhr.setRequestHeader(csrfHeader, csrf);
+                    }
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     msg("请求发生了异常，请联系管理员", "error");

@@ -164,7 +164,11 @@
                 error: function (xhr, textStatus) {
                 },
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                    let csrf = $("meta[name='_csrf']").attr("content");
+                    if (csrfHeader !== '') {
+                        xhr.setRequestHeader(csrfHeader, csrf);
+                    }
                 }
             });
         }
@@ -200,7 +204,11 @@
                 error: function (xhr, textStatus) {
                 },
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                    let csrf = $("meta[name='_csrf']").attr("content");
+                    if (csrfHeader !== '') {
+                        xhr.setRequestHeader(csrfHeader, csrf);
+                    }
                 }
             });
         }
