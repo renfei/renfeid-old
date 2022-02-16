@@ -15,6 +15,19 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/error")
 public class ErrorController extends BaseController {
+    @RequestMapping("400")
+    public ModelAndView error400(ModelAndView mv) {
+        HomePageView<String> pageView = buildPageView(HomePageView.class, "");
+        assert systemConfig != null;
+        pageView.getPageHead().setTitle("Error 400 (BAD REQUEST)!! - " + systemConfig.getSiteName());
+        pageView.getPageHead().setDescription("Error 400 (BAD REQUEST)!!");
+        pageView.getPageHead().setKeywords("error,400,bad request");
+        mv.addObject("pageView", pageView);
+        mv.setViewName("error/400");
+        mv.setStatus(HttpStatus.BAD_REQUEST);
+        return mv;
+    }
+
     @RequestMapping("401")
     public ModelAndView error401(ModelAndView mv) {
         HomePageView<String> pageView = buildPageView(HomePageView.class, "");
