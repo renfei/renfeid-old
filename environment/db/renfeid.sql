@@ -141,7 +141,7 @@ CREATE TABLE `kitbox_icp_cache` (
 DROP TABLE IF EXISTS `kitbox_short_url`;
 CREATE TABLE `kitbox_short_url` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `short_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '短网址编号',
+  `short_url` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '短网址编号',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '长网址',
   `add_time` datetime NOT NULL COMMENT '添加时间',
   `views` bigint(255) unsigned NOT NULL DEFAULT 0 COMMENT '访问量',
