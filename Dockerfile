@@ -31,7 +31,7 @@ RUN set -ex; \
 
 ENV TZ="Asia/Shanghai"
 
-ARG JAR_FILE=target/*.jar
+ARG JAR_FILE=renfeid-server/target/renfeid.jar
 # git clone https://github.com/renfei/ip2location.git
 #ARG IP2LocationBinFile=src/main/resources/ip2location/*.BIN
 

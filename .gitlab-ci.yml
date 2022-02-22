@@ -23,17 +23,17 @@ initialize_JH:
     - yum install -y wget unzip git
     - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
     - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
-    - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
-    - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
+    - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d renfeid-core/src/main/resources/ip2location/
+    - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d renfeid-core/src/main/resources/ip2location/
     - git clone https://renfei:$JH_TOKEN@jihulab.com/renfei/config.git
-    - cp -rf ./config/renfeid/* ./src/main/resources/
+    - cp -rf ./config/renfeid/* ./renfeid-server/src/main/resources/
   artifacts:
     expire_in: 1d
     when: on_success
     paths:
-      - src/main/resources/ip2location/
-      - src/main/resources/application-gitlab.yml
-      - src/main/resources/application-prod.yml
+      - renfeid-core/src/main/resources/ip2location/
+      - renfeid-server/src/main/resources/application-gitlab.yml
+      - renfeid-server/src/main/resources/application-prod.yml
 
 initialize:
   stage: initialize
@@ -44,17 +44,17 @@ initialize:
     - yum install -y wget unzip git
     - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.BIN.ZIP
     - wget $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/ip2location/-/raw/master/IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP
-    - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d src/main/resources/ip2location/
-    - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d src/main/resources/ip2location/
+    - unzip -o IP2LOCATION-LITE-DB11.BIN.ZIP -d renfeid-core/src/main/resources/ip2location/
+    - unzip -o IP2LOCATION-LITE-DB11.IPV6.BIN.ZIP -d renfeid-core/src/main/resources/ip2location/
     - git clone https://cd-robot:$CD_ROBOT_TOKEN@github.com/renfei/config.git
-    - cp -rf ./config/renfeid/* ./src/main/resources/
+    - cp -rf ./config/renfeid/* ./renfeid-server/src/main/resources/
   artifacts:
     expire_in: 1d
     when: on_success
     paths:
-      - src/main/resources/ip2location/
-      - src/main/resources/application-gitlab.yml
-      - src/main/resources/application-prod.yml
+      - renfeid-core/src/main/resources/ip2location/
+      - renfeid-server/src/main/resources/application-gitlab.yml
+      - renfeid-server/src/main/resources/application-prod.yml
 
 compile_JH:
   stage: compile
@@ -131,7 +131,7 @@ package_JH:
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/'
   before_script:
-    - rm -rf src/main/resources/ip2location
+    - rm -rf renfeid-core/src/main/resources/ip2location
   script:
     - cp -rf environment/maven/settings.xml /usr/share/maven/conf/settings.xml
     - mvn clean package -Dmaven.test.skip=true -P prod
@@ -147,7 +147,7 @@ package:
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   before_script:
-    - rm -rf src/main/resources/ip2location
+    - rm -rf renfeid-core/src/main/resources/ip2location
   script:
     - mvn clean package -Dmaven.test.skip=true -P prod
   artifacts:
