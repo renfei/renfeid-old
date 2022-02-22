@@ -36,8 +36,8 @@ application-prod.yml
 application-ci.yml
 application-gitlab.yml
 application-demo.yml
-src/main/resources/ip2location/IP2LOCATION-LITE-DB11.BIN
-src/main/resources/ip2location/IP2LOCATION-LITE-DB11.IPV6.BIN
+**/IP2LOCATION-LITE-DB11.BIN
+**/IP2LOCATION-LITE-DB11.IPV6.BIN
 
 **/transfer/
 src/main/resources/mapper/T**.xml
