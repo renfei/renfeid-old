@@ -1,0 +1,8 @@
+coverage:
+  status:
+    patch:
+      default:
+        threshold: 0%
+ignore:
+  - "renfeid-core/src/main/java/net/renfei/repositories/**/*"
+  - "renfeid-discuz/src/main/java/net/renfei/discuz/repositories/**/*"
