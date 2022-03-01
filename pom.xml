@@ -51,6 +51,7 @@
         <module>renfeid-web</module>
         <module>renfeid-discuz</module>
         <module>renfeid-utils</module>
+        <module>jacoco-aggregate</module>
     </modules>
 
     <profiles>
@@ -335,19 +336,6 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.7</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eluder.coveralls</groupId>
-                    <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.3.0</version>
-                    <configuration>
-                        <repoToken>yourcoverallsprojectrepositorytoken</repoToken>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -416,6 +404,26 @@
                 <configuration>
                     <repoToken>yourcoverallsprojectrepositorytoken</repoToken>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 

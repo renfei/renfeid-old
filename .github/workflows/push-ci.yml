@@ -77,7 +77,7 @@ jobs:
         run: mvn clean test jacoco:report -P ci --file pom.xml
 
       - name: Upload coverage to Codecov
-        run: bash <(curl -s https://codecov.io/bash)
+        run: bash <(curl -s https://codecov.io/bash) -f jacoco-aggregate/target/site/jacoco-aggregate/jacoco.xml
 
       - name: Upload coverage to Coveralls
         run: |
