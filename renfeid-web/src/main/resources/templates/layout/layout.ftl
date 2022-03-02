@@ -134,7 +134,7 @@
         </nav>
         <#if pageView.pageHeader.notice??>
             <div style="background-color: #0071E3;color:#FFFFFF;text-align: center;padding: 12px 0;font-size: 12px;">
-                ${headerVO.notice!}
+                ${pageView.pageHeader.notice!}
             </div>
         </#if>
         <#if pageView.pageHeader.user??>

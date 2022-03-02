@@ -40,6 +40,7 @@ public class SysServiceImpl extends BaseService implements SysService {
     private static final Logger logger = LoggerFactory.getLogger(SysServiceImpl.class);
     private static final String REDIS_KEY_BLOG = REDIS_KEY + "system:";
     private static final String SYSTEM_OPERATION_STATUS_KEY = "SYSTEM_OPERATION_STATUS";
+    private static final String SYSTEM_WEBSITE_NOTICE_KEY = "SYSTEM_WEBSITE_NOTICE";
     private final LeafService leafService;
 
     private final RedisService redisService;
@@ -415,6 +416,9 @@ public class SysServiceImpl extends BaseService implements SysService {
             example.createCriteria()
                     .andPidIsNull();
             pageHeader.setMenus(convertSiteMenu(sysSiteMenuMapper.selectByExample(example)));
+            // 查询全站通知条
+            pageHeader.setNotice(this.querySystemSetting(SYSTEM_WEBSITE_NOTICE_KEY).isPresent() ?
+                    this.querySystemSetting(SYSTEM_WEBSITE_NOTICE_KEY).get() : null);
             if (systemConfig.isEnableRedis()) {
                 redisService.set(redisKey, pageHeader, systemConfig.getDefaultCacheSeconds());
             }
