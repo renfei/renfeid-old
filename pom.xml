@@ -110,7 +110,7 @@
         <graphql.version>5.0.2</graphql.version>
         <graphql-java-tools.version>5.2.4</graphql-java-tools.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
-        <jackson.version>2.13.1</jackson.version>
+        <jackson.version>2.13.2</jackson.version>
         <lang3.version>3.12.0</lang3.version>
         <sonar.organization>renfei</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
