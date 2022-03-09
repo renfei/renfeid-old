@@ -30,6 +30,7 @@ import java.text.DecimalFormat;
 @Controller
 @RequestMapping("/search")
 public class SearchController extends BaseController {
+    private final static Integer MAX_SEARCH_LENGTH = 38;
     private final LogService logService;
     private final SearchService searchService;
     private final PaginationService paginationService;
@@ -54,6 +55,9 @@ public class SearchController extends BaseController {
         if (ObjectUtils.isEmpty(query)) {
             pageView.getPageHead().setTitle("站内搜索 - " + systemConfig.getSiteName());
         } else {
+            if (query.length() > MAX_SEARCH_LENGTH) {
+                query = query.substring(0, MAX_SEARCH_LENGTH);
+            }
             pageView.getPageHead().setTitle("搜索:" + query + " - " + systemConfig.getSiteName());
             TypeEnum typeEnum = null;
             switch (type.toLowerCase().trim()) {
