@@ -16,6 +16,7 @@ import net.renfei.model.kitbox.ShortUrlVO;
 import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.BlogVO;
 import net.renfei.model.system.SystemTypeEnum;
+import net.renfei.repositories.model.KitboxDneyesRecordLog;
 import net.renfei.repositories.model.KitboxShortUrl;
 import net.renfei.services.BlogService;
 import net.renfei.services.CommentService;
@@ -25,6 +26,8 @@ import net.renfei.utils.SentryUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static net.renfei.config.SystemConfig.*;
 
@@ -188,5 +191,17 @@ public class ForegroundApiController extends BaseController implements Foregroun
                     .message("Url不合法，必须以 http 或 https 开头")
                     .build();
         }
+    }
+
+    @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "创建DNeyeS_Subdomain子域名", operation = OperationTypeEnum.CREATE)
+    public APIResult<String> generateDneyesSubdomain() {
+        return new APIResult<>(kitBoxService.generateDneyesSubdomain(getSignUser(), request));
+    }
+
+    @Override
+    @OperationLog(module = SystemTypeEnum.API, desc = "查询DNeyeS_Subdomain子域名解析记录", operation = OperationTypeEnum.RETRIEVE)
+    public APIResult<List<KitboxDneyesRecordLog>> queryDneyesRecordLog(String subdomain) {
+        return new APIResult<>(kitBoxService.queryDneyesRecordLog(subdomain, getSignUser()));
     }
 }

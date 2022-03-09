@@ -13,20 +13,16 @@ import net.renfei.model.StateCodeEnum;
 import net.renfei.model.kitbox.IcpQueryVo;
 import net.renfei.model.kitbox.KitBoxMenus;
 import net.renfei.model.system.SystemTypeEnum;
+import net.renfei.repositories.KitboxDneyesRecordLogMapper;
+import net.renfei.repositories.KitboxDneyesRecordMapper;
 import net.renfei.repositories.KitboxIcpCacheMapper;
 import net.renfei.repositories.KitboxShortUrlMapper;
-import net.renfei.repositories.model.KitboxIcpCache;
-import net.renfei.repositories.model.KitboxIcpCacheExample;
-import net.renfei.repositories.model.KitboxShortUrl;
-import net.renfei.repositories.model.KitboxShortUrlExample;
+import net.renfei.repositories.model.*;
 import net.renfei.services.BaseService;
 import net.renfei.services.KitBoxService;
 import net.renfei.services.RedisService;
 import net.renfei.services.SysService;
-import net.renfei.utils.DateUtils;
-import net.renfei.utils.IcpQueryUtil;
-import net.renfei.utils.ListUtils;
-import net.renfei.utils.StringUtils;
+import net.renfei.utils.*;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +30,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,19 +50,26 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
     public static final String DEVELOPMENT_TOOL = "developmentTool";
     public static final String ENCRYPTION_TOOL = "encryptionTool";
     public static final String OTHER_TOOL = "otherTool";
+    public static final String DNEYES_DOMAIN = "dneyes.net";
     private final SysService sysService;
     private final RedisService redisService;
     private final KitboxShortUrlMapper shortUrlMapper;
     private final KitboxIcpCacheMapper icpCacheMapper;
+    private final KitboxDneyesRecordMapper kitboxDneyesRecordMapper;
+    private final KitboxDneyesRecordLogMapper kitboxDneyesRecordLogMapper;
 
     public KitBoxServiceImpl(SysService sysService,
                              RedisService redisService,
                              KitboxShortUrlMapper kitboxShortUrlMapper,
-                             KitboxIcpCacheMapper kitboxIcpCacheMapper) {
+                             KitboxIcpCacheMapper kitboxIcpCacheMapper,
+                             KitboxDneyesRecordMapper kitboxDneyesRecordMapper,
+                             KitboxDneyesRecordLogMapper kitboxDneyesRecordLogMapper) {
         this.sysService = sysService;
         this.redisService = redisService;
         this.shortUrlMapper = kitboxShortUrlMapper;
         this.icpCacheMapper = kitboxIcpCacheMapper;
+        this.kitboxDneyesRecordMapper = kitboxDneyesRecordMapper;
+        this.kitboxDneyesRecordLogMapper = kitboxDneyesRecordLogMapper;
     }
 
     /**
@@ -97,6 +101,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_ICP));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_GETMYIP));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_CLIENV));
+            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_DNEYES));
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("网络工具")
                     .elementId(NETWORK_TOOL)
@@ -376,6 +381,68 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             }
         }
         return icpInfo;
+    }
+
+    /**
+     * 生成一个 DNeyeS 子域名
+     *
+     * @param user    登陆用户
+     * @param request 请求对象
+     * @return
+     */
+    @Override
+    public String generateDneyesSubdomain(User user, HttpServletRequest request) {
+        KitboxDneyesRecordExample example = new KitboxDneyesRecordExample();
+        String subdomain = StringUtils.getRandomString(6).toLowerCase();
+        subdomain += "." + DNEYES_DOMAIN;
+        example.createCriteria().andSubDomainEqualTo(subdomain);
+        while (!kitboxDneyesRecordMapper.selectByExample(example).isEmpty()) {
+            subdomain = StringUtils.getRandomString(6).toLowerCase();
+            subdomain += "." + DNEYES_DOMAIN;
+            example.createCriteria().andSubDomainEqualTo(subdomain);
+        }
+        KitboxDneyesRecord kitboxDneyesRecord = new KitboxDneyesRecord();
+        kitboxDneyesRecord.setCreateIp(IpUtils.getIpAddress(request));
+        kitboxDneyesRecord.setCreateTime(new Date());
+        kitboxDneyesRecord.setSubDomain(subdomain);
+        kitboxDneyesRecord.setCreateUserId(user == null ? null : user.getId());
+        kitboxDneyesRecordMapper.insertSelective(kitboxDneyesRecord);
+        return subdomain;
+    }
+
+    /**
+     * 查询 DNeyeS 子域名解析记录
+     *
+     * @param subdomain 子域名
+     * @param user      登陆用户
+     * @return
+     */
+    @Override
+    public List<KitboxDneyesRecordLog> queryDneyesRecordLog(String subdomain, User user) {
+        if (subdomain == null || subdomain.isEmpty()) {
+            return new ArrayList<>();
+        }
+        subdomain = subdomain.toLowerCase();
+        if (subdomain.endsWith("." + DNEYES_DOMAIN)) {
+            KitboxDneyesRecordExample example = new KitboxDneyesRecordExample();
+            example.createCriteria().andSubDomainEqualTo(subdomain);
+            KitboxDneyesRecord dneyesRecord = ListUtils.getOne(kitboxDneyesRecordMapper.selectByExample(example));
+            if (dneyesRecord == null) {
+                return new ArrayList<>();
+            }
+            if (dneyesRecord.getCreateUserId() != null) {
+                if (user == null || !dneyesRecord.getCreateUserId().equals(user.getId())) {
+                    return new ArrayList<>();
+                }
+            }
+            KitboxDneyesRecordLogExample recordLogExample = new KitboxDneyesRecordLogExample();
+            recordLogExample.setOrderByClause("log_time DESC");
+            recordLogExample.createCriteria()
+                    .andSubDomainLike("%" + subdomain);
+            return kitboxDneyesRecordLogMapper.selectByExampleWithBLOBs(recordLogExample);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     private IcpQueryVo.IcpInfo queryIcpInfo(String domain) throws IOException, ParseException {

@@ -76,5 +76,7 @@
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_role_permission"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="sys_setting"/>-->
 <!--        <table schema="renfeid" delimitAllColumns="true" tableName="kitbox_icp_cache"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="kitbox_dneyes_record"/>-->
+<!--        <table schema="renfeid" delimitAllColumns="true" tableName="kitbox_dneyes_record_log"/>-->
     </context>
 </generatorConfiguration>

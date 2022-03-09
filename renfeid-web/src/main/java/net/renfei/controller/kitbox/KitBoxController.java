@@ -255,6 +255,29 @@ public class KitBoxController extends BaseController {
     }
 
     /**
+     * DNeyeS工具
+     *
+     * @param mv
+     * @return
+     */
+    @RequestMapping("dneyes")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问DNeyeS工具")
+    public ModelAndView dneyes(ModelAndView mv) {
+        assert systemConfig != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.NETWORK_DNEYES.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
+        pageView.getPageHead().setDescription("DNeyeS（DNSLog）工具，记录DNS解析请求记录信息，可用于渗透测试、SQL注入、XSS盲打等探测。");
+        pageView.getPageHead().setKeywords("dneyes,dnslog,工具,记录,dns,解析,请求,信息");
+        mv.setViewName("kitbox/dneyes");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, NETWORK_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.NETWORK_DNEYES);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.NETWORK_DNEYES.getId());
+        return mv;
+    }
+
+    /**
      * 在线批量生成 UUID/GUID 工具
      *
      * @param mv

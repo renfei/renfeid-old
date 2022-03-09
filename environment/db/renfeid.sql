@@ -110,6 +110,40 @@ CREATE TABLE `docs_online_documents`  (
 INSERT INTO `docs_online_documents` VALUES (1, 'Java', 'JavaSE', '8u281', 'en', 'https://cdn.renfei.net/docs/java/javase/8u281/en/index.html', 'Java SE 8 API 英文原版在线文档手册');
 
 -- ----------------------------
+-- Table structure for kitbox_dneyes_record
+-- ----------------------------
+DROP TABLE IF EXISTS `kitbox_dneyes_record`;
+CREATE TABLE `kitbox_dneyes_record` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `sub_domain` varchar(255) NOT NULL COMMENT '二级域名',
+  `create_ip` varchar(255) NOT NULL COMMENT '创建者IP',
+  `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='DNsysS生成记录';
+
+-- ----------------------------
+-- Records of kitbox_dneyes_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for kitbox_dneyes_record_log
+-- ----------------------------
+DROP TABLE IF EXISTS `kitbox_dneyes_record_log`;
+CREATE TABLE `kitbox_dneyes_record_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `sub_domain` varchar(255) NOT NULL COMMENT '二级域名',
+  `client_ip` varchar(255) NOT NULL COMMENT '解析IP',
+  `log_time` datetime NOT NULL COMMENT '记录时间',
+  `client_host_name` text DEFAULT NULL COMMENT '客户端主机名',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='DNsysS解析记录';
+
+-- ----------------------------
+-- Records of kitbox_dneyes_record_log
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for kitbox_icp_cache
 -- ----------------------------
 DROP TABLE IF EXISTS `kitbox_icp_cache`;

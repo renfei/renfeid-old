@@ -94,8 +94,10 @@ public class OperationLogAspect {
             operationLog.setRequIp(IpUtils.getIpAddress(request));
             Map<String, String> rtnMap = convertMap(request.getParameterMap());
             if ("POST".equals(request.getMethod()) || "PUT".equals(request.getMethod())) {
-                Object object = joinPoint.getArgs()[0];
-                rtnMap.put("RequestBody", JacksonUtil.obj2String(getKeyAndValue(object)));
+                if (joinPoint.getArgs().length > 0) {
+                    Object object = joinPoint.getArgs()[0];
+                    rtnMap.put("RequestBody", JacksonUtil.obj2String(getKeyAndValue(object)));
+                }
             }
             // 将参数所在的数组转换成json
             String params = JacksonUtil.obj2String(rtnMap);

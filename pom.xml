@@ -52,6 +52,7 @@
         <module>renfeid-discuz</module>
         <module>renfeid-utils</module>
         <module>jacoco-aggregate</module>
+        <module>mybatis-generator</module>
     </modules>
 
     <profiles>

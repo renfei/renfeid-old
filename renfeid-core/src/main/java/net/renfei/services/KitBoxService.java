@@ -7,8 +7,10 @@ import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.kitbox.IcpQueryVo;
 import net.renfei.model.kitbox.KitBoxMenus;
+import net.renfei.repositories.model.KitboxDneyesRecordLog;
 import net.renfei.repositories.model.KitboxShortUrl;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -64,4 +66,22 @@ public interface KitBoxService {
     void updateShortUrl(KitboxShortUrl shortUrl);
 
     IcpQueryVo.IcpInfo queryIcpInfo(String domain, Boolean refresh);
+
+    /**
+     * 生成一个 DNeyeS 子域名
+     *
+     * @param user    登陆用户
+     * @param request 请求对象
+     * @return
+     */
+    String generateDneyesSubdomain(User user, HttpServletRequest request);
+
+    /**
+     * 查询 DNeyeS 子域名解析记录
+     *
+     * @param subdomain 子域名
+     * @param user      登陆用户
+     * @return
+     */
+    List<KitboxDneyesRecordLog> queryDneyesRecordLog(String subdomain, User user);
 }

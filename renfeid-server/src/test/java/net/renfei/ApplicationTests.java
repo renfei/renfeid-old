@@ -1,6 +1,5 @@
 package net.renfei;
 
-import net.renfei.application.ApplicationContextUtil;
 import net.renfei.domain.UserDomain;
 import net.renfei.model.auth.SignInVO;
 import net.renfei.model.system.UserDetail;
@@ -42,7 +41,7 @@ public class ApplicationTests {
 
     @BeforeEach
     public void before() throws Exception {
-        ApplicationContextUtil.setApplicationContext(applicationContext);
+//        ApplicationContextUtil.setApplicationContext(applicationContext);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         if (session == null) {
             // 走登陆接口

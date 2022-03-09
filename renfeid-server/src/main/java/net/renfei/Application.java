@@ -1,6 +1,5 @@
 package net.renfei;
 
-import net.renfei.application.ApplicationContextUtil;
 import net.renfei.config.RenFeiBanner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,7 +22,7 @@ public class Application extends SpringBootServletInitializer {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Application.class);
         SpringApplication build = builder.build();
         build.setBanner(new RenFeiBanner());
-        ApplicationContextUtil.setApplicationContext(build.run(args));
+        build.run(args);
     }
 
     @Override

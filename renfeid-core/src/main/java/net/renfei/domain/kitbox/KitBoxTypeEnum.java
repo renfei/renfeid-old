@@ -107,6 +107,10 @@ public enum KitBoxTypeEnum {
      */
     NETWORK_ICP(25, "域名ICP备案查询工具", "查询域名是否已经ICP备案，查询ICP备案的详细信息", "/kitbox/icp"),
     /**
+     * DNeyeS工具
+     */
+    NETWORK_DNEYES(26, "DNeyeS工具", "DNeyeS（DNSLog）工具，记录DNS解析请求记录信息", "/kitbox/dneyes"),
+    /**
      * 其他
      */
     OTHER(-1, "其他", "其他", "/kitbox/");

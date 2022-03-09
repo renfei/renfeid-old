@@ -6,10 +6,10 @@ import net.renfei.domain.blog.Post;
 import net.renfei.domain.comment.Comment;
 import net.renfei.model.APIResult;
 import net.renfei.model.system.SystemTypeEnum;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import net.renfei.repositories.model.KitboxDneyesRecordLog;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 前台接口
@@ -68,4 +68,12 @@ public interface ForegroundApi {
     @PostMapping("kitbox/ShortURL/do")
     @Operation(summary = "新增短网址", description = "新增短网址", tags = "前台接口")
     APIResult addShortUrl(String url);
+
+    @PostMapping("kitbox/dneyes/subdomain")
+    @Operation(summary = "创建 DNeyeS Subdomain 子域名", description = "创建 DNeyeS Subdomain 子域名", tags = "前台接口")
+    APIResult<String> generateDneyesSubdomain();
+
+    @PostMapping("kitbox/dneyes/{subdomain}")
+    @Operation(summary = "查询 DNeyeS Subdomain 子域名解析记录", description = "查询 DNeyeS Subdomain 子域名解析记录", tags = "前台接口")
+    APIResult<List<KitboxDneyesRecordLog>> queryDneyesRecordLog(@PathVariable("subdomain") String subdomain);
 }
