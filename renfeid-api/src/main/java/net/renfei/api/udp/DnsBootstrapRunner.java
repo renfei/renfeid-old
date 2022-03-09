@@ -10,6 +10,7 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.dns.DatagramDnsQueryDecoder;
 import io.netty.handler.codec.dns.DatagramDnsResponseEncoder;
 import net.renfei.api.udp.handler.DnsHandler;
+import net.renfei.config.SystemConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -36,27 +37,31 @@ public class DnsBootstrapRunner
 
     @Override
     public void run(ApplicationArguments args) {
-        final NioEventLoopGroup group = new NioEventLoopGroup();
-        try {
-            Bootstrap bootstrap = new Bootstrap();
-            bootstrap.group(group).channel(NioDatagramChannel.class)
-                    .handler(new ChannelInitializer<NioDatagramChannel>() {
-                        @Override
-                        protected void initChannel(NioDatagramChannel nioDatagramChannel) {
-                            nioDatagramChannel.pipeline().addLast(new DatagramDnsQueryDecoder());
-                            nioDatagramChannel.pipeline().addLast(new DatagramDnsResponseEncoder());
-                            nioDatagramChannel.pipeline().addLast(applicationContext.getBean(DnsHandler.class));
-                        }
-                    }).option(ChannelOption.SO_BROADCAST, true);
+        SystemConfig systemConfig = applicationContext.getBean(SystemConfig.class);
+        // CI 环境会报：java.net.SocketException: Permission denied，并且测试会一直运行不停止
+        if (!"ci".equals(systemConfig.getActive())) {
+            final NioEventLoopGroup group = new NioEventLoopGroup();
+            try {
+                Bootstrap bootstrap = new Bootstrap();
+                bootstrap.group(group).channel(NioDatagramChannel.class)
+                        .handler(new ChannelInitializer<NioDatagramChannel>() {
+                            @Override
+                            protected void initChannel(NioDatagramChannel nioDatagramChannel) {
+                                nioDatagramChannel.pipeline().addLast(new DatagramDnsQueryDecoder());
+                                nioDatagramChannel.pipeline().addLast(new DatagramDnsResponseEncoder());
+                                nioDatagramChannel.pipeline().addLast(applicationContext.getBean(DnsHandler.class));
+                            }
+                        }).option(ChannelOption.SO_BROADCAST, true);
 
-            ChannelFuture future = bootstrap.bind(DNS_PORT).sync();
-            logger.info("DnsNettyBootstrapRunner is running. Port={}.", DNS_PORT);
-            this.serverChannel = future.channel();
-            future.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            group.shutdownGracefully();
+                ChannelFuture future = bootstrap.bind(DNS_PORT).sync();
+                logger.info("DnsNettyBootstrapRunner is running. Port={}.", DNS_PORT);
+                this.serverChannel = future.channel();
+                future.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+            } finally {
+                group.shutdownGracefully();
+            }
         }
     }
 
