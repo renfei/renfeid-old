@@ -31,14 +31,22 @@ import org.springframework.stereotype.Component;
 public class DnsBootstrapRunner
         implements ApplicationRunner, ApplicationListener<ContextClosedEvent>, ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(DnsBootstrapRunner.class);
-    public static final int DNS_PORT = 53;
+    /**
+     * +---------------------------------------------------------+
+     * | 非 root 用户无法使用 1024 以下的端口，所以此处不直接使用 53 端口
+     * | java.net.SocketException: Permission denied
+     * | 使用在宿主机上端口转发的方式将 53 端口转发到 9553 上
+     * | public static final int DNS_PORT = 53;
+     * +---------------------------------------------------------+
+     */
+    public static final int DNS_PORT = 9553;
     private ApplicationContext applicationContext;
     private Channel serverChannel;
 
     @Override
     public void run(ApplicationArguments args) {
         SystemConfig systemConfig = applicationContext.getBean(SystemConfig.class);
-        // CI 环境会报：java.net.SocketException: Permission denied，并且测试会一直运行不停止
+        // 测试会一直运行不停止
         if (!"ci".equals(systemConfig.getActive())) {
             final NioEventLoopGroup group = new NioEventLoopGroup();
             try {
