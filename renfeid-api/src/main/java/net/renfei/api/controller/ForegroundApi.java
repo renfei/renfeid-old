@@ -69,11 +69,13 @@ public interface ForegroundApi {
     @Operation(summary = "新增短网址", description = "新增短网址", tags = "前台接口")
     APIResult addShortUrl(String url);
 
-    @PostMapping("kitbox/dneyes/subdomain")
-    @Operation(summary = "创建 DNeyeS Subdomain 子域名", description = "创建 DNeyeS Subdomain 子域名", tags = "前台接口")
+    // 暂时移除DNeyeS工具，国内云主机商不允许开放 53端口，需要境外部署
+    // @PostMapping("kitbox/dneyes/subdomain")
+    // @Operation(summary = "创建 DNeyeS Subdomain 子域名", description = "创建 DNeyeS Subdomain 子域名", tags = "前台接口")
     APIResult<String> generateDneyesSubdomain();
 
-    @PostMapping("kitbox/dneyes/{subdomain}")
-    @Operation(summary = "查询 DNeyeS Subdomain 子域名解析记录", description = "查询 DNeyeS Subdomain 子域名解析记录", tags = "前台接口")
+    // 暂时移除DNeyeS工具，国内云主机商不允许开放 53端口，需要境外部署
+    // @PostMapping("kitbox/dneyes/{subdomain}")
+    // @Operation(summary = "查询 DNeyeS Subdomain 子域名解析记录", description = "查询 DNeyeS Subdomain 子域名解析记录", tags = "前台接口")
     APIResult<List<KitboxDneyesRecordLog>> queryDneyesRecordLog(@PathVariable("subdomain") String subdomain);
 }

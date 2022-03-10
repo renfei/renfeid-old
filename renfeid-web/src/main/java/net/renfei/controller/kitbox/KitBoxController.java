@@ -260,8 +260,9 @@ public class KitBoxController extends BaseController {
      * @param mv
      * @return
      */
-    @RequestMapping("dneyes")
-    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问DNeyeS工具")
+    // 暂时移除DNeyeS工具，国内云主机商不允许开放 53端口，需要境外部署
+    // @RequestMapping("dneyes")
+    // @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问DNeyeS工具")
     public ModelAndView dneyes(ModelAndView mv) {
         assert systemConfig != null;
         KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");

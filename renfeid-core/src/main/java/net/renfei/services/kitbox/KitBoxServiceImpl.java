@@ -101,7 +101,8 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_ICP));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_GETMYIP));
             networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_CLIENV));
-            networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_DNEYES));
+            // 暂时移除DNeyeS工具，国内云主机商不允许开放 53端口，需要境外部署
+            // networkToolLinks.add(buildLinkTree(KitBoxTypeEnum.NETWORK_DNEYES));
             kitBoxMenus.add(KitBoxMenus.builder()
                     .title("网络工具")
                     .elementId(NETWORK_TOOL)
