@@ -133,7 +133,7 @@
             </div>
         </nav>
         <#if pageView.pageHeader.notice??>
-            <div style="background-color: #0071E3;color:#FFFFFF;text-align: center;padding: 12px 0;font-size: 12px;">
+            <div class="header_notice">
                 ${pageView.pageHeader.notice!}
             </div>
         </#if>
@@ -311,6 +311,13 @@
         <#list pageView.pageFooter.jss! as js>
             <script src="${js}" type='text/javascript' charset="UTF-8"></script>
         </#list>
+        <script>
+            $(function () {
+                if ($(".header_notice").length > 0) {
+                    $(".header_notice").toggleClass('open');
+                }
+            });
+        </script>
         <script>
             ${pageView.pageFooter.jsText!}
         </script>
