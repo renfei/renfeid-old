@@ -206,7 +206,7 @@
                         </div>
                     </#list>
                 </div>
-                <#if pageView.pageFooter.showFriendlyLink??>
+                <#if pageView.pageFooter.showFriendlyLink>
                     <div class="row" style="margin-top: 20px;">
                         <div class="col-12 text-left">
                             <ul class="footer-menu-ul">
