@@ -309,8 +309,8 @@
             </div>
         </div>
         <#list pageView.pageFooter.jss! as js>
-            <#if 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'==js>
-                <script async src="${js+'?client=ca-pub-1234'}" crossorigin="anonymous"></script>
+            <#if js!?contains('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=')>
+                <script async src="${js}" crossorigin="anonymous"></script>
             <#elseif js!?contains('https://www.googletagmanager.com/gtag/js?id=')>
                 <script async src="${js}"></script>
             <#else>
