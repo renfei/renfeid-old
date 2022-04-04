@@ -52,7 +52,7 @@ public class DefaultController extends BaseController {
         homePageView.getPageHead().setTitle("任霏 - " + systemConfig.getSiteName());
         homePageView.getPageHead().setDescription("任霏的博客是任霏的个人网站与博客，一个程序员自己写的网站，不仅仅是文章内容，还包括网站程序的代码。 对新鲜事物都十分感兴趣，利用这个站点向大家分享自己的所见所得，同时这个站点也是我的实验室。");
         homePageView.getPageHead().setKeywords("任霏,博客,任霏博客,RenFei,NeilRen,技术,blog");
-        homePageView.getPageFooter().setShowFriendlyLink(true);
+        homePageView.getPageFooter().setShowFriendlyLink(systemConfig.isShowFriendlyLink());
         homePageView.getPageHead().setOgProtocol(OGProtocol.builder()
                 .type("blog")
                 .author("任霏")

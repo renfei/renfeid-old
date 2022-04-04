@@ -453,7 +453,6 @@ public class SysServiceImpl extends BaseService implements SysService {
             example.createCriteria()
                     .andPidIsNull();
             pageFooter = new PageFooter();
-            pageFooter.setShowFriendlyLink(systemConfig.isShowFriendlyLink());
             pageFooter.setFriendlyLink(this.getSysSiteFriendlyLinkList());
             pageFooter.setVersion(systemConfig.getVersion());
             pageFooter.setBuildTime(systemConfig.getBuildTime());
@@ -481,6 +480,7 @@ public class SysServiceImpl extends BaseService implements SysService {
                 redisService.set(redisKey, pageFooter, systemConfig.getDefaultCacheSeconds());
             }
         }
+        pageFooter.setShowFriendlyLink(false);
         return pageFooter;
     }
 
