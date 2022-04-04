@@ -309,7 +309,13 @@
             </div>
         </div>
         <#list pageView.pageFooter.jss! as js>
-            <script src="${js}" type='text/javascript' charset="UTF-8"></script>
+            <#if 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'==js>
+                <script async src="${js+'?client=ca-pub-1234'}" crossorigin="anonymous"></script>
+            <#elseif js!?contains('https://www.googletagmanager.com/gtag/js?id=')>
+                <script async src="${js}"></script>
+            <#else>
+                <script src="${js}" type='text/javascript' charset="UTF-8"></script>
+            </#if>
         </#list>
         <script>
             $(function () {
