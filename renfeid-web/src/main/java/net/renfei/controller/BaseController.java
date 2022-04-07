@@ -4,6 +4,7 @@ import net.renfei.application.ApplicationContextUtil;
 import net.renfei.config.SystemConfig;
 import net.renfei.domain.UserDomain;
 import net.renfei.domain.user.User;
+import net.renfei.model.PageFooter;
 import net.renfei.model.PageView;
 import net.renfei.model.system.UserDetail;
 import net.renfei.services.PaginationService;
@@ -151,7 +152,21 @@ public abstract class BaseController {
         assert sysService != null;
         result.setPageHead(sysService.getPageHead());
         result.setPageHeader(sysService.getPageHeader(request));
-        result.setPageFooter(sysService.getPageFooter());
+        PageFooter pageFooter = sysService.getPageFooter();
+        if (getSignUser() != null) {
+            String oldGtag = "gtag('config', '" + systemConfig.getGoogle().getAnalytics() + "');";
+            String gtag = "gtag('config', '"
+                    + systemConfig.getGoogle().getAnalytics()
+                    + "', {\n"
+                    + "  'user_id': '"
+                    + getSignUser().getId()
+                    + "'\n"
+                    + "});";
+            pageFooter.setJsText(
+                    pageFooter.getJsText().replace(oldGtag, gtag)
+            );
+        }
+        result.setPageFooter(pageFooter);
         return result;
     }
 }
