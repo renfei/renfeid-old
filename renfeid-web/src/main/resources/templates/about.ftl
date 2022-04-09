@@ -212,8 +212,24 @@
             <div class="col-12">
                 <div class="timeline timeline-line-dotted">
                     <span class="timeline-label">
-                        <span class="badge badge-pill badge-secondary px-2">2021</span>
+                        <span class="badge badge-pill badge-secondary px-2">2022</span>
                     </span>
+                    <div class="timeline-item">
+                        <div class="timeline-point timeline-point-success">
+                            <i class="fab fa-money"></i>
+                        </div>
+                        <div class="timeline-event p-2">
+                            <div class="timeline-heading">
+                                <h4>日PV破1000</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p>当日PV1030，UV764，IP516，不包含搜索引擎蜘蛛、接口等机器访问数据。</p>
+                            </div>
+                            <div class="timeline-footer">
+                                <p class="text-right">2022-02-10</p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="timeline-item">
                         <div class="timeline-point timeline-point-success">
                             <i class="fab fa-money"></i>
@@ -230,6 +246,9 @@
                             </div>
                         </div>
                     </div>
+                    <span class="timeline-label">
+                        <span class="badge badge-pill badge-secondary px-2">2021</span>
+                    </span>
                     <div class="timeline-item">
                         <div class="timeline-point timeline-point-success">
                             <i class="fab fa-money"></i>
