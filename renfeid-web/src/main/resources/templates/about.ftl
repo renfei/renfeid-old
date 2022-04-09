@@ -223,7 +223,7 @@
                                 <h4>日PV破1000</h4>
                             </div>
                             <div class="timeline-body">
-                                <p>当日PV1030，UV764，IP516，不包含搜索引擎蜘蛛、接口等机器访问数据。</p>
+                                <p>当日PV1030，UV764，IP516，不包含子站、CDN、搜索引擎蜘蛛、接口等机器访问数据。</p>
                             </div>
                             <div class="timeline-footer">
                                 <p class="text-right">2022-02-10</p>
