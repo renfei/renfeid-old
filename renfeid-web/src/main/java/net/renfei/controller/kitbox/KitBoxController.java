@@ -418,6 +418,29 @@ public class KitBoxController extends BaseController {
     }
 
     /**
+     * 文章关键词提取工具
+     *
+     * @param mv
+     * @return
+     */
+    @RequestMapping("keyWords")
+    @OperationLog(module = SystemTypeEnum.KITBOX, desc = "访问文章关键词提取工具")
+    public ModelAndView keyWords(ModelAndView mv) {
+        assert systemConfig != null;
+        KitboxPageView<String> pageView = buildPageView(KitboxPageView.class, "");
+        pageView.getPageHead().setTitle(KitBoxTypeEnum.DEVELOP_KEY_WORD.getTitle() + " - 开发者工具箱 - " + systemConfig.getSiteName());
+        pageView.getPageHead().setDescription("在线文章关键词提取工具与API接口(IK Analyze)，提供免费的在线在线文章关键词提取工具，基于IKAnalyzer与词频实现。");
+        pageView.getPageHead().setKeywords("文章,内容,关键词,提取,工具,分词,切词,中文,ik,analyze,api,接口,在线");
+        mv.setViewName("kitbox/keyWords");
+        mv.addObject("pageView", pageView);
+        setKitBoxMenus(mv, DEVELOPMENT_TOOL);
+        List<Comment> commentList = kitBoxService.getCommentList(KitBoxTypeEnum.DEVELOP_KEY_WORD);
+        mv.addObject("commentList", commentList == null ? new ArrayList<>() : commentList);
+        mv.addObject("kitBoxId", KitBoxTypeEnum.DEVELOP_KEY_WORD.getId());
+        return mv;
+    }
+
+    /**
      * 计算机 TCP/UDP 端口号注册列表大全
      *
      * @param mv

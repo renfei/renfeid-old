@@ -111,6 +111,10 @@ public enum KitBoxTypeEnum {
      */
     NETWORK_DNEYES(26, "DNeyeS工具", "DNeyeS（DNSLog）工具，记录DNS解析请求记录信息", "/kitbox/dneyes"),
     /**
+     * 在线文章关键词提取工具与API
+     */
+    DEVELOP_KEY_WORD(27, "在线文章关键词提取工具", "在线文章关键词提取工具与API开放接口服务", "/kitbox/keyWords"),
+    /**
      * 其他
      */
     OTHER(-1, "其他", "其他", "/kitbox/");

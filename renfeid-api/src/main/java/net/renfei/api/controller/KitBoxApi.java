@@ -8,6 +8,7 @@ import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.kitbox.FreeMarkerAndBeanVO;
 import net.renfei.model.kitbox.IcpQueryVo;
 import net.renfei.model.kitbox.IkAnalyzeVO;
+import net.renfei.model.kitbox.KeyWordsAO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +53,10 @@ public interface KitBoxApi {
     @PostMapping("wordIkAnalyze")
     @Operation(summary = "中文分词工具API", description = "中文分词工具API", tags = "开放接口")
     APIResult<List<IkAnalyzeVO>> getWordIkAnalyze(@RequestBody String word);
+
+    @PostMapping("keyWords")
+    @Operation(summary = "提取文章关键词工具API", description = "提取文章关键词工具API", tags = "开放接口")
+    APIResult<List<IkAnalyzeVO>> getKeyWords(@RequestBody KeyWordsAO keyWords);
 
     @GetMapping("domain/icp/{domain}")
     @Operation(summary = "域名ICP备案信息查询工具", description = "域名ICP备案信息查询工具，查询域名ICP备案信息", tags = "开放接口")

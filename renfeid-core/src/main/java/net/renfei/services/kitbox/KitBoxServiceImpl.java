@@ -117,6 +117,7 @@ public class KitBoxServiceImpl extends BaseService implements KitBoxService {
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_BYTE_UNIT_CONVERSION));
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_UEDITOR));
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_WORD_IK_ANALYZE));
+            developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_KEY_WORD));
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_PORT_NUMBER_LIST));
             developmentToolLinks.add(buildLinkTree(KitBoxTypeEnum.DEVELOP_PLIST));
             kitBoxMenus.add(KitBoxMenus.builder()

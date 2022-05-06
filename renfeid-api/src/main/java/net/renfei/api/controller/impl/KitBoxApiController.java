@@ -1,20 +1,22 @@
 package net.renfei.api.controller.impl;
 
 import net.renfei.annotation.OperationLog;
-import net.renfei.controller.BaseController;
 import net.renfei.api.controller.KitBoxApi;
+import net.renfei.controller.BaseController;
 import net.renfei.model.APIResult;
 import net.renfei.model.DnsTypeEnum;
 import net.renfei.model.StateCodeEnum;
 import net.renfei.model.kitbox.FreeMarkerAndBeanVO;
 import net.renfei.model.kitbox.IcpQueryVo;
 import net.renfei.model.kitbox.IkAnalyzeVO;
+import net.renfei.model.kitbox.KeyWordsAO;
 import net.renfei.model.log.OperationTypeEnum;
 import net.renfei.model.system.SystemTypeEnum;
 import net.renfei.services.KitBoxService;
 import net.renfei.services.SearchService;
 import net.renfei.utils.JacksonUtil;
 import net.renfei.utils.NumberUtils;
+import net.renfei.utils.WordUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +33,7 @@ import java.util.UUID;
  */
 @RestController
 public class KitBoxApiController extends BaseController implements KitBoxApi {
+    private final static Integer MAX_WORD = 20000;
     private final KitBoxService kitBoxService;
     private final SearchService searchService;
 
@@ -158,6 +161,35 @@ public class KitBoxApiController extends BaseController implements KitBoxApi {
                     .message("中文分词服务暂时不可用，请稍后再试。")
                     .build();
         }
+    }
+
+    @Override
+    public APIResult<List<IkAnalyzeVO>> getKeyWords(KeyWordsAO keyWords) {
+        if (keyWords.getWord() == null || "".equals(keyWords.getWord())) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("待提取内容为空，请检查入参。")
+                    .build();
+        } else if (keyWords.getWord().length() > MAX_WORD) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("待提取内容长度超过最大限度：" + MAX_WORD)
+                    .build();
+        }
+        WordUtils wordUtils = new WordUtils(searchService);
+        List<IkAnalyzeVO> ikAnalyzeVOS = new ArrayList<>();
+        if (keyWords.getQuantity() == null || keyWords.getQuantity() < 1) {
+            keyWords.setQuantity(2);
+        } else if (keyWords.getNumber() == null || keyWords.getNumber() < 0) {
+            keyWords.setNumber(10);
+        }
+        for (String string : wordUtils.getKeyWords(keyWords.getWord(), keyWords.getQuantity(), keyWords.getNumber())
+        ) {
+            IkAnalyzeVO ikAnalyze = new IkAnalyzeVO();
+            ikAnalyze.setWord(string);
+            ikAnalyzeVOS.add(ikAnalyze);
+        }
+        return new APIResult<>(ikAnalyzeVOS);
     }
 
     @Override
