@@ -13,7 +13,9 @@
         <renfeid.version>3.0.0</renfeid.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <druid.version>1.2.8</druid.version>
         <mybatis.version>2.2.2</mybatis.version>
+        <pagehelper.version>1.4.1</pagehelper.version>
         <mariadb-client.version>2.7.5</mariadb-client.version>
     </properties>
 
@@ -36,6 +38,11 @@
             </dependency>
             <dependency>
                 <groupId>net.renfei</groupId>
+                <artifactId>renfeid-proprietary-discuz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
                 <artifactId>renfeid-uaa-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -46,9 +53,19 @@
             </dependency>
 
             <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mariadb.jdbc</groupId>

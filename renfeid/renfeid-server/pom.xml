@@ -20,13 +20,13 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
         <dependency>
@@ -37,6 +37,11 @@
         <dependency>
             <groupId>net.renfei</groupId>
             <artifactId>renfeid-cms-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>renfeid-proprietary-discuz</artifactId>
         </dependency>
 
         <dependency>

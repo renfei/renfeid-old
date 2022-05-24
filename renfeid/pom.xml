@@ -25,6 +25,7 @@
         <spring-boot.version>2.7.0</spring-boot.version>
         <git.commit.plugin>4.9.9</git.commit.plugin>
         <spring.checkstyle.plugin>0.0.29</spring.checkstyle.plugin>
+        <buildtimestamp>${maven.build.timestamp}</buildtimestamp>
     </properties>
 
     <dependencyManagement>
@@ -50,12 +51,14 @@
 
     <build>
         <finalName>renfeid</finalName>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
+
         <plugins>
             <!--打包jar 与git commit 关联插件-->
             <plugin>
@@ -72,6 +75,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
                     <failOnNoGitDirectory>false</failOnNoGitDirectory>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <!--因为项目定制了jackson的日期时间序列化/反序列化格式，因此这里要进行配置,不然通过management.info.git.mode=full进行完整git信息监控时会存在问题-->
@@ -89,6 +93,7 @@
                 <version>${spring.checkstyle.plugin}</version>
             </plugin>
         </plugins>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -123,4 +128,40 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>gitlab</id>
+            <properties>
+                <activatedProperties>gitlab</activatedProperties>
+            </properties>
+        </profile>
+        <profile>
+            <id>ci</id>
+            <properties>
+                <activatedProperties>ci</activatedProperties>
+            </properties>
+        </profile>
+        <profile>
+            <id>demo</id>
+            <properties>
+                <activatedProperties>demo</activatedProperties>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activatedProperties>prod</activatedProperties>
+            </properties>
+        </profile>
+    </profiles>
 </project>
