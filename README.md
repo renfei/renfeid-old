@@ -11,7 +11,7 @@
 | 后端                                                                             | 前端                                                                               |
 |--------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
 | 所在目录：[renfeid](./renfeid)                                                      | 所在目录：[renfeidvue](./renfeidvue)                                                  |
-| 技术栈：Java8、SpringBoot、MyBatis、MariaDB、RestfulAPI、Maven                          | 技术栈： Node.js、 Webpack、Vue.js、Nuxt.js、Vuetify、Yarn                                |
+| 技术栈：Java8、SpringBoot、MyBatis、MariaDB、Druid、RestfulAPI、Maven                    | 技术栈： Node.js、 Webpack、Vue.js、Nuxt.js、Vuetify、Yarn                                |
 | 简要说明：尝试过SpringCloud微服务架构，但对于个人网站来说过于沉重和耗费资源，所以我用maven多模块的方式进行了拆分，将来可以改造为微服务架构。 | 简要说明：之前一直没有使用Vue是因为SPA对SEO不友好，但随着前端技术的完善，Nuxt的SSR服务器端渲染已经很成熟了，本次是我第一次尝试前台也使用Vue。 |
 | 自我点评：采用前后端分离架构，是目前行业比较流行的结构，SpringBoot也是最新版本的依赖。                               | 自我点评：本人非前端专业，只是业余学习，很可能使用姿势不符合行业规范，前端项目仅供参考。                                     |
 
