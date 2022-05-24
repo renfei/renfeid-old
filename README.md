@@ -1,4 +1,8 @@
+![architecture](./docs/image/architecture.png)
+
 # renfeid
+
+[![License](https://img.shields.io/github/license/renfei/renfeid)](https://github.com/renfei/renfeid/blob/master/LICENSE)
 
 这是 [任霏的个人博客与网站](https://www.renfei.net) 的代码库，能进到这个代码库说明你很有品位嘛。
 
