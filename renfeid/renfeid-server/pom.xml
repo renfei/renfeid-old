@@ -28,6 +28,21 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>renfeid-common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>renfeid-cms-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>renfeid-uaa-service</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -13,6 +13,49 @@
         <renfeid.version>3.0.0</renfeid.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <mybatis.version>2.2.2</mybatis.version>
+        <mariadb-client.version>2.7.5</mariadb-client.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>renfeid-cms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>renfeid-cms-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>renfeid-common-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>renfeid-uaa-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>renfeid-uaa-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mariadb.jdbc</groupId>
+                <artifactId>mariadb-java-client</artifactId>
+                <version>${mariadb-client.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
