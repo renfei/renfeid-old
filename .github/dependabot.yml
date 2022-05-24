@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "maven" # See documentation for possible values
+    directory: "/renfeid/" # Location of package manifests
+    schedule:
+      interval: "daily"
+    assignees:
+      - "renfei"
+    reviewers:
+      - "renfei"
+    open-pull-requests-limit: 10
