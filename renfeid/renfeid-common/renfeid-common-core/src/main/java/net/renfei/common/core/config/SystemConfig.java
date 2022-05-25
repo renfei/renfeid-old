@@ -15,6 +15,7 @@
  */
 package net.renfei.common.core.config;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -24,6 +25,7 @@ import org.springframework.core.annotation.Order;
  *
  * @author renfei
  */
+@Data
 @Order(0)
 @Configuration
 @ConfigurationProperties(prefix = "system")
@@ -31,28 +33,24 @@ public class SystemConfig {
     private String active;
     private String version;
     private String buildTime;
+    private AWS aws;
+    private Aliyun aliyun;
 
-    public String getActive() {
-        return active;
+    @Data
+    public static class AWS{
+        private String region;
+        private String bucketName;
     }
 
-    public void setActive(String active) {
-        this.active = active;
-    }
+    @Data
+    public static class Aliyun{
+        private String accessKeyId;
+        private String accessKeySecret;
+        private Green green;
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getBuildTime() {
-        return buildTime;
-    }
-
-    public void setBuildTime(String buildTime) {
-        this.buildTime = buildTime;
+        @Data
+        public static class Green{
+            private String regionId;
+        }
     }
 }

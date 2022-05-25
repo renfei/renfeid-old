@@ -52,3 +52,11 @@ system:
   active: dev
   version: "@project.version@"
   buildTime: "@buildtimestamp@"
+  aws:
+    region: ap-east-1
+    bucketName: s3-bucket-dev-test
+  aliyun:
+    accessKeyId: accessKeyId
+    accessKeySecret: accessKeySecret
+    green:
+      regionId: ap-southeast-1

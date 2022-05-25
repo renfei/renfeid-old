@@ -1,5 +1,3 @@
-package net.renfei.common.core.constant;
-
 /*
  *   Copyright 2022 RenFei(i@renfei.net)
  *
@@ -15,6 +13,8 @@ package net.renfei.common.core.constant;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package net.renfei.common.core.constant;
+
 import net.renfei.common.core.constant.enums.StateCodeEnum;
 import net.renfei.common.core.utils.StringUtils;
 
