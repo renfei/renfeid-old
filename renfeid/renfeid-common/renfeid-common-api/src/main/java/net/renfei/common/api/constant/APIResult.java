@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.common.core.constant;
+package net.renfei.common.api.constant;
 
-import net.renfei.common.core.constant.enums.StateCodeEnum;
-import net.renfei.common.core.utils.StringUtils;
+
+import net.renfei.common.api.constant.enums.StateCodeEnum;
+import net.renfei.common.api.utils.StringUtils;
 
 /**
  * @author renfei
@@ -39,6 +40,14 @@ public class APIResult<T> {
         this.message = builder.message;
         this.data = builder.data;
         this.stateCode = builder.stateCode;
+        this.signature();
+    }
+
+    public APIResult(T data) {
+        this.code = StateCodeEnum.OK.getCode();
+        this.message = StateCodeEnum.OK.getDescribe();
+        this.data = data;
+        this.stateCode = StateCodeEnum.OK;
         this.signature();
     }
 

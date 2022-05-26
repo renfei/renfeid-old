@@ -19,11 +19,11 @@
 
 
         <!-- 生成的包名和工程名 -->
-        <javaModelGenerator targetPackage="net.renfei.uaa.dao.entity"
+        <javaModelGenerator targetPackage="net.renfei.uaa.repositories.entity"
                             targetProject="src/main/java"/>
         <sqlMapGenerator targetPackage="mapper"
                          targetProject="src/main/resources" />
-        <javaClientGenerator targetPackage="net.renfei.uaa.dao"
+        <javaClientGenerator targetPackage="net.renfei.uaa.repositories"
                              targetProject="src/main/java" type="XMLMAPPER" />
 
         <!-- 数据库表 -->

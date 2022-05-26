@@ -15,9 +15,7 @@
  */
 package net.renfei.proprietary.discuz.service.impl;
 
-
-
-import net.renfei.common.core.utils.ListUtils;
+import net.renfei.common.api.utils.ListUtils;
 import net.renfei.proprietary.discuz.model.DiscuzInfo;
 import net.renfei.proprietary.discuz.repositories.*;
 import net.renfei.proprietary.discuz.repositories.entity.*;

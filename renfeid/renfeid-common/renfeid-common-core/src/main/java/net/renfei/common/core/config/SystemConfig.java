@@ -33,8 +33,16 @@ public class SystemConfig {
     private String active;
     private String version;
     private String buildTime;
+    private Jwt jwt;
     private AWS aws;
     private Aliyun aliyun;
+
+    @Data
+    public static class Jwt{
+        private String secret;
+        private String issuer;
+        private Long expiration;
+    }
 
     @Data
     public static class AWS{

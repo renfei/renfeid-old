@@ -13,15 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.common.core.utils;
+package net.renfei.uaa.api;
 
-import java.util.List;
+import net.renfei.common.api.constant.APIResult;
+import net.renfei.uaa.api.entity.UserDetail;
 
-public class ListUtils {
-    public static <T> T getOne(List<T> list) {
-        if (list == null || list.size() < 1) {
-            return null;
-        }
-        return list.get(0);
-    }
+/**
+ * 用户服务
+ *
+ * @author renfei
+ */
+public interface UserService {
+    /**
+     * 根据 Token 获取用户详情对象
+     *
+     * @param token Token
+     * @param ip    请求方IP
+     * @return
+     */
+    APIResult<UserDetail> getUserDetailByToken(String token, String ip);
 }

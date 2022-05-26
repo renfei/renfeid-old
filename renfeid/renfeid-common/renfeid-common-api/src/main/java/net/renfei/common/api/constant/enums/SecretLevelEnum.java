@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.common.core.constant.enums;
+package net.renfei.common.api.constant.enums;
 
 /**
  * 保密等级

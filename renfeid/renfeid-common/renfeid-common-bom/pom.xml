@@ -17,6 +17,7 @@
         <mybatis.version>2.2.2</mybatis.version>
         <pagehelper.version>1.4.1</pagehelper.version>
         <mariadb-client.version>2.7.5</mariadb-client.version>
+        <jjwt.version>0.11.2</jjwt.version>
         <flowable.version>6.7.2</flowable.version>
     </properties>
 
@@ -30,6 +31,11 @@
             <dependency>
                 <groupId>net.renfei</groupId>
                 <artifactId>renfeid-cms-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>renfeid-common-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -53,6 +59,12 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!--https://github.com/renfei/ip2location-->
+            <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>ip2location</artifactId>
+                <version>1.0.2</version>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
@@ -72,6 +84,23 @@
                 <groupId>org.mariadb.jdbc</groupId>
                 <artifactId>mariadb-java-client</artifactId>
                 <version>${mariadb-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.aliyun</groupId>
