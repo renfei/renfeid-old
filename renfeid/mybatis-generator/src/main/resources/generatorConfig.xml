@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <classPathEntry location="/Users/renfei/Downloads/mysql-connector-java-5.1.45.jar"/>
+    <context id="context" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+        <!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <!-- 是否生成注释 -->
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/renfeid"
+                        userId="root" password="root" />
+        <!-- 生成的包名和工程名 -->
+        <javaModelGenerator targetPackage="net.renfei.uaa.repositories.entity"
+                            targetProject="src/main/java"/>
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="src/main/resources" />
+        <javaClientGenerator targetPackage="net.renfei.uaa.repositories"
+                             targetProject="src/main/java" type="XMLMAPPER" />
+        <!-- 数据库表 -->
+<!--        <table schema="renfeid" tableName="uaa_user" />-->
+<!--        <table schema="renfeid" tableName="uaa_secret_key" />-->
+        <table schema="renfeid" tableName="uaa_system_api" />
+    </context>
+</generatorConfiguration>

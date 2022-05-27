@@ -23,6 +23,10 @@
             <artifactId>renfeid-common-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>renfeid-uaa-service</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
@@ -74,6 +78,10 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-green</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-logback</artifactId>
         </dependency>
     </dependencies>
 </project>

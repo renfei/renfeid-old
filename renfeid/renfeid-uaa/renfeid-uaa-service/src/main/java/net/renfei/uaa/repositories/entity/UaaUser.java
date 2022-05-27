@@ -1,100 +1,50 @@
-/*
- *   Copyright 2022 RenFei(i@renfei.net)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package net.renfei.uaa.api.entity;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+package net.renfei.uaa.repositories.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 
-/**
- * 用户详情
- *
- * @author renfei
- */
-public class UserDetail implements UserDetails, Serializable {
-    private static final long serialVersionUID = -5194970536302876575L;
+public class UaaUser implements Serializable {
     private Long id;
+
     private String uuid;
+
     private String username;
+
     private String email;
+
     private Boolean emailVerified;
+
     private String phone;
+
     private Boolean phoneVerified;
+
     private Date registrationDate;
+
     private String password;
+
     private String totp;
+
     private String registrationIp;
+
     private Integer trialErrorTimes;
+
     private Date lockTime;
+
     private Integer secretLevel;
+
     private Boolean builtInUser;
+
     private Date passwordExpirationTime;
+
     private Boolean locked;
+
     private Boolean enabled;
+
     private String lastName;
+
     private String firstName;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return !locked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        if (passwordExpirationTime == null) {
-            return true;
-        }
-        return new Date().compareTo(passwordExpirationTime) < 0;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -110,6 +60,14 @@ public class UserDetail implements UserDetails, Serializable {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -150,6 +108,14 @@ public class UserDetail implements UserDetails, Serializable {
 
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getTotp() {
@@ -238,5 +204,36 @@ public class UserDetail implements UserDetails, Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", uuid=").append(uuid);
+        sb.append(", username=").append(username);
+        sb.append(", email=").append(email);
+        sb.append(", emailVerified=").append(emailVerified);
+        sb.append(", phone=").append(phone);
+        sb.append(", phoneVerified=").append(phoneVerified);
+        sb.append(", registrationDate=").append(registrationDate);
+        sb.append(", password=").append(password);
+        sb.append(", totp=").append(totp);
+        sb.append(", registrationIp=").append(registrationIp);
+        sb.append(", trialErrorTimes=").append(trialErrorTimes);
+        sb.append(", lockTime=").append(lockTime);
+        sb.append(", secretLevel=").append(secretLevel);
+        sb.append(", builtInUser=").append(builtInUser);
+        sb.append(", passwordExpirationTime=").append(passwordExpirationTime);
+        sb.append(", locked=").append(locked);
+        sb.append(", enabled=").append(enabled);
+        sb.append(", lastName=").append(lastName);
+        sb.append(", firstName=").append(firstName);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

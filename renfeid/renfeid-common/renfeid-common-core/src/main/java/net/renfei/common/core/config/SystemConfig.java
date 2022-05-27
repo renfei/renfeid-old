@@ -20,6 +20,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import java.util.List;
+
 /**
  * 系统配置
  *
@@ -33,7 +35,9 @@ public class SystemConfig {
     private String active;
     private String version;
     private String buildTime;
+    private String superTubeUserName;
     private Jwt jwt;
+    private List<String> authIgnore;
     private AWS aws;
     private Aliyun aliyun;
 

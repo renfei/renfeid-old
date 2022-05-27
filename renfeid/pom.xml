@@ -16,6 +16,7 @@
         <module>renfeid-proprietary</module>
         <module>renfeid-server</module>
         <module>renfeid-uaa</module>
+        <module>mybatis-generator</module>
     </modules>
 
     <properties>
@@ -123,17 +124,6 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.mybatis.generator</groupId>
-                    <artifactId>mybatis-generator-maven-plugin</artifactId>
-                    <version>1.4.1</version>
-                    <configuration>
-                        <!--mybatis generator插件配置文件位置，默认值${basedir}/src/main/resources/generatorConfig.xml-->
-                        <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
-                        <overwrite>true</overwrite>
-                        <verbose>true</verbose>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

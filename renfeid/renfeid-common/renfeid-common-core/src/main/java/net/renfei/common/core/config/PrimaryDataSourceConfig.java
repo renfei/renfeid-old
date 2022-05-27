@@ -54,7 +54,7 @@ public class PrimaryDataSourceConfig {
         druidDataSource.setInitialSize(5);
         druidDataSource.setMinIdle(5);
         druidDataSource.setMaxActive(20);
-        druidDataSource.setMaxWait(60000);
+        druidDataSource.setMaxWait(3000);
         druidDataSource.setTestOnBorrow(false);
         druidDataSource.setTestWhileIdle(true);
         druidDataSource.setTestOnReturn(false);

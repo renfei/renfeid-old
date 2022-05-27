@@ -29,6 +29,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * Discuz论坛数据源配置
@@ -41,7 +42,27 @@ public class DiscuzDataSourceConfig {
     @Bean(name = "discuzDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.discuz")
     public DataSource discuzDataSource() {
-        return new DruidDataSource();
+        DruidDataSource druidDataSource = new DruidDataSource();
+        // 由于此处的配置几乎不怎么修改，所以直接在代码里硬编码了，懒得写入配置文件中
+        druidDataSource.setInitialSize(1);
+        druidDataSource.setMinIdle(1);
+        druidDataSource.setMaxActive(10);
+        druidDataSource.setMaxWait(3000);
+        druidDataSource.setTestOnBorrow(false);
+        druidDataSource.setTestWhileIdle(true);
+        druidDataSource.setTestOnReturn(false);
+        druidDataSource.setValidationQuery("SELECT 1");
+        druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
+        druidDataSource.setMinEvictableIdleTimeMillis(300000);
+        druidDataSource.setPoolPreparedStatements(true);
+        druidDataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
+        druidDataSource.setUseGlobalDataSourceStat(true);
+        // Properties
+        Properties properties = new Properties();
+        properties.setProperty("druid.stat.mergeSql","true");
+        properties.setProperty("druid.stat.slowSqlMillis","5000");
+        druidDataSource.setConnectProperties(properties);
+        return druidDataSource;
     }
 
     @Bean(name = "discuzSessionFactory")
