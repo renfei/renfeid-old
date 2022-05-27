@@ -19,6 +19,7 @@
         <mariadb-client.version>2.7.5</mariadb-client.version>
         <jjwt.version>0.11.2</jjwt.version>
         <flowable.version>6.7.2</flowable.version>
+        <sentry.version>5.7.4</sentry.version>
     </properties>
 
     <dependencyManagement>
@@ -149,6 +150,11 @@
                 <groupId>org.flowable</groupId>
                 <artifactId>flowable-json-converter</artifactId>
                 <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.sentry</groupId>
+                <artifactId>sentry-logback</artifactId>
+                <version>${sentry.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

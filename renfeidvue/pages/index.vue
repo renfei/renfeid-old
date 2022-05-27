@@ -141,7 +141,7 @@ export default {
   },
   data: () => ({
     title: "任霏的主页",
-    adsenseClientId: "",
+    adsenseClientId: "test",
     post_1: {},
     post_2_4: [
       {
