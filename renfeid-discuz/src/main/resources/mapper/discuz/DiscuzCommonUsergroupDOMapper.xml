@@ -79,7 +79,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    groupid, radminid, type, system, grouptitle, creditshigher, creditslower, stars, 
+    groupid, radminid, `type`, `system`, grouptitle, creditshigher, creditslower, stars,
     color, icon, allowvisit, allowsendpm, allowinvite, allowmailinvite, maxinvitenum, 
     inviteprice, maxinviteday
   </sql>
@@ -114,8 +114,8 @@
     </if>
   </delete>
   <insert id="insert" parameterType="net.renfei.discuz.repositories.entity.DiscuzCommonUsergroupDO">
-    insert into bbs_common_usergroup (groupid, radminid, type, 
-      system, grouptitle, creditshigher, 
+    insert into bbs_common_usergroup (groupid, radminid, `type`,
+      `system`, grouptitle, creditshigher,
       creditslower, stars, color, 
       icon, allowvisit, allowsendpm, 
       allowinvite, allowmailinvite, maxinvitenum, 
@@ -137,10 +137,10 @@
         radminid,
       </if>
       <if test="type != null">
-        type,
+        `type`,
       </if>
       <if test="system != null">
-        system,
+        `system`,
       </if>
       <if test="grouptitle != null">
         grouptitle,
@@ -252,10 +252,10 @@
         radminid = #{record.radminid,jdbcType=TINYINT},
       </if>
       <if test="record.type != null">
-        type = #{record.type,jdbcType=CHAR},
+        `type` = #{record.type,jdbcType=CHAR},
       </if>
       <if test="record.system != null">
-        system = #{record.system,jdbcType=VARCHAR},
+        `system` = #{record.system,jdbcType=VARCHAR},
       </if>
       <if test="record.grouptitle != null">
         grouptitle = #{record.grouptitle,jdbcType=VARCHAR},
@@ -305,8 +305,8 @@
     update bbs_common_usergroup
     set groupid = #{record.groupid,jdbcType=SMALLINT},
       radminid = #{record.radminid,jdbcType=TINYINT},
-      type = #{record.type,jdbcType=CHAR},
-      system = #{record.system,jdbcType=VARCHAR},
+      `type` = #{record.type,jdbcType=CHAR},
+      `system` = #{record.system,jdbcType=VARCHAR},
       grouptitle = #{record.grouptitle,jdbcType=VARCHAR},
       creditshigher = #{record.creditshigher,jdbcType=INTEGER},
       creditslower = #{record.creditslower,jdbcType=INTEGER},
@@ -331,10 +331,10 @@
         radminid = #{radminid,jdbcType=TINYINT},
       </if>
       <if test="type != null">
-        type = #{type,jdbcType=CHAR},
+        `type` = #{type,jdbcType=CHAR},
       </if>
       <if test="system != null">
-        system = #{system,jdbcType=VARCHAR},
+        `system` = #{system,jdbcType=VARCHAR},
       </if>
       <if test="grouptitle != null">
         grouptitle = #{grouptitle,jdbcType=VARCHAR},
@@ -381,8 +381,8 @@
   <update id="updateByPrimaryKey" parameterType="net.renfei.discuz.repositories.entity.DiscuzCommonUsergroupDO">
     update bbs_common_usergroup
     set radminid = #{radminid,jdbcType=TINYINT},
-      type = #{type,jdbcType=CHAR},
-      system = #{system,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=CHAR},
+      `system` = #{system,jdbcType=VARCHAR},
       grouptitle = #{grouptitle,jdbcType=VARCHAR},
       creditshigher = #{creditshigher,jdbcType=INTEGER},
       creditslower = #{creditslower,jdbcType=INTEGER},
