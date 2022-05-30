@@ -67,6 +67,11 @@
                 <version>1.0.2</version>
             </dependency>
             <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>cloudflare</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid.version}</version>
