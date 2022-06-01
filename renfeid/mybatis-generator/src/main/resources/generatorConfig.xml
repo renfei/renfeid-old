@@ -34,6 +34,10 @@
         <!-- 数据库表 -->
 <!--        <table schema="renfeid" tableName="uaa_user" />-->
 <!--        <table schema="renfeid" tableName="uaa_secret_key" />-->
-        <table schema="renfeid" tableName="uaa_system_api" />
+<!--        <table schema="renfeid" tableName="uaa_system_api" />-->
+        <table schema="renfeid" tableName="uaa_role" />
+        <table schema="renfeid" tableName="uaa_user_role" />
+        <table schema="renfeid" tableName="uaa_authority" />
+        <table schema="renfeid" tableName="uaa_menu" />
     </context>
 </generatorConfiguration>

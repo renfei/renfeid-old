@@ -67,8 +67,8 @@ public class PrimaryDataSourceConfig {
         druidDataSource.setUseGlobalDataSourceStat(true);
         // Properties
         Properties properties = new Properties();
-        properties.setProperty("druid.stat.mergeSql","true");
-        properties.setProperty("druid.stat.slowSqlMillis","5000");
+        properties.setProperty("druid.stat.mergeSql", "true");
+        properties.setProperty("druid.stat.slowSqlMillis", "5000");
         druidDataSource.setConnectProperties(properties);
         return druidDataSource;
     }

@@ -66,6 +66,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDetail convert(UaaUser uaaUser) {
+        if (uaaUser == null) {
+            return null;
+        }
         UserDetail userDetail = new UserDetail();
         userDetail.setId(uaaUser.getId());
         userDetail.setUuid(uaaUser.getUuid());

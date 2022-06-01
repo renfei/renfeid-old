@@ -67,6 +67,18 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.yml</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.factories</include>
+                    <include>**/*.sh</include>
+                    <include>**/*.html</include>
+                    <include>**/*.png</include>
+                    <include>**/*.css</include>
+                    <include>**/*.js</include>
+                    <include>**/*.jpg</include>
+                </includes>
             </resource>
         </resources>
 

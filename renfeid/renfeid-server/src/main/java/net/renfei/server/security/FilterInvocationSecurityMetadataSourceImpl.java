@@ -15,7 +15,9 @@
  */
 package net.renfei.server.security;
 
+import net.renfei.uaa.api.RoleService;
 import net.renfei.uaa.api.SystemApiService;
+import net.renfei.uaa.api.entity.RoleDetail;
 import net.renfei.uaa.api.entity.SystemApi;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -42,8 +44,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocationSecurityMetadataSource {
     private final AntPathMatcher antPathMatcher;
     private final List<SystemApi> sysApiList;
+    private final RoleService roleService;
 
-    public FilterInvocationSecurityMetadataSourceImpl(SystemApiService systemApiService) {
+    public FilterInvocationSecurityMetadataSourceImpl(SystemApiService systemApiService,
+                                                      RoleService roleService) {
+        this.roleService = roleService;
         this.antPathMatcher = new AntPathMatcher();
         // 从数据库加载权限配置
         this.sysApiList = systemApiService.allSystemApiList().getData().getData();
@@ -72,11 +77,10 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
                 String url = sysApi.getUrlPath();
                 if (requestMethod.equals(method) && antPathMatcher.match(url, requestUrl)) {
                     // 匹配命中了，将访问此资源需要的角色添加到 List<ConfigAttribute>
-                    // TODO
-//                    List<RoleDTO> roleDTOList = sysService.getRoleDtoBySysApi(sysApi);
-//                    if (roleDTOList != null) {
-//                        configAttributes.addAll(roleDTOList);
-//                    }
+                    List<RoleDetail> roleDTOList = roleService.allRoleList(true).getData();
+                    if (roleDTOList != null) {
+                        configAttributes.addAll(roleDTOList);
+                    }
                 }
             }
             if (!configAttributes.isEmpty()) {

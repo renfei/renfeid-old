@@ -69,6 +69,9 @@ public class SystemApiServiceImpl implements SystemApiService {
     }
 
     private SystemApi convert(UaaSystemApi uaaSystemApi) {
+        if (uaaSystemApi == null) {
+            return null;
+        }
         SystemApi systemApi = new SystemApi();
         systemApi.setId(uaaSystemApi.getId());
         systemApi.setUrlPath(uaaSystemApi.getUrlPath());
