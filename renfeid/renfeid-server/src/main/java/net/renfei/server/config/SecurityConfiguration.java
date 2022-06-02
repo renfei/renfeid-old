@@ -19,6 +19,8 @@ import net.renfei.common.core.config.SystemConfig;
 import net.renfei.server.filter.AuthorizationFilter;
 import net.renfei.server.security.AccessDecisionManagerImpl;
 import net.renfei.server.security.FilterInvocationSecurityMetadataSourceImpl;
+import net.renfei.server.security.handler.AccessDeniedHandlerImpl;
+import net.renfei.server.security.handler.AuthenticationEntryPointImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -72,7 +74,9 @@ public class SecurityConfiguration {
                 })
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().permitAll()
-                .and().exceptionHandling();
+                .and().exceptionHandling()
+                .accessDeniedHandler(new AccessDeniedHandlerImpl())
+                .authenticationEntryPoint(new AuthenticationEntryPointImpl());
         http.addFilterBefore(
                 authorizationFilter,
                 UsernamePasswordAuthenticationFilter.class

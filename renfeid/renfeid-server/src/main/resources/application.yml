@@ -1,9 +1,24 @@
 server:
   port: 9595
+  error:
+    whitelabel:
+      enabled: true
+    include-message: always
+    include-exception: true
+    include-stacktrace: always
+    include-binding-errors: always
 
 spring:
   profiles:
     active: @activatedProperties@
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/config-repo/renfeid
+          force-pull: true
+          username: renfei
+          password: renfei
 
 management:
   endpoints:

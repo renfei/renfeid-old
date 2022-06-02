@@ -30,7 +30,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @EnableAsync
 @SpringBootApplication
-@ComponentScan(basePackages ={"net.renfei"})
+@ComponentScan(basePackages = "net.renfei.*")
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Application.class);

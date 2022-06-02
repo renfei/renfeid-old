@@ -20,8 +20,6 @@ import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -42,24 +40,6 @@ public class GlobalExceptionHandler {
         return APIResult.builder()
                 .code(StateCodeEnum.Failure)
                 .message(e.getMessage())
-                .build();
-    }
-
-    @ExceptionHandler(value = AuthenticationException.class)
-    public APIResult authenticationExceptionExceptionError(HttpServletRequest req, AuthenticationException e) {
-        logger.warn("401 Unauthorized. Request: {}", req, e);
-        return APIResult.builder()
-                .code(StateCodeEnum.Unauthorized)
-                .message(StateCodeEnum.Unauthorized.getDescribe())
-                .build();
-    }
-
-    @ExceptionHandler(value = AccessDeniedException.class)
-    public APIResult accessDeniedExceptionExceptionExceptionError(HttpServletRequest req, AccessDeniedException e) {
-        logger.warn("403 Forbidden. Request: {}", req, e);
-        return APIResult.builder()
-                .code(StateCodeEnum.Forbidden)
-                .message(StateCodeEnum.Forbidden.getDescribe())
                 .build();
     }
 
