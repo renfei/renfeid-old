@@ -28,6 +28,14 @@ public interface UserService {
      * 根据 Token 获取用户详情对象
      *
      * @param token Token
+     * @return
+     */
+    APIResult<UserDetail> getUserDetailByToken(String token);
+
+    /**
+     * 根据 Token 获取用户详情对象
+     *
+     * @param token Token
      * @param ip    请求方IP
      * @return
      */

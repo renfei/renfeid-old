@@ -45,6 +45,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public APIResult<UserDetail> getUserDetailByToken(String token) {
+        if (jwtService.validate(token).getCode() != 200) {
+            // JWT 校验失败
+            logger.warn("Token校验失败：{}", token);
+            throw new RuntimeException("Token校验失败。");
+        }
+        String username = jwtService.getUsername(token).getData();
+        logger.info(username);
+        // 根据 username 获取 UserDetail
+        UaaUserExample example = new UaaUserExample();
+        example.createCriteria()
+                .andUsernameEqualTo(username);
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser == null) {
+            logger.error("根据用户名：{}，未找到用户信息", username);
+            throw new RuntimeException("未找到用户信息。");
+        }
+        return new APIResult<>(convert(uaaUser));
+    }
+
+    @Override
     public APIResult<UserDetail> getUserDetailByToken(String token, String ip) {
         if (jwtService.validate(token, ip).getCode() != 200) {
             // JWT 校验失败

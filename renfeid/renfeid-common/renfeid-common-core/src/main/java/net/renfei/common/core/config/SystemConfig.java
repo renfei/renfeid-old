@@ -36,6 +36,7 @@ public class SystemConfig {
     private String version;
     private String buildTime;
     private String superTubeUserName;
+    private Boolean bindingIp;
     private Jwt jwt;
     private List<String> authIgnore;
     private AWS aws;

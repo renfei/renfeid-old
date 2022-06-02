@@ -51,6 +51,14 @@ public interface JwtService {
     APIResult<String> getUsername(String token);
 
     /**
+     * TOKEN 校验
+     *
+     * @param token
+     * @return
+     */
+    APIResult validate(String token);
+
+    /**
      * TOKEN 与IP进行绑定校验
      *
      * @param token

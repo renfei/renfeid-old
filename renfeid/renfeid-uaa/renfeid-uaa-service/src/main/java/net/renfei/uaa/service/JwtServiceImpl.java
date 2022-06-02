@@ -127,6 +127,23 @@ public class JwtServiceImpl implements JwtService {
     }
 
     /**
+     * TOKEN 校验
+     *
+     * @param token
+     * @return
+     */
+    @Override
+    public APIResult validate(String token) {
+        if (this.parseJWT(token) == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message(StateCodeEnum.Failure.getDescribe())
+                    .build();
+        }
+        return APIResult.success();
+    }
+
+    /**
      * TOKEN 与IP进行绑定校验
      *
      * @param token

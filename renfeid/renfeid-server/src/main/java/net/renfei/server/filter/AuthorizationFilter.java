@@ -16,6 +16,7 @@
 package net.renfei.server.filter;
 
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.utils.IpUtils;
 import net.renfei.uaa.api.UserService;
 import net.renfei.uaa.api.entity.UserDetail;
@@ -41,9 +42,11 @@ import static net.renfei.common.api.constant.Constant.*;
  */
 @Component
 public class AuthorizationFilter extends OncePerRequestFilter {
+    private final SystemConfig systemConfig;
     private final UserService userService;
 
-    public AuthorizationFilter(UserService userService) {
+    public AuthorizationFilter(SystemConfig systemConfig, UserService userService) {
+        this.systemConfig = systemConfig;
         this.userService = userService;
     }
 
@@ -58,7 +61,12 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             return;
         }
         final String token = auth.split(" ")[1].trim();
-        APIResult<UserDetail> userDetailApiResult = userService.getUserDetailByToken(token, IpUtils.getIpAddress(request));
+        APIResult<UserDetail> userDetailApiResult;
+        if (systemConfig.getBindingIp()) {
+            userDetailApiResult = userService.getUserDetailByToken(token, IpUtils.getIpAddress(request));
+        } else {
+            userDetailApiResult = userService.getUserDetailByToken(token);
+        }
         if (userDetailApiResult.getCode() != 200) {
             // token 无效
             filterChain.doFilter(request, response);
