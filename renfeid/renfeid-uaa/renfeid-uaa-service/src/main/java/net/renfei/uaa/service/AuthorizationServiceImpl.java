@@ -22,6 +22,8 @@ import net.renfei.common.api.utils.RSAUtils;
 import net.renfei.common.api.utils.StringUtils;
 import net.renfei.uaa.api.AuthorizationService;
 import net.renfei.uaa.api.entity.SecretKey;
+import net.renfei.uaa.api.entity.SignInAo;
+import net.renfei.uaa.api.entity.SignInVo;
 import net.renfei.uaa.repositories.UaaSecretKeyMapper;
 import net.renfei.uaa.repositories.entity.UaaSecretKeyExample;
 import net.renfei.uaa.repositories.entity.UaaSecretKeyWithBLOBs;
@@ -120,5 +122,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         responseSecretKey.setPublicKey(aesEnc);
         responseSecretKey.setPrivateKey(aesEnc);
         return new APIResult<>(responseSecretKey);
+    }
+
+    /**
+     * 登录
+     *
+     * @param signIn 登录请求对象
+     * @return 登录响应
+     */
+    @Override
+    public APIResult<SignInVo> signIn(SignInAo signIn) {
+        // TODO
+        return null;
     }
 }

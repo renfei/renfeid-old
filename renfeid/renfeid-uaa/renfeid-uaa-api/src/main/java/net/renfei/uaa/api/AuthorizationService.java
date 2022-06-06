@@ -17,6 +17,8 @@ package net.renfei.uaa.api;
 
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.uaa.api.entity.SecretKey;
+import net.renfei.uaa.api.entity.SignInAo;
+import net.renfei.uaa.api.entity.SignInVo;
 
 /**
  * 认证服务
@@ -38,4 +40,12 @@ public interface AuthorizationService {
      * @return
      */
     APIResult<SecretKey> settingClientSecretKey(SecretKey secretKey);
+
+    /**
+     * 登录
+     *
+     * @param signIn 登录请求对象
+     * @return 登录响应
+     */
+    APIResult<SignInVo> signIn(SignInAo signIn);
 }
