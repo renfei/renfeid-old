@@ -68,3 +68,6 @@ system:
     accessKeySecret: accessKeySecret
     green:
       regionId: ap-southeast-1
+  leaf:
+    prot: 2181
+    zk: localhost

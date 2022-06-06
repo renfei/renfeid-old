@@ -43,6 +43,7 @@ public class SystemConfig {
     private List<String> authIgnore;
     private AWS aws;
     private Aliyun aliyun;
+    private Leaf leaf;
 
     @Data
     public static class Jwt{
@@ -67,5 +68,11 @@ public class SystemConfig {
         public static class Green{
             private String regionId;
         }
+    }
+
+    @Data
+    public static class Leaf{
+        private Integer port;
+        private String zk;
     }
 }

@@ -17,6 +17,7 @@
         <module>renfeid-common-bom</module>
         <module>renfeid-common-core</module>
         <module>renfeid-common-api</module>
+        <module>renfeid-common-leaf</module>
     </modules>
 
     <properties>
