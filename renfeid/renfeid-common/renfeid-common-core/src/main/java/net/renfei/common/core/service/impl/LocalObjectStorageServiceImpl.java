@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 本地磁盘实现的对象存储服务
@@ -32,6 +33,11 @@ import java.io.IOException;
 @Service
 public class LocalObjectStorageServiceImpl implements ObjectStorageService {
     private final static Logger logger = LoggerFactory.getLogger(LocalObjectStorageServiceImpl.class);
+
+    @Override
+    public boolean putObject(String objectKey, InputStream inputStream, long contentLength) {
+        return false;
+    }
 
     @Override
     public boolean putObject(String objectKey, String objectPath) {

@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.uaa.api;
+package net.renfei.common.core.entity;
 
-import net.renfei.common.api.constant.APIResult;
-import net.renfei.common.core.entity.UserDetail;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
- * 用户服务
+ * 系统日志实体
  *
  * @author renfei
  */
-public interface UserService {
-    /**
-     * 根据 Token 获取用户详情对象
-     *
-     * @param token Token
-     * @return
-     */
-    APIResult<UserDetail> getUserDetailByToken(String token);
-
-    /**
-     * 根据 Token 获取用户详情对象
-     *
-     * @param token Token
-     * @param ip    请求方IP
-     * @return
-     */
-    APIResult<UserDetail> getUserDetailByToken(String token, String ip);
+@Data
+public class SystemLogEntity {
+    private Long id;
+    private Date logTime;
+    private String logLevel;
+    private String logModule;
+    private String logType;
+    private String requMethod;
+    private String requUri;
+    private String requReferrer;
+    private String userUuid;
+    private String userName;
+    private String requIp;
+    private String logDesc;
+    private String requParam;
+    private String respParam;
+    private String requAgent;
 }

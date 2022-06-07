@@ -13,31 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.uaa.api;
+package net.renfei.common.core.service;
 
-import net.renfei.common.api.constant.APIResult;
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.common.core.entity.SystemLogEntity;
 
 /**
- * 用户服务
+ * 系统审计日志服务
  *
  * @author renfei
  */
-public interface UserService {
-    /**
-     * 根据 Token 获取用户详情对象
-     *
-     * @param token Token
-     * @return
-     */
-    APIResult<UserDetail> getUserDetailByToken(String token);
-
-    /**
-     * 根据 Token 获取用户详情对象
-     *
-     * @param token Token
-     * @param ip    请求方IP
-     * @return
-     */
-    APIResult<UserDetail> getUserDetailByToken(String token, String ip);
+public interface SystemLogService {
+    void save(SystemLogEntity systemLogEntity);
 }

@@ -30,8 +30,8 @@ public class SnowflakeZookeeperHolder {
     private String zk_AddressNode = null;//保存自身的key  ip:port-000000001
     private String listenAddress = null;//保存自身的key ip:port
     private int workerID;
-    private static final String PREFIX_ZK_PATH = "/snowflake/" + PropertyFactory.getProperties().getProperty("leaf.name");
-    private static final String PROP_PATH = System.getProperty("java.io.tmpdir") + File.separator + PropertyFactory.getProperties().getProperty("leaf.name") + "/leafconf/{port}/workerID.properties";
+    private static final String PREFIX_ZK_PATH = "/snowflake/renfeid";
+    private static final String PROP_PATH = System.getProperty("java.io.tmpdir") + File.separator + "renfeid/leafconf/{port}/workerID.properties";
     private static final String PATH_FOREVER = PREFIX_ZK_PATH + "/forever";//保存所有数据持久的节点
     private String ip;
     private String port;

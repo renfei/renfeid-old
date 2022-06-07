@@ -19,7 +19,7 @@ import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.utils.ListUtils;
 import net.renfei.uaa.api.JwtService;
 import net.renfei.uaa.api.UserService;
-import net.renfei.uaa.api.entity.UserDetail;
+import net.renfei.common.core.entity.UserDetail;
 import net.renfei.uaa.repositories.UaaUserMapper;
 import net.renfei.uaa.repositories.entity.UaaUser;
 import net.renfei.uaa.repositories.entity.UaaUserExample;

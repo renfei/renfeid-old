@@ -51,6 +51,21 @@ public class S3ObjectStorageServiceImpl implements ObjectStorageService {
     }
 
     @Override
+    public boolean putObject(String objectKey, InputStream inputStream, long contentLength) {
+        try {
+            PutObjectRequest putOb = PutObjectRequest.builder()
+                    .bucket(systemConfig.getAws().getBucketName())
+                    .key(objectKey)
+                    .build();
+            s3Client.putObject(putOb, RequestBody.fromInputStream(inputStream, contentLength));
+            return true;
+        } catch (S3Exception e) {
+            logger.error(e.getMessage(), e);
+            return false;
+        }
+    }
+
+    @Override
     public boolean putObject(String objectKey, String objectPath) {
         return putObject(objectKey, new File(objectPath));
     }

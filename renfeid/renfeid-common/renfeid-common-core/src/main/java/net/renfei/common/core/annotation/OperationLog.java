@@ -13,31 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.uaa.api;
+package net.renfei.common.core.annotation;
 
-import net.renfei.common.api.constant.APIResult;
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.common.core.entity.LogLevelEnum;
+import net.renfei.common.core.entity.OperationTypeEnum;
+import net.renfei.common.core.entity.SystemTypeEnum;
+
+import java.lang.annotation.*;
 
 /**
- * 用户服务
+ * 操作日志记录注解
  *
  * @author renfei
  */
-public interface UserService {
+@Documented
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface OperationLog {
     /**
-     * 根据 Token 获取用户详情对象
+     * 日志等级
      *
-     * @param token Token
      * @return
      */
-    APIResult<UserDetail> getUserDetailByToken(String token);
+    LogLevelEnum leve() default LogLevelEnum.INFO;
 
     /**
-     * 根据 Token 获取用户详情对象
+     * 子系统类型
      *
-     * @param token Token
-     * @param ip    请求方IP
      * @return
      */
-    APIResult<UserDetail> getUserDetailByToken(String token, String ip);
+    SystemTypeEnum module();
+
+    /**
+     * 操作类型
+     *
+     * @return
+     */
+    OperationTypeEnum operation() default OperationTypeEnum.RETRIEVE;
+
+    /**
+     * 详细信息
+     *
+     * @return
+     */
+    String desc() default "";
 }

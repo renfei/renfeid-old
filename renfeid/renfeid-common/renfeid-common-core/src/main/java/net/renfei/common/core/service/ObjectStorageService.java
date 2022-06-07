@@ -16,6 +16,7 @@
 package net.renfei.common.core.service;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * 对象存储服务
@@ -23,6 +24,15 @@ import java.io.File;
  * @author renfei
  */
 public interface ObjectStorageService {
+    /**
+     * 存入一个对象
+     *
+     * @param objectKey   存入对象路径
+     * @param inputStream 对象流
+     * @return
+     */
+    boolean putObject(String objectKey, InputStream inputStream, long contentLength);
+
     /**
      * 存入一个对象
      *

@@ -16,7 +16,7 @@
 package net.renfei.server.security;
 
 import net.renfei.common.core.config.SystemConfig;
-import net.renfei.uaa.api.entity.UserDetail;
+import net.renfei.common.core.entity.UserDetail;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;

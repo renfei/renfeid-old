@@ -55,8 +55,8 @@ public class APIResult<T> {
         return new Builder();
     }
 
-    public static APIResult success() {
-        APIResult apiResult = new APIResult();
+    public static APIResult<?> success() {
+        APIResult<?> apiResult = new APIResult<>();
         apiResult.stateCode = StateCodeEnum.OK;
         apiResult.code = StateCodeEnum.OK.getCode();
         apiResult.message = StateCodeEnum.OK.getDescribe();
@@ -106,24 +106,24 @@ public class APIResult<T> {
         public Builder() {
         }
 
-        public Builder code(StateCodeEnum stateCode) {
+        public Builder<T> code(StateCodeEnum stateCode) {
             this.stateCode = stateCode;
             this.code = stateCode.getCode();
             return this;
         }
 
-        public Builder message(String message) {
+        public Builder<T> message(String message) {
             this.message = message;
             return this;
         }
 
-        public Builder data(T data) {
+        public Builder<T> data(T data) {
             this.data = data;
             return this;
         }
 
         public APIResult<T> build() {
-            return new APIResult(this);
+            return new APIResult<>(this);
         }
     }
 }

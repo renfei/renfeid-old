@@ -30,7 +30,7 @@ import java.util.List;
  */
 @Data
 @Order(0)
-@RefreshScope
+//@RefreshScope
 @Configuration
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
@@ -44,6 +44,7 @@ public class SystemConfig {
     private AWS aws;
     private Aliyun aliyun;
     private Leaf leaf;
+    private AccessLimit accessLimit;
 
     @Data
     public static class Jwt{
@@ -62,7 +63,15 @@ public class SystemConfig {
     public static class Aliyun{
         private String accessKeyId;
         private String accessKeySecret;
+        private Oss oss;
         private Green green;
+
+        @Data
+        public static class Oss{
+            private String regionId;
+            private String endpoint;
+            private String bucketName;
+        }
 
         @Data
         public static class Green{
@@ -74,5 +83,13 @@ public class SystemConfig {
     public static class Leaf{
         private Integer port;
         private String zk;
+    }
+
+    @Data
+    public static class AccessLimit{
+        private Long globalRate;
+        private Long apiRate;
+        private Long blacklistRate;
+        private Long time;
     }
 }

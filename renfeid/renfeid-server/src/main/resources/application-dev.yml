@@ -66,8 +66,17 @@ system:
   aliyun:
     accessKeyId: accessKeyId
     accessKeySecret: accessKeySecret
+    oss:
+      regionId: cn-beijing
+      endpoint: http://oss-cn-hangzhou.aliyuncs.com
+      bucketName: renfei
     green:
-      regionId: ap-southeast-1
+      regionId: cn-beijing
   leaf:
-    prot: 2181
+    port: 2181
     zk: localhost
+  accessLimit:
+    globalRate: 250
+    apiRate: 300
+    blacklistRate: 600
+    time: 300

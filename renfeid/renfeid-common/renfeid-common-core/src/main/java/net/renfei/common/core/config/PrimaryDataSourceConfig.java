@@ -43,7 +43,7 @@ import java.util.Properties;
  */
 @Configuration
 @EnableAutoConfiguration(exclude = {DruidDataSourceAutoConfigure.class})
-@MapperScan(basePackages = "net.renfei.*.repositories", sqlSessionTemplateRef = "primarySessionTemplate", annotationClass = Mapper.class)
+@MapperScan(basePackages = "net.renfei.**.repositories", sqlSessionTemplateRef = "primarySessionTemplate", annotationClass = Mapper.class)
 public class PrimaryDataSourceConfig {
     @Primary
     @Bean(name = "primaryDataSource")
