@@ -22,6 +22,7 @@ import net.renfei.common.core.entity.SystemLogEntity;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.entity.UserDetail;
 import net.renfei.common.core.service.SystemLogService;
+import net.renfei.common.core.service.SystemService;
 import net.renfei.common.core.utils.IpUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -30,8 +31,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -43,7 +42,6 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 在切面记录操作日志
@@ -55,11 +53,15 @@ import java.util.Optional;
 public class OperationLogAspect {
     private final static Logger logger = LoggerFactory.getLogger(OperationLogAspect.class);
     private final SystemConfig systemConfig;
+    private final SystemService systemService;
     private final SystemLogService systemLogService;
 
+
     public OperationLogAspect(SystemConfig systemConfig,
+                              SystemService systemService,
                               SystemLogService systemLogService) {
         this.systemConfig = systemConfig;
+        this.systemService = systemService;
         this.systemLogService = systemLogService;
     }
 
@@ -90,11 +92,8 @@ public class OperationLogAspect {
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert servletRequestAttributes != null;
         HttpServletRequest request = servletRequestAttributes.getRequest();
-        if (SecurityContextHolder.getContext() != null
-                && SecurityContextHolder.getContext().getAuthentication() != null
-                && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
-                && SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserDetail) {
-            UserDetail userDetail = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail != null) {
             systemLogEntity.setUserUuid(userDetail.getUuid());
             systemLogEntity.setUserName(userDetail.getUsername());
         }

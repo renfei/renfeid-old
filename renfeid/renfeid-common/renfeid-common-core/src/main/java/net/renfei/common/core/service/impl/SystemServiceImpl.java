@@ -15,9 +15,25 @@
  */
 package net.renfei.common.core.service.impl;
 
+import net.renfei.common.core.entity.LogLevelEnum;
+import net.renfei.common.core.entity.OperationTypeEnum;
+import net.renfei.common.core.entity.SystemTypeEnum;
+import net.renfei.common.core.entity.UserDetail;
+import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.service.SystemService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.cloud.context.refresh.ContextRefresher;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PreDestroy;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 系统级服务
@@ -26,10 +42,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SystemServiceImpl implements SystemService {
+    private final static Logger logger = LoggerFactory.getLogger(SystemServiceImpl.class);
     private final ContextRefresher contextRefresher;
+    private final SystemLogService systemLogService;
+    private ApplicationContext context;
 
-    public SystemServiceImpl(ContextRefresher contextRefresher) {
+    public SystemServiceImpl(ContextRefresher contextRefresher,
+                             SystemLogService systemLogService) {
         this.contextRefresher = contextRefresher;
+        this.systemLogService = systemLogService;
     }
 
     /**
@@ -39,4 +60,58 @@ public class SystemServiceImpl implements SystemService {
     public void refreshConfiguration() {
         contextRefresher.refresh();
     }
+
+    /**
+     * 【危险】关闭系统，主动退出
+     */
+    @Override
+    public void shutdownSystem(HttpServletRequest request) {
+        UserDetail userDetail = this.currentUserDetail();
+        String userUuid = null, username = null;
+        if (userDetail != null) {
+            userUuid = userDetail.getUuid();
+            username = userDetail.getUsername();
+        }
+        systemLogService.save(LogLevelEnum.FATAL, SystemTypeEnum.SYSTEM, OperationTypeEnum.DELETE,
+                "系统停车！！！ System shutdown!!!", userUuid, username, request);
+        ConfigurableApplicationContext ctx = (ConfigurableApplicationContext) context;
+        ctx.close();
+    }
+
+    /**
+     * 获取当前登陆的用户详情
+     *
+     * @return
+     */
+    @Override
+    public UserDetail currentUserDetail() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext != null) {
+            Authentication authentication = securityContext.getAuthentication();
+            if (authentication != null) {
+                Object principal = authentication.getPrincipal();
+                if (principal != null) {
+                    if (principal instanceof UserDetail) {
+                        return (UserDetail) principal;
+                    } else {
+                        logger.error("UserDetail type error.");
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        context = applicationContext;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        systemLogService.save(LogLevelEnum.FATAL, SystemTypeEnum.SYSTEM, OperationTypeEnum.DELETE,
+                "系统停车！！！ System shutdown!!!", null, null, null);
+        logger.error("系统停车！！！ System shutdown!!!");
+    }
+
 }

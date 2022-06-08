@@ -15,14 +15,31 @@
  */
 package net.renfei.common.core.service;
 
+import net.renfei.common.core.entity.UserDetail;
+import org.springframework.context.ApplicationContextAware;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 系统级服务
  *
  * @author renfei
  */
-public interface SystemService {
+public interface SystemService extends ApplicationContextAware {
     /**
      * 刷新系统配置（无需停机更新配置）
      */
     void refreshConfiguration();
+
+    /**
+     * 【危险】关闭系统，主动退出
+     */
+    void shutdownSystem(HttpServletRequest request);
+
+    /**
+     * 获取当前登陆的用户详情
+     *
+     * @return
+     */
+    UserDetail currentUserDetail();
 }

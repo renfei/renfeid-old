@@ -1,5 +1,6 @@
 server:
   port: 9595
+  shutdown: graceful
   error:
     whitelabel:
       enabled: true

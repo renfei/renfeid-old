@@ -67,6 +67,10 @@ public enum SystemTypeEnum {
      */
     SYS_MENU(""),
     /**
+     * 系统模块
+     */
+    SYSTEM(""),
+    /**
      * 系统设置模块
      */
     SYS_SETTING(""),
