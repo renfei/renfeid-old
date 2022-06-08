@@ -52,12 +52,20 @@ system:
   active: dev
   version: "@project.version@"
   buildTime: "@buildtimestamp@"
+  siteName: 任霏的博客
+  siteDomainName: https://www.renfei.net
   superTubeUserName: admin
   bindingIp: false
   jwt:
     secret: zL4pC7mP4vH4nY2cK1kE6lC3bJ0yC5wI4kB0kZ2wK4tW3nQ9vP1hO6vZ5jA7wP7ulN6vY3mQ7uI5wU5sE6yP0hP6pK0tF5tT1oO0nO2mL4nO8uP3kJ3rV3iJ4aD5iB5h
     issuer: RENFEI.NET
     expiration: 28800000
+  uCenter:
+    enable: false
+    api: https://bbs.renfei.net/uc_server
+    key: <key>
+    appId: 3
+    connect:
   authIgnore:
     - /_/api/test
   aws:
@@ -72,11 +80,20 @@ system:
       bucketName: renfei
     green:
       regionId: cn-beijing
+    sms:
+      endpoint: dysmsapi.aliyuncs.com
+      signName: 任霏博客
+      templateCode: SMS_205876320
   leaf:
     port: 2181
     zk: localhost
   accessLimit:
+    enable: true
+    blacklistEnable: true
     globalRate: 250
     apiRate: 300
     blacklistRate: 600
     time: 300
+  cloudflare:
+    accountId: dd
+    token: dd

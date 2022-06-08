@@ -21,5 +21,10 @@
             <groupId>net.renfei</groupId>
             <artifactId>renfeid-common-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>discuz-ucenter-api-for-java</artifactId>
+            <version>1.0.7</version>
+        </dependency>
     </dependencies>
 </project>

@@ -20,6 +20,8 @@ import net.renfei.uaa.api.entity.SecretKey;
 import net.renfei.uaa.api.entity.SignInAo;
 import net.renfei.uaa.api.entity.SignInVo;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 认证服务
  *
@@ -42,10 +44,19 @@ public interface AuthorizationService {
     APIResult<SecretKey> settingClientSecretKey(SecretKey secretKey);
 
     /**
+     * 根据秘钥ID解密AES密文
+     *
+     * @param string 密文
+     * @param keyId  秘钥ID
+     * @return 明文
+     */
+    APIResult<String> decryptAesByKeyId(String string, String keyId);
+
+    /**
      * 登录
      *
      * @param signIn 登录请求对象
      * @return 登录响应
      */
-    APIResult<SignInVo> signIn(SignInAo signIn);
+    APIResult<SignInVo> signIn(SignInAo signIn, HttpServletRequest request);
 }

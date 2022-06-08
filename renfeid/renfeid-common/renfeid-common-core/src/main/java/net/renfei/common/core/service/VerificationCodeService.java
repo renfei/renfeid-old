@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.proprietary.discuz.service;
+package net.renfei.common.core.service;
 
-import net.renfei.proprietary.discuz.model.DiscuzInfo;
-import net.renfei.proprietary.discuz.repositories.entity.DiscuzForumPostDO;
+import net.renfei.common.core.entity.UserDetail;
 
-import java.util.List;
+import java.util.Date;
 
 /**
+ * 验证码服务
+ *
  * @author renfei
  */
-public interface DiscuzService {
-    DiscuzInfo getDiscuzInfo(String userName);
-    List<DiscuzForumPostDO> getAllPost();
-
-    String uCenterSynLogin(String username);
+public interface VerificationCodeService {
+    void sendVerificationCode(boolean numberVerificationCode, Date expires,
+                              String addressee, String authType, UserDetail account, String callBack);
+    boolean verificationCode(String code, String addressee, String authType);
 }

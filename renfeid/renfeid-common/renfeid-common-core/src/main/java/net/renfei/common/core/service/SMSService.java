@@ -21,4 +21,20 @@ package net.renfei.common.core.service;
  * @author renfei
  */
 public interface SMSService {
+    /**
+     * 发送短信
+     *
+     * @param phoneNumber 手机号
+     * @param content     内容
+     */
+    void send(String phoneNumber, String content);
+
+    /**
+     * 发送短信
+     *
+     * @param templateCode 模板号
+     * @param phoneNumber  手机号
+     * @param content      内容
+     */
+    void send(String templateCode, String phoneNumber, String content);
 }

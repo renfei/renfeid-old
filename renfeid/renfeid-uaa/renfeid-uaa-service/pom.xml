@@ -26,6 +26,10 @@
             <groupId>net.renfei</groupId>
             <artifactId>renfeid-uaa-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>renfeid-proprietary-discuz</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

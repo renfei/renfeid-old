@@ -15,7 +15,12 @@
  */
 package net.renfei.common.core.service;
 
+import net.renfei.common.core.entity.LogLevelEnum;
+import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemLogEntity;
+import net.renfei.common.core.entity.SystemTypeEnum;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 系统审计日志服务
@@ -24,4 +29,7 @@ import net.renfei.common.core.entity.SystemLogEntity;
  */
 public interface SystemLogService {
     void save(SystemLogEntity systemLogEntity);
+
+    void save(LogLevelEnum logLevel, SystemTypeEnum systemType, OperationTypeEnum operationType,
+              String desc, String userUuid, String username, HttpServletRequest request);
 }

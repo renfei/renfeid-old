@@ -20,7 +20,16 @@ import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.api.utils.ListUtils;
 import net.renfei.common.api.utils.RSAUtils;
 import net.renfei.common.api.utils.StringUtils;
+import net.renfei.common.core.config.RedisConfig;
+import net.renfei.common.core.config.SystemConfig;
+import net.renfei.common.core.entity.UserDetail;
+import net.renfei.common.core.service.RedisService;
+import net.renfei.common.core.utils.AESUtils;
+import net.renfei.common.core.utils.IpUtils;
+import net.renfei.proprietary.discuz.service.DiscuzService;
 import net.renfei.uaa.api.AuthorizationService;
+import net.renfei.uaa.api.JwtService;
+import net.renfei.uaa.api.UserService;
 import net.renfei.uaa.api.entity.SecretKey;
 import net.renfei.uaa.api.entity.SignInAo;
 import net.renfei.uaa.api.entity.SignInVo;
@@ -32,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -43,10 +53,26 @@ import java.util.UUID;
  */
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
+    public final static String REDIS_TOKEN_KEY = RedisConfig.REDIS_KEY_DATABASE + ":token:";
     private final static Logger logger = LoggerFactory.getLogger(AuthorizationServiceImpl.class);
+    private final JwtService jwtService;
+    private final UserService userService;
+    private final SystemConfig systemConfig;
+    private final RedisService redisService;
+    private final DiscuzService discuzService;
     private final UaaSecretKeyMapper uaaSecretKeyMapper;
 
-    public AuthorizationServiceImpl(UaaSecretKeyMapper uaaSecretKeyMapper) {
+    public AuthorizationServiceImpl(JwtService jwtService,
+                                    UserService userService,
+                                    SystemConfig systemConfig,
+                                    RedisService redisService,
+                                    DiscuzService discuzService,
+                                    UaaSecretKeyMapper uaaSecretKeyMapper) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+        this.systemConfig = systemConfig;
+        this.redisService = redisService;
+        this.discuzService = discuzService;
         this.uaaSecretKeyMapper = uaaSecretKeyMapper;
     }
 
@@ -125,14 +151,52 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     /**
+     * 根据秘钥ID解密AES密文
+     *
+     * @param string 密文
+     * @param keyId  秘钥ID
+     * @return 明文
+     */
+    @Override
+    public APIResult<String> decryptAesByKeyId(String string, String keyId) {
+        UaaSecretKeyExample example = new UaaSecretKeyExample();
+        example.createCriteria().andUuidEqualTo(keyId);
+        UaaSecretKeyWithBLOBs uaaSecretKey = ListUtils.getOne(uaaSecretKeyMapper.selectByExampleWithBLOBs(example));
+        if (uaaSecretKey == null) {
+            throw new BusinessException("AESKeyId不存在");
+        }
+        try {
+            string = AESUtils.decrypt(string, uaaSecretKey.getPrivateKey());
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            throw new BusinessException("加密密文解密失败");
+        }
+        return new APIResult<>(string);
+    }
+
+    /**
      * 登录
      *
      * @param signIn 登录请求对象
      * @return 登录响应
      */
     @Override
-    public APIResult<SignInVo> signIn(SignInAo signIn) {
-        // TODO
-        return null;
+    public APIResult<SignInVo> signIn(SignInAo signIn, HttpServletRequest request) {
+        signIn.setUserName(signIn.getUserName().trim().toLowerCase());
+        signIn.setPassword(this.decryptAesByKeyId(
+                signIn.getPassword(), signIn.getKeyUuid()
+        ).getData());
+        UserDetail userDetail = userService.signIn(signIn, request).getData();
+        String token = jwtService.createJWT(userDetail.getUsername(), IpUtils.getIpAddress(request)).getData();
+        // 将此用户的其他token从redis中删除
+        redisService.del(REDIS_TOKEN_KEY + userDetail.getUsername());
+        redisService.set(REDIS_TOKEN_KEY + userDetail.getUsername(), token);
+        redisService.expire(REDIS_TOKEN_KEY + userDetail.getUsername(), systemConfig.getJwt().getExpiration() / 1000);
+        SignInVo signInVo = new SignInVo();
+        signInVo.setAccessToken(token);
+        if (systemConfig.getUCenter().getEnable()) {
+            signInVo.setUcScript(discuzService.uCenterSynLogin(userDetail.getUsername()));
+        }
+        return new APIResult<>(signInVo);
     }
 }

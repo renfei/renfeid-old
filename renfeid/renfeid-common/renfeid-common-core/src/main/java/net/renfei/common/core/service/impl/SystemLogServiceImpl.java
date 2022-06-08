@@ -15,13 +15,18 @@
  */
 package net.renfei.common.core.service.impl;
 
+import net.renfei.common.core.entity.LogLevelEnum;
+import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemLogEntity;
+import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.repositories.CoreLogsMapper;
 import net.renfei.common.core.repositories.entity.CoreLogsWithBLOBs;
 import net.renfei.common.core.service.SystemLogService;
+import net.renfei.common.core.utils.IpUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
@@ -44,6 +49,27 @@ public class SystemLogServiceImpl implements SystemLogService {
         logs.setId(null);
         if (logs.getLogTime() == null) {
             logs.setLogTime(new Date());
+        }
+        coreLogsMapper.insertSelective(logs);
+    }
+
+    @Override
+    public void save(LogLevelEnum logLevel, SystemTypeEnum systemType, OperationTypeEnum operationType,
+                     String desc, String userUuid, String username, HttpServletRequest request) {
+        CoreLogsWithBLOBs logs = new CoreLogsWithBLOBs();
+        logs.setLogTime(new Date());
+        logs.setLogLevel(logLevel.toString());
+        logs.setLogModule(systemType.toString());
+        logs.setLogType(operationType.toString());
+        logs.setLogDesc(desc);
+        logs.setUserUuid(userUuid);
+        logs.setUserName(username);
+        if (request != null) {
+            logs.setRequMethod(request.getMethod());
+            logs.setRequUri(request.getRequestURI());
+            logs.setRequIp(IpUtils.getIpAddress(request));
+            logs.setRequAgent(request.getHeader("User-Agent"));
+            logs.setRequReferrer(request.getHeader("Referer"));
         }
         coreLogsMapper.insertSelective(logs);
     }

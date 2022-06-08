@@ -16,6 +16,8 @@
 package net.renfei.proprietary.discuz.service.impl;
 
 import net.renfei.common.api.utils.ListUtils;
+import net.renfei.common.core.config.SystemConfig;
+import net.renfei.discuz.ucenter.client.Client;
 import net.renfei.proprietary.discuz.model.DiscuzInfo;
 import net.renfei.proprietary.discuz.repositories.*;
 import net.renfei.proprietary.discuz.repositories.entity.*;
@@ -23,6 +25,7 @@ import net.renfei.proprietary.discuz.service.DiscuzService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -32,17 +35,20 @@ import java.util.List;
 @Service
 public class DiscuzServiceImpl implements DiscuzService {
     private static final Logger logger = LoggerFactory.getLogger(DiscuzServiceImpl.class);
+    private final SystemConfig systemConfig;
     private final DiscuzCommonMemberDOMapper memberMapper;
     private final DiscuzUcenterMembersDOMapper membersMapper;
     private final DiscuzCommonUsergroupDOMapper userGroupMapper;
     private final DiscuzForumPostDOMapper discuzForumPostMapper;
     private final DiscuzCommonMemberCountDOMapper memberCountMapper;
 
-    public DiscuzServiceImpl(DiscuzCommonMemberDOMapper memberMapper,
+    public DiscuzServiceImpl(SystemConfig systemConfig,
+                             DiscuzCommonMemberDOMapper memberMapper,
                              DiscuzUcenterMembersDOMapper membersMapper,
                              DiscuzCommonUsergroupDOMapper userGroupMapper,
                              DiscuzForumPostDOMapper discuzForumPostMapper,
                              DiscuzCommonMemberCountDOMapper memberCountMapper) {
+        this.systemConfig = systemConfig;
         this.memberMapper = memberMapper;
         this.membersMapper = membersMapper;
         this.userGroupMapper = userGroupMapper;
@@ -127,5 +133,48 @@ public class DiscuzServiceImpl implements DiscuzService {
             logger.error(exception.getMessage(), exception);
             return null;
         }
+    }
+
+    @Override
+    public String uCenterSynLogin(String username) {
+        DiscuzUcenterMembersDOExample discuzUcenterMembersExample = new DiscuzUcenterMembersDOExample();
+        discuzUcenterMembersExample.createCriteria().andUsernameEqualTo(username);
+        DiscuzUcenterMembersDO discuzUcenterMembers = ListUtils.getOne(membersMapper.selectByExample(discuzUcenterMembersExample));
+        if (discuzUcenterMembers != null) {
+            try {
+                assert systemConfig != null;
+                Client client =
+                        new Client(systemConfig.getUCenter().getApi(),
+                                null,
+                                systemConfig.getUCenter().getKey(),
+                                systemConfig.getUCenter().getAppId(),
+                                systemConfig.getUCenter().getConnect());
+                String script = client.ucUserSynlogin(discuzUcenterMembers.getUid());
+                logger.info("uc script:{}", script);
+                if (!ObjectUtils.isEmpty(script)) {
+                    String[] strings = script.split("src=\"");
+                    String script2 = "";
+                    if (strings.length == 3) {
+                        script2 += strings[1].replace("\" reload=\"1\"></script><script type=\"text/javascript\" ", "");
+                        script2 += "|";
+                        script2 += strings[2].replace("\" reload=\"1\"></script>", "");
+                    } else if (strings.length == 2) {
+                        script2 += strings[1].replace("\" reload=\"1\"></script>", "");
+                    } else {
+                        logger.warn("strings.length != 3,script:{}", script);
+                    }
+                    // 将http转为https
+                    script = script2.replace("http://", "https://");
+                    return script;
+                } else {
+                    logger.warn("根据UserName：{}，论坛登录脚本为空。", username);
+                }
+            } catch (Exception exception) {
+                logger.error(exception.getMessage(), exception);
+            }
+        } else {
+            logger.warn("根据UserName：{}，未找到论坛用户，所以没有论坛登录脚本。", username);
+        }
+        return null;
     }
 }

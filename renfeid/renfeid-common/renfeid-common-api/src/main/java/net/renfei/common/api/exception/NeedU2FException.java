@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.proprietary.discuz.service;
-
-import net.renfei.proprietary.discuz.model.DiscuzInfo;
-import net.renfei.proprietary.discuz.repositories.entity.DiscuzForumPostDO;
-
-import java.util.List;
+package net.renfei.common.api.exception;
 
 /**
  * @author renfei
  */
-public interface DiscuzService {
-    DiscuzInfo getDiscuzInfo(String userName);
-    List<DiscuzForumPostDO> getAllPost();
-
-    String uCenterSynLogin(String username);
+public class NeedU2FException extends RuntimeException{
+    public NeedU2FException(String message) {
+        super(message);
+    }
 }

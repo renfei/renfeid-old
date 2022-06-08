@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.proprietary.discuz.service;
+package net.renfei.common.core.service;
 
-import net.renfei.proprietary.discuz.model.DiscuzInfo;
-import net.renfei.proprietary.discuz.repositories.entity.DiscuzForumPostDO;
-
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
+ * 邮件发送服务
+ *
  * @author renfei
  */
-public interface DiscuzService {
-    DiscuzInfo getDiscuzInfo(String userName);
-    List<DiscuzForumPostDO> getAllPost();
+public interface EmailService {
+    boolean send(String to, String name, String subject, List<String> contents);
 
-    String uCenterSynLogin(String username);
+    boolean send(String to, String name, String subject, String contents);
+
+    boolean send(String to, String name, String subject, List<String> contents, Map<String, File> attachment);
+
+    boolean send(String to, String name, String subject, String contents, Map<String, File> attachment);
 }

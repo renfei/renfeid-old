@@ -15,6 +15,7 @@
  */
 package net.renfei.common.core.entity;
 
+import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -42,7 +43,7 @@ public class UserDetail implements UserDetails, Serializable {
     private String registrationIp;
     private Integer trialErrorTimes;
     private Date lockTime;
-    private Integer secretLevel;
+    private SecretLevelEnum secretLevel;
     private Boolean builtInUser;
     private Date passwordExpirationTime;
     private Boolean locked;
@@ -184,11 +185,11 @@ public class UserDetail implements UserDetails, Serializable {
         this.lockTime = lockTime;
     }
 
-    public Integer getSecretLevel() {
+    public SecretLevelEnum getSecretLevel() {
         return secretLevel;
     }
 
-    public void setSecretLevel(Integer secretLevel) {
+    public void setSecretLevel(SecretLevelEnum secretLevel) {
         this.secretLevel = secretLevel;
     }
 

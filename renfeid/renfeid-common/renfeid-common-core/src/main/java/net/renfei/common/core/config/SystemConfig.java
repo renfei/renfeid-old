@@ -37,59 +37,88 @@ public class SystemConfig {
     private String active;
     private String version;
     private String buildTime;
+    private String siteName;
+    private String siteDomainName;
     private String superTubeUserName;
     private Boolean bindingIp;
     private Jwt jwt;
+    private UCenter uCenter;
     private List<String> authIgnore;
     private AWS aws;
     private Aliyun aliyun;
     private Leaf leaf;
     private AccessLimit accessLimit;
+    private Cloudflare cloudflare;
 
     @Data
-    public static class Jwt{
+    public static class Jwt {
         private String secret;
         private String issuer;
         private Long expiration;
     }
 
     @Data
-    public static class AWS{
+    public static class UCenter {
+        private Boolean enable;
+        private String api;
+        private String key;
+        private String appId;
+        private String connect;
+    }
+
+    @Data
+    public static class AWS {
         private String region;
         private String bucketName;
     }
 
     @Data
-    public static class Aliyun{
+    public static class Aliyun {
         private String accessKeyId;
         private String accessKeySecret;
         private Oss oss;
         private Green green;
+        private Sms sms;
 
         @Data
-        public static class Oss{
+        public static class Oss {
             private String regionId;
             private String endpoint;
             private String bucketName;
         }
 
         @Data
-        public static class Green{
+        public static class Green {
             private String regionId;
+        }
+
+        @Data
+        public static class Sms {
+            private String endpoint;
+            private String signName;
+            private String templateCode;
         }
     }
 
     @Data
-    public static class Leaf{
+    public static class Leaf {
         private Integer port;
         private String zk;
     }
 
     @Data
-    public static class AccessLimit{
+    public static class AccessLimit {
+        private Boolean enable;
+        private Boolean blacklistEnable;
         private Long globalRate;
         private Long apiRate;
         private Long blacklistRate;
         private Long time;
+    }
+
+    @Data
+    public static class Cloudflare {
+        public String accountId;
+        public String token;
     }
 }

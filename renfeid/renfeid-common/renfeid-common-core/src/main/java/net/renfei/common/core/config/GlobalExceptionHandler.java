@@ -18,6 +18,7 @@ package net.renfei.common.core.config;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.exception.BusinessException;
+import net.renfei.common.api.exception.NeedU2FException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,6 +40,14 @@ public class GlobalExceptionHandler {
         logger.warn("Message: {} \n Request: {}", e.getMessage(), req, e);
         return APIResult.builder()
                 .code(StateCodeEnum.Failure)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(value = NeedU2FException.class)
+    public APIResult needU2FExceptionError(HttpServletRequest req, NeedU2FException e) {
+        return APIResult.builder()
+                .code(StateCodeEnum.NeedTOTP)
                 .message(e.getMessage())
                 .build();
     }
