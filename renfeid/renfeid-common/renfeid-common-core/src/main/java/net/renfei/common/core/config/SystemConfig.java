@@ -16,6 +16,7 @@
 package net.renfei.common.core.config;
 
 import lombok.Data;
+import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
@@ -34,12 +35,26 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
+    /**
+     * 允许最大长度用户名
+     */
+    public static final Integer MAX_USERNAME_LENGTH = 60;
+    /**
+     * 允许最大评论长度
+     */
+    public static final Integer MAX_COMMENT_LENGTH = 10240;
+    /**
+     * 允许最大链接长度
+     */
+    public static final Integer MAX_LINK_LENGTH = 300;
     private String active;
     private String version;
     private String buildTime;
     private String siteName;
     private String siteDomainName;
     private String superTubeUserName;
+    private SecretLevelEnum maxSecretLevel;
+    private Boolean enableSignUp;
     private Boolean bindingIp;
     private Jwt jwt;
     private UCenter uCenter;

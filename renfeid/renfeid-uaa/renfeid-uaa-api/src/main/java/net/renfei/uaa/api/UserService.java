@@ -18,6 +18,7 @@ package net.renfei.uaa.api;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.core.entity.UserDetail;
 import net.renfei.uaa.api.entity.SignInAo;
+import net.renfei.uaa.api.entity.SignUpAo;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,4 +46,7 @@ public interface UserService {
     APIResult<UserDetail> getUserDetailByToken(String token, String ip);
 
     APIResult<UserDetail> signIn(SignInAo signIn, HttpServletRequest request);
+    APIResult signUp(SignUpAo signUp, HttpServletRequest request);
+
+    void activation(String emailOrPhone);
 }

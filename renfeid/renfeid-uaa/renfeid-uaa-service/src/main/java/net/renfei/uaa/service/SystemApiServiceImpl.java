@@ -50,21 +50,22 @@ public class SystemApiServiceImpl implements SystemApiService {
     @Override
     public APIResult<ListData<SystemApi>> allSystemApiList() {
         UaaSystemApiExample example = new UaaSystemApiExample();
-        Page<UaaSystemApi> page = PageHelper.startPage(1, Integer.MAX_VALUE);
-        uaaSystemApiMapper.selectByExample(example);
         ListData<SystemApi> systemApiListData = new ListData<>();
-        systemApiListData.setPageNum(page.getPageNum());
-        systemApiListData.setPageSize(page.getPageSize());
-        systemApiListData.setStartRow(page.getStartRow());
-        systemApiListData.setEndRow(page.getEndRow());
-        systemApiListData.setTotal(page.getTotal());
-        systemApiListData.setPages(page.getPages());
-        List<SystemApi> systemApiList = new ArrayList<>();
-        for (UaaSystemApi uaaSystemApi : page.getResult()
-        ) {
-            systemApiList.add(convert(uaaSystemApi));
+        try (Page<UaaSystemApi> page = PageHelper.startPage(1, Integer.MAX_VALUE)) {
+            uaaSystemApiMapper.selectByExample(example);
+            systemApiListData.setPageNum(page.getPageNum());
+            systemApiListData.setPageSize(page.getPageSize());
+            systemApiListData.setStartRow(page.getStartRow());
+            systemApiListData.setEndRow(page.getEndRow());
+            systemApiListData.setTotal(page.getTotal());
+            systemApiListData.setPages(page.getPages());
+            List<SystemApi> systemApiList = new ArrayList<>();
+            for (UaaSystemApi uaaSystemApi : page.getResult()
+            ) {
+                systemApiList.add(convert(uaaSystemApi));
+            }
+            systemApiListData.setData(systemApiList);
         }
-        systemApiListData.setData(systemApiList);
         return new APIResult<>(systemApiListData);
     }
 

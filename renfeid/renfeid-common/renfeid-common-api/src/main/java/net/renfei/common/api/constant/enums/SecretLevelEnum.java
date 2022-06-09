@@ -59,4 +59,15 @@ public enum SecretLevelEnum {
                 return UNCLASSIFIED;
         }
     }
+
+    /**
+     * 是否超越保密等级
+     *
+     * @param source 当前用户持有的保密等级
+     * @param target 需要符合的保密等级
+     * @return
+     */
+    public static boolean outOfSecretLevel(SecretLevelEnum source, SecretLevelEnum target) {
+        return target.getLevel() > source.getLevel();
+    }
 }

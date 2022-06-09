@@ -19,6 +19,7 @@ import net.renfei.common.core.entity.UserDetail;
 import org.springframework.context.ApplicationContextAware;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
  * 系统级服务
@@ -26,6 +27,15 @@ import javax.servlet.http.HttpServletRequest;
  * @author renfei
  */
 public interface SystemService extends ApplicationContextAware {
+    /**
+     * 【危险】在主机上执行命令
+     *
+     * @param command 命令
+     * @return
+     * @throws IOException
+     */
+    String execCommand(String... command) throws IOException;
+
     /**
      * 刷新系统配置（无需停机更新配置）
      */

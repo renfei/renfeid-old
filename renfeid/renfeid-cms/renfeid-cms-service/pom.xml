@@ -22,6 +22,10 @@
             <groupId>net.renfei</groupId>
             <artifactId>renfeid-cms-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.renfei</groupId>
+            <artifactId>renfeid-common-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

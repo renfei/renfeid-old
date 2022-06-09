@@ -19,13 +19,46 @@
 
 ### 后端项目目录结构
 
+为啥不选微服务？我尝试过微服务架构，并不适合我，微服务过于沉重，并且在低并发的场景中性能并不如单体应用好，并且造成运维代价大幅提升。
+
+那为啥还参考微服务划分多个模块？虽然我的场景不适合微服务，但我的程序保留微服务化的能力，如果需要改造可以快速的微服务化、分布式部署。
+
+<details>
+<summary>点此展开查看详情</summary>
+
+| 工程名                                       | 描述               |
+|-------------------------------------------|------------------|
+| + renfeid-bpm                             | 流程引擎服务（待开发）      |
+| + renfeid-cms                             | 内容管理服务（CMS）      |
+| &nbsp;&nbsp; - renfeid-cms-api            | 内容管理服务接口         |
+| &nbsp;&nbsp; - renfeid-cms-service        | 内容管理服务实现         |
+| + renfeid-common                          | 通用模块             |
+| &nbsp;&nbsp; - renfeid-common-api         | 全局通用的接口与对象       |
+| &nbsp;&nbsp; - renfeid-common-bom         | 全局统一制品清单         |
+| &nbsp;&nbsp; - renfeid-common-core        | 核心服务             |
+| &nbsp;&nbsp; - renfeid-common-leaf        | 分布式发号器雪花算法（美团实现） |
+| + renfeid-proprietary                     | 任霏博客私有功能         |
+| &nbsp;&nbsp; - renfeid-proprietary-discuz | 与Discuz的集成       |
+| + renfeid-server                          | 服务入口（类似微服务的网关）   |
+| + renfeid-uaa                             | 用户认证与鉴权          |
+| &nbsp;&nbsp; - renfeid-uaa-api            | UAA暴露的接口         |
+| &nbsp;&nbsp; - renfeid-uaa-service        | UAA服务实现          |
+| + mybatis-generator                       | mybatis dao层生成   |
+
+</details>
+
+关于 ```renfeid-proprietary``` 模块的说明，这个模块中是我自己网站特有的功能，你可以直接删除掉。 ```mybatis-generator``` 模块只是为了方便自动生成 mybatis dao层，没有实际的作用，可以删除。
+
 ### 前端项目目录结构
+
+为啥选择了 Vue？ 我当然知道大厂都用 React，但我招不到人啊，所以基本 Vue 还是中小厂的首选，如果我选用 React，中小厂用不上，大厂看不上，由于公司内部大部分是 Vue 的项目，所以我还是选择 Vue 来构建前端项目。
 
 ## 构建
 
 ### 后端项目构建
 
-后端使用 ```Maven``` 来管理依赖，如果你已经安装了 ```Maven``` 可以直接使用 mvn 命令，如果你的机器上没有安装  ```Maven```，那么你可以使用目录中自带的 ```mvnw``` 来代替 ```mvn``` 命令。
+后端使用 ```Maven``` 来管理依赖，如果你已经安装了 ```Maven``` 可以直接使用 mvn 命令，如果你的机器上没有安装  ```Maven```，那么你可以使用目录中自带的 ```mvnw```
+来代替 ```mvn``` 命令。
 
 <details>
 <summary>点此展开查看构建命令</summary>
@@ -45,6 +78,7 @@ mvn test
 # 项目打包
 mvn package
 ```
+
 </details>
 
 ### 前端项目构建
@@ -70,4 +104,32 @@ $ yarn start
 # generate static project
 $ yarn generate
 ```
+
+</details>
+
+## 涉密应用系统"三员"
+
+系统设计时采用了系统管理员、安全保密管理员、安全审计管理员三员分立，分别负责系统的运行、安全保密和安全审计工作。三员权限划分如下：
+
+<details>
+<summary>点此展开查看详情</summary>
+
+### 系统管理员
+
+* 负责系统的日常运行维护工作
+* 负责系统用户创建、用户删除
+
+### 安全保密管理员
+
+* 负责系统的日常安全保密管理工作
+* 负责系统用户修改、用户密码重置、用户停启
+* 负责系统用户的角色分配、角色的功能资源分配
+* 负责管理与审查系统用户及安全审计管理员的操作日志
+
+### 安全审计管理员
+
+* 负责对系统管理员和安全保密管理员的日常操作行为进行审计跟踪分析和监督检查
+* 审计管理员禁止访问管理平台安装的系统文件和直接访问数据库
+* 禁止执行其它项目管理平台管理工作
+
 </details>

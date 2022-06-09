@@ -16,9 +16,9 @@
 package net.renfei.uaa.api;
 
 import net.renfei.common.api.constant.APIResult;
-import net.renfei.uaa.api.entity.SecretKey;
-import net.renfei.uaa.api.entity.SignInAo;
-import net.renfei.uaa.api.entity.SignInVo;
+import net.renfei.common.api.entity.UserInfo;
+import net.renfei.common.core.entity.UserDetail;
+import net.renfei.uaa.api.entity.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,4 +59,36 @@ public interface AuthorizationService {
      * @return 登录响应
      */
     APIResult<SignInVo> signIn(SignInAo signIn, HttpServletRequest request);
+
+    /**
+     * 注册
+     *
+     * @param signUp  注册请求对象
+     * @param request 请求对象
+     * @return
+     */
+    APIResult signUp(SignUpAo signUp, HttpServletRequest request);
+
+    /**
+     * 登出
+     *
+     * @param userDetail 用户详情
+     * @param request    请求对象
+     * @return
+     */
+    APIResult signOut(UserDetail userDetail, HttpServletRequest request);
+
+    /**
+     * 账户激活
+     *
+     * @param signUpActivation
+     */
+    void activation(SignUpActivationAo signUpActivation);
+
+    /**
+     * 获取当前登陆用户的信息
+     *
+     * @return
+     */
+    UserInfo requestCurrentUserInfo();
 }

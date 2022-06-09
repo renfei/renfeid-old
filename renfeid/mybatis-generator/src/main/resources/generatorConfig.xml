@@ -25,20 +25,22 @@
                         connectionURL="jdbc:mysql://localhost:3306/renfeid"
                         userId="root" password="root" />
         <!-- 生成的包名和工程名 -->
-        <javaModelGenerator targetPackage="net.renfei.common.core.repositories.entity"
+        <javaModelGenerator targetPackage="net.renfei.cms.repositories.entity"
                             targetProject="src/main/java"/>
         <sqlMapGenerator targetPackage="mapper"
                          targetProject="src/main/resources" />
-        <javaClientGenerator targetPackage="net.renfei.common.core.repositories"
+        <javaClientGenerator targetPackage="net.renfei.cms.repositories"
                              targetProject="src/main/java" type="XMLMAPPER" />
         <!-- 数据库表 -->
 <!--        <table schema="renfeid" tableName="uaa_user" />-->
 <!--        <table schema="renfeid" tableName="uaa_secret_key" />-->
 <!--        <table schema="renfeid" tableName="uaa_system_api" />-->
-        <table schema="renfeid" tableName="uaa_role" />
-        <table schema="renfeid" tableName="uaa_user_role" />
-        <table schema="renfeid" tableName="uaa_authority" />
-        <table schema="renfeid" tableName="uaa_menu" />
-        <table schema="renfeid" tableName="core_logs" />
+<!--        <table schema="renfeid" tableName="uaa_role" />-->
+<!--        <table schema="renfeid" tableName="uaa_user_role" />-->
+<!--        <table schema="renfeid" tableName="uaa_authority" />-->
+<!--        <table schema="renfeid" tableName="uaa_menu" />-->
+<!--        <table schema="renfeid" tableName="core_logs" />-->
+<!--        <table schema="renfeid" tableName="uaa_user_keep_name" />-->
+        <table schema="renfeid" tableName="cms_posts" />
     </context>
 </generatorConfiguration>

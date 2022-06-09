@@ -17,6 +17,7 @@ package net.renfei.uaa.service;
 
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
+import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.api.exception.NeedU2FException;
 import net.renfei.common.api.utils.ListUtils;
@@ -25,17 +26,23 @@ import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.entity.LogLevelEnum;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
+import net.renfei.common.core.entity.UserDetail;
 import net.renfei.common.core.service.RedisService;
+import net.renfei.common.core.service.SnowflakeService;
 import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.service.VerificationCodeService;
 import net.renfei.common.core.utils.DateUtils;
+import net.renfei.common.core.utils.IpUtils;
 import net.renfei.uaa.api.JwtService;
 import net.renfei.uaa.api.UserService;
-import net.renfei.common.core.entity.UserDetail;
 import net.renfei.uaa.api.entity.SignInAo;
+import net.renfei.uaa.api.entity.SignUpAo;
+import net.renfei.uaa.repositories.UaaUserKeepNameMapper;
 import net.renfei.uaa.repositories.UaaUserMapper;
 import net.renfei.uaa.repositories.entity.UaaUser;
 import net.renfei.uaa.repositories.entity.UaaUserExample;
+import net.renfei.uaa.repositories.entity.UaaUserKeepName;
+import net.renfei.uaa.repositories.entity.UaaUserKeepNameExample;
 import net.renfei.uaa.utils.GoogleAuthenticator;
 import net.renfei.uaa.utils.PasswordUtils;
 import org.slf4j.Logger;
@@ -44,8 +51,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import static net.renfei.uaa.service.AuthorizationServiceImpl.REDIS_TOKEN_KEY;
 
@@ -61,20 +69,26 @@ public class UserServiceImpl implements UserService {
     private final RedisService redisService;
     private final SystemConfig systemConfig;
     private final UaaUserMapper uaaUserMapper;
+    private final SnowflakeService snowflakeService;
     private final SystemLogService systemLogService;
+    private final UaaUserKeepNameMapper uaaUserKeepNameMapper;
     private final VerificationCodeService verificationCodeService;
 
     public UserServiceImpl(JwtService jwtService,
                            RedisService redisService,
                            SystemConfig systemConfig,
                            UaaUserMapper uaaUserMapper,
+                           SnowflakeService snowflakeService,
                            SystemLogService systemLogService,
+                           UaaUserKeepNameMapper uaaUserKeepNameMapper,
                            VerificationCodeService verificationCodeService) {
         this.jwtService = jwtService;
         this.redisService = redisService;
         this.systemConfig = systemConfig;
         this.uaaUserMapper = uaaUserMapper;
+        this.snowflakeService = snowflakeService;
         this.systemLogService = systemLogService;
+        this.uaaUserKeepNameMapper = uaaUserKeepNameMapper;
         this.verificationCodeService = verificationCodeService;
     }
 
@@ -210,6 +224,86 @@ public class UserServiceImpl implements UserService {
                 uaaUser.getUuid(), uaaUser.getUsername(), request);
         logger.info("账号：{}，登入系统。", signIn.getUserName());
         return new APIResult<>(convert(uaaUser));
+    }
+
+    @Override
+    public APIResult signUp(SignUpAo signUp, HttpServletRequest request) {
+        // 检查保留用户名
+        UaaUserKeepNameExample userKeepNameExample = new UaaUserKeepNameExample();
+        userKeepNameExample.createCriteria().andUserNameEqualTo(signUp.getUserName());
+        List<UaaUserKeepName> keepNames = uaaUserKeepNameMapper.selectByExample(userKeepNameExample);
+        if (keepNames != null && keepNames.size() > 0) {
+            return APIResult.builder().code(StateCodeEnum.Failure).message("用户名已经被占用，请换个用户名试试").build();
+        }
+        // 检查用户名重复
+        UaaUserExample example = new UaaUserExample();
+        example.createCriteria().andUsernameEqualTo(signUp.getUserName().trim().toLowerCase());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser != null) {
+            return APIResult.builder().code(StateCodeEnum.Failure).message("用户名已经被占用，请换个用户名试试").build();
+        }
+        // 检查Email重复
+        example = new UaaUserExample();
+        example.createCriteria().andEmailEqualTo(signUp.getEmail().trim().toLowerCase());
+        uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser != null) {
+            return APIResult.builder().code(StateCodeEnum.Failure).message("电子邮箱地址已经被注册，您不妨直接登陆试试").build();
+        }
+        uaaUser = new UaaUser();
+        uaaUser.setId(snowflakeService.getId("").getId());
+        uaaUser.setUuid(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+        uaaUser.setUsername(signUp.getUserName().trim().toLowerCase());
+        uaaUser.setEmail(signUp.getEmail().trim().toLowerCase());
+        try {
+            uaaUser.setPassword(PasswordUtils.createHash(signUp.getPassword()));
+        } catch (PasswordUtils.CannotPerformOperationException e) {
+            logger.error(e.getMessage(), e);
+            return APIResult.builder().code(StateCodeEnum.Error).message("服务器内部错误，密码加密时遇到一些问题，请联系系统管理员").build();
+        }
+        uaaUser.setRegistrationDate(new Date());
+        uaaUser.setRegistrationIp(IpUtils.getIpAddress(request));
+        // 互联网注册的用户，默认非密等级
+        uaaUser.setSecretLevel(SecretLevelEnum.UNCLASSIFIED.getLevel());
+        // 互联网注册的用户，默认启用
+        uaaUser.setEnabled(true);
+        uaaUserMapper.insertSelective(uaaUser);
+        // 发送激活邮件
+        verificationCodeService.sendVerificationCode(true, DateUtils.nextHours(2),
+                uaaUser.getEmail(), "SIGN_UP", convert(uaaUser), systemConfig.getSiteDomainName() + "/auth/signUp/activation");
+        return APIResult.success();
+    }
+
+    @Override
+    public void activation(String emailOrPhone) {
+        boolean isEmail = false, isPhone = false;
+        if (StringUtils.isEmail(emailOrPhone)) {
+            isEmail = true;
+        } else if (StringUtils.isChinaPhone(emailOrPhone)) {
+            isPhone = true;
+        } else {
+            throw new BusinessException("验证码发送失败发送地址不正确");
+        }
+        // 查找对应的账户
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        if (isEmail) {
+            criteria.andEmailEqualTo(emailOrPhone);
+        }
+        if (isPhone) {
+            criteria.andPhoneEqualTo(emailOrPhone);
+        }
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser == null) {
+            logger.error("账户{}激活失败，未找到用户", emailOrPhone);
+            throw new BusinessException("验证码错误或已过期");
+        }
+        if (isEmail) {
+            uaaUser.setEmailVerified(true);
+        }
+        if (isPhone) {
+            uaaUser.setPhoneVerified(true);
+        }
+        uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
     }
 
     private UserDetail convert(UaaUser uaaUser) {

@@ -17,6 +17,8 @@ package net.renfei.proprietary.discuz.service.impl;
 
 import net.renfei.common.api.utils.ListUtils;
 import net.renfei.common.core.config.SystemConfig;
+import net.renfei.common.core.utils.DateUtils;
+import net.renfei.common.core.utils.IpUtils;
 import net.renfei.discuz.ucenter.client.Client;
 import net.renfei.proprietary.discuz.model.DiscuzInfo;
 import net.renfei.proprietary.discuz.repositories.*;
@@ -27,7 +29,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author renfei
@@ -41,19 +45,31 @@ public class DiscuzServiceImpl implements DiscuzService {
     private final DiscuzCommonUsergroupDOMapper userGroupMapper;
     private final DiscuzForumPostDOMapper discuzForumPostMapper;
     private final DiscuzCommonMemberCountDOMapper memberCountMapper;
+    private final DiscuzCommonMemberStatusDOMapper memberStatusMapper;
+    private final DiscuzCommonMemberProfileDOMapper memberProfileMapper;
+    private final DiscuzCommonMemberFieldHomeDOMapper memberFieldHomeMapper;
+    private final DiscuzCommonMemberFieldForumDOMapper memberFieldForumMapper;
 
     public DiscuzServiceImpl(SystemConfig systemConfig,
                              DiscuzCommonMemberDOMapper memberMapper,
                              DiscuzUcenterMembersDOMapper membersMapper,
                              DiscuzCommonUsergroupDOMapper userGroupMapper,
                              DiscuzForumPostDOMapper discuzForumPostMapper,
-                             DiscuzCommonMemberCountDOMapper memberCountMapper) {
+                             DiscuzCommonMemberCountDOMapper memberCountMapper,
+                             DiscuzCommonMemberStatusDOMapper memberStatusMapper,
+                             DiscuzCommonMemberProfileDOMapper memberProfileMapper,
+                             DiscuzCommonMemberFieldHomeDOMapper memberFieldHomeMapper,
+                             DiscuzCommonMemberFieldForumDOMapper memberFieldForumMapper) {
         this.systemConfig = systemConfig;
         this.memberMapper = memberMapper;
         this.membersMapper = membersMapper;
         this.userGroupMapper = userGroupMapper;
         this.discuzForumPostMapper = discuzForumPostMapper;
         this.memberCountMapper = memberCountMapper;
+        this.memberStatusMapper = memberStatusMapper;
+        this.memberProfileMapper = memberProfileMapper;
+        this.memberFieldHomeMapper = memberFieldHomeMapper;
+        this.memberFieldForumMapper = memberFieldForumMapper;
     }
 
     @Override
@@ -176,5 +192,84 @@ public class DiscuzServiceImpl implements DiscuzService {
             logger.warn("根据UserName：{}，未找到论坛用户，所以没有论坛登录脚本。", username);
         }
         return null;
+    }
+
+    @Override
+    public void uCenterSynSignUp(String username, String email, HttpServletRequest request) {
+        try {
+            Client client =
+                    new Client(systemConfig.getUCenter().getApi(),
+                            null,
+                            systemConfig.getUCenter().getKey(),
+                            systemConfig.getUCenter().getAppId(),
+                            systemConfig.getUCenter().getConnect());
+            client.ucUserRegister(username, UUID.randomUUID().toString(), email);
+            // 向Discuz表里插入用户
+            DiscuzUcenterMembersDOExample discuzUcenterMembersExample = new DiscuzUcenterMembersDOExample();
+            discuzUcenterMembersExample.createCriteria().andUsernameEqualTo(username);
+            DiscuzUcenterMembersDO discuzUcenterMembers = ListUtils.getOne(membersMapper.selectByExample(discuzUcenterMembersExample));
+            if (discuzUcenterMembers != null) {
+                DiscuzCommonMemberDO commonMemberDO = new DiscuzCommonMemberDO();
+                commonMemberDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberDO.setEmail(email.trim().toLowerCase());
+                commonMemberDO.setUsername(username.trim().toLowerCase());
+                commonMemberDO.setGroupid((short) 10);
+                commonMemberDO.setRegdate((int) DateUtils.getUnixTimestamp());
+                commonMemberDO.setTimeoffset("9999");
+                commonMemberDO.setEmailstatus(1);
+                memberMapper.insertSelective(commonMemberDO);
+                DiscuzCommonMemberCountDO commonMemberCountDO = new DiscuzCommonMemberCountDO();
+                commonMemberCountDO.setUid(discuzUcenterMembers.getUid());
+                memberCountMapper.insertSelective(commonMemberCountDO);
+                DiscuzCommonMemberFieldForumDOWithBLOBs commonMemberFieldForumDO = new DiscuzCommonMemberFieldForumDOWithBLOBs();
+                commonMemberFieldForumDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberFieldForumDO.setMedals("");
+                commonMemberFieldForumDO.setSightml("");
+                commonMemberFieldForumDO.setGroupterms("");
+                commonMemberFieldForumDO.setGroups("");
+                memberFieldForumMapper.insertSelective(commonMemberFieldForumDO);
+                DiscuzCommonMemberFieldHomeDOWithBLOBs commonMemberFieldHomeDO = new DiscuzCommonMemberFieldHomeDOWithBLOBs();
+                commonMemberFieldHomeDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberFieldHomeDO.setSpacecss("");
+                commonMemberFieldHomeDO.setBlockposition("");
+                commonMemberFieldHomeDO.setRecentnote("");
+                commonMemberFieldHomeDO.setSpacenote("");
+                commonMemberFieldHomeDO.setPrivacy("");
+                commonMemberFieldHomeDO.setFeedfriend("");
+                commonMemberFieldHomeDO.setAcceptemail("");
+                commonMemberFieldHomeDO.setMagicgift("");
+                commonMemberFieldHomeDO.setStickblogs("");
+                memberFieldHomeMapper.insertSelective(commonMemberFieldHomeDO);
+                DiscuzCommonMemberProfileDOWithBLOBs commonMemberProfileDO = new DiscuzCommonMemberProfileDOWithBLOBs();
+                commonMemberProfileDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberProfileDO.setBio("");
+                commonMemberProfileDO.setInterest("");
+                commonMemberProfileDO.setField1("");
+                commonMemberProfileDO.setField2("");
+                commonMemberProfileDO.setField3("");
+                commonMemberProfileDO.setField4("");
+                commonMemberProfileDO.setField5("");
+                commonMemberProfileDO.setField6("");
+                commonMemberProfileDO.setField7("");
+                commonMemberProfileDO.setField8("");
+                memberProfileMapper.insertSelective(commonMemberProfileDO);
+                DiscuzCommonMemberStatusDO commonMemberStatusDO = new DiscuzCommonMemberStatusDO();
+                commonMemberStatusDO.setUid(discuzUcenterMembers.getUid());
+                commonMemberStatusDO.setRegip(IpUtils.getIpAddress(request));
+                commonMemberStatusDO.setLastip(IpUtils.getIpAddress(request));
+                commonMemberStatusDO.setLastvisit((int) DateUtils.getUnixTimestamp());
+                commonMemberStatusDO.setLastactivity((int) DateUtils.getUnixTimestamp());
+                commonMemberStatusDO.setLastsendmail(0);
+                commonMemberStatusDO.setInvisible(0);
+                commonMemberStatusDO.setBuyercredit((short) 0);
+                commonMemberStatusDO.setSellercredit((short) 0);
+                commonMemberStatusDO.setFavtimes(0);
+                commonMemberStatusDO.setSharetimes(0);
+                commonMemberStatusDO.setProfileprogress((byte) 0);
+                memberStatusMapper.insertSelective(commonMemberStatusDO);
+            }
+        } catch (Exception exception) {
+            logger.error(exception.getMessage(), exception);
+        }
     }
 }

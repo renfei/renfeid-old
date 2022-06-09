@@ -55,6 +55,8 @@ system:
   siteName: 任霏的博客
   siteDomainName: https://www.renfei.net
   superTubeUserName: admin
+  maxSecretLevel: UNCLASSIFIED
+  enableSignUp: true
   bindingIp: false
   jwt:
     secret: zL4pC7mP4vH4nY2cK1kE6lC3bJ0yC5wI4kB0kZ2wK4tW3nQ9vP1hO6vZ5jA7wP7ulN6vY3mQ7uI5wU5sE6yP0hP6pK0tF5tT1oO0nO2mL4nO8uP3kJ3rV3iJ4aD5iB5h

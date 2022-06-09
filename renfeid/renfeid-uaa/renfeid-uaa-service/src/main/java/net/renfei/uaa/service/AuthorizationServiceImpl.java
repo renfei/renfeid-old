@@ -16,6 +16,8 @@
 package net.renfei.uaa.service;
 
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.common.api.constant.enums.StateCodeEnum;
+import net.renfei.common.api.entity.UserInfo;
 import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.api.utils.ListUtils;
 import net.renfei.common.api.utils.RSAUtils;
@@ -24,20 +26,21 @@ import net.renfei.common.core.config.RedisConfig;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.entity.UserDetail;
 import net.renfei.common.core.service.RedisService;
+import net.renfei.common.core.service.SystemService;
+import net.renfei.common.core.service.VerificationCodeService;
 import net.renfei.common.core.utils.AESUtils;
 import net.renfei.common.core.utils.IpUtils;
 import net.renfei.proprietary.discuz.service.DiscuzService;
 import net.renfei.uaa.api.AuthorizationService;
 import net.renfei.uaa.api.JwtService;
 import net.renfei.uaa.api.UserService;
-import net.renfei.uaa.api.entity.SecretKey;
-import net.renfei.uaa.api.entity.SignInAo;
-import net.renfei.uaa.api.entity.SignInVo;
+import net.renfei.uaa.api.entity.*;
 import net.renfei.uaa.repositories.UaaSecretKeyMapper;
 import net.renfei.uaa.repositories.entity.UaaSecretKeyExample;
 import net.renfei.uaa.repositories.entity.UaaSecretKeyWithBLOBs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -45,6 +48,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
+
+import static net.renfei.common.core.config.SystemConfig.MAX_USERNAME_LENGTH;
 
 /**
  * 认证服务
@@ -55,25 +61,32 @@ import java.util.UUID;
 public class AuthorizationServiceImpl implements AuthorizationService {
     public final static String REDIS_TOKEN_KEY = RedisConfig.REDIS_KEY_DATABASE + ":token:";
     private final static Logger logger = LoggerFactory.getLogger(AuthorizationServiceImpl.class);
+    private final static Pattern SPECIAL_PATTERN = Pattern.compile("[ _`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]|\n|\r|\t");
     private final JwtService jwtService;
     private final UserService userService;
     private final SystemConfig systemConfig;
     private final RedisService redisService;
+    private final SystemService systemService;
     private final DiscuzService discuzService;
     private final UaaSecretKeyMapper uaaSecretKeyMapper;
+    private final VerificationCodeService verificationCodeService;
 
     public AuthorizationServiceImpl(JwtService jwtService,
                                     UserService userService,
                                     SystemConfig systemConfig,
                                     RedisService redisService,
+                                    SystemService systemService,
                                     DiscuzService discuzService,
-                                    UaaSecretKeyMapper uaaSecretKeyMapper) {
+                                    UaaSecretKeyMapper uaaSecretKeyMapper,
+                                    VerificationCodeService verificationCodeService) {
         this.jwtService = jwtService;
         this.userService = userService;
         this.systemConfig = systemConfig;
         this.redisService = redisService;
+        this.systemService = systemService;
         this.discuzService = discuzService;
         this.uaaSecretKeyMapper = uaaSecretKeyMapper;
+        this.verificationCodeService = verificationCodeService;
     }
 
     /**
@@ -198,5 +211,88 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             signInVo.setUcScript(discuzService.uCenterSynLogin(userDetail.getUsername()));
         }
         return new APIResult<>(signInVo);
+    }
+
+    @Override
+    public APIResult signUp(SignUpAo signUp, HttpServletRequest request) {
+        if (systemConfig.getEnableSignUp()) {
+            if (signUp.getUserName().trim().toLowerCase().length() >= MAX_USERNAME_LENGTH) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("用户名长度超过系统允许的最大值：" + MAX_USERNAME_LENGTH).build();
+            }
+            if (signUp.getEmail().length() >= MAX_USERNAME_LENGTH) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("邮箱地址长度超过系统允许最大值：" + MAX_USERNAME_LENGTH).build();
+            }
+            signUp.setPassword(this.decryptAesByKeyId(
+                    signUp.getPassword(), signUp.getKeyUuid()
+            ).getData());
+            if (ObjectUtils.isEmpty(signUp.getUserName().trim())) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("用户名不能为空").build();
+            }
+            if (signUp.getUserName().trim().getBytes().length < 4) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("用户名长度过短，请重起一个名字吧").build();
+            }
+            if (ObjectUtils.isEmpty(signUp.getEmail().trim())) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("电子邮箱不能为空").build();
+            }
+            if (StringUtils.isEmail(signUp.getUserName().trim())) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("您不能使用电子邮件地址作为您的用户名").build();
+            }
+            if (StringUtils.isChinaPhone(signUp.getUserName().trim())) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("您不能使用手机号码作为您的用户名，注册成功后您可以绑定您的手机号码").build();
+            }
+            if (StringUtils.isDomain(signUp.getUserName().trim())) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("用户名格式不正确，请换个用户名试试").build();
+            }
+            if (SPECIAL_PATTERN.matcher(signUp.getUserName().trim()).find()) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("用户名包含非法字符，请重起一个名字吧").build();
+            }
+            if (ObjectUtils.isEmpty(signUp.getPassword())) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("密码不能为空").build();
+            }
+            if (!StringUtils.isEmail(signUp.getEmail().trim())) {
+                return APIResult.builder().code(StateCodeEnum.Failure).message("您填写的电子邮箱地址格式不正确").build();
+            }
+            APIResult apiResult = userService.signUp(signUp, request);
+            if (apiResult.getCode() == 200 && systemConfig.getUCenter().getEnable()) {
+                // 同步注册Discuz论坛
+                discuzService.uCenterSynSignUp(signUp.getUserName(), signUp.getEmail(), request);
+            }
+            return apiResult;
+        } else {
+            return APIResult.builder().code(StateCodeEnum.Failure).message("系统当前禁止新用户注册，请联系系统管理员启用新用户注册功能").build();
+        }
+    }
+
+    @Override
+    public APIResult signOut(UserDetail userDetail, HttpServletRequest request) {
+        if (userDetail != null) {
+            redisService.del(REDIS_TOKEN_KEY + userDetail.getUsername());
+        }
+        return APIResult.success();
+    }
+
+    @Override
+    public void activation(SignUpActivationAo signUpActivation) {
+        if (!StringUtils.isEmail(signUpActivation.getEmailOrPhone())
+                && !StringUtils.isChinaPhone(signUpActivation.getEmailOrPhone())) {
+            // 验证的地址既不是手机也不是邮箱，直接拒绝
+            throw new BusinessException("请填写正确的邮箱或手机号");
+        }
+        if (!verificationCodeService.verificationCode(signUpActivation.getCode(), signUpActivation.getEmailOrPhone(), "SIGN_UP")) {
+            // 验证码找不到，拒绝
+            throw new BusinessException("验证码错误或已过期");
+        }
+        userService.activation(signUpActivation.getEmailOrPhone());
+    }
+
+    @Override
+    public UserInfo requestCurrentUserInfo() {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail != null) {
+            UserInfo userInfo = new UserInfo();
+            BeanUtils.copyProperties(userDetail, userInfo);
+            return userInfo;
+        }
+        return null;
     }
 }

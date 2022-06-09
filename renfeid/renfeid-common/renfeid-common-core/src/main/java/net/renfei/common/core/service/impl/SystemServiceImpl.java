@@ -34,6 +34,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * 系统级服务
@@ -51,6 +54,25 @@ public class SystemServiceImpl implements SystemService {
                              SystemLogService systemLogService) {
         this.contextRefresher = contextRefresher;
         this.systemLogService = systemLogService;
+    }
+
+    /**
+     * 【危险】在主机上执行命令
+     *
+     * @param command 命令
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public String execCommand(String... command) throws IOException {
+        Process process = Runtime.getRuntime().exec(command);
+        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        return sb.toString();
     }
 
     /**
@@ -93,8 +115,6 @@ public class SystemServiceImpl implements SystemService {
                 if (principal != null) {
                     if (principal instanceof UserDetail) {
                         return (UserDetail) principal;
-                    } else {
-                        logger.error("UserDetail type error.");
                     }
                 }
             }

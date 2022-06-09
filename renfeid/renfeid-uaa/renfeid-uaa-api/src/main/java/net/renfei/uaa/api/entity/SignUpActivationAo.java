@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.proprietary.discuz.service;
-
-import net.renfei.proprietary.discuz.model.DiscuzInfo;
-import net.renfei.proprietary.discuz.repositories.entity.DiscuzForumPostDO;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+package net.renfei.uaa.api.entity;
 
 /**
  * @author renfei
  */
-public interface DiscuzService {
-    DiscuzInfo getDiscuzInfo(String userName);
-    List<DiscuzForumPostDO> getAllPost();
+public class SignUpActivationAo {
+    private String emailOrPhone;
+    private String code;
 
-    String uCenterSynLogin(String username);
+    public String getEmailOrPhone() {
+        return emailOrPhone;
+    }
 
-    void uCenterSynSignUp(String username, String email, HttpServletRequest request);
+    public void setEmailOrPhone(String emailOrPhone) {
+        this.emailOrPhone = emailOrPhone;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }
