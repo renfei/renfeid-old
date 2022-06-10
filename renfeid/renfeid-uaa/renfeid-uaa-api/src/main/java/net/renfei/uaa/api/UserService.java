@@ -16,7 +16,9 @@
 package net.renfei.uaa.api;
 
 import net.renfei.common.api.constant.APIResult;
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.common.api.constant.enums.SecretLevelEnum;
+import net.renfei.common.api.entity.ListData;
+import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.api.entity.SignInAo;
 import net.renfei.uaa.api.entity.SignUpAo;
 
@@ -32,7 +34,7 @@ public interface UserService {
      * 根据 Token 获取用户详情对象
      *
      * @param token Token
-     * @return
+     * @return 用户详情对象
      */
     APIResult<UserDetail> getUserDetailByToken(String token);
 
@@ -41,12 +43,69 @@ public interface UserService {
      *
      * @param token Token
      * @param ip    请求方IP
-     * @return
+     * @return 用户详情对象
      */
     APIResult<UserDetail> getUserDetailByToken(String token, String ip);
 
+    /**
+     * 登陆
+     *
+     * @param signIn  登陆请求对象
+     * @param request 请求对象
+     * @return 用户详情对象
+     */
     APIResult<UserDetail> signIn(SignInAo signIn, HttpServletRequest request);
+
+    /**
+     * 注册
+     *
+     * @param signUp  注册请求对象
+     * @param request 请求对象
+     * @return
+     */
     APIResult signUp(SignUpAo signUp, HttpServletRequest request);
 
+    /**
+     * 激活账户（邮箱或手机）
+     *
+     * @param emailOrPhone 账户邮箱或手机号
+     */
     void activation(String emailOrPhone);
+
+    /**
+     * 查询用户列表
+     *
+     * @param username    用户名
+     * @param email       邮箱
+     * @param phone       手机号
+     * @param ip          注册IP地址
+     * @param secretLevel 保密等级
+     * @param locked      是否被锁定
+     * @param enabled     是否启用
+     * @param pages       页码
+     * @param rows        每页容量
+     * @return 用户列表
+     */
+    APIResult<ListData<UserDetail>> queryUserList(String username, String email, String phone, String ip,
+                                                  SecretLevelEnum secretLevel, Boolean locked, Boolean enabled,
+                                                  int pages, int rows);
+
+    /**
+     * 添加用户（只添加用户，用户的定密、启用由安全保密员操作）
+     *
+     * @param userDetail 用户详情
+     * @param request    请求对象
+     * @return
+     */
+    APIResult<UserDetail> createUser(UserDetail userDetail, HttpServletRequest request);
+
+    /**
+     * 更新用户资料
+     *
+     * @param userId     用户ID
+     * @param userDetail 用户资料详情
+     * @param request    请求对象
+     * @return
+     */
+    APIResult<UserDetail> updateUser(long userId, UserDetail userDetail, HttpServletRequest request);
 }

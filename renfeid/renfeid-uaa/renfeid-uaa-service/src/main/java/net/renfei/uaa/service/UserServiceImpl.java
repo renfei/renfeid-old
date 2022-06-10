@@ -15,9 +15,12 @@
  */
 package net.renfei.uaa.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
+import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.api.exception.NeedU2FException;
 import net.renfei.common.api.utils.ListUtils;
@@ -26,17 +29,15 @@ import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.entity.LogLevelEnum;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
-import net.renfei.common.core.entity.UserDetail;
-import net.renfei.common.core.service.RedisService;
-import net.renfei.common.core.service.SnowflakeService;
-import net.renfei.common.core.service.SystemLogService;
-import net.renfei.common.core.service.VerificationCodeService;
+import net.renfei.common.core.service.*;
 import net.renfei.common.core.utils.DateUtils;
 import net.renfei.common.core.utils.IpUtils;
 import net.renfei.uaa.api.JwtService;
+import net.renfei.uaa.api.RoleService;
 import net.renfei.uaa.api.UserService;
 import net.renfei.uaa.api.entity.SignInAo;
 import net.renfei.uaa.api.entity.SignUpAo;
+import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.repositories.UaaUserKeepNameMapper;
 import net.renfei.uaa.repositories.UaaUserMapper;
 import net.renfei.uaa.repositories.entity.UaaUser;
@@ -47,10 +48,12 @@ import net.renfei.uaa.utils.GoogleAuthenticator;
 import net.renfei.uaa.utils.PasswordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -66,26 +69,32 @@ import static net.renfei.uaa.service.AuthorizationServiceImpl.REDIS_TOKEN_KEY;
 public class UserServiceImpl implements UserService {
     private final static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final JwtService jwtService;
+    private final RoleService roleService;
     private final RedisService redisService;
     private final SystemConfig systemConfig;
     private final UaaUserMapper uaaUserMapper;
+    private final SystemService systemService;
     private final SnowflakeService snowflakeService;
     private final SystemLogService systemLogService;
     private final UaaUserKeepNameMapper uaaUserKeepNameMapper;
     private final VerificationCodeService verificationCodeService;
 
     public UserServiceImpl(JwtService jwtService,
+                           RoleService roleService,
                            RedisService redisService,
                            SystemConfig systemConfig,
                            UaaUserMapper uaaUserMapper,
+                           SystemService systemService,
                            SnowflakeService snowflakeService,
                            SystemLogService systemLogService,
                            UaaUserKeepNameMapper uaaUserKeepNameMapper,
                            VerificationCodeService verificationCodeService) {
         this.jwtService = jwtService;
+        this.roleService = roleService;
         this.redisService = redisService;
         this.systemConfig = systemConfig;
         this.uaaUserMapper = uaaUserMapper;
+        this.systemService = systemService;
         this.snowflakeService = snowflakeService;
         this.systemLogService = systemLogService;
         this.uaaUserKeepNameMapper = uaaUserKeepNameMapper;
@@ -126,7 +135,9 @@ public class UserServiceImpl implements UserService {
             logger.error("根据用户名：{}，未找到用户信息", username);
             throw new RuntimeException("未找到用户信息。");
         }
-        return new APIResult<>(convert(uaaUser));
+        UserDetail userDetail = convert(uaaUser);
+        this.fillRoleDetailList(userDetail);
+        return new APIResult<>(userDetail);
     }
 
     @Override
@@ -223,33 +234,16 @@ public class UserServiceImpl implements UserService {
                 String.format("账号：%s，登入系统。", signIn.getUserName()),
                 uaaUser.getUuid(), uaaUser.getUsername(), request);
         logger.info("账号：{}，登入系统。", signIn.getUserName());
-        return new APIResult<>(convert(uaaUser));
+        UserDetail userDetail = convert(uaaUser);
+        this.fillRoleDetailList(userDetail);
+        return new APIResult<>(userDetail);
     }
 
     @Override
     public APIResult signUp(SignUpAo signUp, HttpServletRequest request) {
-        // 检查保留用户名
-        UaaUserKeepNameExample userKeepNameExample = new UaaUserKeepNameExample();
-        userKeepNameExample.createCriteria().andUserNameEqualTo(signUp.getUserName());
-        List<UaaUserKeepName> keepNames = uaaUserKeepNameMapper.selectByExample(userKeepNameExample);
-        if (keepNames != null && keepNames.size() > 0) {
-            return APIResult.builder().code(StateCodeEnum.Failure).message("用户名已经被占用，请换个用户名试试").build();
-        }
-        // 检查用户名重复
-        UaaUserExample example = new UaaUserExample();
-        example.createCriteria().andUsernameEqualTo(signUp.getUserName().trim().toLowerCase());
-        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
-        if (uaaUser != null) {
-            return APIResult.builder().code(StateCodeEnum.Failure).message("用户名已经被占用，请换个用户名试试").build();
-        }
-        // 检查Email重复
-        example = new UaaUserExample();
-        example.createCriteria().andEmailEqualTo(signUp.getEmail().trim().toLowerCase());
-        uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
-        if (uaaUser != null) {
-            return APIResult.builder().code(StateCodeEnum.Failure).message("电子邮箱地址已经被注册，您不妨直接登陆试试").build();
-        }
-        uaaUser = new UaaUser();
+        this.checkDuplicateUsername(signUp.getUserName());
+        this.checkDuplicateEmail(signUp.getEmail());
+        UaaUser uaaUser = new UaaUser();
         uaaUser.setId(snowflakeService.getId("").getId());
         uaaUser.setUuid(UUID.randomUUID().toString().replace("-", "").toUpperCase());
         uaaUser.setUsername(signUp.getUserName().trim().toLowerCase());
@@ -306,6 +300,139 @@ public class UserServiceImpl implements UserService {
         uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
     }
 
+    @Override
+    public APIResult<ListData<UserDetail>> queryUserList(String username, String email, String phone, String ip,
+                                                         SecretLevelEnum secretLevel, Boolean locked, Boolean enabled,
+                                                         int pages, int rows) {
+        UserDetail currentUserDetail = systemService.currentUserDetail();
+        UaaUserExample example = new UaaUserExample();
+        example.setOrderByClause("registration_date DESC");
+        UaaUserExample.Criteria criteria = example.createCriteria().andBuiltInUserEqualTo(false);
+        if (username != null && !username.isEmpty()) {
+            criteria.andUsernameLike("%" + username + "%");
+        }
+        if (email != null && !email.isEmpty()) {
+            criteria.andEmailLike("%" + email + "%");
+        }
+        if (phone != null && !phone.isEmpty()) {
+            criteria.andPhoneLike("%" + phone + "%");
+        }
+        if (ip != null && !ip.isEmpty()) {
+            criteria.andRegistrationIpEqualTo(ip);
+        }
+        if (secretLevel != null) {
+            if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), secretLevel)) {
+                throw new BusinessException("根据您账户当前的保密等级，您无权查询比您更高保密等级的数据，请求已被拒绝。");
+            }
+            criteria.andSecretLevelEqualTo(secretLevel.getLevel());
+        } else {
+            criteria.andSecretLevelLessThanOrEqualTo(currentUserDetail.getSecretLevel().getLevel());
+        }
+        if (locked != null) {
+            criteria.andLockedEqualTo(locked);
+        }
+        if (enabled != null) {
+            criteria.andEnabledEqualTo(enabled);
+        }
+        ListData<UserDetail> userDetailListData = new ListData<>();
+        try (Page<UaaUser> page = PageHelper.startPage(pages, rows)) {
+            uaaUserMapper.selectByExample(example);
+            userDetailListData.setPageNum(page.getPageNum());
+            userDetailListData.setPageSize(page.getPageSize());
+            userDetailListData.setStartRow(page.getStartRow());
+            userDetailListData.setEndRow(page.getEndRow());
+            userDetailListData.setTotal(page.getTotal());
+            userDetailListData.setPages(page.getPages());
+            List<UserDetail> userDetails = new ArrayList<>();
+            for (UaaUser uaaUser : page.getResult()
+            ) {
+                UserDetail userDetail = new UserDetail();
+                BeanUtils.copyProperties(uaaUser, userDetail);
+                this.fillRoleDetailList(userDetail);
+                userDetails.add(userDetail);
+            }
+            userDetailListData.setData(userDetails);
+        }
+        return new APIResult<>(userDetailListData);
+    }
+
+    @Override
+    public APIResult<UserDetail> createUser(UserDetail userDetail, HttpServletRequest request) {
+        userDetail.setId(snowflakeService.getId("").getId());
+        userDetail.setUuid(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+        // 检查用户名
+        this.checkDuplicateUsername(userDetail.getUsername());
+        userDetail.setUsername(userDetail.getUsername());
+        // 检查邮箱
+        this.checkDuplicateEmail(userDetail.getEmail());
+        userDetail.setEmail(userDetail.getEmail());
+        userDetail.setEmailVerified(userDetail.getEmailVerified());
+        if (userDetail.getPhone() != null && !userDetail.getPhone().isEmpty()) {
+            // 检查手机号
+            this.checkDuplicatePhone(userDetail.getPhone());
+            userDetail.setPhone(userDetail.getPhone());
+        }
+        userDetail.setPhoneVerified(userDetail.getPhoneVerified());
+        userDetail.setRegistrationDate(new Date());
+        try {
+            userDetail.setPassword(PasswordUtils.createHash(userDetail.getPassword()));
+        } catch (PasswordUtils.CannotPerformOperationException e) {
+            logger.error(e.getMessage(), e);
+            throw new BusinessException("内部错误，密码加密失败");
+        }
+        userDetail.setTotp(null);
+        userDetail.setRegistrationIp(IpUtils.getIpAddress(request));
+        userDetail.setTrialErrorTimes(null);
+        userDetail.setLockTime(null);
+        userDetail.setSecretLevel(SecretLevelEnum.UNCLASSIFIED);
+        userDetail.setBuiltInUser(false);
+        userDetail.setPasswordExpirationTime(null);
+        userDetail.setLocked(false);
+        userDetail.setEnabled(false);
+        userDetail.setLastName(userDetail.getLastName());
+        userDetail.setFirstName(userDetail.getFirstName());
+        uaaUserMapper.insertSelective(convert(userDetail));
+        return new APIResult<>(userDetail);
+    }
+
+    @Override
+    public APIResult<UserDetail> updateUser(long userId, UserDetail userDetail, HttpServletRequest request) {
+        UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
+        UserDetail currentUserDetail = systemService.currentUserDetail();
+        if (uaaUser == null) {
+            throw new BusinessException("根据用户ID未找到该用户，请查正");
+        }
+        UserDetail oldUserDetail = convert(uaaUser);
+        if (uaaUser.getBuiltInUser()) {
+            // 内置用户，禁止编辑，去数据库里改
+            systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                    "尝试修改内置用户资料，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+            throw new BusinessException("内置用户，禁止编辑，请求被拒绝");
+        }
+        if (userId != currentUserDetail.getId()
+                && SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), oldUserDetail.getSecretLevel())) {
+            // 如果不是修改自己的，那么需要判断密级是否跨级修改
+            systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                    "尝试修改高于自己密级的用户，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+            throw new BusinessException("您修改的用户密级高于您的密级，您无权编辑，请求被拒绝");
+        }
+        // 只能修改以下内容，修改密码、更改密级等有专门的接口
+        if (userDetail.getEmail() != null && !userDetail.getEmail().isEmpty()) {
+            uaaUser.setEmail(userDetail.getEmail());
+            // 因为是后台管理员更新的，认为是可信的，直接是已认证状态
+            uaaUser.setEmailVerified(true);
+        }
+
+        if (userDetail.getPhone() != null && !userDetail.getPhone().isEmpty()) {
+            uaaUser.setPhone(userDetail.getPhone());
+            // 因为是后台管理员更新的，认为是可信的，直接是已认证状态
+            uaaUser.setPhoneVerified(true);
+        }
+        uaaUser.setLastName(userDetail.getLastName());
+        uaaUser.setFirstName(userDetail.getFirstName());
+        return null;
+    }
+
     private UserDetail convert(UaaUser uaaUser) {
         if (uaaUser == null) {
             return null;
@@ -332,5 +459,87 @@ public class UserServiceImpl implements UserService {
         userDetail.setLastName(uaaUser.getLastName());
         userDetail.setFirstName(uaaUser.getFirstName());
         return userDetail;
+    }
+
+    private void checkDuplicateUsername(String username) {
+        if (username == null || username.isEmpty()) {
+            throw new BusinessException("用户名不能为空");
+        }
+        // 检查保留用户名
+        UaaUserKeepNameExample userKeepNameExample = new UaaUserKeepNameExample();
+        userKeepNameExample.createCriteria().andUserNameEqualTo(username.trim().toLowerCase());
+        List<UaaUserKeepName> keepNames = uaaUserKeepNameMapper.selectByExample(userKeepNameExample);
+        if (keepNames != null && keepNames.size() > 0) {
+            throw new BusinessException("用户名已经被占用，请换个用户名试试");
+        }
+        // 检查用户名重复
+        UaaUserExample example = new UaaUserExample();
+        example.createCriteria().andUsernameEqualTo(username.trim().toLowerCase());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser != null) {
+            throw new BusinessException("用户名已经被占用，请换个用户名试试");
+        }
+    }
+
+    private void checkDuplicateEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            throw new BusinessException("电子邮箱不能为空");
+        }
+        // 检查Email重复
+        UaaUserExample example = new UaaUserExample();
+        example.createCriteria().andEmailEqualTo(email.trim().toLowerCase()).andEmailVerifiedEqualTo(true);
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser != null) {
+            throw new BusinessException("电子邮箱地址已经被注册，您不妨直接登陆试试");
+        }
+    }
+
+    private void checkDuplicatePhone(String phone) {
+        // 检查Email重复
+        UaaUserExample example = new UaaUserExample();
+        example.createCriteria().andEmailEqualTo(phone.trim().toLowerCase()).andEmailVerifiedEqualTo(true);
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser != null) {
+            throw new BusinessException("手机号已经被注册，您不妨直接登陆试试");
+        }
+    }
+
+    private UaaUser convert(UserDetail userDetail) {
+        if (userDetail == null) {
+            return null;
+        }
+        UaaUser uaaUser = new UaaUser();
+        uaaUser.setId(userDetail.getId());
+        uaaUser.setUuid(userDetail.getUuid());
+        uaaUser.setUsername(userDetail.getUsername());
+        uaaUser.setEmail(userDetail.getEmail());
+        uaaUser.setEmailVerified(userDetail.getEmailVerified());
+        uaaUser.setPhone(userDetail.getPhone());
+        uaaUser.setPhoneVerified(userDetail.getPhoneVerified());
+        uaaUser.setRegistrationDate(userDetail.getRegistrationDate());
+        uaaUser.setPassword(userDetail.getPassword());
+        uaaUser.setTotp(userDetail.getTotp());
+        uaaUser.setRegistrationIp(userDetail.getRegistrationIp());
+        uaaUser.setTrialErrorTimes(userDetail.getTrialErrorTimes());
+        uaaUser.setLockTime(userDetail.getLockTime());
+        uaaUser.setSecretLevel(userDetail.getSecretLevel().getLevel());
+        uaaUser.setBuiltInUser(userDetail.getBuiltInUser());
+        uaaUser.setPasswordExpirationTime(userDetail.getPasswordExpirationTime());
+        uaaUser.setLocked(userDetail.getLocked());
+        uaaUser.setEnabled(userDetail.getEnabled());
+        uaaUser.setLastName(userDetail.getLastName());
+        uaaUser.setFirstName(userDetail.getFirstName());
+        return uaaUser;
+    }
+
+    /**
+     * 填充用户拥有的角色列表
+     *
+     * @param userDetail
+     */
+    private void fillRoleDetailList(UserDetail userDetail) {
+        userDetail.setRoleDetailList(
+                roleService.queryRoleListByUser(userDetail.getId(), 1, Integer.MAX_VALUE).getData()
+        );
     }
 }

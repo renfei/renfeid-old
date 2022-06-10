@@ -15,7 +15,7 @@
  */
 package net.renfei.common.core.service;
 
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.context.ApplicationContextAware;
 
 import javax.servlet.http.HttpServletRequest;

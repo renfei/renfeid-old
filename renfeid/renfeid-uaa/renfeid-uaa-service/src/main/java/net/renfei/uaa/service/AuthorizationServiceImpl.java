@@ -24,7 +24,7 @@ import net.renfei.common.api.utils.RSAUtils;
 import net.renfei.common.api.utils.StringUtils;
 import net.renfei.common.core.config.RedisConfig;
 import net.renfei.common.core.config.SystemConfig;
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.common.core.service.RedisService;
 import net.renfei.common.core.service.SystemService;
 import net.renfei.common.core.service.VerificationCodeService;
@@ -222,9 +222,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             if (signUp.getEmail().length() >= MAX_USERNAME_LENGTH) {
                 return APIResult.builder().code(StateCodeEnum.Failure).message("邮箱地址长度超过系统允许最大值：" + MAX_USERNAME_LENGTH).build();
             }
-            signUp.setPassword(this.decryptAesByKeyId(
-                    signUp.getPassword(), signUp.getKeyUuid()
-            ).getData());
             if (ObjectUtils.isEmpty(signUp.getUserName().trim())) {
                 return APIResult.builder().code(StateCodeEnum.Failure).message("用户名不能为空").build();
             }
@@ -252,6 +249,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             if (!StringUtils.isEmail(signUp.getEmail().trim())) {
                 return APIResult.builder().code(StateCodeEnum.Failure).message("您填写的电子邮箱地址格式不正确").build();
             }
+            signUp.setPassword(this.decryptAesByKeyId(
+                    signUp.getPassword(), signUp.getKeyUuid()
+            ).getData());
             APIResult apiResult = userService.signUp(signUp, request);
             if (apiResult.getCode() == 200 && systemConfig.getUCenter().getEnable()) {
                 // 同步注册Discuz论坛

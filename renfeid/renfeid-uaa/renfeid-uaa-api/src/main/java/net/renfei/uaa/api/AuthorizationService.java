@@ -17,7 +17,7 @@ package net.renfei.uaa.api;
 
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.entity.UserInfo;
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.api.entity.*;
 
 import javax.servlet.http.HttpServletRequest;

@@ -15,9 +15,9 @@
  */
 package net.renfei.common.core.service.impl;
 
+import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.api.utils.StringUtils;
-import net.renfei.common.core.entity.UserDetail;
 import net.renfei.common.core.service.EmailService;
 import net.renfei.common.core.service.RedisService;
 import net.renfei.common.core.service.SMSService;

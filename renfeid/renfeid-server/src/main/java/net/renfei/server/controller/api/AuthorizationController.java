@@ -22,7 +22,7 @@ import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.common.core.service.SystemService;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.uaa.api.AuthorizationService;

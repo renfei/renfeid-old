@@ -29,6 +29,16 @@ import java.util.Date;
  */
 public interface PostService {
     /**
+     * 查询已发布的文章列表
+     *
+     * @param categoryId 分类ID
+     * @param pages      页码
+     * @param rows       每页行数
+     * @return
+     */
+    APIResult<ListData<Post>> queryPostList(Long categoryId, int pages, int rows);
+
+    /**
      * 查询文章列表
      *
      * @param categoryId 分类ID

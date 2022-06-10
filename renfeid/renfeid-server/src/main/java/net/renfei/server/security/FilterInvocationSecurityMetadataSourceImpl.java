@@ -17,6 +17,7 @@ package net.renfei.server.security;
 
 import net.renfei.uaa.api.RoleService;
 import net.renfei.uaa.api.SystemApiService;
+import net.renfei.uaa.api.entity.AuthorityTypeEnum;
 import net.renfei.uaa.api.entity.RoleDetail;
 import net.renfei.uaa.api.entity.SystemApi;
 import org.springframework.security.access.ConfigAttribute;
@@ -77,7 +78,8 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
                 String url = sysApi.getUrlPath();
                 if (requestMethod.equals(method) && antPathMatcher.match(url, requestUrl)) {
                     // 匹配命中了，将访问此资源需要的角色添加到 List<ConfigAttribute>
-                    List<RoleDetail> roleDTOList = roleService.allRoleList(true).getData();
+                    List<RoleDetail> roleDTOList =
+                            roleService.queryRoleListByResource(AuthorityTypeEnum.API, sysApi.getId()).getData();
                     if (roleDTOList != null) {
                         configAttributes.addAll(roleDTOList);
                     }

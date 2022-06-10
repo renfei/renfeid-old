@@ -26,8 +26,8 @@ import net.renfei.cms.repositories.entity.CmsPostsWithBLOBs;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.entity.ListData;
-import net.renfei.common.core.entity.UserDetail;
 import net.renfei.common.core.service.SystemService;
+import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -48,6 +48,11 @@ public class PostServiceImpl implements PostService {
                            CmsPostsMapper cmsPostsMapper) {
         this.systemService = systemService;
         this.cmsPostsMapper = cmsPostsMapper;
+    }
+
+    @Override
+    public APIResult<ListData<Post>> queryPostList(Long categoryId, int pages, int rows) {
+        return this.queryPostList(categoryId, PostStatusEnum.PUBLISH, null, new Date(), pages, rows);
     }
 
     @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.common.core.entity;
+package net.renfei.uaa.api.entity;
 
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户详情
@@ -50,10 +51,12 @@ public class UserDetail implements UserDetails, Serializable {
     private Boolean enabled;
     private String lastName;
     private String firstName;
+    private String keyUuid;
+    private List<RoleDetail> roleDetailList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.roleDetailList;
     }
 
     @Override
@@ -239,5 +242,21 @@ public class UserDetail implements UserDetails, Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getKeyUuid() {
+        return keyUuid;
+    }
+
+    public void setKeyUuid(String keyUuid) {
+        this.keyUuid = keyUuid;
+    }
+
+    public List<RoleDetail> getRoleDetailList() {
+        return roleDetailList;
+    }
+
+    public void setRoleDetailList(List<RoleDetail> roleDetailList) {
+        this.roleDetailList = roleDetailList;
     }
 }

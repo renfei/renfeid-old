@@ -24,6 +24,10 @@
         </dependency>
         <dependency>
             <groupId>net.renfei</groupId>
+            <artifactId>renfeid-uaa-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.renfei</groupId>
             <artifactId>renfeid-common-leaf</artifactId>
         </dependency>
         <dependency>

@@ -19,7 +19,7 @@ import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.utils.IpUtils;
 import net.renfei.uaa.api.UserService;
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

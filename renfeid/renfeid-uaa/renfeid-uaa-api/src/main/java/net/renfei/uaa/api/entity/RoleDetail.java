@@ -16,6 +16,7 @@
 package net.renfei.uaa.api.entity;
 
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,7 +26,7 @@ import java.util.Date;
  *
  * @author renfei
  */
-public class RoleDetail implements ConfigAttribute,Serializable {
+public class RoleDetail implements ConfigAttribute, GrantedAuthority, Serializable {
     private static final long serialVersionUID = -5194970536302876575L;
     private Long id;
     private String roleName;
@@ -37,6 +38,11 @@ public class RoleDetail implements ConfigAttribute,Serializable {
 
     @Override
     public String getAttribute() {
+        return roleName;
+    }
+
+    @Override
+    public String getAuthority() {
         return roleName;
     }
 

@@ -16,7 +16,7 @@
 package net.renfei.server.security;
 
 import net.renfei.common.core.config.SystemConfig;
-import net.renfei.common.core.entity.UserDetail;
+import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -61,7 +61,7 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
     public void decide(Authentication authentication, Object object,
                        Collection<ConfigAttribute> collection)
             throws AccessDeniedException, InsufficientAuthenticationException {
-        // 【警告】如果 net.renfei.security.interceptor.FilterInvocationSecurityMetadataSourceImpl.getAttributes
+        // 【警告】如果 net.renfei.server.security.FilterInvocationSecurityMetadataSourceImpl
         // 返回 null 就不会进入此方法，所以需要保护的资源一定要入库并设置所需的角色
         if (authentication == null) {
             throw new AccessDeniedException("Access Denied! 当前访问没有权限！");
@@ -76,11 +76,13 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
                 }
             }
         }
-        if (authentication.getPrincipal() instanceof UserDetail) {
-            UserDetail user = (UserDetail) authentication.getPrincipal();
-            if (systemConfig.getSuperTubeUserName().equals(user.getUsername())) {
-                // 超管，不做校验
-                return;
+        if(systemConfig.getEnableSuperTubeUser()){
+            if (authentication.getPrincipal() instanceof UserDetail) {
+                UserDetail user = (UserDetail) authentication.getPrincipal();
+                if (systemConfig.getSuperTubeUserName().equals(user.getUsername())) {
+                    // 超管，不做校验
+                    return;
+                }
             }
         }
         //当前用户所具有的权限

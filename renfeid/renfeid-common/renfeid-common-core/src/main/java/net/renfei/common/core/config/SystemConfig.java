@@ -18,7 +18,6 @@ package net.renfei.common.core.config;
 import lombok.Data;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
@@ -53,6 +52,7 @@ public class SystemConfig {
     private String siteName;
     private String siteDomainName;
     private String superTubeUserName;
+    private Boolean enableSuperTubeUser;
     private SecretLevelEnum maxSecretLevel;
     private Boolean enableSignUp;
     private Boolean bindingIp;

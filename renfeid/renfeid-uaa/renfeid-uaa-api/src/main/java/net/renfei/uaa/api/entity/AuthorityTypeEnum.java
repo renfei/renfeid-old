@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.common.core.service;
-
-
-import net.renfei.uaa.api.entity.UserDetail;
-
-import java.util.Date;
+package net.renfei.uaa.api.entity;
 
 /**
- * 验证码服务
- *
  * @author renfei
  */
-public interface VerificationCodeService {
-    void sendVerificationCode(boolean numberVerificationCode, Date expires,
-                              String addressee, String authType, UserDetail account, String callBack);
-    boolean verificationCode(String code, String addressee, String authType);
+public enum AuthorityTypeEnum {
+    MENU,
+    API,
+    BUTTON
 }

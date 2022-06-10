@@ -54,10 +54,19 @@ system:
   buildTime: "@buildtimestamp@"
   siteName: 任霏的博客
   siteDomainName: https://www.renfei.net
+  # 超管用户名
   superTubeUserName: admin
+  # 是否启用超管，涉密系统不允许出现超管账号
+  enableSuperTubeUser: true
+  # 系统允许的最大密级
   maxSecretLevel: UNCLASSIFIED
+  # 是否启用注册功能
   enableSignUp: true
+  # Token 是否与 IP 做强绑定
   bindingIp: false
+  # 忽略鉴权的地址
+  authIgnore:
+    - /_/api/test
   jwt:
     secret: zL4pC7mP4vH4nY2cK1kE6lC3bJ0yC5wI4kB0kZ2wK4tW3nQ9vP1hO6vZ5jA7wP7ulN6vY3mQ7uI5wU5sE6yP0hP6pK0tF5tT1oO0nO2mL4nO8uP3kJ3rV3iJ4aD5iB5h
     issuer: RENFEI.NET
@@ -68,8 +77,6 @@ system:
     key: <key>
     appId: 3
     connect:
-  authIgnore:
-    - /_/api/test
   aws:
     region: ap-east-1
     bucketName: s3-bucket-dev-test
