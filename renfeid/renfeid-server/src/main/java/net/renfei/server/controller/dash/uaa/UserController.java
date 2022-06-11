@@ -21,10 +21,12 @@ import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.utils.StringUtils;
 import net.renfei.common.core.annotation.OperationLog;
+import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.uaa.api.AuthorizationService;
 import net.renfei.uaa.api.UserService;
+import net.renfei.uaa.api.entity.ResetPasswordAo;
 import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +64,7 @@ public class UserController extends AbstractController {
     }
 
     @PostMapping("user")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "创建用户", operation = OperationTypeEnum.CREATE)
     public APIResult<UserDetail> createUser(@RequestBody UserDetail userDetail) {
         if (userDetail.getUsername().trim().toLowerCase().length() >= MAX_USERNAME_LENGTH) {
             return APIResult.builder().code(StateCodeEnum.Failure).message("用户名长度超过系统允许的最大值：" + MAX_USERNAME_LENGTH).build();
@@ -97,5 +100,42 @@ public class UserController extends AbstractController {
                 userDetail.getPassword(), userDetail.getKeyUuid()
         ).getData());
         return userService.createUser(userDetail, request);
+    }
+
+    @PutMapping("user/{id}")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改用户资料", operation = OperationTypeEnum.UPDATE)
+    public APIResult<UserDetail> updateUser(@PathVariable("id") Long userId, @RequestBody UserDetail userDetail) {
+        return userService.updateUser(userId, userDetail, request);
+    }
+
+    @PutMapping("user/{id}/secret-level/{secretLevel}")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "给用户定密", operation = OperationTypeEnum.UPDATE)
+    public APIResult determineUserSecretLevel(@PathVariable("id") Long userId,
+                                              @PathVariable("secretLevel") SecretLevelEnum secretLevel) {
+        return userService.determineUserSecretLevel(userId, secretLevel, request);
+    }
+
+    @PutMapping("user/{id}/enable/{enable}")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "用户启用或禁用", operation = OperationTypeEnum.UPDATE)
+    public APIResult enableUser(@PathVariable("id") Long userId, @PathVariable("enable") boolean enable) {
+        return userService.enableUser(userId, enable, request);
+    }
+
+    @PutMapping("user/{id}/reset-password")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "重置用户密码", operation = OperationTypeEnum.UPDATE)
+    public APIResult resetPassword(@PathVariable("id") Long userId, @RequestBody ResetPasswordAo resetPassword) {
+        resetPassword.setPassword(authorizationService.decryptAesByKeyId(
+                resetPassword.getPassword(), resetPassword.getKeyUuid()
+        ).getData());
+        return userService.resetPassword(userId, resetPassword);
+    }
+
+    @DeleteMapping("user/{id}")
+    public APIResult deleteUser(@PathVariable("id") Long userId) {
+        // 由于需要可审计，避免毁尸灭迹，用户暂时不支持删除操作
+        return APIResult.builder()
+                .code(StateCodeEnum.Failure)
+                .message("由于需要确保系统可审计可追踪，暂不支持用户删除操作。")
+                .build();
     }
 }

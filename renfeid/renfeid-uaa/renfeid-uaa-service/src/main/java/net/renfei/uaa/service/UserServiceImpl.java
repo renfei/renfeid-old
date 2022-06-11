@@ -32,9 +32,11 @@ import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.service.*;
 import net.renfei.common.core.utils.DateUtils;
 import net.renfei.common.core.utils.IpUtils;
+import net.renfei.uaa.api.AuthorizationService;
 import net.renfei.uaa.api.JwtService;
 import net.renfei.uaa.api.RoleService;
 import net.renfei.uaa.api.UserService;
+import net.renfei.uaa.api.entity.ResetPasswordAo;
 import net.renfei.uaa.api.entity.SignInAo;
 import net.renfei.uaa.api.entity.SignUpAo;
 import net.renfei.uaa.api.entity.UserDetail;
@@ -76,6 +78,7 @@ public class UserServiceImpl implements UserService {
     private final SystemService systemService;
     private final SnowflakeService snowflakeService;
     private final SystemLogService systemLogService;
+    private final AuthorizationService authorizationService;
     private final UaaUserKeepNameMapper uaaUserKeepNameMapper;
     private final VerificationCodeService verificationCodeService;
 
@@ -87,6 +90,7 @@ public class UserServiceImpl implements UserService {
                            SystemService systemService,
                            SnowflakeService snowflakeService,
                            SystemLogService systemLogService,
+                           AuthorizationService authorizationService,
                            UaaUserKeepNameMapper uaaUserKeepNameMapper,
                            VerificationCodeService verificationCodeService) {
         this.jwtService = jwtService;
@@ -97,6 +101,7 @@ public class UserServiceImpl implements UserService {
         this.systemService = systemService;
         this.snowflakeService = snowflakeService;
         this.systemLogService = systemLogService;
+        this.authorizationService = authorizationService;
         this.uaaUserKeepNameMapper = uaaUserKeepNameMapper;
         this.verificationCodeService = verificationCodeService;
     }
@@ -431,6 +436,90 @@ public class UserServiceImpl implements UserService {
         uaaUser.setLastName(userDetail.getLastName());
         uaaUser.setFirstName(userDetail.getFirstName());
         return null;
+    }
+
+    @Override
+    public APIResult determineUserSecretLevel(long userId, SecretLevelEnum secretLevel, HttpServletRequest request) {
+        UserDetail currentUserDetail = systemService.currentUserDetail();
+        if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), systemConfig.getMaxSecretLevel())) {
+            // 判断密级是否跨级修改
+            systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                    "尝试定密密级高于系统允许的最大密级，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+            throw new BusinessException("您定密的密级高于系统允许的最大密级，请求被拒绝");
+        }
+        if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), secretLevel)) {
+            // 判断密级是否跨级修改
+            systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                    "尝试给用户定密高于自己的密级，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+            throw new BusinessException("您定密的密级高于您自身的密级，请求被拒绝");
+        }
+        UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
+        if (uaaUser == null) {
+            throw new BusinessException("根据用户ID未找到该用户，请查正");
+        }
+        UserDetail oldUserDetail = convert(uaaUser);
+        if (uaaUser.getBuiltInUser()) {
+            // 内置用户，禁止编辑，去数据库里改
+            systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                    "尝试给内置用户定密，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+            throw new BusinessException("内置用户，禁止编辑，请求被拒绝");
+        }
+        if (userId != currentUserDetail.getId()
+                && SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), oldUserDetail.getSecretLevel())) {
+            // 如果不是修改自己的，那么需要判断密级是否跨级修改
+            systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                    "尝试修改高于自己密级的用户，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+            throw new BusinessException("您修改的用户密级高于您的密级，您无权编辑，请求被拒绝");
+        }
+        uaaUser.setSecretLevel(secretLevel.getLevel());
+        uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult enableUser(long userId, boolean enable, HttpServletRequest request) {
+        UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
+        if (uaaUser == null) {
+            throw new BusinessException("根据用户ID未找到该用户，请查正");
+        }
+        uaaUser.setEnabled(enable);
+        if (!enable) {
+            // 如果是禁用，Token一起删除
+            authorizationService.signOut(convert(uaaUser), request);
+        }
+        uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult lockUser(long userId, boolean lock) {
+        UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
+        if (uaaUser == null) {
+            throw new BusinessException("根据用户ID未找到该用户，请查正");
+        }
+        uaaUser.setLocked(lock);
+        if (!lock) {
+            // 如果是解锁，那么试错次数清空
+            uaaUser.setTrialErrorTimes(0);
+            uaaUser.setPasswordExpirationTime(null);
+        }
+        uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
+        return APIResult.success();
+    }
+
+    public APIResult resetPassword(long userId, ResetPasswordAo resetPassword) {
+        UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
+        if (uaaUser == null) {
+            throw new BusinessException("根据用户ID未找到该用户，请查正");
+        }
+        try {
+            uaaUser.setPassword(PasswordUtils.createHash(resetPassword.getPassword()));
+        } catch (PasswordUtils.CannotPerformOperationException e) {
+            logger.error(e.getMessage(), e);
+            throw new BusinessException("内部错误，密码加密失败");
+        }
+        uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
+        return APIResult.success();
     }
 
     private UserDetail convert(UaaUser uaaUser) {

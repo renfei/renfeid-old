@@ -18,6 +18,7 @@ package net.renfei.uaa.api;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.entity.ListData;
+import net.renfei.uaa.api.entity.ResetPasswordAo;
 import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.api.entity.SignInAo;
 import net.renfei.uaa.api.entity.SignUpAo;
@@ -108,4 +109,41 @@ public interface UserService {
      * @return
      */
     APIResult<UserDetail> updateUser(long userId, UserDetail userDetail, HttpServletRequest request);
+
+    /**
+     * 给用户定密
+     *
+     * @param userId      用户ID
+     * @param secretLevel 密级
+     * @return
+     */
+    APIResult determineUserSecretLevel(long userId, SecretLevelEnum secretLevel, HttpServletRequest request);
+
+    /**
+     * 禁用用户，登陆状态将被踢出
+     *
+     * @param userId  用户ID
+     * @param enable  是否启用
+     * @param request 请求对象
+     * @return
+     */
+    APIResult enableUser(long userId, boolean enable, HttpServletRequest request);
+
+    /**
+     * 锁定与解锁用户，等级比禁用低，不会踢出登陆状态
+     *
+     * @param userId 用户ID
+     * @param lock   是否锁定
+     * @return
+     */
+    APIResult lockUser(long userId, boolean lock);
+
+    /**
+     * 重置密码
+     *
+     * @param userId        用户ID
+     * @param resetPassword 重置密码请求对象
+     * @return
+     */
+    APIResult resetPassword(long userId, ResetPasswordAo resetPassword);
 }
