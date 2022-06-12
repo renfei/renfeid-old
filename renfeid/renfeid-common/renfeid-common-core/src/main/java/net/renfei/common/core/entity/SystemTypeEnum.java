@@ -29,7 +29,7 @@ public enum SystemTypeEnum {
     /**
      * 博客类
      */
-    BLOG("/posts"),
+    POSTS("/posts"),
     /**
      * 相册类
      */

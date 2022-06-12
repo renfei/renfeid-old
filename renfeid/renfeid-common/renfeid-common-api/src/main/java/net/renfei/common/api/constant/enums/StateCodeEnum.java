@@ -84,7 +84,8 @@ public enum StateCodeEnum {
     /**
      * 服务器维护
      */
-    Unavailable(503, "服务器可能正在维护，服务暂时不可用");
+    Unavailable(503, "服务器可能正在维护，服务暂时不可用"),
+    NeedPostPassword(1403, "内容受到密码保护，需要输入密码访问");
 
     private final Integer code;
     private final String describe;

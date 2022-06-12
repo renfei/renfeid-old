@@ -41,6 +41,8 @@
 <!--        <table schema="renfeid" tableName="uaa_menu" />-->
 <!--        <table schema="renfeid" tableName="core_logs" />-->
 <!--        <table schema="renfeid" tableName="uaa_user_keep_name" />-->
-        <table schema="renfeid" tableName="cms_posts" />
+<!--        <table schema="renfeid" tableName="cms_posts" />-->
+<!--        <table schema="renfeid" tableName="cms_posts_archival" />-->
+        <table schema="renfeid" tableName="cms_category" />
     </context>
 </generatorConfiguration>

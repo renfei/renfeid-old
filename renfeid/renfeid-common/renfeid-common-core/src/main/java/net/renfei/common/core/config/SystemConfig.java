@@ -53,6 +53,8 @@ public class SystemConfig {
     private String siteDomainName;
     private String superTubeUserName;
     private Boolean enableSuperTubeUser;
+    private Boolean enableCache;
+    private Boolean enablePostAuditing;
     private SecretLevelEnum maxSecretLevel;
     private Boolean enableSignUp;
     private Boolean bindingIp;

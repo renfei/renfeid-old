@@ -34,9 +34,10 @@ public interface PostService {
      * @param categoryId 分类ID
      * @param pages      页码
      * @param rows       每页行数
+     * @param useCache   使用缓存（只缓存非密内容）
      * @return
      */
-    APIResult<ListData<Post>> queryPostList(Long categoryId, int pages, int rows);
+    APIResult<ListData<Post>> queryPostList(Long categoryId, int pages, int rows, boolean useCache);
 
     /**
      * 查询文章列表
@@ -51,4 +52,49 @@ public interface PostService {
      */
     APIResult<ListData<Post>> queryPostList(Long categoryId, PostStatusEnum postStatus,
                                             Date startDate, Date endDate, int pages, int rows);
+
+    /**
+     * 根据ID获取文章详情
+     *
+     * @param postId   文章ID
+     * @param useCache 是否使用缓存
+     * @param password 查看文章的密码
+     * @param isAdmin  是否是管理员
+     * @param useCache 是否使用缓存
+     * @return
+     */
+    APIResult<Post> queryPostById(long postId, String password, boolean isAdmin, boolean useCache);
+
+    /**
+     * 创建一篇新内容
+     *
+     * @param post 文章内容
+     * @return
+     */
+    APIResult<Post> createPost(Post post);
+
+    /**
+     * 修改一篇新内容
+     *
+     * @param postId 内容ID
+     * @param post   文章内容
+     * @return
+     */
+    APIResult<Post> updatePost(long postId, Post post);
+
+    /**
+     * 下线内容，上线请重新编辑发布
+     *
+     * @param postId 内容ID
+     * @return
+     */
+    APIResult offlinePost(long postId);
+
+    /**
+     * 删除内容
+     *
+     * @param postId 内容ID
+     * @return
+     */
+    APIResult deletePost(long postId);
 }
