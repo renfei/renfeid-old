@@ -50,6 +50,8 @@ public class PostsController extends AbstractController {
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "获取文章详情")
     public APIResult<Post> queryPostById(@PathVariable("id") long postId,
                                          @RequestParam(value = "password", required = false) String password) {
-        return postService.queryPostById(postId, password, false, true);
+        APIResult<Post> postResult = postService.queryPostById(postId, password, false, true);
+        postService.addViews(postResult.getData().getId());
+        return postResult;
     }
 }

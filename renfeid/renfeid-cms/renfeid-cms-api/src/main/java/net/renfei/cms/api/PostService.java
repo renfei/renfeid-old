@@ -97,4 +97,6 @@ public interface PostService {
      * @return
      */
     APIResult deletePost(long postId);
+
+    APIResult addViews(long postId);
 }

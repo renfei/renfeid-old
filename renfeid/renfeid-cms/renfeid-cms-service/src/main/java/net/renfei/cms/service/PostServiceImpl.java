@@ -351,6 +351,14 @@ public class PostServiceImpl implements PostService {
         return APIResult.success();
     }
 
+    @Override
+    public APIResult addViews(long postId) {
+        Post post = convert(cmsPostsMapper.selectByPrimaryKey(postId));
+        post.setPostViews(post.getPostViews() + 1);
+        cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(post));
+        return APIResult.success();
+    }
+
     private void postCheck(String value, String prompt) {
         if (value == null || value.isEmpty()) {
             throw new BusinessException(prompt);
