@@ -16,6 +16,8 @@
 package net.renfei.server.controller;
 
 import net.renfei.common.core.config.SystemConfig;
+import net.renfei.common.core.service.SystemService;
+import net.renfei.uaa.api.entity.UserDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,8 @@ public abstract class AbstractController {
     protected SystemConfig systemConfig;
     @Autowired
     protected HttpServletRequest request;
+    @Autowired
+    protected SystemService systemService;
 
     /**
      * 应用到所有@RequestMapping注解方法，在其执行之前初始化数据绑定器
@@ -51,5 +55,7 @@ public abstract class AbstractController {
     public void modelAttribute(ModelAndView mv) {
     }
 
-
+    protected UserDetail currentUserDetail(){
+        return systemService.currentUserDetail();
+    }
 }
