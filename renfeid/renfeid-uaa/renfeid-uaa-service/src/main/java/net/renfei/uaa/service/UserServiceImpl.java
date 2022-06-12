@@ -36,10 +36,7 @@ import net.renfei.uaa.api.AuthorizationService;
 import net.renfei.uaa.api.JwtService;
 import net.renfei.uaa.api.RoleService;
 import net.renfei.uaa.api.UserService;
-import net.renfei.uaa.api.entity.ResetPasswordAo;
-import net.renfei.uaa.api.entity.SignInAo;
-import net.renfei.uaa.api.entity.SignUpAo;
-import net.renfei.uaa.api.entity.UserDetail;
+import net.renfei.uaa.api.entity.*;
 import net.renfei.uaa.repositories.UaaUserKeepNameMapper;
 import net.renfei.uaa.repositories.UaaUserMapper;
 import net.renfei.uaa.repositories.entity.UaaUser;
@@ -78,7 +75,6 @@ public class UserServiceImpl implements UserService {
     private final SystemService systemService;
     private final SnowflakeService snowflakeService;
     private final SystemLogService systemLogService;
-    private final AuthorizationService authorizationService;
     private final UaaUserKeepNameMapper uaaUserKeepNameMapper;
     private final VerificationCodeService verificationCodeService;
 
@@ -90,7 +86,6 @@ public class UserServiceImpl implements UserService {
                            SystemService systemService,
                            SnowflakeService snowflakeService,
                            SystemLogService systemLogService,
-                           AuthorizationService authorizationService,
                            UaaUserKeepNameMapper uaaUserKeepNameMapper,
                            VerificationCodeService verificationCodeService) {
         this.jwtService = jwtService;
@@ -101,7 +96,6 @@ public class UserServiceImpl implements UserService {
         this.systemService = systemService;
         this.snowflakeService = snowflakeService;
         this.systemLogService = systemLogService;
-        this.authorizationService = authorizationService;
         this.uaaUserKeepNameMapper = uaaUserKeepNameMapper;
         this.verificationCodeService = verificationCodeService;
     }
@@ -485,7 +479,7 @@ public class UserServiceImpl implements UserService {
         uaaUser.setEnabled(enable);
         if (!enable) {
             // 如果是禁用，Token一起删除
-            authorizationService.signOut(convert(uaaUser), request);
+            redisService.del(REDIS_TOKEN_KEY + uaaUser.getUsername());
         }
         uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
         return APIResult.success();
@@ -520,6 +514,11 @@ public class UserServiceImpl implements UserService {
         }
         uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
         return APIResult.success();
+    }
+
+    @Override
+    public APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request) {
+        return roleService.authorizationRoleByUser(userId, roleDetailList, request);
     }
 
     private UserDetail convert(UaaUser uaaUser) {

@@ -27,13 +27,18 @@ import net.renfei.server.controller.AbstractController;
 import net.renfei.uaa.api.AuthorizationService;
 import net.renfei.uaa.api.UserService;
 import net.renfei.uaa.api.entity.ResetPasswordAo;
+import net.renfei.uaa.api.entity.RoleDetail;
 import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static net.renfei.common.core.config.SystemConfig.MAX_USERNAME_LENGTH;
 
 /**
+ * 用户管理接口
+ *
  * @author renfei
  */
 @RestController
@@ -60,7 +65,8 @@ public class UserController extends AbstractController {
                   @RequestParam(value = "enabled", required = false) Boolean enabled,
                   @RequestParam(value = "pages", required = false) Integer pages,
                   @RequestParam(value = "rows", required = false) Integer rows) {
-        return userService.queryUserList(username, email, phone, ip, secretLevel, locked, enabled, pages, rows);
+        return userService.queryUserList(username, email, phone, ip, secretLevel,
+                locked, enabled, pages == null ? 1 : pages, rows == null ? 10 : rows);
     }
 
     @PostMapping("user")
@@ -104,26 +110,26 @@ public class UserController extends AbstractController {
 
     @PutMapping("user/{id}")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改用户资料", operation = OperationTypeEnum.UPDATE)
-    public APIResult<UserDetail> updateUser(@PathVariable("id") Long userId, @RequestBody UserDetail userDetail) {
+    public APIResult<UserDetail> updateUser(@PathVariable("id") long userId, @RequestBody UserDetail userDetail) {
         return userService.updateUser(userId, userDetail, request);
     }
 
     @PutMapping("user/{id}/secret-level/{secretLevel}")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "给用户定密", operation = OperationTypeEnum.UPDATE)
-    public APIResult determineUserSecretLevel(@PathVariable("id") Long userId,
+    public APIResult determineUserSecretLevel(@PathVariable("id") long userId,
                                               @PathVariable("secretLevel") SecretLevelEnum secretLevel) {
         return userService.determineUserSecretLevel(userId, secretLevel, request);
     }
 
     @PutMapping("user/{id}/enable/{enable}")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "用户启用或禁用", operation = OperationTypeEnum.UPDATE)
-    public APIResult enableUser(@PathVariable("id") Long userId, @PathVariable("enable") boolean enable) {
+    public APIResult enableUser(@PathVariable("id") long userId, @PathVariable("enable") boolean enable) {
         return userService.enableUser(userId, enable, request);
     }
 
     @PutMapping("user/{id}/reset-password")
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "重置用户密码", operation = OperationTypeEnum.UPDATE)
-    public APIResult resetPassword(@PathVariable("id") Long userId, @RequestBody ResetPasswordAo resetPassword) {
+    public APIResult resetPassword(@PathVariable("id") long userId, @RequestBody ResetPasswordAo resetPassword) {
         resetPassword.setPassword(authorizationService.decryptAesByKeyId(
                 resetPassword.getPassword(), resetPassword.getKeyUuid()
         ).getData());
@@ -131,11 +137,18 @@ public class UserController extends AbstractController {
     }
 
     @DeleteMapping("user/{id}")
-    public APIResult deleteUser(@PathVariable("id") Long userId) {
+    public APIResult deleteUser(@PathVariable("id") long userId) {
         // 由于需要可审计，避免毁尸灭迹，用户暂时不支持删除操作
         return APIResult.builder()
                 .code(StateCodeEnum.Failure)
                 .message("由于需要确保系统可审计可追踪，暂不支持用户删除操作。")
                 .build();
+    }
+
+    @PutMapping("user/{id}/role")
+    @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "编辑用户角色", operation = OperationTypeEnum.UPDATE)
+    public APIResult<List<RoleDetail>> authorizationRoleByUser(@PathVariable("id") long userId,
+                                                               @RequestBody List<RoleDetail> roleDetailList) {
+        return userService.authorizationRoleByUser(userId, roleDetailList, request);
     }
 }

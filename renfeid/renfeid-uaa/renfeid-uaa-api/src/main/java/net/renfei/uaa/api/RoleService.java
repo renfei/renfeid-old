@@ -16,9 +16,11 @@
 package net.renfei.uaa.api;
 
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.uaa.api.entity.Authority;
 import net.renfei.uaa.api.entity.AuthorityTypeEnum;
 import net.renfei.uaa.api.entity.RoleDetail;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -33,7 +35,7 @@ public interface RoleService {
      * @param haveBuiltInRoles 是否包含内置角色
      * @return 角色列表
      */
-    APIResult<List<RoleDetail>> allRoleList(boolean haveBuiltInRoles, int pages, int rows);
+    APIResult<List<RoleDetail>> queryRoleList(boolean haveBuiltInRoles, String roleName, int pages, int rows);
 
     /**
      * 根据资源ID获取所需的角色列表
@@ -51,4 +53,50 @@ public interface RoleService {
      * @return 用户拥有的角色列表
      */
     APIResult<List<RoleDetail>> queryRoleListByUser(long userId, int pages, int rows);
+
+    /**
+     * 给用户授予角色
+     *
+     * @param userId         用户ID
+     * @param roleDetailList 角色列表
+     * @param request        请求对象
+     * @return
+     */
+    APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request);
+
+    /**
+     * 查询角色拥有的权限列表
+     *
+     * @param roleId 角色ID
+     * @return
+     */
+    APIResult<List<Authority>> queryAuthorityListByRole(long roleId);
+
+    /**
+     * 创建角色
+     *
+     * @param roleDetail 角色详情
+     * @param request    请求对象
+     * @return
+     */
+    APIResult<RoleDetail> createRole(RoleDetail roleDetail, HttpServletRequest request);
+
+    /**
+     * 修改角色
+     *
+     * @param roleId     角色ID
+     * @param roleDetail 角色详情
+     * @param request    请求对象
+     * @return
+     */
+    APIResult<RoleDetail> updateRole(long roleId, RoleDetail roleDetail, HttpServletRequest request);
+
+    /**
+     * 删除角色
+     *
+     * @param roleId  角色ID
+     * @param request 请求对象
+     * @return
+     */
+    APIResult deleteRole(long roleId, HttpServletRequest request);
 }

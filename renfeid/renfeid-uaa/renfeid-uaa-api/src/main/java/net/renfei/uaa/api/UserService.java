@@ -18,12 +18,10 @@ package net.renfei.uaa.api;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.entity.ListData;
-import net.renfei.uaa.api.entity.ResetPasswordAo;
-import net.renfei.uaa.api.entity.UserDetail;
-import net.renfei.uaa.api.entity.SignInAo;
-import net.renfei.uaa.api.entity.SignUpAo;
+import net.renfei.uaa.api.entity.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户服务
@@ -146,4 +144,14 @@ public interface UserService {
      * @return
      */
     APIResult resetPassword(long userId, ResetPasswordAo resetPassword);
+
+    /**
+     * 给用户授予角色
+     *
+     * @param userId         用户ID
+     * @param roleDetailList 角色列表
+     * @param request        请求对象
+     * @return
+     */
+    APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request);
 }

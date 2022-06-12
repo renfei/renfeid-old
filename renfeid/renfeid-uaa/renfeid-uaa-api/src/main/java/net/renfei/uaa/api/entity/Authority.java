@@ -13,23 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.uaa.api;
-
-import net.renfei.common.api.constant.APIResult;
-import net.renfei.common.api.entity.ListData;
-import net.renfei.uaa.api.entity.SystemApi;
+package net.renfei.uaa.api.entity;
 
 /**
- * 系统API服务
+ * 权限
  *
  * @author renfei
  */
-public interface SystemApiService {
-    /**
-     * 获取全部系统API列表
-     *
-     * @return
-     */
-    APIResult<ListData<SystemApi>> allSystemApiList();
-    APIResult<ListData<SystemApi>> allSystemApiList(String url, int pages, int rows);
+public class Authority {
+    private AuthorityTypeEnum authorityType;
+    private Long targetId;
+
+    public AuthorityTypeEnum getAuthorityType() {
+        return authorityType;
+    }
+
+    public void setAuthorityType(AuthorityTypeEnum authorityType) {
+        this.authorityType = authorityType;
+    }
+
+    public Long getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
+    }
 }

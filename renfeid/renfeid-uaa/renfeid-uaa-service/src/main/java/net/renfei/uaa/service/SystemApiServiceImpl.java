@@ -49,9 +49,17 @@ public class SystemApiServiceImpl implements SystemApiService {
      */
     @Override
     public APIResult<ListData<SystemApi>> allSystemApiList() {
+        return this.allSystemApiList(null, 1, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public APIResult<ListData<SystemApi>> allSystemApiList(String url, int pages, int rows) {
         UaaSystemApiExample example = new UaaSystemApiExample();
+        if (url != null && !url.isEmpty()) {
+            example.createCriteria().andUrlPathLike("%" + url + "%");
+        }
         ListData<SystemApi> systemApiListData = new ListData<>();
-        try (Page<UaaSystemApi> page = PageHelper.startPage(1, Integer.MAX_VALUE)) {
+        try (Page<UaaSystemApi> page = PageHelper.startPage(pages, rows)) {
             uaaSystemApiMapper.selectByExample(example);
             systemApiListData.setPageNum(page.getPageNum());
             systemApiListData.setPageSize(page.getPageSize());

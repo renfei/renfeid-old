@@ -20,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 角色信息
@@ -35,6 +36,8 @@ public class RoleDetail implements ConfigAttribute, GrantedAuthority, Serializab
     private Date updateTime;
     private Boolean builtInRole;
     private String extendJson;
+
+    private List<Authority> authorityList;
 
     @Override
     public String getAttribute() {
@@ -100,5 +103,13 @@ public class RoleDetail implements ConfigAttribute, GrantedAuthority, Serializab
 
     public void setExtendJson(String extendJson) {
         this.extendJson = extendJson;
+    }
+
+    public List<Authority> getAuthorityList() {
+        return authorityList;
+    }
+
+    public void setAuthorityList(List<Authority> authorityList) {
+        this.authorityList = authorityList;
     }
 }
