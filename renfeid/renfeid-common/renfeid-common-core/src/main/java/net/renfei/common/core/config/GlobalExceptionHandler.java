@@ -22,10 +22,12 @@ import net.renfei.common.api.exception.NeedU2FException;
 import net.renfei.common.api.exception.OutOfSecretLevelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 全局异常捕获处理
@@ -37,8 +39,8 @@ public class GlobalExceptionHandler {
     private final static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(value = BusinessException.class)
-    public APIResult businessExceptionError(HttpServletRequest req, BusinessException e) {
-        logger.warn("Message: {} \n Request: {}", e.getMessage(), req, e);
+    public APIResult businessExceptionError(HttpServletRequest request, BusinessException e) {
+        logger.info("Request'{}':{}", request.getRequestURI(), e.getMessage());
         return APIResult.builder()
                 .code(StateCodeEnum.Failure)
                 .message(e.getMessage())
@@ -46,8 +48,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = OutOfSecretLevelException.class)
-    public APIResult outOfSecretLevelExceptionError(HttpServletRequest req, OutOfSecretLevelException e) {
-        logger.warn("Message: {} \n Request: {}", e.getMessage(), req, e);
+    public APIResult outOfSecretLevelExceptionError(HttpServletRequest request,
+                                                    HttpServletResponse response,
+                                                    OutOfSecretLevelException e) {
+        response.setStatus(403);
+        logger.warn("Request'{}':{}", request.getRequestURI(), e.getMessage());
         return APIResult.builder()
                 .code(StateCodeEnum.Forbidden)
                 .message(e.getMessage())
@@ -55,16 +60,31 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = NeedU2FException.class)
-    public APIResult needU2FExceptionError(HttpServletRequest req, NeedU2FException e) {
+    public APIResult needU2FExceptionError(NeedU2FException e) {
         return APIResult.builder()
                 .code(StateCodeEnum.NeedTOTP)
                 .message(e.getMessage())
                 .build();
     }
 
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    public APIResult httpRequestMethodNotSupportedExceptionError(HttpServletRequest request,
+                                                                 HttpServletResponse response,
+                                                                 HttpRequestMethodNotSupportedException e) {
+        response.setStatus(405);
+        logger.warn("Request'{}':{}", request.getRequestURI(), e.getMessage());
+        return APIResult.builder()
+                .code(StateCodeEnum.MethodNotAllowed)
+                .message(e.getMessage())
+                .build();
+    }
+
     @ExceptionHandler(value = RuntimeException.class)
-    public APIResult runtimeExceptionError(HttpServletRequest req, RuntimeException e) {
-        logger.error("Request: {}", req, e);
+    public APIResult runtimeExceptionError(HttpServletRequest request,
+                                           HttpServletResponse response,
+                                           RuntimeException e) {
+        response.setStatus(500);
+        logger.error("Request'{}':{}", request.getRequestURI(), e.getMessage(), e);
         return APIResult.builder()
                 .code(StateCodeEnum.Error)
                 .message("服务器发生了内部错误，请稍后重试。")
@@ -72,8 +92,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = Exception.class)
-    public APIResult exceptionError(HttpServletRequest req, Exception e) {
-        logger.error("Request: {}", req, e);
+    public APIResult exceptionError(HttpServletRequest request, HttpServletResponse response, Exception e) {
+        response.setStatus(500);
+        logger.error("Request'{}':{}", request.getRequestURI(), e.getMessage(), e);
         return APIResult.builder()
                 .code(StateCodeEnum.Error)
                 .message("服务器发生了内部错误，请稍后重试。")

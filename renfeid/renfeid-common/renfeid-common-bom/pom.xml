@@ -87,7 +87,13 @@
             <dependency>
                 <groupId>net.renfei</groupId>
                 <artifactId>ik-analyzer</artifactId>
-                <version>3.0.0.0</version>
+                <version>3.0.0.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.lucene</groupId>
+                        <artifactId>lucene-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
