@@ -18,6 +18,7 @@
         <module>renfeid-common-core</module>
         <module>renfeid-common-api</module>
         <module>renfeid-common-leaf</module>
+        <module>renfeid-common-search</module>
     </modules>
 
     <properties>

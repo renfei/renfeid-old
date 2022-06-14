@@ -19,10 +19,13 @@ package net.renfei.common.api.constant;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.utils.StringUtils;
 
+import java.io.Serializable;
+
 /**
  * @author renfei
  */
-public class APIResult<T> {
+public class APIResult<T> implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private StateCodeEnum stateCode;
     private Integer code;
     private String message;

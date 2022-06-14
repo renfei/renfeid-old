@@ -17,6 +17,7 @@ package net.renfei.common.core.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -25,7 +26,8 @@ import java.util.Date;
  * @author renfei
  */
 @Data
-public class SystemLogEntity {
+public class SystemLogEntity implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private Long id;
     private Date logTime;
     private String logLevel;

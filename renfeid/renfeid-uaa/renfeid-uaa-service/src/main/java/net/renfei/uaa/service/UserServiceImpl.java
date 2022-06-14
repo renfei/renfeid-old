@@ -23,6 +23,7 @@ import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.api.exception.NeedU2FException;
+import net.renfei.common.api.exception.OutOfSecretLevelException;
 import net.renfei.common.api.utils.ListUtils;
 import net.renfei.common.api.utils.StringUtils;
 import net.renfei.common.core.config.SystemConfig;
@@ -32,7 +33,6 @@ import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.service.*;
 import net.renfei.common.core.utils.DateUtils;
 import net.renfei.common.core.utils.IpUtils;
-import net.renfei.uaa.api.AuthorizationService;
 import net.renfei.uaa.api.JwtService;
 import net.renfei.uaa.api.RoleService;
 import net.renfei.uaa.api.UserService;
@@ -321,7 +321,7 @@ public class UserServiceImpl implements UserService {
         }
         if (secretLevel != null) {
             if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), secretLevel)) {
-                throw new BusinessException("根据您账户当前的保密等级，您无权查询比您更高保密等级的数据，请求已被拒绝。");
+                throw new OutOfSecretLevelException("根据您账户当前的保密等级，您无权查询比您更高保密等级的数据，请求已被拒绝。");
             }
             criteria.andSecretLevelEqualTo(secretLevel.getLevel());
         } else {
@@ -399,7 +399,7 @@ public class UserServiceImpl implements UserService {
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (uaaUser == null) {
-            throw new BusinessException("根据用户ID未找到该用户，请查正");
+            throw new BusinessException("根据用户ID未找到该用户，请查证");
         }
         UserDetail oldUserDetail = convert(uaaUser);
         if (uaaUser.getBuiltInUser()) {
@@ -413,7 +413,7 @@ public class UserServiceImpl implements UserService {
             // 如果不是修改自己的，那么需要判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                     "尝试修改高于自己密级的用户，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
-            throw new BusinessException("您修改的用户密级高于您的密级，您无权编辑，请求被拒绝");
+            throw new OutOfSecretLevelException("您修改的用户密级高于您的密级，您无权编辑，请求被拒绝");
         }
         // 只能修改以下内容，修改密码、更改密级等有专门的接口
         if (userDetail.getEmail() != null && !userDetail.getEmail().isEmpty()) {
@@ -439,17 +439,17 @@ public class UserServiceImpl implements UserService {
             // 判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                     "尝试定密密级高于系统允许的最大密级，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
-            throw new BusinessException("您定密的密级高于系统允许的最大密级，请求被拒绝");
+            throw new OutOfSecretLevelException("您定密的密级高于系统允许的最大密级，请求被拒绝");
         }
         if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), secretLevel)) {
             // 判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                     "尝试给用户定密高于自己的密级，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
-            throw new BusinessException("您定密的密级高于您自身的密级，请求被拒绝");
+            throw new OutOfSecretLevelException("您定密的密级高于您自身的密级，请求被拒绝");
         }
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
         if (uaaUser == null) {
-            throw new BusinessException("根据用户ID未找到该用户，请查正");
+            throw new BusinessException("根据用户ID未找到该用户，请查证");
         }
         UserDetail oldUserDetail = convert(uaaUser);
         if (uaaUser.getBuiltInUser()) {
@@ -463,7 +463,7 @@ public class UserServiceImpl implements UserService {
             // 如果不是修改自己的，那么需要判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                     "尝试修改高于自己密级的用户，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
-            throw new BusinessException("您修改的用户密级高于您的密级，您无权编辑，请求被拒绝");
+            throw new OutOfSecretLevelException("您修改的用户密级高于您的密级，您无权编辑，请求被拒绝");
         }
         uaaUser.setSecretLevel(secretLevel.getLevel());
         uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
@@ -474,7 +474,7 @@ public class UserServiceImpl implements UserService {
     public APIResult enableUser(long userId, boolean enable, HttpServletRequest request) {
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
         if (uaaUser == null) {
-            throw new BusinessException("根据用户ID未找到该用户，请查正");
+            throw new BusinessException("根据用户ID未找到该用户，请查证");
         }
         uaaUser.setEnabled(enable);
         if (!enable) {
@@ -489,7 +489,7 @@ public class UserServiceImpl implements UserService {
     public APIResult lockUser(long userId, boolean lock) {
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
         if (uaaUser == null) {
-            throw new BusinessException("根据用户ID未找到该用户，请查正");
+            throw new BusinessException("根据用户ID未找到该用户，请查证");
         }
         uaaUser.setLocked(lock);
         if (!lock) {
@@ -504,7 +504,7 @@ public class UserServiceImpl implements UserService {
     public APIResult resetPassword(long userId, ResetPasswordAo resetPassword) {
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
         if (uaaUser == null) {
-            throw new BusinessException("根据用户ID未找到该用户，请查正");
+            throw new BusinessException("根据用户ID未找到该用户，请查证");
         }
         try {
             uaaUser.setPassword(PasswordUtils.createHash(resetPassword.getPassword()));

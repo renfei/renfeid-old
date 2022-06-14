@@ -54,6 +54,11 @@
             </dependency>
             <dependency>
                 <groupId>net.renfei</groupId>
+                <artifactId>renfeid-common-search</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
                 <artifactId>renfeid-proprietary-discuz</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -78,6 +83,11 @@
                 <groupId>net.renfei</groupId>
                 <artifactId>cloudflare</artifactId>
                 <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
+                <artifactId>ik-analyzer</artifactId>
+                <version>3.0.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

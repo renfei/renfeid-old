@@ -18,6 +18,7 @@ package net.renfei.common.core.entity;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Properties;
 
 /**
@@ -26,7 +27,8 @@ import java.util.Properties;
  * @author renfei
  */
 @ToString
-public class EnvironmentInfo {
+public class EnvironmentInfo implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private final static Properties PROPERTIES = System.getProperties();
     @Getter
     private final User user;

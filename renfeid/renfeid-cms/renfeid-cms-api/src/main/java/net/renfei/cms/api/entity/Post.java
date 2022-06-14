@@ -18,12 +18,14 @@ package net.renfei.cms.api.entity;
 import net.renfei.cms.api.constant.enums.PostStatusEnum;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author renfei
  */
-public class Post {
+public class Post implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private Long id;
     private Long categoryId;
     private Long postAuthor;

@@ -13,31 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.uaa.api.entity;
-
-import java.io.Serializable;
+package net.renfei.common.api.exception;
 
 /**
+ * 密级越界异常
+ *
  * @author renfei
  */
-public class SignUpActivationAo implements Serializable {
-    private static final long serialVersionUID = -3316408227872898096L;
-    private String emailOrPhone;
-    private String code;
-
-    public String getEmailOrPhone() {
-        return emailOrPhone;
-    }
-
-    public void setEmailOrPhone(String emailOrPhone) {
-        this.emailOrPhone = emailOrPhone;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+public class OutOfSecretLevelException extends RuntimeException {
+    public OutOfSecretLevelException(String message) {
+        super(message);
     }
 }

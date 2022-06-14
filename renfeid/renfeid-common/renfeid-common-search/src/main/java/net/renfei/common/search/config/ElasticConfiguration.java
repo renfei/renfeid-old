@@ -13,31 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.uaa.api.entity;
+package net.renfei.common.search.config;
 
-import java.io.Serializable;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 /**
  * @author renfei
  */
-public class SignUpActivationAo implements Serializable {
-    private static final long serialVersionUID = -3316408227872898096L;
-    private String emailOrPhone;
-    private String code;
-
-    public String getEmailOrPhone() {
-        return emailOrPhone;
-    }
-
-    public void setEmailOrPhone(String emailOrPhone) {
-        this.emailOrPhone = emailOrPhone;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
+@Configuration
+@EnableElasticsearchRepositories(basePackages = "net.renfei.common.search.repository")
+public class ElasticConfiguration {
 }

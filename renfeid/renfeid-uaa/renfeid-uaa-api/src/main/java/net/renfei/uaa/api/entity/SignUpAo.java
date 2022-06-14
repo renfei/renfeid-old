@@ -15,12 +15,15 @@
  */
 package net.renfei.uaa.api.entity;
 
+import java.io.Serializable;
+
 /**
  * 注册请求对象
  *
  * @author renfei
  */
-public class SignUpAo {
+public class SignUpAo implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private String userName;
     private String password;
     private String email;

@@ -15,12 +15,15 @@
  */
 package net.renfei.uaa.api.entity;
 
+import java.io.Serializable;
+
 /**
  * 重置密码请求对象
  *
  * @author renfei
  */
-public class ResetPasswordAo {
+public class ResetPasswordAo implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private String password;
     private String tOtp;
     private String keyUuid;

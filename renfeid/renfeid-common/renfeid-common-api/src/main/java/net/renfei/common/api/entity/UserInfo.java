@@ -17,12 +17,14 @@ package net.renfei.common.api.entity;
 
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author renfei
  */
-public class UserInfo {
+public class UserInfo implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private Long id;
     private String uuid;
     private String username;

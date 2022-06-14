@@ -37,7 +37,7 @@
 | &nbsp;&nbsp; - renfeid-common-bom         | 全局统一制品清单         |
 | &nbsp;&nbsp; - renfeid-common-core        | 核心服务             |
 | &nbsp;&nbsp; - renfeid-common-leaf        | 分布式发号器雪花算法（美团实现） |
-| + renfeid-proprietary                     | 任霏博客私有功能         |
+| + renfeid-proprietary                     | 任霏博客私有功能（闭源）     |
 | &nbsp;&nbsp; - renfeid-proprietary-discuz | 与Discuz的集成       |
 | + renfeid-server                          | 服务入口（类似微服务的网关）   |
 | + renfeid-uaa                             | 用户认证与鉴权          |

@@ -15,12 +15,15 @@
  */
 package net.renfei.uaa.api.entity;
 
+import java.io.Serializable;
+
 /**
  * 权限
  *
  * @author renfei
  */
-public class Authority {
+public class Authority implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private AuthorityTypeEnum authorityType;
     private Long targetId;
 

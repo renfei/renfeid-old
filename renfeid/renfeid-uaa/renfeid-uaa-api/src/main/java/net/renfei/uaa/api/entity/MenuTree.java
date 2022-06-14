@@ -15,6 +15,7 @@
  */
 package net.renfei.uaa.api.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,8 @@ import java.util.List;
  *
  * @author renfei
  */
-public class MenuTree {
+public class MenuTree implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
     private Long id;
     private Long pid;
     private String menuName;

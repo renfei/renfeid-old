@@ -32,6 +32,7 @@ import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.exception.BusinessException;
+import net.renfei.common.api.exception.OutOfSecretLevelException;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.service.RedisService;
 import net.renfei.common.core.service.SnowflakeService;
@@ -170,43 +171,25 @@ public class PostServiceImpl implements PostService {
             }
         }
         if (post == null) {
-            return APIResult.builder()
-                    .code(StateCodeEnum.NotFound)
-                    .message("内容不存在")
-                    .build();
+            throw new BusinessException("内容不存在");
         }
         if (SecretLevelEnum.outOfSecretLevel(userSecretLevel, post.getSecretLevel())) {
-            return APIResult.builder()
-                    .code(StateCodeEnum.Forbidden)
-                    .message("您所在密级无权查看此内容")
-                    .build();
+            throw new BusinessException("您所在密级无权查看此内容");
         }
         if (!isAdmin) {
             // 如果不是管理员，那么还需要判断内容的状态是否已经发布
             if (!PostStatusEnum.PUBLISH.equals(post.getPostStatus())) {
-                return APIResult.builder()
-                        .code(StateCodeEnum.NotFound)
-                        .message("内容不存在")
-                        .build();
+                throw new BusinessException("内容不存在");
             }
             if (new Date().before(post.getPostDate())) {
-                return APIResult.builder()
-                        .code(StateCodeEnum.NotFound)
-                        .message("内容不存在")
-                        .build();
+                throw new BusinessException("内容不存在");
             }
             if (post.getPostPassword() != null && !post.getPostPassword().isEmpty()) {
                 if (password == null || password.isEmpty()) {
-                    return APIResult.builder()
-                            .code(StateCodeEnum.NeedPostPassword)
-                            .message("内容受到密码保护，需要输入密码访问")
-                            .build();
+                    throw new BusinessException("内容受到密码保护，需要输入密码访问");
                 }
                 if (post.getPostPassword().equals(password)) {
-                    return APIResult.builder()
-                            .code(StateCodeEnum.Forbidden)
-                            .message("密码错误")
-                            .build();
+                    throw new BusinessException("密码错误");
                 }
             }
         }
@@ -256,10 +239,7 @@ public class PostServiceImpl implements PostService {
     public APIResult<Post> updatePost(long postId, Post post) {
         Post oldPost = convert(cmsPostsMapper.selectByPrimaryKey(postId));
         if (oldPost == null) {
-            return APIResult.builder()
-                    .code(StateCodeEnum.Failure)
-                    .message("根据内容ID未找到内容，请重试")
-                    .build();
+            throw new BusinessException("根据内容ID未找到内容，请重试");
         }
         postCheck(post.getPostTitle(), "标题不能为空");
         postCheck(post.getPostContent(), "内容不能为空");
@@ -314,7 +294,7 @@ public class PostServiceImpl implements PostService {
         }
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), oldPost.getSecretLevel())) {
-            throw new BusinessException("内容密级超过您账号的密级，请求被拒绝");
+            throw new OutOfSecretLevelException("内容密级超过您账号的密级，请求被拒绝");
         }
         oldPost.setPostStatus(PostStatusEnum.OFFLINE);
         oldPost.setPostModified(new Date());
@@ -338,7 +318,7 @@ public class PostServiceImpl implements PostService {
         }
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), oldPost.getSecretLevel())) {
-            throw new BusinessException("内容密级超过您账号的密级，请求被拒绝");
+            throw new OutOfSecretLevelException("内容密级超过您账号的密级，请求被拒绝");
         }
         oldPost.setPostStatus(PostStatusEnum.DELETED);
         oldPost.setPostModified(new Date());
@@ -367,18 +347,18 @@ public class PostServiceImpl implements PostService {
 
     private void postCheckSecretLevel(Post post) {
         if (SecretLevelEnum.outOfSecretLevel(systemConfig.getMaxSecretLevel(), post.getSecretLevel())) {
-            throw new BusinessException("内容密级超过当前系统允许的最大等级，请求被拒绝");
+            throw new OutOfSecretLevelException("内容密级超过当前系统允许的最大等级，请求被拒绝");
         }
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), post.getSecretLevel())) {
-            throw new BusinessException("内容密级超过您账号的密级，请求被拒绝");
+            throw new OutOfSecretLevelException("内容密级超过您账号的密级，请求被拒绝");
         }
         CmsCategory cmsCategory = cmsCategoryMapper.selectByPrimaryKey(post.getCategoryId());
         if (cmsCategory == null) {
             throw new BusinessException("分类栏目ID不正确，未能找到该分类");
         }
         if (SecretLevelEnum.outOfSecretLevel(SecretLevelEnum.valueOf(cmsCategory.getSecretLevel()), post.getSecretLevel())) {
-            throw new BusinessException("内容密级超过内容分类栏目的密级，请求被拒绝");
+            throw new OutOfSecretLevelException("内容密级超过内容分类栏目的密级，请求被拒绝");
         }
     }
 
