@@ -99,7 +99,7 @@
         <perf4j.version>0.9.16</perf4j.version>
         <curator.version>5.2.0</curator.version>
         <openfeign.version>3.1.1</openfeign.version>
-        <sentry.version>5.6.1</sentry.version>
+        <sentry.version>6.1.0</sentry.version>
         <email.version>2.6.4</email.version>
         <springdoc.version>1.6.6</springdoc.version>
         <mariadb.client.version>2.7.5</mariadb.client.version>
