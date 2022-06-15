@@ -15,6 +15,7 @@
  */
 package net.renfei.common.core.service.impl;
 
+import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.service.WordSegmentationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,8 @@ import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.dic.CustomDictionary;
 import org.wltea.analyzer.dic.Dictionary;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -40,13 +43,18 @@ import java.util.Map;
 public class WordSegmentationServiceImpl implements WordSegmentationService {
     private final static Logger logger = LoggerFactory.getLogger(WordSegmentationServiceImpl.class);
 
-    public WordSegmentationServiceImpl() {
+    public WordSegmentationServiceImpl(SystemConfig systemConfig) {
         Dictionary dictionary = Dictionary.getInstance();
-        if (!dictionary.isLoadedCustomDictionary()) {
+        if (systemConfig.getMainDict() != null
+                && !systemConfig.getMainDict().isEmpty()
+                && !dictionary.isLoadedCustomDictionary()) {
             // 没有加载自定义词典，加载自定义词典
             CustomDictionary customDictionary = new CustomDictionary();
-            // TODO
-            // customDictionary.setMainDictInputStream(new FileInputStream("/Users/renfei/Downloads/sogou.txt"));
+            try {
+                customDictionary.setMainDictInputStream(new FileInputStream(systemConfig.getMainDict()));
+            } catch (FileNotFoundException e) {
+                logger.error(e.getMessage(), e);
+            }
             dictionary.loadCustomDictionary(customDictionary);
         }
     }

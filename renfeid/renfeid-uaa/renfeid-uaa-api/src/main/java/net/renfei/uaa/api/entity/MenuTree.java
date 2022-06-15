@@ -15,6 +15,8 @@
  */
 package net.renfei.uaa.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -24,23 +26,40 @@ import java.util.List;
  *
  * @author renfei
  */
+@Schema(title = "菜单树")
 public class MenuTree implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "菜单ID")
     private Long id;
+    @Schema(description = "菜单父级ID")
     private Long pid;
+    @Schema(description = "菜单名称")
     private String menuName;
+    @Schema(description = "菜单图标")
     private String menuIcon;
+    @Schema(description = "菜单目标")
     private String menuTarget;
+    @Schema(description = "菜单样式类")
     private String menuClass;
+    @Schema(description = "菜单标题")
     private String menuTitle;
+    @Schema(description = "菜单点击事件")
     private String menuOnclick;
+    @Schema(description = "菜单排序")
     private Integer menuOrder;
+    @Schema(description = "是否启用")
     private Boolean enable;
+    @Schema(description = "添加时间")
     private Date addTime;
+    @Schema(description = "更新时间")
     private Date updateTime;
+    @Schema(description = "菜单链接")
     private String menuHref;
+    @Schema(description = "菜单样式")
     private String menuCss;
+    @Schema(description = "菜单扩展预留")
     private String extendJson;
+    @Schema(description = "子级菜单")
     private List<MenuTree> child;
 
     public Long getId() {

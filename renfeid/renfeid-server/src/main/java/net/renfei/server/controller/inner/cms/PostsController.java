@@ -15,6 +15,9 @@
  */
 package net.renfei.server.controller.inner.cms;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.cms.api.PostService;
 import net.renfei.cms.api.entity.Post;
 import net.renfei.common.api.constant.APIResult;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/-/api/cms")
+@Tag(name = "文章内容接口", description = "文章内容接口")
 public class PostsController extends AbstractController {
     private final PostService postService;
 
@@ -39,6 +43,12 @@ public class PostsController extends AbstractController {
     }
 
     @GetMapping("posts")
+    @Operation(summary = "查询已发布的文章列表", tags = {"文章内容接口"},
+            parameters = {
+                    @Parameter(name = "categoryId", description = "内容分类ID"),
+                    @Parameter(name = "pages", description = "页码"),
+                    @Parameter(name = "rows", description = "每页数据量")
+            })
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询已发布的文章列表")
     public APIResult<ListData<Post>> queryPostList(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                                    @RequestParam(value = "pages", required = false) Integer pages,
@@ -47,6 +57,10 @@ public class PostsController extends AbstractController {
     }
 
     @GetMapping("posts/{id}")
+    @Operation(summary = "获取文章内容详情", tags = {"文章内容接口"}, parameters = {
+            @Parameter(name = "id", description = "文章内容ID"),
+            @Parameter(name = "password", description = "文章内容密码")
+    })
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "获取文章详情")
     public APIResult<Post> queryPostById(@PathVariable("id") long postId,
                                          @RequestParam(value = "password", required = false) String password) {

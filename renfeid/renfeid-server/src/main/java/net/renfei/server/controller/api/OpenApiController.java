@@ -15,7 +15,12 @@
  */
 package net.renfei.server.controller.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.common.api.exception.BusinessException;
+import net.renfei.common.core.annotation.OperationLog;
+import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.service.WordSegmentationService;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.server.entity.ExtractKeywordAo;
@@ -33,6 +38,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
+@Tag(name = "开放API接口", description = "开放API接口")
 public class OpenApiController extends AbstractController {
     private final WordSegmentationService wordSegmentationService;
 
@@ -41,7 +47,15 @@ public class OpenApiController extends AbstractController {
     }
 
     @PostMapping("extractKeywords")
+    @Operation(summary = "从内容中提取关键字（基于词频）", tags = {"开放API接口"})
+    @OperationLog(module = SystemTypeEnum.API, desc = "从内容中提取关键字")
     public APIResult<List<String>> extractKeywords(@RequestBody ExtractKeywordAo extractKeyword) {
+        if (extractKeyword == null || extractKeyword.getContent() == null || extractKeyword.getContent().isEmpty()) {
+            throw new BusinessException("请求体为空，请查证后重试。");
+        }
+        if (extractKeyword.getContent().length() > 10000) {
+            throw new BusinessException("目前关键词提取支持最大长度为[10000]，请删减后重试。");
+        }
         return new APIResult<>(wordSegmentationService.extractKeywords(extractKeyword.getContent(), 2, 10));
     }
 }

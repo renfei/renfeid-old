@@ -61,6 +61,7 @@ public class SystemConfig {
     private Jwt jwt;
     private UCenter uCenter;
     private List<String> authIgnore;
+    private String mainDict;
     private AWS aws;
     private Aliyun aliyun;
     private Leaf leaf;

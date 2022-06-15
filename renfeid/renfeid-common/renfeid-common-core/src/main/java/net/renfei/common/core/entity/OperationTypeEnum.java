@@ -27,9 +27,13 @@ public enum OperationTypeEnum {
      */
     SIGNIN("登录"),
     /**
+     * 注册
+     */
+    SIGNUP("注册"),
+    /**
      * 登出
      */
-    SIGNUP("登出");
+    SIGNOUT("登出");
     private final String describe;
 
     OperationTypeEnum(String describe) {

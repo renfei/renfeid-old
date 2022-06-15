@@ -15,6 +15,8 @@
  */
 package net.renfei.uaa.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 /**
@@ -22,12 +24,18 @@ import java.io.Serializable;
  *
  * @author renfei
  */
+@Schema(title = "登录请求对象")
 public class SignInAo implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "用户名（支持邮箱和手机号）")
     private String userName;
+    @Schema(description = "密码（加密后传输）")
     private String password;
+    @Schema(description = "一次性密码（可选）")
     private String tOtp;
+    @Schema(description = "加密密码使用的秘钥UUID编号")
     private String keyUuid;
+    @Schema(description = "是否使用验证码登录")
     private Boolean useVerCode;
 
     public String getUserName() {

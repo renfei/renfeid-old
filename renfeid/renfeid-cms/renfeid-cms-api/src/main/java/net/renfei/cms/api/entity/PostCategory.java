@@ -15,6 +15,7 @@
  */
 package net.renfei.cms.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 
 import java.io.Serializable;
@@ -24,11 +25,16 @@ import java.io.Serializable;
  *
  * @author renfei
  */
+@Schema(title = "文章内容分类")
 public class PostCategory implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "ID")
     private Long id;
+    @Schema(description = "英文名称")
     private String enName;
+    @Schema(description = "中文名称")
     private String zhName;
+    @Schema(description = "密级")
     private SecretLevelEnum secretLevel;
 
     public Long getId() {

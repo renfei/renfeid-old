@@ -15,6 +15,8 @@
  */
 package net.renfei.server.controller.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.entity.UserInfo;
@@ -22,7 +24,6 @@ import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
-import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.common.core.service.SystemService;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.uaa.api.AuthorizationService;
@@ -38,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "认证接口", description = "用户认证与鉴权接口")
 public class AuthorizationController extends AbstractController {
     private final SystemService systemService;
     private final AuthorizationService authorizationService;
@@ -54,6 +56,7 @@ public class AuthorizationController extends AbstractController {
      * @return
      */
     @GetMapping("secretKey")
+    @Operation(summary = "向服务器申请服务器公钥", tags = {"认证接口"})
     @OperationLog(module = SystemTypeEnum.AUTH, desc = "向服务器申请服务器公钥")
     APIResult<SecretKey> requestServerSecretKey() {
         return authorizationService.requestServerSecretKey();
@@ -66,12 +69,15 @@ public class AuthorizationController extends AbstractController {
      * @return
      */
     @PostMapping("secretKey")
+    @Operation(summary = "上报客户端公钥，并下发AES秘钥", tags = {"认证接口"})
     @OperationLog(module = SystemTypeEnum.AUTH, desc = "上报客户端公钥", operation = OperationTypeEnum.CREATE)
     APIResult<SecretKey> settingClientSecretKey(@RequestBody SecretKey secretKey) {
         return authorizationService.settingClientSecretKey(secretKey);
     }
 
     @PostMapping("signIn")
+    @Operation(summary = "登录接口", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "登录", operation = OperationTypeEnum.SIGNIN)
     APIResult<SignInVo> signIn(@RequestBody SignInAo sign) {
         UserDetail userDetail = systemService.currentUserDetail();
         if (userDetail != null) {
@@ -81,6 +87,8 @@ public class AuthorizationController extends AbstractController {
     }
 
     @PostMapping("signUp")
+    @Operation(summary = "注册接口", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "注册", operation = OperationTypeEnum.SIGNUP)
     APIResult signUp(@RequestBody SignUpAo signUp) {
         UserDetail userDetail = systemService.currentUserDetail();
         if (userDetail != null) {
@@ -90,17 +98,23 @@ public class AuthorizationController extends AbstractController {
     }
 
     @DeleteMapping("signOut")
+    @Operation(summary = "登出接口", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "登出", operation = OperationTypeEnum.SIGNOUT)
     APIResult signOut() {
         return authorizationService.signOut(systemService.currentUserDetail(), request);
     }
 
     @PostMapping("signUp/activation")
+    @Operation(summary = "账户激活接口", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "账户激活", operation = OperationTypeEnum.UPDATE)
     APIResult doSignUpActivation(@RequestBody SignUpActivationAo signUpActivation) {
         authorizationService.activation(signUpActivation);
         return APIResult.success();
     }
 
     @GetMapping("current/user")
+    @Operation(summary = "获取当前登录的用户信息接口", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "获取当前登录的用户信息", operation = OperationTypeEnum.RETRIEVE)
     APIResult<UserInfo> requestCurrentUserInfo(HttpServletResponse response) {
         UserInfo userInfo = authorizationService.requestCurrentUserInfo();
         if (userInfo == null) {

@@ -15,14 +15,21 @@
  */
 package net.renfei.uaa.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 /**
+ * 登录响应对象
+ *
  * @author renfei
  */
+@Schema(title = "登录响应对象")
 public class SignInVo implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "Token令牌")
     private String accessToken;
+    @Schema(description = "UCenter的登陆脚本")
     private String ucScript;
 
     public String getAccessToken() {

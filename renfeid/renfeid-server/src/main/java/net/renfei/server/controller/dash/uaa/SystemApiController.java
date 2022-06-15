@@ -15,6 +15,9 @@
  */
 package net.renfei.server.controller.dash.uaa;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.annotation.OperationLog;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/_/api/uaa")
+@Tag(name = "系统API接口列表", description = "系统API接口列表")
 public class SystemApiController extends AbstractController {
     private final SystemApiService systemApiService;
 
@@ -42,6 +46,12 @@ public class SystemApiController extends AbstractController {
     }
 
     @GetMapping("system/api")
+    @Operation(summary = "查询系统API接口列表", tags = {"系统API接口列表"},
+            parameters = {
+                    @Parameter(name = "url", description = "API地址"),
+                    @Parameter(name = "pages", description = "页码"),
+                    @Parameter(name = "rows", description = "每页数据量")
+            }, description = "这里注册着系统全部API接口地址，每次系统新增接口以后由专业运维人员去数据库中添加，所以此资源不提供增删改")
     @OperationLog(module = SystemTypeEnum.SYS_ROLE, desc = "查询系统API列表")
     public APIResult<ListData<SystemApi>> querySystemApi(@RequestParam(value = "url", required = false) String url,
                                                          @RequestParam(value = "pages", required = false) Integer pages,

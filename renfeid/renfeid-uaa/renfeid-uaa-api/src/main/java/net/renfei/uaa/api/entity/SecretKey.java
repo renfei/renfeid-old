@@ -15,15 +15,21 @@
  */
 package net.renfei.uaa.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 /**
  * @author renfei
  */
+@Schema(title = "秘钥交换对象")
 public class SecretKey implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "秘钥UUID编号")
     private String uuid;
+    @Schema(description = "公钥")
     private String publicKey;
+    @Schema(description = "私钥")
     private String privateKey;
 
     public String getPublicKey() {

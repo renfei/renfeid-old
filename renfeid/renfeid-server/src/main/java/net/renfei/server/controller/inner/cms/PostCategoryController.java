@@ -15,6 +15,9 @@
  */
 package net.renfei.server.controller.inner.cms;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.cms.api.PostCategoryService;
 import net.renfei.cms.api.entity.PostCategory;
 import net.renfei.common.api.constant.APIResult;
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/-/api/cms")
+@Tag(name = "内容分类接口", description = "内容分类接口")
 public class PostCategoryController extends AbstractController {
     private final SystemService systemService;
     private final PostCategoryService postCategoryService;
@@ -48,7 +52,13 @@ public class PostCategoryController extends AbstractController {
     }
 
     @GetMapping("posts/category")
-    @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询文章分类列表")
+    @Operation(summary = "查询文章内容分类列表", tags = {"内容分类接口"},
+            parameters = {
+                    @Parameter(name = "enName", description = "分类英文名称"),
+                    @Parameter(name = "pages", description = "页码"),
+                    @Parameter(name = "rows", description = "每页数据量")
+            })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询文章内容分类列表")
     public APIResult<ListData<PostCategory>>
     queryPostCategoryList(@RequestParam(value = "enName", required = false) String enName,
                           @RequestParam(value = "pages", required = false) int pages,

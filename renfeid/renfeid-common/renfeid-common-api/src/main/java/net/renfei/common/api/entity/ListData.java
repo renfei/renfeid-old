@@ -1,18 +1,27 @@
 package net.renfei.common.api.entity;
 
 import com.github.pagehelper.Page;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.List;
 
+@Schema(title = "分页响应对象")
 public class ListData<T> implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "当前页码")
     private int pageNum = 1;
+    @Schema(description = "每页容量")
     private int pageSize = 10;
+    @Schema(description = "起始行")
     private long startRow = 0;
+    @Schema(description = "结束行")
     private long endRow = 0;
+    @Schema(description = "总数量")
     private long total = 0;
+    @Schema(description = "总页数")
     private int pages = 0;
+    @Schema(description = "数据负载")
     private List<T> data;
 
     public ListData() {

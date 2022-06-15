@@ -15,6 +15,9 @@
  */
 package net.renfei.server.controller.dash.cms;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.cms.api.PostCategoryService;
 import net.renfei.cms.api.entity.PostCategory;
 import net.renfei.common.api.constant.APIResult;
@@ -27,12 +30,13 @@ import net.renfei.server.controller.AbstractController;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 内容分类管理接口
+ * 文章内容分类管理接口
  *
  * @author renfei
  */
 @RestController
 @RequestMapping("/_/api/cms")
+@Tag(name = "文章内容分类管理接口", description = "文章内容分类管理接口")
 public class PostCategoryDashController extends AbstractController {
     private final PostCategoryService postCategoryService;
 
@@ -41,7 +45,15 @@ public class PostCategoryDashController extends AbstractController {
     }
 
     @GetMapping("posts/category")
-    @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询文章分类列表")
+    @Operation(summary = "查询文章内容分类列表", tags = {"文章内容分类管理接口"},
+            parameters = {
+                    @Parameter(name = "enName", description = "分类英文名称"),
+                    @Parameter(name = "zhName", description = "分类中文名称"),
+                    @Parameter(name = "secretLevel", description = "密级"),
+                    @Parameter(name = "pages", description = "页码"),
+                    @Parameter(name = "rows", description = "每页数据量")
+            })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询文章内容分类列表")
     public APIResult<ListData<PostCategory>>
     queryPostCategoryList(@RequestParam(value = "enName", required = false) String enName,
                           @RequestParam(value = "zhName", required = false) String zhName,
@@ -52,20 +64,27 @@ public class PostCategoryDashController extends AbstractController {
     }
 
     @PostMapping("posts/category")
-    @OperationLog(module = SystemTypeEnum.POSTS, desc = "创建文章分类", operation = OperationTypeEnum.CREATE)
+    @Operation(summary = "创建文章内容分类", tags = {"文章内容分类管理接口"})
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "创建文章内容分类", operation = OperationTypeEnum.CREATE)
     public APIResult<PostCategory> createPostCategory(@RequestBody PostCategory postCategory) {
         return postCategoryService.createPostCategory(postCategory);
     }
 
     @PutMapping("posts/category/{id}")
-    @OperationLog(module = SystemTypeEnum.POSTS, desc = "修改文章分类", operation = OperationTypeEnum.UPDATE)
+    @Operation(summary = "修改文章内容分类", tags = {"文章内容分类管理接口"}, parameters = {
+            @Parameter(name = "id", description = "文章内容分类ID")
+    })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "修改文章内容分类", operation = OperationTypeEnum.UPDATE)
     public APIResult<PostCategory> updatePostCategory(@PathVariable("id") long categoryId,
                                                       @RequestBody PostCategory postCategory) {
         return postCategoryService.updatePostCategory(categoryId, postCategory);
     }
 
     @DeleteMapping("posts/category/{id}")
-    @OperationLog(module = SystemTypeEnum.POSTS, desc = "删除文章分类", operation = OperationTypeEnum.DELETE)
+    @Operation(summary = "删除文章内容分类", tags = {"文章内容分类管理接口"}, parameters = {
+            @Parameter(name = "id", description = "文章内容分类ID")
+    })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "删除文章内容分类", operation = OperationTypeEnum.DELETE)
     public APIResult deletePostCategory(@PathVariable("id") long categoryId) {
         return postCategoryService.deletePostCategory(categoryId);
     }

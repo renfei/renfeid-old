@@ -15,6 +15,7 @@
  */
 package net.renfei.uaa.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -27,16 +28,25 @@ import java.util.List;
  *
  * @author renfei
  */
+@Schema(title = "角色对象")
 public class RoleDetail implements ConfigAttribute, GrantedAuthority, Serializable {
     private static final long serialVersionUID = -5194970536302876575L;
+    @Schema(description = "角色ID")
     private Long id;
+    @Schema(description = "角色名称")
     private String roleName;
+    @Schema(description = "角色描述")
     private String roleDescribe;
+    @Schema(description = "添加时间")
     private Date addTime;
+    @Schema(description = "更新时间")
     private Date updateTime;
+    @Schema(description = "是否是内置角色")
     private Boolean builtInRole;
+    @Schema(description = "扩展预留")
     private String extendJson;
 
+    @Schema(description = "拥有的权限列表")
     private List<Authority> authorityList;
 
     @Override

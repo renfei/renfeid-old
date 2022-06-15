@@ -15,12 +15,16 @@
  */
 package net.renfei.server.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * 提取关键词请求对象
  *
  * @author renfei
  */
+@Schema(title = "提取关键词请求对象")
 public class ExtractKeywordAo {
+    @Schema(description = "待提取关键词的内容", maxLength = 10000)
     private String content;
 
     public String getContent() {

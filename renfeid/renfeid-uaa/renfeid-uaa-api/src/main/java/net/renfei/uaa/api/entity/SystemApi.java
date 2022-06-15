@@ -15,6 +15,8 @@
  */
 package net.renfei.uaa.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 /**
@@ -22,12 +24,18 @@ import java.io.Serializable;
  *
  * @author renfei
  */
+@Schema(title = "系统API")
 public class SystemApi implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "ID")
     private Long id;
+    @Schema(description = "API地址")
     private String urlPath;
+    @Schema(description = "请求方法")
     private String methodName;
+    @Schema(description = "概述")
     private String summary;
+    @Schema(description = "详细描述")
     private String description;
 
     public Long getId() {

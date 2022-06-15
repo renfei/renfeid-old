@@ -15,14 +15,21 @@
  */
 package net.renfei.uaa.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 /**
+ * 注册激活对象
+ *
  * @author renfei
  */
+@Schema(title = "注册激活对象")
 public class SignUpActivationAo implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "邮箱或手机号")
     private String emailOrPhone;
+    @Schema(description = "验证码")
     private String code;
 
     public String getEmailOrPhone() {

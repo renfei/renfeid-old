@@ -13,6 +13,7 @@
         <renfeid.version>3.0.0</renfeid.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <springdoc.version>1.6.9</springdoc.version>
         <druid.version>1.2.8</druid.version>
         <mybatis.version>2.2.2</mybatis.version>
         <pagehelper.version>1.4.1</pagehelper.version>
@@ -94,6 +95,11 @@
                         <artifactId>lucene-core</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

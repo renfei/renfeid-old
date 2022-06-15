@@ -15,6 +15,7 @@
  */
 package net.renfei.cms.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import net.renfei.cms.api.constant.enums.PostStatusEnum;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 
@@ -22,35 +23,64 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 文章内容对象
+ *
  * @author renfei
  */
+@Schema(title = "文章内容对象")
 public class Post implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "ID")
     private Long id;
+    @Schema(description = "内容分类ID")
     private Long categoryId;
+    @Schema(description = "作者ID")
     private Long postAuthor;
+    @Schema(description = "发布时间")
     private Date postDate;
+    @Schema(description = "文章状态")
     private PostStatusEnum postStatus;
+    @Schema(description = "浏览量")
     private Long postViews;
+    @Schema(description = "评论状态")
     private String commentStatus;
+    @Schema(description = "文章内容密码")
     private String postPassword;
+    @Schema(description = "文章内容修改时间")
     private Date postModified;
+    @Schema(description = "文章内容修改人ID")
     private Long postModifiedUser;
+    @Schema(description = "文章内容历史记录父级ID")
     private Long postParent;
+    @Schema(description = "修改版本号")
     private Integer versionNumber;
+    @Schema(description = "点赞量")
     private Long thumbsUp;
+    @Schema(description = "点踩量")
     private Long thumbsDown;
+    @Schema(description = "平均浏览量")
     private Double avgViews;
+    @Schema(description = "平均评论量")
     private Double avgComment;
+    @Schema(description = "排名指数")
     private Double pageRank;
+    @Schema(description = "密级")
     private SecretLevelEnum secretLevel;
+    @Schema(description = "是否原创")
     private Boolean isOriginal;
+    @Schema(description = "特色图像")
     private String featuredImage;
+    @Schema(description = "内容标题")
     private String postTitle;
+    @Schema(description = "内容关键字")
     private String postKeyword;
+    @Schema(description = "内容摘要")
     private String postExcerpt;
+    @Schema(description = "内容主体")
     private String postContent;
+    @Schema(description = "原文作者")
     private String sourceName;
+    @Schema(description = "原文链接")
     private String sourceUrl;
 
     public Long getId() {

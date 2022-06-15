@@ -15,6 +15,8 @@
  */
 package net.renfei.uaa.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 /**
@@ -22,9 +24,12 @@ import java.io.Serializable;
  *
  * @author renfei
  */
+@Schema(title = "权限对象")
 public class Authority implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "权限类型")
     private AuthorityTypeEnum authorityType;
+    @Schema(description = "权限详情ID")
     private Long targetId;
 
     public AuthorityTypeEnum getAuthorityType() {

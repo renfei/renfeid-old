@@ -15,27 +15,43 @@
  */
 package net.renfei.common.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 用户信息对象
+ *
  * @author renfei
  */
+@Schema(title = "用户信息对象")
 public class UserInfo implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "ID")
     private Long id;
+    @Schema(description = "唯一编号")
     private String uuid;
+    @Schema(description = "用户名")
     private String username;
+    @Schema(description = "电子邮箱")
     private String email;
+    @Schema(description = "电子邮箱是否通过验证")
     private Boolean emailVerified;
+    @Schema(description = "手机号")
     private String phone;
+    @Schema(description = "手机号是否通过验证")
     private Boolean phoneVerified;
+    @Schema(description = "账户注册时间")
     private Date registrationDate;
+    @Schema(description = "账户注册IP地址")
     private String registrationIp;
+    @Schema(description = "保密等级")
     private SecretLevelEnum secretLevel;
+    @Schema(description = "姓")
     private String lastName;
+    @Schema(description = "名")
     private String firstName;
 
     public Long getId() {

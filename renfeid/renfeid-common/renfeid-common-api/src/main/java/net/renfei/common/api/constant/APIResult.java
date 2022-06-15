@@ -16,22 +16,33 @@
 package net.renfei.common.api.constant;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.utils.StringUtils;
 
 import java.io.Serializable;
 
 /**
+ * API统一响应返回对象
+ *
  * @author renfei
  */
+@Schema(title = "API响应对象")
 public class APIResult<T> implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
+    @Schema(description = "状态码")
     private StateCodeEnum stateCode;
+    @Schema(description = "状态码，成功为200")
     private Integer code;
+    @Schema(description = "消息")
     private String message;
+    @Schema(description = "服务器时间戳")
     private Integer timestamp;
+    @Schema(description = "签名")
     private String signature;
+    @Schema(description = "随机数")
     private String nonce;
+    @Schema(description = "数据负载")
     private T data;
 
     private APIResult() {
