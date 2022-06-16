@@ -21,7 +21,6 @@ import net.renfei.cloudflare.entity.common.Response;
 import net.renfei.cloudflare.entity.firewall.FirewallRule;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
-import net.renfei.common.api.utils.JacksonUtil;
 import net.renfei.common.core.config.RedisConfig;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.utils.IpUtils;
@@ -34,7 +33,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,9 +41,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @author renfei
  */
-@Order(1)
+@Order(2)
 @Component
-public class AccessLimitFilter implements Filter {
+public class AccessLimitFilter extends AbstractFilter implements Filter {
     private final static Logger logger = LoggerFactory.getLogger(AccessLimitFilter.class);
     private final static String REDIS_KEY = RedisConfig.REDIS_KEY_DATABASE + ":limit:access";
     private final SystemConfig systemConfig;
@@ -54,11 +53,6 @@ public class AccessLimitFilter implements Filter {
                              RedisTemplate<String, Object> redisTemplate) {
         this.systemConfig = systemConfig;
         this.redisTemplate = redisTemplate;
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
     }
 
     @Override
@@ -125,12 +119,11 @@ public class AccessLimitFilter implements Filter {
                         logger.info("IP address {} reached the threshold for restricted access(Global Access Limit).", ip);
                     }
                     if (block) {
-                        APIResult<String> result = APIResult.builder()
+                        APIResult result = APIResult.builder()
                                 .code(StateCodeEnum.NotModified)
-                                .message("Your access frequency is too fast. Please try again later.")
-                                .data("你的访问频率过快，请稍后再试。")
+                                .message("Your access frequency is too fast. Please try again later. 你的访问频率过快，请稍后再试。")
                                 .build();
-                        responseResult(httpResponse, result);
+                        responseResult(logger, httpResponse, result);
                         return;
                     }
                 }
@@ -139,28 +132,5 @@ public class AccessLimitFilter implements Filter {
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);
-    }
-
-    @Override
-    public void destroy() {
-        Filter.super.destroy();
-    }
-
-    private void responseResult(HttpServletResponse response, APIResult<String> result) {
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-Type", "application/json");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST");
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json;charset=UTF-8");
-
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()))) {
-            writer.write(JacksonUtil.obj2String(result));
-            writer.flush();
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        }
     }
 }

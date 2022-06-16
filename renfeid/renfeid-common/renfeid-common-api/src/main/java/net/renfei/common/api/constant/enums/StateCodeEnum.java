@@ -22,8 +22,9 @@ package net.renfei.common.api.constant.enums;
  */
 public enum StateCodeEnum {
     /**
-     * 执行失败
+     * 系统关闭
      */
+    SystemClosed(-1, "系统关闭"),
     Failure(100, "失败"),
     /**
      * 完成请求

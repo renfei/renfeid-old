@@ -36,6 +36,10 @@
         </dependency>
         <dependency>
             <groupId>net.renfei</groupId>
+            <artifactId>ip2location</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.renfei</groupId>
             <artifactId>cloudflare</artifactId>
         </dependency>
         <dependency>

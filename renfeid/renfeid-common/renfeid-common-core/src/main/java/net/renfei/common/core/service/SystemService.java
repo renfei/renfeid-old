@@ -15,11 +15,14 @@
  */
 package net.renfei.common.core.service;
 
+import net.renfei.common.api.constant.enums.SystemSettingEnum;
+import net.renfei.common.api.constant.enums.SystemStatusEnum;
 import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.context.ApplicationContextAware;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 系统级服务
@@ -52,4 +55,27 @@ public interface SystemService extends ApplicationContextAware {
      * @return
      */
     UserDetail currentUserDetail();
+
+    /**
+     * 查询系统设置
+     *
+     * @param settingEnum 系统设置枚举
+     * @return
+     */
+    List<String> querySystemSetting(SystemSettingEnum settingEnum);
+
+    /**
+     * 更新系统设置
+     *
+     * @param settingEnum 系统设置枚举
+     * @param values      值
+     */
+    void updateSystemSetting(SystemSettingEnum settingEnum, List<String> values);
+
+    /**
+     * 查询系统运行状态
+     *
+     * @return
+     */
+    SystemStatusEnum querySystemRunningStatus();
 }

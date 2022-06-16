@@ -26,24 +26,26 @@
 <details>
 <summary>点此展开查看详情</summary>
 
-| 工程名                                       | 描述               |
-|-------------------------------------------|------------------|
-| + renfeid-bpm                             | 流程引擎服务（待开发）      |
-| + renfeid-cms                             | 内容管理服务（CMS）      |
-| &nbsp;&nbsp; - renfeid-cms-api            | 内容管理服务接口         |
-| &nbsp;&nbsp; - renfeid-cms-service        | 内容管理服务实现         |
-| + renfeid-common                          | 通用模块             |
-| &nbsp;&nbsp; - renfeid-common-api         | 全局通用的接口与对象       |
-| &nbsp;&nbsp; - renfeid-common-bom         | 全局统一制品清单         |
-| &nbsp;&nbsp; - renfeid-common-core        | 核心服务             |
-| &nbsp;&nbsp; - renfeid-common-leaf        | 分布式发号器雪花算法（美团实现） |
-| + renfeid-proprietary                     | 任霏博客私有功能（闭源）     |
-| &nbsp;&nbsp; - renfeid-proprietary-discuz | 与Discuz的集成       |
-| + renfeid-server                          | 服务入口（类似微服务的网关）   |
-| + renfeid-uaa                             | 用户认证与鉴权          |
-| &nbsp;&nbsp; - renfeid-uaa-api            | UAA暴露的接口         |
-| &nbsp;&nbsp; - renfeid-uaa-service        | UAA服务实现          |
-| + mybatis-generator                       | mybatis dao层生成   |
+| 工程名                                       | 描述                      |
+|-------------------------------------------|-------------------------|
+| + renfeid-bpm                             | 流程引擎服务（待开发）             |
+| + renfeid-cms                             | 内容管理服务（CMS）             |
+| &nbsp;&nbsp; - renfeid-cms-api            | 内容管理服务接口                |
+| &nbsp;&nbsp; - renfeid-cms-service        | 内容管理服务实现                |
+| + renfeid-common                          | 通用模块                    |
+| &nbsp;&nbsp; - renfeid-common-api         | 全局通用的接口与对象              |
+| &nbsp;&nbsp; - renfeid-common-bom         | 全局统一制品清单                |
+| &nbsp;&nbsp; - renfeid-common-core        | 核心服务                    |
+| &nbsp;&nbsp; - renfeid-common-leaf        | 分布式发号器雪花算法（美团实现）        |
+| &nbsp;&nbsp; - renfeid-common-search      | 搜索引擎服务（ElasticSearch实现） |
+| + renfeid-proprietary                     | 任霏博客私有功能（闭源）            |
+| &nbsp;&nbsp; - renfeid-proprietary-discuz | 与Discuz的集成              |
+| &nbsp;&nbsp; - 其他（工具箱、微博、相册等）             | 闭源管理                    |
+| + renfeid-server                          | 服务入口（类似微服务的网关）          |
+| + renfeid-uaa                             | 用户认证与鉴权                 |
+| &nbsp;&nbsp; - renfeid-uaa-api            | UAA暴露的接口                |
+| &nbsp;&nbsp; - renfeid-uaa-service        | UAA服务实现                 |
+| + mybatis-generator                       | mybatis dao层生成          |
 
 </details>
 

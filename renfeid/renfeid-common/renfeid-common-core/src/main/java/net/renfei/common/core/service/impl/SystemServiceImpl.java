@@ -15,9 +15,14 @@
  */
 package net.renfei.common.core.service.impl;
 
+import net.renfei.common.api.constant.enums.SystemSettingEnum;
+import net.renfei.common.api.constant.enums.SystemStatusEnum;
 import net.renfei.common.core.entity.LogLevelEnum;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
+import net.renfei.common.core.repositories.CoreSystemSettingMapper;
+import net.renfei.common.core.repositories.entity.CoreSystemSetting;
+import net.renfei.common.core.repositories.entity.CoreSystemSettingExample;
 import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.service.SystemService;
 import net.renfei.uaa.api.entity.UserDetail;
@@ -31,12 +36,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 系统级服务
@@ -46,14 +54,17 @@ import java.io.InputStreamReader;
 @Service
 public class SystemServiceImpl implements SystemService {
     private final static Logger logger = LoggerFactory.getLogger(SystemServiceImpl.class);
+    private ApplicationContext context;
     private final ContextRefresher contextRefresher;
     private final SystemLogService systemLogService;
-    private ApplicationContext context;
+    private final CoreSystemSettingMapper coreSystemSettingMapper;
 
     public SystemServiceImpl(ContextRefresher contextRefresher,
-                             SystemLogService systemLogService) {
+                             SystemLogService systemLogService,
+                             CoreSystemSettingMapper coreSystemSettingMapper) {
         this.contextRefresher = contextRefresher;
         this.systemLogService = systemLogService;
+        this.coreSystemSettingMapper = coreSystemSettingMapper;
     }
 
     /**
@@ -120,6 +131,44 @@ public class SystemServiceImpl implements SystemService {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<String> querySystemSetting(SystemSettingEnum settingEnum) {
+        CoreSystemSettingExample example = new CoreSystemSettingExample();
+        example.createCriteria().andSettingKeyEqualTo(settingEnum.toString());
+        List<CoreSystemSetting> systemSettings = coreSystemSettingMapper.selectByExample(example);
+        List<String> stringList = new ArrayList<>();
+        for (CoreSystemSetting systemSetting : systemSettings
+        ) {
+            stringList.add(systemSetting.getSettingValue());
+        }
+        return stringList;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateSystemSetting(SystemSettingEnum settingEnum, List<String> values) {
+        CoreSystemSettingExample example = new CoreSystemSettingExample();
+        example.createCriteria().andSettingKeyEqualTo(settingEnum.toString());
+        coreSystemSettingMapper.deleteByExample(example);
+        for (String value : values
+        ) {
+            CoreSystemSetting coreSystemSetting = new CoreSystemSetting();
+            coreSystemSetting.setSettingKey(settingEnum.toString());
+            coreSystemSetting.setSettingValue(value);
+            coreSystemSettingMapper.insertSelective(coreSystemSetting);
+        }
+    }
+
+    @Override
+    public SystemStatusEnum querySystemRunningStatus() {
+        List<String> strings = this.querySystemSetting(SystemSettingEnum.SYSTEM_RUNNING_STATUS);
+        if (strings.isEmpty()) {
+            return SystemStatusEnum.OPENED;
+        } else {
+            return SystemStatusEnum.valueOf(strings.get(0));
+        }
     }
 
     @Override

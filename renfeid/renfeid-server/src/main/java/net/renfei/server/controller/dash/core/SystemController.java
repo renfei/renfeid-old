@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.server.controller.dash.system;
+package net.renfei.server.controller.dash.core;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author renfei
  */
 @RestController
-@RequestMapping("/_/api/system")
+@RequestMapping("/_/api/core/system")
 @Tag(name = "系统相关接口", description = "系统相关接口")
 public class SystemController extends AbstractController {
     private final SystemService systemService;

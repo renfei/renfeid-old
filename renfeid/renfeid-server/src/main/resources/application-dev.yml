@@ -66,8 +66,13 @@ system:
   maxSecretLevel: UNCLASSIFIED
   # 是否启用注册功能
   enableSignUp: true
+  # 是否启用内容审核（阿里云内容安全）
+  enableAudit: true
   # Token 是否与 IP 做强绑定
   bindingIp: false
+  # IP2Location 数据库 Bin 文件路径
+  ip2LocationBinFile: /
+  ip2LocationBinFileV6: /
   # 忽略鉴权的地址
   authIgnore:
     - /_/api/test

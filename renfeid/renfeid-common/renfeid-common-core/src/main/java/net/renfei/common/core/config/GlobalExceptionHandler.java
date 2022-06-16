@@ -18,6 +18,7 @@ package net.renfei.common.core.config;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.exception.BusinessException;
+import net.renfei.common.api.exception.IP2LocationException;
 import net.renfei.common.api.exception.NeedU2FException;
 import net.renfei.common.api.exception.OutOfSecretLevelException;
 import org.slf4j.Logger;
@@ -75,6 +76,18 @@ public class GlobalExceptionHandler {
         logger.warn("Request'{}':{}", request.getRequestURI(), e.getMessage());
         return APIResult.builder()
                 .code(StateCodeEnum.MethodNotAllowed)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(value = IP2LocationException.class)
+    public APIResult ip2LocationExceptionError(HttpServletRequest request,
+                                               HttpServletResponse response,
+                                               IP2LocationException e) {
+        response.setStatus(500);
+        logger.error("Request'{}':{}", request.getRequestURI(), e.getMessage(), e);
+        return APIResult.builder()
+                .code(StateCodeEnum.Error)
                 .message(e.getMessage())
                 .build();
     }

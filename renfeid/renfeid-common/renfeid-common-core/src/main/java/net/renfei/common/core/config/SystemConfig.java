@@ -57,7 +57,10 @@ public class SystemConfig {
     private Boolean enablePostAuditing;
     private SecretLevelEnum maxSecretLevel;
     private Boolean enableSignUp;
+    private Boolean enableAudit;
     private Boolean bindingIp;
+    private String ip2LocationBinFile;
+    private String ip2LocationBinFileV6;
     private Jwt jwt;
     private UCenter uCenter;
     private List<String> authIgnore;
