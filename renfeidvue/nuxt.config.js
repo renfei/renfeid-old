@@ -29,6 +29,7 @@ export default {
     {src: '@/plugins/vue-google-adsense', ssr: true},
     {src: '@/plugins/vue-kinesis', mode: 'client'},
     {src: '@/plugins/renfeidvue', ssr: true},
+    {src: '@/plugins/axios', ssr: true},
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

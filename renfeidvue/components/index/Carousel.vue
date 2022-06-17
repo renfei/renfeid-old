@@ -83,12 +83,15 @@
                 <v-col
                   class="text-h2"
                 >
-                  啦啦啦啦啦啦
+                  开发者工具箱
                 </v-col>
               </v-row>
             </v-card-text>
             <v-list-item>
-              <v-list-item-subtitle class="px-5">zfgadghadhdfhdf</v-list-item-subtitle>
+              <v-list-item-subtitle class="px-5">
+                子曰："工欲善其事，必先利其器。"<br/>
+                利用工具优化自己的学习工作效率，将时间留给更美好的事物。
+              </v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item>
@@ -98,8 +101,9 @@
                   outlined
                   color="grey"
                   dark
+                  href="/kitbox"
                 >
-                  Rounded Button
+                  开发者工具箱
                 </v-btn>
               </div>
             </v-list-item>
@@ -112,7 +116,7 @@
                 class="mx-auto"
                 width="20vw"
                 style="margin-top: 10vh;"
-                src="/image/undraw_order_delivered_re_v4ab.svg"/>
+                src="/image/undraw_code_inspection_bdl7.svg"/>
             </kinesis-element>
             <!-- background-circles-props -->
             <kinesis-element :strength="150">

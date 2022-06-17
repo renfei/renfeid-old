@@ -10,6 +10,8 @@
       </v-container>
     </v-main>
 
+    <div style="height: 300px;"></div>
+
     <default-footer />
   </v-app>
 </template>
