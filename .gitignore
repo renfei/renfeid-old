@@ -123,3 +123,5 @@ sw.*
 
 # Vim swap files
 *.swp
+
+IP2LOCATION-LITE-*.BIN

@@ -38,7 +38,7 @@ public class IP2LocationServiceImpl implements IP2LocationService {
     private static final Logger logger = LoggerFactory.getLogger(IP2LocationServiceImpl.class);
     private final IP2Location location;
     private final IP2Location locationV6;
-    private static final String CLASS_PATH_RESOURCE = "classpath:/";
+    private static final String CLASS_PATH_RESOURCE = "classpath";
 
     public IP2LocationServiceImpl(SystemConfig systemConfig) {
         location = new IP2Location();
