@@ -11,21 +11,21 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "npm" # See documentation for possible values
-      directory: "/renfeidvue/" # Location of package manifests
-      schedule:
-        interval: "daily"
-      assignees:
-        - "renfei"
-      reviewers:
-        - "renfei"
-      open-pull-requests-limit: 10
+    directory: "/renfeidvue/" # Location of package manifests
+    schedule:
+      interval: "daily"
+    assignees:
+      - "renfei"
+    reviewers:
+      - "renfei"
+    open-pull-requests-limit: 10
 
   - package-ecosystem: "github-actions" # See documentation for possible values
-      directory: "/" # Location of package manifests
-      schedule:
-        interval: "daily"
-      assignees:
-        - "renfei"
-      reviewers:
-        - "renfei"
-      open-pull-requests-limit: 10
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
+    assignees:
+      - "renfei"
+    reviewers:
+      - "renfei"
+    open-pull-requests-limit: 10
