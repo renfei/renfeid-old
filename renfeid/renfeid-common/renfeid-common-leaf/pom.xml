@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>renfeid-common</artifactId>
+        <groupId>net.renfei</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    <artifactId>renfeid-common-leaf</artifactId>
+    <description>Distributed ID Generate Service</description>
+    <developers>
+        <developer>
+            <id>zhangzhitong</id>
+            <name>zhangzhitong</name>
+            <email>zhitongzhang@outlook.com</email>
+        </developer>
+        <developer>
+            <id>zhanghan</id>
+            <name>zhanghan</name>
+            <email>han122655904@163.com</email>
+        </developer>
+        <developer>
+            <id>xiezhaodong</id>
+            <name>xiezhaodong</name>
+            <email>pursuer_xie@foxmail.com</email>
+        </developer>
+    </developers>
+    <organization>
+        <name>Meituan-Dianping Group</name>
+        <url>https://github.com/Meituan-Dianping</url>
+    </organization>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

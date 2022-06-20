@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.renfei.uaa.repositories.UaaUserMapper">
+  <resultMap id="BaseResultMap" type="net.renfei.uaa.repositories.entity.UaaUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="email_verified" jdbcType="BIT" property="emailVerified" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="phone_verified" jdbcType="BIT" property="phoneVerified" />
+    <result column="registration_date" jdbcType="TIMESTAMP" property="registrationDate" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="totp" jdbcType="VARCHAR" property="totp" />
+    <result column="registration_ip" jdbcType="VARCHAR" property="registrationIp" />
+    <result column="trial_error_times" jdbcType="INTEGER" property="trialErrorTimes" />
+    <result column="lock_time" jdbcType="TIMESTAMP" property="lockTime" />
+    <result column="secret_level" jdbcType="INTEGER" property="secretLevel" />
+    <result column="built_in_user" jdbcType="BIT" property="builtInUser" />
+    <result column="password_expiration_time" jdbcType="TIMESTAMP" property="passwordExpirationTime" />
+    <result column="locked" jdbcType="BIT" property="locked" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="last_name" jdbcType="VARCHAR" property="lastName" />
+    <result column="first_name" jdbcType="VARCHAR" property="firstName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, uuid, username, email, email_verified, phone, phone_verified, registration_date, 
+    password, totp, registration_ip, trial_error_times, lock_time, secret_level, built_in_user, 
+    password_expiration_time, locked, enabled, last_name, first_name
+  </sql>
+  <select id="selectByExample" parameterType="net.renfei.uaa.repositories.entity.UaaUserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from uaa_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from uaa_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from uaa_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="net.renfei.uaa.repositories.entity.UaaUserExample">
+    delete from uaa_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="net.renfei.uaa.repositories.entity.UaaUser">
+    insert into uaa_user (id, uuid, username, 
+      email, email_verified, phone, 
+      phone_verified, registration_date, password, 
+      totp, registration_ip, trial_error_times, 
+      lock_time, secret_level, built_in_user, 
+      password_expiration_time, locked, enabled, 
+      last_name, first_name)
+    values (#{id,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{emailVerified,jdbcType=BIT}, #{phone,jdbcType=VARCHAR}, 
+      #{phoneVerified,jdbcType=BIT}, #{registrationDate,jdbcType=TIMESTAMP}, #{password,jdbcType=VARCHAR}, 
+      #{totp,jdbcType=VARCHAR}, #{registrationIp,jdbcType=VARCHAR}, #{trialErrorTimes,jdbcType=INTEGER}, 
+      #{lockTime,jdbcType=TIMESTAMP}, #{secretLevel,jdbcType=INTEGER}, #{builtInUser,jdbcType=BIT}, 
+      #{passwordExpirationTime,jdbcType=TIMESTAMP}, #{locked,jdbcType=BIT}, #{enabled,jdbcType=BIT}, 
+      #{lastName,jdbcType=VARCHAR}, #{firstName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="net.renfei.uaa.repositories.entity.UaaUser">
+    insert into uaa_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="uuid != null">
+        uuid,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="emailVerified != null">
+        email_verified,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="phoneVerified != null">
+        phone_verified,
+      </if>
+      <if test="registrationDate != null">
+        registration_date,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="totp != null">
+        totp,
+      </if>
+      <if test="registrationIp != null">
+        registration_ip,
+      </if>
+      <if test="trialErrorTimes != null">
+        trial_error_times,
+      </if>
+      <if test="lockTime != null">
+        lock_time,
+      </if>
+      <if test="secretLevel != null">
+        secret_level,
+      </if>
+      <if test="builtInUser != null">
+        built_in_user,
+      </if>
+      <if test="passwordExpirationTime != null">
+        password_expiration_time,
+      </if>
+      <if test="locked != null">
+        locked,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+      <if test="lastName != null">
+        last_name,
+      </if>
+      <if test="firstName != null">
+        first_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="emailVerified != null">
+        #{emailVerified,jdbcType=BIT},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneVerified != null">
+        #{phoneVerified,jdbcType=BIT},
+      </if>
+      <if test="registrationDate != null">
+        #{registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="totp != null">
+        #{totp,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationIp != null">
+        #{registrationIp,jdbcType=VARCHAR},
+      </if>
+      <if test="trialErrorTimes != null">
+        #{trialErrorTimes,jdbcType=INTEGER},
+      </if>
+      <if test="lockTime != null">
+        #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="secretLevel != null">
+        #{secretLevel,jdbcType=INTEGER},
+      </if>
+      <if test="builtInUser != null">
+        #{builtInUser,jdbcType=BIT},
+      </if>
+      <if test="passwordExpirationTime != null">
+        #{passwordExpirationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locked != null">
+        #{locked,jdbcType=BIT},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
+      </if>
+      <if test="lastName != null">
+        #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null">
+        #{firstName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="net.renfei.uaa.repositories.entity.UaaUserExample" resultType="java.lang.Long">
+    select count(*) from uaa_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update uaa_user
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.uuid != null">
+        uuid = #{record.uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.username != null">
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emailVerified != null">
+        email_verified = #{record.emailVerified,jdbcType=BIT},
+      </if>
+      <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phoneVerified != null">
+        phone_verified = #{record.phoneVerified,jdbcType=BIT},
+      </if>
+      <if test="record.registrationDate != null">
+        registration_date = #{record.registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.totp != null">
+        totp = #{record.totp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationIp != null">
+        registration_ip = #{record.registrationIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trialErrorTimes != null">
+        trial_error_times = #{record.trialErrorTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.lockTime != null">
+        lock_time = #{record.lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.secretLevel != null">
+        secret_level = #{record.secretLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.builtInUser != null">
+        built_in_user = #{record.builtInUser,jdbcType=BIT},
+      </if>
+      <if test="record.passwordExpirationTime != null">
+        password_expiration_time = #{record.passwordExpirationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.locked != null">
+        locked = #{record.locked,jdbcType=BIT},
+      </if>
+      <if test="record.enabled != null">
+        enabled = #{record.enabled,jdbcType=BIT},
+      </if>
+      <if test="record.lastName != null">
+        last_name = #{record.lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.firstName != null">
+        first_name = #{record.firstName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update uaa_user
+    set id = #{record.id,jdbcType=BIGINT},
+      uuid = #{record.uuid,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      email_verified = #{record.emailVerified,jdbcType=BIT},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      phone_verified = #{record.phoneVerified,jdbcType=BIT},
+      registration_date = #{record.registrationDate,jdbcType=TIMESTAMP},
+      password = #{record.password,jdbcType=VARCHAR},
+      totp = #{record.totp,jdbcType=VARCHAR},
+      registration_ip = #{record.registrationIp,jdbcType=VARCHAR},
+      trial_error_times = #{record.trialErrorTimes,jdbcType=INTEGER},
+      lock_time = #{record.lockTime,jdbcType=TIMESTAMP},
+      secret_level = #{record.secretLevel,jdbcType=INTEGER},
+      built_in_user = #{record.builtInUser,jdbcType=BIT},
+      password_expiration_time = #{record.passwordExpirationTime,jdbcType=TIMESTAMP},
+      locked = #{record.locked,jdbcType=BIT},
+      enabled = #{record.enabled,jdbcType=BIT},
+      last_name = #{record.lastName,jdbcType=VARCHAR},
+      first_name = #{record.firstName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.uaa.repositories.entity.UaaUser">
+    update uaa_user
+    <set>
+      <if test="uuid != null">
+        uuid = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="emailVerified != null">
+        email_verified = #{emailVerified,jdbcType=BIT},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneVerified != null">
+        phone_verified = #{phoneVerified,jdbcType=BIT},
+      </if>
+      <if test="registrationDate != null">
+        registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="totp != null">
+        totp = #{totp,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationIp != null">
+        registration_ip = #{registrationIp,jdbcType=VARCHAR},
+      </if>
+      <if test="trialErrorTimes != null">
+        trial_error_times = #{trialErrorTimes,jdbcType=INTEGER},
+      </if>
+      <if test="lockTime != null">
+        lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="secretLevel != null">
+        secret_level = #{secretLevel,jdbcType=INTEGER},
+      </if>
+      <if test="builtInUser != null">
+        built_in_user = #{builtInUser,jdbcType=BIT},
+      </if>
+      <if test="passwordExpirationTime != null">
+        password_expiration_time = #{passwordExpirationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locked != null">
+        locked = #{locked,jdbcType=BIT},
+      </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=BIT},
+      </if>
+      <if test="lastName != null">
+        last_name = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null">
+        first_name = #{firstName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="net.renfei.uaa.repositories.entity.UaaUser">
+    update uaa_user
+    set uuid = #{uuid,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      email_verified = #{emailVerified,jdbcType=BIT},
+      phone = #{phone,jdbcType=VARCHAR},
+      phone_verified = #{phoneVerified,jdbcType=BIT},
+      registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      password = #{password,jdbcType=VARCHAR},
+      totp = #{totp,jdbcType=VARCHAR},
+      registration_ip = #{registrationIp,jdbcType=VARCHAR},
+      trial_error_times = #{trialErrorTimes,jdbcType=INTEGER},
+      lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      secret_level = #{secretLevel,jdbcType=INTEGER},
+      built_in_user = #{builtInUser,jdbcType=BIT},
+      password_expiration_time = #{passwordExpirationTime,jdbcType=TIMESTAMP},
+      locked = #{locked,jdbcType=BIT},
+      enabled = #{enabled,jdbcType=BIT},
+      last_name = #{lastName,jdbcType=VARCHAR},
+      first_name = #{firstName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

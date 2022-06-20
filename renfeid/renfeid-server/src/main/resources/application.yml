@@ -1,0 +1,45 @@
+server:
+  port: 9595
+  shutdown: graceful
+  error:
+    whitelabel:
+      enabled: true
+    include-message: always
+    include-exception: true
+    include-stacktrace: always
+    include-binding-errors: always
+
+spring:
+  profiles:
+    active: @activatedProperties@
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/config-repo/renfeid
+          force-pull: true
+          username: renfei
+          password: renfei
+
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    ## 打印SQL
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

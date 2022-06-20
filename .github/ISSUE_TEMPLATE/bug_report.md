@@ -24,15 +24,15 @@ assignees: 'renfei'
 如果适用，添加屏幕截图以帮助解释您的问题。
 
 **PC客户端请填写以下环境信息**
- - 操作系统: [e.g. iOS]
- - 浏览器 [e.g. chrome, safari]
- - 版本 [e.g. 22]
+- 操作系统: [e.g. iOS]
+- 浏览器 [e.g. chrome, safari]
+- 版本 [e.g. 22]
 
 **移动端设备请填写以下环境信息**
- - 设备: [e.g. iPhone6]
- - 操作系统: [e.g. iOS8.1]
- - 浏览器 [e.g. stock browser, safari]
- - 版本 [e.g. 22]
+- 设备: [e.g. iPhone6]
+- 操作系统: [e.g. iOS8.1]
+- 浏览器 [e.g. stock browser, safari]
+- 版本 [e.g. 22]
 
 **附加上下文**
 在此处添加有关此问题的任何其他上下文。

@@ -1,0 +1,132 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mariadb://local.renfei.net:3306/renfeid?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+    druid:
+      stat-view-servlet:
+        login-username: admin
+        login-password: admin
+    discuz:
+      url: jdbc:mariadb://local.renfei.net:3306/discuz?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: root
+      password: root
+  redis:
+    ## Redis数据库索引（默认为0）
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    #    password: password
+    timeout: 3000ms # 连接超时时间
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数
+        max-idle: 8 # 连接池最大空闲连接数
+        min-idle: 0 # 连接池最小空闲连接数
+        max-wait: -1ms # 连接池最大阻塞等待时间，负值表示没有限制
+  mail:
+    host: smtp.exmail.qq.com
+    port: 465
+    username: no-reply@renfei.net
+    password: <password>
+    protocol: smtp
+    default-encoding: UTF-8
+    reply-to: i@renfei.net
+    properties:
+      mail.smtp.localhost: renfei.net
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.socketFactory.port: 465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      mail.smtp.socketFactory.fallback: false
+    jndi-name: mail/Session
+  elasticsearch:
+    uris: http://local.renfei.net:9200
+
+# 自定义配置
+system:
+  active: dev
+  version: "@project.version@"
+  buildTime: "@buildtimestamp@"
+  siteName: 任霏的博客
+  siteDomainName: https://www.renfei.net
+  # 超管用户名
+  superTubeUserName: admin
+  # 是否启用超管，涉密系统不允许出现超管账号
+  enableSuperTubeUser: true
+  # 是否启用缓存
+  enableCache: true
+  # 是否启用内容发布审核流程机制
+  enablePostAuditing: false
+  # 系统允许的最大密级
+  maxSecretLevel: UNCLASSIFIED
+  # 是否启用注册功能
+  enableSignUp: true
+  # 是否启用内容审核（阿里云内容安全）
+  enableAudit: true
+  # Token 是否与 IP 做强绑定
+  bindingIp: false
+  # IP2Location 数据库 Bin 文件请到此处下载：https://github.com/renfei/ip2location
+  ip2LocationBinFile: classpath:/IP2LOCATION-LITE-DB11/IP2LOCATION-LITE-DB11.BIN
+  ip2LocationBinFileV6: classpath:/IP2LOCATION-LITE-DB11/IP2LOCATION-LITE-DB11.IPV6.BIN
+  # 忽略鉴权的地址
+  authIgnore:
+    - /_/api/test
+  # 分词主词典文件
+  mainDict: /Users/renfei/Downloads/sogou.txt
+  jwt:
+    secret: zL4pC7mP4vH4nY2cK1kE6lC3bJ0yC5wI4kB0kZ2wK4tW3nQ9vP1hO6vZ5jA7wP7ulN6vY3mQ7uI5wU5sE6yP0hP6pK0tF5tT1oO0nO2mL4nO8uP3kJ3rV3iJ4aD5iB5h
+    issuer: RENFEI.NET
+    expiration: 28800000
+  uCenter:
+    enable: false
+    api: https://bbs.renfei.net/uc_server
+    key: <key>
+    appId: 3
+    connect:
+  aws:
+    region: ap-east-1
+    bucketName: s3-bucket-dev-test
+  aliyun:
+    accessKeyId: accessKeyId
+    accessKeySecret: accessKeySecret
+    oss:
+      regionId: cn-beijing
+      endpoint: http://oss-cn-hangzhou.aliyuncs.com
+      bucketName: renfei
+    green:
+      regionId: cn-beijing
+    sms:
+      endpoint: dysmsapi.aliyuncs.com
+      signName: 任霏博客
+      templateCode: SMS_205876320
+  leaf:
+    port: 2181
+    zk: localhost
+  accessLimit:
+    enable: true
+    blacklistEnable: true
+    globalRate: 250
+    apiRate: 300
+    blacklistRate: 600
+    time: 300
+  cloudflare:
+    accountId: dd
+    token: dd
+
+aj:
+  captcha:
+    type: default
+    cache-number: 60
+    timing-clear: 600
+    water-mark: 任霏博客
+    # 校验滑动拼图允许误差偏移量(默认5像素).
+    slip-offset: 5
+    # aes加密坐标开启或者禁用(true|false).
+    aes-status: true
+    # 滑块干扰项(0/1/2)
+    interference-options: 1

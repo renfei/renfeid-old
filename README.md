@@ -1,110 +1,135 @@
 # renfeid
 
 [![License](https://img.shields.io/github/license/renfei/renfeid)](https://github.com/renfei/renfeid/blob/master/LICENSE)
-[![Actions Status](https://github.com/renfei/renfeid/workflows/CI/badge.svg)](https://github.com/renfei/renfeid/actions)
-[![codecov](https://codecov.io/gh/renfei/renfeid/branch/master/graph/badge.svg?token=2Hd5NL3fnV)](https://codecov.io/gh/renfei/renfeid)
-[![Coverage Status](https://coveralls.io/repos/github/renfei/renfeid/badge.svg?branch=master)](https://coveralls.io/github/renfei/renfeid?branch=master)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/945285e334094d2f93643778bb4c8dd7)](https://www.codacy.com/gh/renfei/renfeid/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=renfei/renfeid&amp;utm_campaign=Badge_Grade)
 
-## 简介
+这是 [任霏的个人博客与网站](https://www.renfei.net) 的代码库，能进到这个代码库说明你很有品位嘛。
 
-这是任霏的个人网站（[www.renfei.net](https://www.renfei.net)），一直保持一年一次大更新，所以这个版本是为2022年准备的。
+我的网站结构为前后端分离，所以会产生前后端两个子项目：
 
-代号 renfeid 是因为参考了一部分 DDD 领域设计，从之前的贫血模型到现在的充血模型的应用；并且 Linux 中的服务都已 d 结尾来表示 daemon，伴随着系统的启动而启动，系统的关闭而结束，在后台等待执行的进程。
+| 后端                                                                             | 前端                                                                               |
+|--------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| 所在目录：[renfeid](./renfeid)                                                      | 所在目录：[renfeidvue](./renfeidvue)                                                  |
+| 技术栈：Java8、SpringBoot、MyBatis、MariaDB、Druid、RestfulAPI、Maven                    | 技术栈： Node.js、 Webpack、Vue.js、Nuxt.js、Vuetify、Yarn                                |
+| 简要说明：尝试过SpringCloud微服务架构，但对于个人网站来说过于沉重和耗费资源，所以我用maven多模块的方式进行了拆分，将来可以改造为微服务架构。 | 简要说明：之前一直没有使用Vue是因为SPA对SEO不友好，但随着前端技术的完善，Nuxt的SSR服务器端渲染已经很成熟了，本次是我第一次尝试前台也使用Vue。 |
+| 自我点评：采用前后端分离架构，是目前行业比较流行的结构，SpringBoot也是最新版本的依赖。                               | 自我点评：本人非前端专业，只是业余学习，很可能使用姿势不符合行业规范，前端项目仅供参考。                                     |
 
-### 历史版本
+## 目录结构
 
-随着知识不断的累积，每年都看不上去年自己的设计和代码，总想推翻重来，慢慢形成了一年一次大更新的习惯。同时这也是我的试验场，新技术和理念在这里尝试和学习，掌握后用于公司内的商用项目中。
+### 后端项目目录结构
 
-- 2021年：[https://github.com/renfei/renfeid](https://github.com/renfei/renfeid) (当前版本)
-- 2020年：[https://github.com/renfei/www.renfei.net](https://github.com/renfei/www.renfei.net) (Java)
-- 2019年：[https://github.com/renfei/RenFei.Net](https://github.com/renfei/RenFei.Net) (Java)
-- 2017年：[https://github.com/renfei/NEILREN4J](https://github.com/renfei/NEILREN4J) (Java)
-- 2015年：[https://github.com/renfei/NeilNT](https://github.com/renfei/NeilNT) (ASP.NET)
-- 2012~2014年：WordPress （PHP）
+为啥不选微服务？我尝试过微服务架构，并不适合我，微服务过于沉重，并且在低并发的场景中性能并不如单体应用好，并且造成运维代价大幅提升。
 
-## 技术栈
+那为啥还参考微服务划分多个模块？虽然我的场景不适合微服务，但我的程序保留微服务化的能力，如果需要改造可以快速的微服务化、分布式部署。
 
-| 依赖 | 类型 | 版本 | 说明 |
-| ----: | :----: | :----: | :---- |
-| Java | 基础设施 | JDK1.8 | 任他版本怎么发，我用Java8（考虑升到JDK11） |
-| SpringBoot | Framework | 2.6.2 | 我会保持最新版本 |
-| Druid | 数据库连接池 | 1.2.8 | 来自 Alibaba 的开源数据库连接池 |
-| MyBatis | ORM | 2.2.1 | 选用 MyBatis 写 SQL 更自由 |
-| Feign | HttpClient | 3.1.0 | 虽然它来自SpringCloud，但我很喜欢用它 |
-| MariaDB | DataBase | 10.6.5 | MySQL 的最佳替代者，我使用最新版本 |
-| JWT | Token | - | 我使用JWT支持无状态接口，支持分布式部署 |
-| Redis | NoSQL | 6.2.6 | 用于缓存加速，数据变化不频繁的扔到内存里 |
-| ElasticSearch | 搜索引擎 | 7.16.3 | 站内搜索就是依赖 ES 搜索引擎实现的 |
-| Freemarker | 视图引擎 | 2.3.31 | 我是放弃 Thymeleaf 又换回来的，不解释 |
-| Quartz | 定时任务 | 2.3.2 | 为了支持分布式部署，本地定时任务不能用 |
-| SpringSecurity | 安全框架 | 5.6.1 | Spring全家桶，各种权限判断和拦截就是基于它的 |
-| Leaf | 全局发号器 | - | 美团技术团队的开源分布式ID生成，参考雪花算法 |
-| GraphQL | Graph查询语言 | - | 初步尝试探索GraphQL [www.renfei.net/Graphiql](https://www.renfei.net/Graphiql) |
+<details>
+<summary>点此展开查看详情</summary>
 
-### 一些计划和主张
+| 工程名                                       | 描述                      |
+|-------------------------------------------|-------------------------|
+| + renfeid-bpm                             | 流程引擎服务（待开发）             |
+| + renfeid-cms                             | 内容管理服务（CMS）             |
+| &nbsp;&nbsp; - renfeid-cms-api            | 内容管理服务接口                |
+| &nbsp;&nbsp; - renfeid-cms-service        | 内容管理服务实现                |
+| + renfeid-common                          | 通用模块                    |
+| &nbsp;&nbsp; - renfeid-common-api         | 全局通用的接口与对象              |
+| &nbsp;&nbsp; - renfeid-common-bom         | 全局统一制品清单                |
+| &nbsp;&nbsp; - renfeid-common-core        | 核心服务                    |
+| &nbsp;&nbsp; - renfeid-common-leaf        | 分布式发号器雪花算法（美团实现）        |
+| &nbsp;&nbsp; - renfeid-common-search      | 搜索引擎服务（ElasticSearch实现） |
+| + renfeid-proprietary                     | 任霏博客私有功能（闭源）            |
+| &nbsp;&nbsp; - renfeid-proprietary-discuz | 与Discuz的集成              |
+| &nbsp;&nbsp; - 其他（工具箱、微博、相册等）             | 闭源管理                    |
+| + renfeid-server                          | 服务入口（类似微服务的网关）          |
+| + renfeid-uaa                             | 用户认证与鉴权                 |
+| &nbsp;&nbsp; - renfeid-uaa-api            | UAA暴露的接口                |
+| &nbsp;&nbsp; - renfeid-uaa-service        | UAA服务实现                 |
+| + mybatis-generator                       | mybatis dao层生成          |
 
-- [x] 已移除 Lombok，一旦使用整个团队其他人也必须安装插件，强X队友； 同时在慢慢使用中发现除非真的非常了解 Lombok 的注解会生成什么，否则会出现奇怪的各种问题，当然只使用简单的```@Data```没什么问题。
-- [ ] 计划升级到 Java11，虽然 Java8 完全满足需求，但毕竟新的东西会优化很多旧的问题。
+</details>
 
-### DevOps 和 CI/CD 的探索
+关于 ```renfeid-proprietary``` 模块的说明，这个模块中是我自己网站特有的功能，你可以直接删除掉。 ```mybatis-generator``` 模块只是为了方便自动生成 mybatis dao层，没有实际的作用，可以删除。
 
-之前使用 GitHub 的 Actions Workflow，但因为是境外所以和境内的相关服务器网络延迟高失败率高，一直没什么太大用处， 直到 2021年底 GitLab
-在国内成立了分公司并上线了 [极狐(GitLab)](https://gitlab.cn) SaaS 平台，一群开源大佬布道中国的 DevOps， 我正好参与了内测，开始接触并尝试探索大佬们的理念。
+### 前端项目目录结构
 
-项目中的 [.gitlab-ci.yml](./.gitlab-ci.yml) 就是 GitLab 的 Pipeline 文件，主要由这几个阶段 (stage) 组成：
+为啥选择了 Vue？ 我当然知道大厂都用 React，但我招不到人啊，所以基本 Vue 还是中小厂的首选，如果我选用 React，中小厂用不上，大厂看不上，由于公司内部大部分是 Vue 的项目，所以我还是选择 Vue 来构建前端项目。
 
-- initialize：初始化准备环境，包括下载测试环境配置文件、[IP2Location](https://github.com/renfei/ip2location) 数据 BIN 文件，将 artifact 向下面的阶段传递。
-- compile：编译，先执行编译确保没有基础的语法错误，如果编译都过不了下面的就不用执行了。
-- test：测试，执行单元测试，验证各个接口和服务可以正常运行。
-- package：打包，将 SpringBoot 应用打包成 Jar 包。
-- release：发布，构建 Docker 镜像，发布到制品仓库中
+## 构建
 
-自动部署方面，我还没探索，后面等着尝试探索一下。
+### 后端项目构建
 
-#### 安全风险告知
+后端使用 ```Maven``` 来管理依赖，如果你已经安装了 ```Maven``` 可以直接使用 mvn 命令，如果你的机器上没有安装  ```Maven```，那么你可以使用目录中自带的 ```mvnw```
+来代替 ```mvn``` 命令。
 
-如果您也使用 GitLab Pipeline，注意项目可访问性，或者设置 CI/CD 的可访问性，如果都是公开的状态， 那么每个阶段 (stage) 的制品 (artifact) 将会公开下载！其中一旦包含配置文件或相关敏感文件将被公开。
+<details>
+<summary>点此展开查看构建命令</summary>
 
-## 前端部分
+首先，进入前端项目的 ```renfeid``` 目录里执行下面的命令：
 
-由于我不是前端专业，所以前端写的可能不是很好，但没有前端页面还不行，所以只能献丑了。
+```bash
+# 清除缓存
+mvn clean
 
-### 前台前端（前后端不分离）
+# 编译项目
+mvn compile
 
-前台由于有 SEO 的需求，所以不能使用 SPA 单页应用，我选择继承旧项目的方案，使用 Freemarker 在服务器端渲染页面。Node.js 我不熟。
+# 执行单元测试
+mvn test
 
-使用的是 Bootstrap V4，然后自己再 DIY 修改，本来计划升级到 V5，但 v2.0.0 为了修复远程代码执行漏洞，还没做完，只能先用 V4 了。
+# 项目打包
+mvn package
+```
 
-### 后台前端（前后端分离）
+</details>
 
-后台前端就可以前后端分离了，我选择了现成的 [Ant Design Pro](https://pro.ant.design/) 来构建。
+### 前端项目构建
 
-项目地址是：[https://github.com/renfei/renfeidesign](https://github.com/renfei/renfeidesign)
+前端我使用 ```yarn``` 来代替 ```npm``` 包管理器，后端同学注意了这里的 ```yarn``` 跟 ```Apache Hadoop YARN``` 没有任何关系，完全是两个东西。
 
-## Url地址划分
+<details>
+<summary>点此展开查看构建命令</summary>
 
-- /** : 默认全部是前台Html页面
-- /api/** : OpenAPI 开放接口，向外提供接口能力，无需登陆并允许 CORS 跨域请求
-- /-/api/** : 前台接口，有可能需要登陆，禁止跨域请求，不开放接口，例如评论接口
-- /_/api/** : 后台接口，必须登陆，禁止跨域请求，系统管理类的后台接口在这里
+首先，进入前端项目的 ```renfeidvue``` 目录里执行下面的命令：
 
-## 安全漏洞修复
+```bash
+# install dependencies
+$ yarn install
 
-在这个 Repo 中修复了 https://github.com/renfei/renfeid/issues/32 远程代码执行漏洞，此漏洞从2020年1月14日存在至今，是我自己干的，
-也是我自己发现的，这么多次代码扫描，都没扫描出来，漏洞存在于以下 Repo：
+# serve with hot reload at localhost:3000
+$ yarn dev
 
-- [https://github.com/renfei/www.renfei.net](https://github.com/renfei/www.renfei.net)
-- [https://github.com/renfei/RenFei.Net](https://github.com/renfei/RenFei.Net)
+# build for production and launch server
+$ yarn build
+$ yarn start
 
-所以 v2.0.0 版本还没写完，就连滚带爬的强行上线了，原本不想这么早上线的。
+# generate static project
+$ yarn generate
+```
 
-## License
+</details>
 
-[Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0)
+## 涉密应用系统"三员"
 
-虽然我这点代码在开源生态里就是芝麻渣渣，但是出于对各路大佬的尊重和敬仰，我同样遵守开源圈的 License 协议，我选用 Apache-2.0 License。
+系统设计时采用了系统管理员、安全保密管理员、安全审计管理员三员分立，分别负责系统的运行、安全保密和安全审计工作。三员权限划分如下：
 
-由于 MySQL 是 GPL License，所以已经移除所有 MySQL 的依赖，全部使用 MariaDB 来兼容 MySQL。
+<details>
+<summary>点此展开查看详情</summary>
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frenfei%2Frenfeid.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frenfei%2Frenfeid?ref=badge_large)
+### 系统管理员
+
+* 负责系统的日常运行维护工作
+* 负责系统用户创建、用户删除
+
+### 安全保密管理员
+
+* 负责系统的日常安全保密管理工作
+* 负责系统用户修改、用户密码重置、用户停启
+* 负责系统用户的角色分配、角色的功能资源分配
+* 负责管理与审查系统用户及安全审计管理员的操作日志
+
+### 安全审计管理员
+
+* 负责对系统管理员和安全保密管理员的日常操作行为进行审计跟踪分析和监督检查
+* 审计管理员禁止访问管理平台安装的系统文件和直接访问数据库
+* 禁止执行其它项目管理平台管理工作
+
+</details>

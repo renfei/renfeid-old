@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.renfei.uaa.repositories.UaaMenuMapper">
+  <resultMap id="BaseResultMap" type="net.renfei.uaa.repositories.entity.UaaMenu">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pid" jdbcType="BIGINT" property="pid" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" />
+    <result column="menu_target" jdbcType="VARCHAR" property="menuTarget" />
+    <result column="menu_class" jdbcType="VARCHAR" property="menuClass" />
+    <result column="menu_title" jdbcType="VARCHAR" property="menuTitle" />
+    <result column="menu_onclick" jdbcType="VARCHAR" property="menuOnclick" />
+    <result column="menu_order" jdbcType="INTEGER" property="menuOrder" />
+    <result column="enable" jdbcType="BIT" property="enable" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="net.renfei.uaa.repositories.entity.UaaMenuWithBLOBs">
+    <result column="menu_href" jdbcType="LONGVARCHAR" property="menuHref" />
+    <result column="menu_css" jdbcType="LONGVARCHAR" property="menuCss" />
+    <result column="extend_json" jdbcType="LONGVARCHAR" property="extendJson" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, pid, menu_name, menu_icon, menu_target, menu_class, menu_title, menu_onclick, 
+    menu_order, enable, add_time, update_time
+  </sql>
+  <sql id="Blob_Column_List">
+    menu_href, menu_css, extend_json
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="net.renfei.uaa.repositories.entity.UaaMenuExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from uaa_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="net.renfei.uaa.repositories.entity.UaaMenuExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from uaa_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from uaa_menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from uaa_menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="net.renfei.uaa.repositories.entity.UaaMenuExample">
+    delete from uaa_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="net.renfei.uaa.repositories.entity.UaaMenuWithBLOBs">
+    insert into uaa_menu (id, pid, menu_name, 
+      menu_icon, menu_target, menu_class, 
+      menu_title, menu_onclick, menu_order, 
+      enable, add_time, update_time, 
+      menu_href, menu_css, extend_json
+      )
+    values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{menuName,jdbcType=VARCHAR}, 
+      #{menuIcon,jdbcType=VARCHAR}, #{menuTarget,jdbcType=VARCHAR}, #{menuClass,jdbcType=VARCHAR}, 
+      #{menuTitle,jdbcType=VARCHAR}, #{menuOnclick,jdbcType=VARCHAR}, #{menuOrder,jdbcType=INTEGER}, 
+      #{enable,jdbcType=BIT}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{menuHref,jdbcType=LONGVARCHAR}, #{menuCss,jdbcType=LONGVARCHAR}, #{extendJson,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="net.renfei.uaa.repositories.entity.UaaMenuWithBLOBs">
+    insert into uaa_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="menuName != null">
+        menu_name,
+      </if>
+      <if test="menuIcon != null">
+        menu_icon,
+      </if>
+      <if test="menuTarget != null">
+        menu_target,
+      </if>
+      <if test="menuClass != null">
+        menu_class,
+      </if>
+      <if test="menuTitle != null">
+        menu_title,
+      </if>
+      <if test="menuOnclick != null">
+        menu_onclick,
+      </if>
+      <if test="menuOrder != null">
+        menu_order,
+      </if>
+      <if test="enable != null">
+        enable,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="menuHref != null">
+        menu_href,
+      </if>
+      <if test="menuCss != null">
+        menu_css,
+      </if>
+      <if test="extendJson != null">
+        extend_json,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuIcon != null">
+        #{menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTarget != null">
+        #{menuTarget,jdbcType=VARCHAR},
+      </if>
+      <if test="menuClass != null">
+        #{menuClass,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTitle != null">
+        #{menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuOnclick != null">
+        #{menuOnclick,jdbcType=VARCHAR},
+      </if>
+      <if test="menuOrder != null">
+        #{menuOrder,jdbcType=INTEGER},
+      </if>
+      <if test="enable != null">
+        #{enable,jdbcType=BIT},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="menuHref != null">
+        #{menuHref,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="menuCss != null">
+        #{menuCss,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extendJson != null">
+        #{extendJson,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="net.renfei.uaa.repositories.entity.UaaMenuExample" resultType="java.lang.Long">
+    select count(*) from uaa_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update uaa_menu
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.pid != null">
+        pid = #{record.pid,jdbcType=BIGINT},
+      </if>
+      <if test="record.menuName != null">
+        menu_name = #{record.menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuIcon != null">
+        menu_icon = #{record.menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuTarget != null">
+        menu_target = #{record.menuTarget,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuClass != null">
+        menu_class = #{record.menuClass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuTitle != null">
+        menu_title = #{record.menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuOnclick != null">
+        menu_onclick = #{record.menuOnclick,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuOrder != null">
+        menu_order = #{record.menuOrder,jdbcType=INTEGER},
+      </if>
+      <if test="record.enable != null">
+        enable = #{record.enable,jdbcType=BIT},
+      </if>
+      <if test="record.addTime != null">
+        add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.menuHref != null">
+        menu_href = #{record.menuHref,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.menuCss != null">
+        menu_css = #{record.menuCss,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.extendJson != null">
+        extend_json = #{record.extendJson,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update uaa_menu
+    set id = #{record.id,jdbcType=BIGINT},
+      pid = #{record.pid,jdbcType=BIGINT},
+      menu_name = #{record.menuName,jdbcType=VARCHAR},
+      menu_icon = #{record.menuIcon,jdbcType=VARCHAR},
+      menu_target = #{record.menuTarget,jdbcType=VARCHAR},
+      menu_class = #{record.menuClass,jdbcType=VARCHAR},
+      menu_title = #{record.menuTitle,jdbcType=VARCHAR},
+      menu_onclick = #{record.menuOnclick,jdbcType=VARCHAR},
+      menu_order = #{record.menuOrder,jdbcType=INTEGER},
+      enable = #{record.enable,jdbcType=BIT},
+      add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      menu_href = #{record.menuHref,jdbcType=LONGVARCHAR},
+      menu_css = #{record.menuCss,jdbcType=LONGVARCHAR},
+      extend_json = #{record.extendJson,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update uaa_menu
+    set id = #{record.id,jdbcType=BIGINT},
+      pid = #{record.pid,jdbcType=BIGINT},
+      menu_name = #{record.menuName,jdbcType=VARCHAR},
+      menu_icon = #{record.menuIcon,jdbcType=VARCHAR},
+      menu_target = #{record.menuTarget,jdbcType=VARCHAR},
+      menu_class = #{record.menuClass,jdbcType=VARCHAR},
+      menu_title = #{record.menuTitle,jdbcType=VARCHAR},
+      menu_onclick = #{record.menuOnclick,jdbcType=VARCHAR},
+      menu_order = #{record.menuOrder,jdbcType=INTEGER},
+      enable = #{record.enable,jdbcType=BIT},
+      add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.uaa.repositories.entity.UaaMenuWithBLOBs">
+    update uaa_menu
+    <set>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="menuName != null">
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuIcon != null">
+        menu_icon = #{menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTarget != null">
+        menu_target = #{menuTarget,jdbcType=VARCHAR},
+      </if>
+      <if test="menuClass != null">
+        menu_class = #{menuClass,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTitle != null">
+        menu_title = #{menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuOnclick != null">
+        menu_onclick = #{menuOnclick,jdbcType=VARCHAR},
+      </if>
+      <if test="menuOrder != null">
+        menu_order = #{menuOrder,jdbcType=INTEGER},
+      </if>
+      <if test="enable != null">
+        enable = #{enable,jdbcType=BIT},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="menuHref != null">
+        menu_href = #{menuHref,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="menuCss != null">
+        menu_css = #{menuCss,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extendJson != null">
+        extend_json = #{extendJson,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="net.renfei.uaa.repositories.entity.UaaMenuWithBLOBs">
+    update uaa_menu
+    set pid = #{pid,jdbcType=BIGINT},
+      menu_name = #{menuName,jdbcType=VARCHAR},
+      menu_icon = #{menuIcon,jdbcType=VARCHAR},
+      menu_target = #{menuTarget,jdbcType=VARCHAR},
+      menu_class = #{menuClass,jdbcType=VARCHAR},
+      menu_title = #{menuTitle,jdbcType=VARCHAR},
+      menu_onclick = #{menuOnclick,jdbcType=VARCHAR},
+      menu_order = #{menuOrder,jdbcType=INTEGER},
+      enable = #{enable,jdbcType=BIT},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      menu_href = #{menuHref,jdbcType=LONGVARCHAR},
+      menu_css = #{menuCss,jdbcType=LONGVARCHAR},
+      extend_json = #{extendJson,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="net.renfei.uaa.repositories.entity.UaaMenu">
+    update uaa_menu
+    set pid = #{pid,jdbcType=BIGINT},
+      menu_name = #{menuName,jdbcType=VARCHAR},
+      menu_icon = #{menuIcon,jdbcType=VARCHAR},
+      menu_target = #{menuTarget,jdbcType=VARCHAR},
+      menu_class = #{menuClass,jdbcType=VARCHAR},
+      menu_title = #{menuTitle,jdbcType=VARCHAR},
+      menu_onclick = #{menuOnclick,jdbcType=VARCHAR},
+      menu_order = #{menuOrder,jdbcType=INTEGER},
+      enable = #{enable,jdbcType=BIT},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
