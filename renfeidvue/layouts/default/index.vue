@@ -5,7 +5,7 @@
     <default-app-bar/>
 
     <v-main>
-      <v-container fluid>
+      <v-container fluid style="padding: 0;">
         <Nuxt/>
       </v-container>
     </v-main>
