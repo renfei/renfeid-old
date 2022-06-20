@@ -1,5 +1,3 @@
-![architecture](./docs/image/architecture.png)
-
 # renfeid
 
 [![License](https://img.shields.io/github/license/renfei/renfeid)](https://github.com/renfei/renfeid/blob/master/LICENSE)
