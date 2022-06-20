@@ -18,7 +18,7 @@
         <mybatis.version>2.2.2</mybatis.version>
         <pagehelper.version>1.4.1</pagehelper.version>
         <mariadb-client.version>2.7.5</mariadb-client.version>
-        <jjwt.version>0.11.2</jjwt.version>
+        <jjwt.version>0.11.5</jjwt.version>
         <flowable.version>6.7.2</flowable.version>
         <sentry.version>5.7.4</sentry.version>
         <curator-recipes.version>5.2.1</curator-recipes.version>
