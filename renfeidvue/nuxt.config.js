@@ -26,9 +26,9 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    {src: '~/plugins/renfeidvue.js',ssr: false},
     {src: '@/plugins/vue-google-adsense', ssr: true},
     {src: '@/plugins/vue-kinesis', mode: 'client'},
-    {src: '@/plugins/renfeidvue', ssr: true},
     {src: '@/plugins/axios', ssr: true},
   ],
 
@@ -63,6 +63,7 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
+    treeShake: true,
     optionsPath: './vuetify.options.js',
   },
 

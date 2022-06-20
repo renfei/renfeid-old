@@ -1,0 +1,29 @@
+stages:
+  - test
+  - build
+  - deploy
+
+test_job:
+  stage: test
+  script: 
+    - echo 'TODO....'
+
+nuxt_build_job:
+  stage: build
+  script:
+    - echo 'TODO....'
+
+maven_build_job:
+  stage: build
+  script:
+     - echo 'TODO....'
+
+nodejs_docker_job:
+  stage: deploy
+  script:
+    - echo 'TODO....'
+
+java_docker_job:
+  stage: deploy
+  script:
+    - echo 'TODO....'
