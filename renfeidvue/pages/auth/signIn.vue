@@ -8,8 +8,14 @@
           flat
           class="signin-card mx-auto"
       >
-        <v-card-title>
-          <img class="mx-auto" :src="pageLogo" height="48" width="48" alt="logo"/>
+        <v-card-title class="mt-6">
+          <v-img class="mx-auto"
+                 :src="pageLogo"
+                 height="48"
+                 width="48"
+                 max-height="48"
+                 max-width="48"
+                 alt="logo"/>
         </v-card-title>
         <v-card-subtitle>
           <v-row
@@ -154,6 +160,8 @@
                 class="px-0">
               <v-btn
                   text
+                  nuxt
+                  to="/auth/signUp"
                   color="primary"
               >
                 创建账号
@@ -369,10 +377,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.signin-card {
-  padding: 40px 36px;
-  margin-top: 150px;
-}
-</style>

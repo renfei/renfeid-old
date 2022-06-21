@@ -13,12 +13,15 @@
     <div style="height: 300px;"></div>
 
     <default-footer />
+
+    <Snackbar></Snackbar>
   </v-app>
 </template>
 
 <script>
 import {dark} from '@/utils/dark'
 
+import Snackbar from "@/components/Snackbar"
 import DefaultSystemBar from "./SystemBar";
 import DefaultAppBar from "./AppBar";
 import DefaultFooter from "./Footer";
@@ -26,6 +29,7 @@ import DefaultFooter from "./Footer";
 export default {
   name: 'DefaultLayout',
   components: {
+    Snackbar,
     DefaultSystemBar,
     DefaultAppBar,
     DefaultFooter,
