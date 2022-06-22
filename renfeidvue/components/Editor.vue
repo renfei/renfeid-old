@@ -14,6 +14,7 @@
         :key="tinymceFlag"
         :height="height"
         v-model="content"
+        images_upload_url="http://localhost:9595/_/api/core/system/upload"
     />
   </div>
 </template>
@@ -28,12 +29,6 @@ export default {
       type: String,
       default: () => {
         return ""
-      }
-    },
-    init: {
-      type: Object,
-      default: () => {
-        return {}
       }
     },
     disabled: {
@@ -96,7 +91,31 @@ export default {
     apiKey: "",
     tinymceFlag: 1,
     content: '',
+    init: {},
   }),
+  created() {
+    this.init = {
+      language: "zh_CN",
+      height: 400,
+      statusbar: false, //最下方的元素路径和字数统计那一栏是否显示
+      elementpath: false, //隐藏底栏的元素路径
+      plugins: this.plugins,
+      toolbar: this.toolbar,
+      branding: false,
+      menubar: true,
+      table_default_styles: {
+        width: "100%",
+        borderCollapse: "collapse",
+      },
+      paste_data_images: true, //图片是否可粘贴
+      image_description: true,
+      image_title: false, // 是否开启图片标题设置的选择，这里设置否
+      // 此处为图片上传处理函数，这个直接用了base64的图片形式上传图片，
+      images_upload_handler: (blobInfo, success, failure) => {
+        this.images_upload_handler(blobInfo, success, failure)
+      },
+    }
+  },
   mounted() {
     if (this.editorContent) {
       this.content = this.editorContent
@@ -117,6 +136,20 @@ export default {
   },
   activated() {
     this.tinymceFlag++
+  },
+  methods: {
+    images_upload_handler: async function (blobInfo, success, failure) {
+      if (blobInfo.blob().size > this.$renfeid.uploadMaxSize) {
+        failure("您上传的文件超过允许的最大尺寸：" + this.$renfeid.uploadMaxSizeText)
+      } else {
+        var form = new FormData();
+        form.append('file', blobInfo.blob(), blobInfo.filename());
+        const [uploadObjectVo] = await Promise.all([
+          this.$api.uploadObject({}, form, {})
+        ])
+        success(uploadObjectVo.data.data.location)
+      }
+    },
   },
 }
 </script>

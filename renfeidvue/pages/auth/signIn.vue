@@ -140,13 +140,10 @@
             <v-col
                 cols="12"
                 class="pb-0">
-              <v-text-field
-                  label="输入验证码"
-                  outlined
-                  dense
+              <v-otp-input
                   v-model="form.totp"
-                  :error-messages="error.totpErrorMessages"
-              ></v-text-field>
+                  length="6"
+              ></v-otp-input>
             </v-col>
           </v-row>
         </v-card-text>
@@ -333,24 +330,22 @@ export default {
       this.error.totpErrorMessages = ""
     },
   },
-  head() {
-    return {
-      title: "登录",
-      meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'My custom description'
-        },
-        {
-          hid: 'keyword',
-          name: 'keyword',
-          content: 'My custom keyword'
-        }
-      ]
-    }
-  },
+  head: () => ({
+    title: "登录",
+    meta: [
+      // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+      {
+        hid: 'description',
+        name: 'description',
+        content: 'My custom description'
+      },
+      {
+        hid: 'keyword',
+        name: 'keyword',
+        content: 'My custom keyword'
+      }
+    ]
+  }),
   computed: {
     width() {
       switch (this.$vuetify.breakpoint.name) {

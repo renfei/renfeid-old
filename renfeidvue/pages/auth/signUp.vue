@@ -212,7 +212,7 @@ export default {
   }),
   methods: {
     next() {
-      this.$renfeid.info(this,"sss")
+      this.$renfeid.info(this, "sss")
       this.loading = true
       this.clearError()
       if (this.form.username === "") {
@@ -242,24 +242,22 @@ export default {
       this.error.emailErrorMessages = ""
     },
   },
-  head() {
-    return {
-      title: "创建您的账号",
-      meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'My custom description'
-        },
-        {
-          hid: 'keyword',
-          name: 'keyword',
-          content: 'My custom keyword'
-        }
-      ]
-    }
-  },
+  head: () => ({
+    title: "创建您的账号",
+    meta: [
+      // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+      {
+        hid: 'description',
+        name: 'description',
+        content: 'My custom description'
+      },
+      {
+        hid: 'keyword',
+        name: 'keyword',
+        content: 'My custom keyword'
+      }
+    ]
+  }),
   computed: {
     width() {
       switch (this.$vuetify.breakpoint.name) {
