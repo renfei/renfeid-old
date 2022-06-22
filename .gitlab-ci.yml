@@ -5,7 +5,7 @@ stages:
 
 test_job:
   stage: test
-  script: 
+  script:
     - echo 'TODO....'
 
 nuxt_build_job:
@@ -16,7 +16,7 @@ nuxt_build_job:
 maven_build_job:
   stage: build
   script:
-     - echo 'TODO....'
+    - echo 'TODO....'
 
 nodejs_docker_job:
   stage: deploy
@@ -27,3 +27,8 @@ java_docker_job:
   stage: deploy
   script:
     - echo 'TODO....'
+
+sast:
+  stage: test
+include:
+  - template: Security/SAST.gitlab-ci.yml
