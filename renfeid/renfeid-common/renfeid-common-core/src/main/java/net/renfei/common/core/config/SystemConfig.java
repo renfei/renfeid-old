@@ -51,10 +51,12 @@ public class SystemConfig {
     private String buildTime;
     private String siteName;
     private String siteDomainName;
+    private String staticDomainName;
     private String superTubeUserName;
     private Boolean enableSuperTubeUser;
     private Boolean enableCache;
     private Boolean enablePostAuditing;
+    private Boolean allowCORS;
     private SecretLevelEnum maxSecretLevel;
     private Boolean enableSignUp;
     private Boolean enableAudit;

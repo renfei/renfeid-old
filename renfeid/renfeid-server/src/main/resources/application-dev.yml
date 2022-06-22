@@ -54,6 +54,7 @@ system:
   buildTime: "@buildtimestamp@"
   siteName: 任霏的博客
   siteDomainName: https://www.renfei.net
+  staticDomainName: https://cdn.renfei.net
   # 超管用户名
   superTubeUserName: admin
   # 是否启用超管，涉密系统不允许出现超管账号
@@ -62,6 +63,8 @@ system:
   enableCache: true
   # 是否启用内容发布审核流程机制
   enablePostAuditing: false
+  # 是否允许跨域请求
+  allowCORS: true
   # 系统允许的最大密级
   maxSecretLevel: UNCLASSIFIED
   # 是否启用注册功能

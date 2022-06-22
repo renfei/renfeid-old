@@ -17,18 +17,24 @@ package net.renfei.common.core.service.impl;
 
 import net.renfei.common.api.constant.enums.SystemSettingEnum;
 import net.renfei.common.api.constant.enums.SystemStatusEnum;
+import net.renfei.common.api.exception.BusinessException;
+import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.entity.LogLevelEnum;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
+import net.renfei.common.core.entity.UploadObjectVo;
 import net.renfei.common.core.repositories.CoreSystemSettingMapper;
 import net.renfei.common.core.repositories.entity.CoreSystemSetting;
 import net.renfei.common.core.repositories.entity.CoreSystemSettingExample;
+import net.renfei.common.core.service.ObjectStorageService;
 import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.service.SystemService;
+import net.renfei.common.core.utils.DateUtils;
 import net.renfei.uaa.api.entity.UserDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.context.refresh.ContextRefresher;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -37,6 +43,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +52,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 系统级服务
@@ -55,15 +63,22 @@ import java.util.List;
 public class SystemServiceImpl implements SystemService {
     private final static Logger logger = LoggerFactory.getLogger(SystemServiceImpl.class);
     private ApplicationContext context;
+    private final SystemConfig systemConfig;
     private final ContextRefresher contextRefresher;
     private final SystemLogService systemLogService;
+    private final ObjectStorageService objectStorageService;
     private final CoreSystemSettingMapper coreSystemSettingMapper;
 
-    public SystemServiceImpl(ContextRefresher contextRefresher,
+    public SystemServiceImpl(SystemConfig systemConfig,
+                             ContextRefresher contextRefresher,
                              SystemLogService systemLogService,
+                             @Qualifier("aliyunObjectStorageServiceImpl") ObjectStorageService objectStorageService,
                              CoreSystemSettingMapper coreSystemSettingMapper) {
+        this.systemConfig = systemConfig;
         this.contextRefresher = contextRefresher;
         this.systemLogService = systemLogService;
+        // 这里按需注入不同的实现类，例如上传到阿里云：AliyunObjectStorageServiceImpl
+        this.objectStorageService = objectStorageService;
         this.coreSystemSettingMapper = coreSystemSettingMapper;
     }
 
@@ -169,6 +184,31 @@ public class SystemServiceImpl implements SystemService {
         } else {
             return SystemStatusEnum.valueOf(strings.get(0));
         }
+    }
+
+    @Override
+    public UploadObjectVo uploadObject(MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new BusinessException("上传文件为空，请重试");
+        }
+        // 原始文件名
+        String originalFileName = file.getOriginalFilename();
+        // 后缀名
+        assert originalFileName != null;
+        String suffixName = originalFileName.substring(originalFileName.lastIndexOf("."));
+        // 新文件名
+        String fileName = UUID.randomUUID().toString().replace("-", "") + suffixName;
+        String path = "upload/" + DateUtils.getYear() + "/" + fileName;
+        try {
+            objectStorageService.putObject(path, file.getInputStream(), file.getSize());
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new BusinessException("文件流读取失败，请重试");
+        }
+        UploadObjectVo uploadObject = new UploadObjectVo();
+        uploadObject.setLocation(systemConfig.getStaticDomainName() + "/" + path);
+        uploadObject.setAlt(originalFileName);
+        return uploadObject;
     }
 
     @Override

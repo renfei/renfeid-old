@@ -41,7 +41,7 @@ import static net.renfei.common.api.constant.Constant.*;
  *
  * @author renfei
  */
-@Order(10)
+@Order
 @Component
 public class AuthorizationFilter extends OncePerRequestFilter {
     private final SystemConfig systemConfig;
@@ -56,6 +56,15 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        if (systemConfig.getAllowCORS()) {
+            response.setContentType("application/json; charset=utf-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Access-Control-Max-Age", "3600");
+            response.setHeader("Access-Control-Allow-Methods", "POST, GET,PUT, OPTIONS, DELETE");
+            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token");
+        }
         final String auth = request.getHeader(HEADER_TOKEN_NAME);
         if (ObjectUtils.isEmpty(auth) || !auth.startsWith(HEADER_TOKEN)) {
             // 请求头中没有token

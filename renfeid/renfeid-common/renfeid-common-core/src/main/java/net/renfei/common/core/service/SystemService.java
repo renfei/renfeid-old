@@ -17,8 +17,10 @@ package net.renfei.common.core.service;
 
 import net.renfei.common.api.constant.enums.SystemSettingEnum;
 import net.renfei.common.api.constant.enums.SystemStatusEnum;
+import net.renfei.common.core.entity.UploadObjectVo;
 import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -78,4 +80,6 @@ public interface SystemService extends ApplicationContextAware {
      * @return
      */
     SystemStatusEnum querySystemRunningStatus();
+
+    UploadObjectVo uploadObject(MultipartFile file);
 }
