@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "maven" # See documentation for possible values
-    directory: "/renfeid/" # Location of package manifests
+    directory: "/renfeidboot/" # Location of package manifests
     schedule:
       interval: "daily"
     assignees:
