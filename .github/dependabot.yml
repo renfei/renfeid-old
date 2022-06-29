@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "maven" # See documentation for possible values
-    directory: "/renfeidboot/" # Location of package manifests
+    directory: "/renfeid-service/" # Location of package manifests
     schedule:
       interval: "daily"
     assignees:
@@ -11,7 +11,7 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/renfeidvue/" # Location of package manifests
+    directory: "/renfeid-ui/" # Location of package manifests
     schedule:
       interval: "daily"
     assignees:
