@@ -22,7 +22,7 @@
     "vue-script2": "^2.1.0",
     "vue-server-renderer": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
-    "vuetify": "^2.6.6",
+    "vuetify": "^2.6.7",
     "vuetify-datetime-picker": "^2.1.1",
     "vuex-pathify": "^3.0.0-beta",
     "webpack": "^5.73.0"
