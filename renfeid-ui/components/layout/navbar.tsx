@@ -1,26 +1,91 @@
-import {Breadcrumb, Layout, Menu} from 'antd';
-
-const {Header} = Layout;
+import Link from 'next/link';
+import Image from 'next/image';
+import TopBarWrapper from "./top-bar-wrapper";
+import {SearchOutlined, UnorderedListOutlined} from '@ant-design/icons';
 
 const Navbar = () => {
-    const items = [
-        {label: '菜单项一', key: 'item-1'}, // 菜单项务必填写 key
-        {label: '菜单项二', key: 'item-2'},
-        {
-            label: '子菜单',
-            key: 'submenu',
-            children: [{label: '子菜单项', key: 'submenu-item-1'}],
-        },
-    ]
-
     return (
         <>
-            <Header>
-                <Menu
-                    mode="horizontal"
-                    items={items}
-                />
-            </Header>
+            <TopBarWrapper>
+                TopBarWrapper
+            </TopBarWrapper>
+            <nav className={"renfeid-nav"}>
+                <div className={"renfeid-content"}>
+                    <ul className={"nav-menu-mobile"}>
+                        <li>
+                            <UnorderedListOutlined/>
+                        </li>
+                        <li>
+                            <Link href={"/"}>
+                                <Image
+                                    className={"nav-logo"}
+                                    src="https://cdn.renfei.net/Logo/RF_white.svg"
+                                    alt={""}
+                                    height={30}
+                                    width={30}
+                                />
+                            </Link>
+                        </li>
+                        <li><SearchOutlined/></li>
+                    </ul>
+                    <ul className={"nav-menu"}>
+                        <li>
+                            <Link href={"/"}>
+                                <Image
+                                    className={"nav-logo"}
+                                    src="https://cdn.renfei.net/Logo/RF_white.svg"
+                                    alt={""}
+                                    height={30}
+                                    width={30}
+                                />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"/"}>
+                                <a>首页</a>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"/posts"}>
+                                <a>文章</a>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"/weibo"}>
+                                <a>微博</a>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"/photo"}>
+                                <a>相册</a>
+                            </Link>
+                        </li>
+                        <li>
+                            <a href={"https://bbs.renfei.net"} target={"_blank"}>论坛</a>
+                        </li>
+                        <li>
+                            <Link href={"/kitbox"}>
+                                <a>工具箱</a>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"/docs"}>
+                                <a>在线文档</a>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"/"}>
+                                <a>更多</a>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"javascript:void(0)"}>
+                                <SearchOutlined/>
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </>
     )
 }
