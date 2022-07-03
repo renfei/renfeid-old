@@ -1,4 +1,4 @@
-import {Layout, Affix} from 'antd';
+import {Layout} from 'antd';
 import Navbar from './navbar'
 import SectionWrapper from "./section-wrapper";
 import Footer from './footer'
@@ -9,9 +9,7 @@ const MyLayout = ({children}: any) => {
     return (
         <>
             <Layout>
-                <Affix offsetTop={0}>
-                    <Navbar/>
-                </Affix>
+                <Navbar/>
                 <SectionWrapper>SectionWrapper</SectionWrapper>
                 <Content>{children}</Content>
                 <Footer/>
