@@ -19,7 +19,7 @@ a {
 .renfeid-content {
     width: 100%;
     margin: 0 auto;
-    max-width: 980px;
+    max-width: 1280px;
     padding: 0 max(22px, env(safe-area-inset-right)) 0 max(22px, env(safe-area-inset-left));
 }
 

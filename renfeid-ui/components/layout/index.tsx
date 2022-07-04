@@ -1,4 +1,4 @@
-import {Layout} from 'antd';
+import {Layout, BackTop} from 'antd';
 import Navbar from './navbar'
 import SectionWrapper from "./section-wrapper";
 import Footer from './footer'
@@ -14,6 +14,7 @@ const MyLayout = ({children}: any) => {
                 <Content>{children}</Content>
                 <Footer/>
             </Layout>
+            <BackTop/>
         </>
     )
 }

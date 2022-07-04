@@ -1,9 +1,11 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Layout from "../components/layout";
-import {Button, Space, DatePicker, Card} from 'antd';
-import {CiCircleFilled} from '@ant-design/icons';
+import {Col, Row, Button, Space, DatePicker, Typography} from 'antd';
+import {ArrowRightOutlined, CiCircleFilled} from '@ant-design/icons';
 import styles from '../styles/Home.module.css'
+
+const {Title} = Typography;
 
 const Home = () => {
     const onChange = () => {
@@ -17,7 +19,46 @@ const Home = () => {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
 
+            <div className={styles.banner_wrapper}>
+                <div className={styles.banner}>
+                    <Row>
+                        <Col span={15} className={styles.banner_col}>
+                            <div className={styles.banner_img_wrapper}>
+                                <img
+                                    className={styles.banner_img}
+                                    src={"https://cdn.renfei.net/upload/2022/2af9436a41c945e58b98d5ac09835179.webp?x-oss-process=style/992.558"}
+                                    alt={""}/>
+                            </div>
+                        </Col>
+                        <Col span={9} className={styles.banner_col}>
+                            <div className={styles.banner_content_wrapper}>
+                                <a style={{display: 'block'}}>
+                                    <Title level={2}
+                                           className={styles.banner_content_h2}>关于我在极狐GitLab造机器人这件事儿我觉得很酷</Title>
+                                    <p className={styles.banner_content_p}>我在参与极狐GitLab创作营 JIHULAB
+                                        101活动的时候，发现极狐GitLab官方启用了一个机器人，会在issue哪里进行服务，我就突发奇想，很多地方都有自动回复的客服机器人，那在极狐GitLab能不能造个机器人玩？</p>
+                                    <span className={styles.banner_content_icon}><ArrowRightOutlined/></span>
+                                </a>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+            </div>
             <main className={styles.main}>
+                <section className={"renfeid-content"}>
+                    <div className={styles.posts_top5}>
+                        <Title level={3}>任霏博客</Title>
+                        <Row>
+                            <Col span={12}>
+                                sdf
+                            </Col>
+                            <Col span={12}>
+                                sdf
+                            </Col>
+                        </Row>
+                    </div>
+                </section>
+
                 <h1 className={styles.title}>
                     Welcome to <a href="https://www.renfei.net">renfeid !</a>
                 </h1>
