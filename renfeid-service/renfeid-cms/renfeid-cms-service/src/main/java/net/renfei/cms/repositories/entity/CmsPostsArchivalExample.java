@@ -1274,6 +1274,356 @@ public class CmsPostsArchivalExample {
             addCriterion("is_original not between", value1, value2, "isOriginal");
             return (Criteria) this;
         }
+
+        public Criteria andPostTitleIsNull() {
+            addCriterion("post_title is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleIsNotNull() {
+            addCriterion("post_title is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleEqualTo(String value) {
+            addCriterion("post_title =", value, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleNotEqualTo(String value) {
+            addCriterion("post_title <>", value, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleGreaterThan(String value) {
+            addCriterion("post_title >", value, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleGreaterThanOrEqualTo(String value) {
+            addCriterion("post_title >=", value, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleLessThan(String value) {
+            addCriterion("post_title <", value, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleLessThanOrEqualTo(String value) {
+            addCriterion("post_title <=", value, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleLike(String value) {
+            addCriterion("post_title like", value, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleNotLike(String value) {
+            addCriterion("post_title not like", value, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleIn(List<String> values) {
+            addCriterion("post_title in", values, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleNotIn(List<String> values) {
+            addCriterion("post_title not in", values, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleBetween(String value1, String value2) {
+            addCriterion("post_title between", value1, value2, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTitleNotBetween(String value1, String value2) {
+            addCriterion("post_title not between", value1, value2, "postTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordIsNull() {
+            addCriterion("post_keyword is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordIsNotNull() {
+            addCriterion("post_keyword is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordEqualTo(String value) {
+            addCriterion("post_keyword =", value, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordNotEqualTo(String value) {
+            addCriterion("post_keyword <>", value, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordGreaterThan(String value) {
+            addCriterion("post_keyword >", value, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordGreaterThanOrEqualTo(String value) {
+            addCriterion("post_keyword >=", value, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordLessThan(String value) {
+            addCriterion("post_keyword <", value, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordLessThanOrEqualTo(String value) {
+            addCriterion("post_keyword <=", value, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordLike(String value) {
+            addCriterion("post_keyword like", value, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordNotLike(String value) {
+            addCriterion("post_keyword not like", value, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordIn(List<String> values) {
+            addCriterion("post_keyword in", values, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordNotIn(List<String> values) {
+            addCriterion("post_keyword not in", values, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordBetween(String value1, String value2) {
+            addCriterion("post_keyword between", value1, value2, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostKeywordNotBetween(String value1, String value2) {
+            addCriterion("post_keyword not between", value1, value2, "postKeyword");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptIsNull() {
+            addCriterion("post_excerpt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptIsNotNull() {
+            addCriterion("post_excerpt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptEqualTo(String value) {
+            addCriterion("post_excerpt =", value, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptNotEqualTo(String value) {
+            addCriterion("post_excerpt <>", value, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptGreaterThan(String value) {
+            addCriterion("post_excerpt >", value, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptGreaterThanOrEqualTo(String value) {
+            addCriterion("post_excerpt >=", value, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptLessThan(String value) {
+            addCriterion("post_excerpt <", value, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptLessThanOrEqualTo(String value) {
+            addCriterion("post_excerpt <=", value, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptLike(String value) {
+            addCriterion("post_excerpt like", value, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptNotLike(String value) {
+            addCriterion("post_excerpt not like", value, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptIn(List<String> values) {
+            addCriterion("post_excerpt in", values, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptNotIn(List<String> values) {
+            addCriterion("post_excerpt not in", values, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptBetween(String value1, String value2) {
+            addCriterion("post_excerpt between", value1, value2, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostExcerptNotBetween(String value1, String value2) {
+            addCriterion("post_excerpt not between", value1, value2, "postExcerpt");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameIsNull() {
+            addCriterion("source_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameIsNotNull() {
+            addCriterion("source_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameEqualTo(String value) {
+            addCriterion("source_name =", value, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameNotEqualTo(String value) {
+            addCriterion("source_name <>", value, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameGreaterThan(String value) {
+            addCriterion("source_name >", value, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameGreaterThanOrEqualTo(String value) {
+            addCriterion("source_name >=", value, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameLessThan(String value) {
+            addCriterion("source_name <", value, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameLessThanOrEqualTo(String value) {
+            addCriterion("source_name <=", value, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameLike(String value) {
+            addCriterion("source_name like", value, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameNotLike(String value) {
+            addCriterion("source_name not like", value, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameIn(List<String> values) {
+            addCriterion("source_name in", values, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameNotIn(List<String> values) {
+            addCriterion("source_name not in", values, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameBetween(String value1, String value2) {
+            addCriterion("source_name between", value1, value2, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceNameNotBetween(String value1, String value2) {
+            addCriterion("source_name not between", value1, value2, "sourceName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlIsNull() {
+            addCriterion("source_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlIsNotNull() {
+            addCriterion("source_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlEqualTo(String value) {
+            addCriterion("source_url =", value, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlNotEqualTo(String value) {
+            addCriterion("source_url <>", value, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlGreaterThan(String value) {
+            addCriterion("source_url >", value, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("source_url >=", value, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlLessThan(String value) {
+            addCriterion("source_url <", value, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlLessThanOrEqualTo(String value) {
+            addCriterion("source_url <=", value, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlLike(String value) {
+            addCriterion("source_url like", value, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlNotLike(String value) {
+            addCriterion("source_url not like", value, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlIn(List<String> values) {
+            addCriterion("source_url in", values, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlNotIn(List<String> values) {
+            addCriterion("source_url not in", values, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlBetween(String value1, String value2) {
+            addCriterion("source_url between", value1, value2, "sourceUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceUrlNotBetween(String value1, String value2) {
+            addCriterion("source_url not between", value1, value2, "sourceUrl");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

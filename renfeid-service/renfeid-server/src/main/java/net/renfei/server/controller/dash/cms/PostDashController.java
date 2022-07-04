@@ -50,6 +50,7 @@ public class PostDashController extends AbstractController {
     @Operation(summary = "查询文章内容列表", tags = {"文章内容接口"},
             parameters = {
                     @Parameter(name = "categoryId", description = "内容分类ID"),
+                    @Parameter(name = "title", description = "内容标题"),
                     @Parameter(name = "postStatus", description = "文章状态"),
                     @Parameter(name = "startDate", description = "发布时间起始时间"),
                     @Parameter(name = "endDate", description = "发布时间结束时间"),
@@ -58,12 +59,13 @@ public class PostDashController extends AbstractController {
             })
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询文章内容列表")
     public APIResult<ListData<Post>> queryPostList(@RequestParam(value = "categoryId", required = false) Long categoryId,
+                                                   @RequestParam(value = "title", required = false) String title,
                                                    @RequestParam(value = "postStatus", required = false) PostStatusEnum postStatus,
                                                    @RequestParam(value = "startDate", required = false) Date startDate,
                                                    @RequestParam(value = "endDate", required = false) Date endDate,
                                                    @RequestParam(value = "pages", required = false) Integer pages,
                                                    @RequestParam(value = "rows", required = false) Integer rows) {
-        return postService.queryPostList(categoryId, postStatus, startDate, endDate,
+        return postService.queryPostList(categoryId, title, postStatus, startDate, endDate,
                 pages == null ? 1 : pages, rows == null ? 10 : rows);
     }
 

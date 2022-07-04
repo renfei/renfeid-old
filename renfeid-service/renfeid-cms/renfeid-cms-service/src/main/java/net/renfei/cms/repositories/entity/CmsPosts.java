@@ -42,6 +42,16 @@ public class CmsPosts implements Serializable {
 
     private Boolean isOriginal;
 
+    private String postTitle;
+
+    private String postKeyword;
+
+    private String postExcerpt;
+
+    private String sourceName;
+
+    private String sourceUrl;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -196,6 +206,46 @@ public class CmsPosts implements Serializable {
         this.isOriginal = isOriginal;
     }
 
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    public String getPostKeyword() {
+        return postKeyword;
+    }
+
+    public void setPostKeyword(String postKeyword) {
+        this.postKeyword = postKeyword;
+    }
+
+    public String getPostExcerpt() {
+        return postExcerpt;
+    }
+
+    public void setPostExcerpt(String postExcerpt) {
+        this.postExcerpt = postExcerpt;
+    }
+
+    public String getSourceName() {
+        return sourceName;
+    }
+
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -221,6 +271,11 @@ public class CmsPosts implements Serializable {
         sb.append(", pageRank=").append(pageRank);
         sb.append(", secretLevel=").append(secretLevel);
         sb.append(", isOriginal=").append(isOriginal);
+        sb.append(", postTitle=").append(postTitle);
+        sb.append(", postKeyword=").append(postKeyword);
+        sb.append(", postExcerpt=").append(postExcerpt);
+        sb.append(", sourceName=").append(sourceName);
+        sb.append(", sourceUrl=").append(sourceUrl);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

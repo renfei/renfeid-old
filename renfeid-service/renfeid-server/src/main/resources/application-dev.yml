@@ -46,6 +46,8 @@ spring:
     jndi-name: mail/Session
   elasticsearch:
     uris: http://local.renfei.net:9200
+    username: elastic
+    password: elastic
 
 # 自定义配置
 system:

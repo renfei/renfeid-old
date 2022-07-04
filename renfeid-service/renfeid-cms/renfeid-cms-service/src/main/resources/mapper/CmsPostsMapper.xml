@@ -21,15 +21,15 @@
     <result column="page_rank" jdbcType="DOUBLE" property="pageRank" />
     <result column="secret_level" jdbcType="INTEGER" property="secretLevel" />
     <result column="is_original" jdbcType="BIT" property="isOriginal" />
+    <result column="post_title" jdbcType="VARCHAR" property="postTitle" />
+    <result column="post_keyword" jdbcType="VARCHAR" property="postKeyword" />
+    <result column="post_excerpt" jdbcType="VARCHAR" property="postExcerpt" />
+    <result column="source_name" jdbcType="VARCHAR" property="sourceName" />
+    <result column="source_url" jdbcType="VARCHAR" property="sourceUrl" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="net.renfei.cms.repositories.entity.CmsPostsWithBLOBs">
     <result column="featured_image" jdbcType="LONGVARCHAR" property="featuredImage" />
-    <result column="post_title" jdbcType="LONGVARCHAR" property="postTitle" />
-    <result column="post_keyword" jdbcType="LONGVARCHAR" property="postKeyword" />
-    <result column="post_excerpt" jdbcType="LONGVARCHAR" property="postExcerpt" />
     <result column="post_content" jdbcType="LONGVARCHAR" property="postContent" />
-    <result column="source_name" jdbcType="LONGVARCHAR" property="sourceName" />
-    <result column="source_url" jdbcType="LONGVARCHAR" property="sourceUrl" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -92,11 +92,11 @@
   <sql id="Base_Column_List">
     id, category_id, post_author, post_date, post_status, post_views, comment_status, 
     post_password, post_modified, post_modified_user, post_parent, version_number, thumbs_up, 
-    thumbs_down, avg_views, avg_comment, page_rank, secret_level, is_original
+    thumbs_down, avg_views, avg_comment, page_rank, secret_level, is_original, post_title, 
+    post_keyword, post_excerpt, source_name, source_url
   </sql>
   <sql id="Blob_Column_List">
-    featured_image, post_title, post_keyword, post_excerpt, post_content, source_name, 
-    source_url
+    featured_image, post_content
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="net.renfei.cms.repositories.entity.CmsPostsExample" resultMap="ResultMapWithBLOBs">
     select
@@ -153,18 +153,18 @@
       post_modified_user, post_parent, version_number, 
       thumbs_up, thumbs_down, avg_views, 
       avg_comment, page_rank, secret_level, 
-      is_original, featured_image, post_title, 
-      post_keyword, post_excerpt, post_content, 
-      source_name, source_url)
+      is_original, post_title, post_keyword, 
+      post_excerpt, source_name, source_url, 
+      featured_image, post_content)
     values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{postAuthor,jdbcType=BIGINT}, 
       #{postDate,jdbcType=TIMESTAMP}, #{postStatus,jdbcType=VARCHAR}, #{postViews,jdbcType=BIGINT}, 
       #{commentStatus,jdbcType=VARCHAR}, #{postPassword,jdbcType=VARCHAR}, #{postModified,jdbcType=TIMESTAMP}, 
       #{postModifiedUser,jdbcType=BIGINT}, #{postParent,jdbcType=BIGINT}, #{versionNumber,jdbcType=INTEGER}, 
       #{thumbsUp,jdbcType=BIGINT}, #{thumbsDown,jdbcType=BIGINT}, #{avgViews,jdbcType=DOUBLE}, 
       #{avgComment,jdbcType=DOUBLE}, #{pageRank,jdbcType=DOUBLE}, #{secretLevel,jdbcType=INTEGER}, 
-      #{isOriginal,jdbcType=BIT}, #{featuredImage,jdbcType=LONGVARCHAR}, #{postTitle,jdbcType=LONGVARCHAR}, 
-      #{postKeyword,jdbcType=LONGVARCHAR}, #{postExcerpt,jdbcType=LONGVARCHAR}, #{postContent,jdbcType=LONGVARCHAR}, 
-      #{sourceName,jdbcType=LONGVARCHAR}, #{sourceUrl,jdbcType=LONGVARCHAR})
+      #{isOriginal,jdbcType=BIT}, #{postTitle,jdbcType=VARCHAR}, #{postKeyword,jdbcType=VARCHAR}, 
+      #{postExcerpt,jdbcType=VARCHAR}, #{sourceName,jdbcType=VARCHAR}, #{sourceUrl,jdbcType=VARCHAR}, 
+      #{featuredImage,jdbcType=LONGVARCHAR}, #{postContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.cms.repositories.entity.CmsPostsWithBLOBs">
     insert into cms_posts
@@ -226,9 +226,6 @@
       <if test="isOriginal != null">
         is_original,
       </if>
-      <if test="featuredImage != null">
-        featured_image,
-      </if>
       <if test="postTitle != null">
         post_title,
       </if>
@@ -238,14 +235,17 @@
       <if test="postExcerpt != null">
         post_excerpt,
       </if>
-      <if test="postContent != null">
-        post_content,
-      </if>
       <if test="sourceName != null">
         source_name,
       </if>
       <if test="sourceUrl != null">
         source_url,
+      </if>
+      <if test="featuredImage != null">
+        featured_image,
+      </if>
+      <if test="postContent != null">
+        post_content,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -306,26 +306,26 @@
       <if test="isOriginal != null">
         #{isOriginal,jdbcType=BIT},
       </if>
+      <if test="postTitle != null">
+        #{postTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="postKeyword != null">
+        #{postKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="postExcerpt != null">
+        #{postExcerpt,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceName != null">
+        #{sourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceUrl != null">
+        #{sourceUrl,jdbcType=VARCHAR},
+      </if>
       <if test="featuredImage != null">
         #{featuredImage,jdbcType=LONGVARCHAR},
       </if>
-      <if test="postTitle != null">
-        #{postTitle,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="postKeyword != null">
-        #{postKeyword,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="postExcerpt != null">
-        #{postExcerpt,jdbcType=LONGVARCHAR},
-      </if>
       <if test="postContent != null">
         #{postContent,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="sourceName != null">
-        #{sourceName,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="sourceUrl != null">
-        #{sourceUrl,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -338,143 +338,148 @@
   <update id="updateByExampleSelective" parameterType="map">
     update cms_posts
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=BIGINT},
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
       </if>
-      <if test="record.categoryId != null">
-        category_id = #{record.categoryId,jdbcType=BIGINT},
+      <if test="row.categoryId != null">
+        category_id = #{row.categoryId,jdbcType=BIGINT},
       </if>
-      <if test="record.postAuthor != null">
-        post_author = #{record.postAuthor,jdbcType=BIGINT},
+      <if test="row.postAuthor != null">
+        post_author = #{row.postAuthor,jdbcType=BIGINT},
       </if>
-      <if test="record.postDate != null">
-        post_date = #{record.postDate,jdbcType=TIMESTAMP},
+      <if test="row.postDate != null">
+        post_date = #{row.postDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.postStatus != null">
-        post_status = #{record.postStatus,jdbcType=VARCHAR},
+      <if test="row.postStatus != null">
+        post_status = #{row.postStatus,jdbcType=VARCHAR},
       </if>
-      <if test="record.postViews != null">
-        post_views = #{record.postViews,jdbcType=BIGINT},
+      <if test="row.postViews != null">
+        post_views = #{row.postViews,jdbcType=BIGINT},
       </if>
-      <if test="record.commentStatus != null">
-        comment_status = #{record.commentStatus,jdbcType=VARCHAR},
+      <if test="row.commentStatus != null">
+        comment_status = #{row.commentStatus,jdbcType=VARCHAR},
       </if>
-      <if test="record.postPassword != null">
-        post_password = #{record.postPassword,jdbcType=VARCHAR},
+      <if test="row.postPassword != null">
+        post_password = #{row.postPassword,jdbcType=VARCHAR},
       </if>
-      <if test="record.postModified != null">
-        post_modified = #{record.postModified,jdbcType=TIMESTAMP},
+      <if test="row.postModified != null">
+        post_modified = #{row.postModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.postModifiedUser != null">
-        post_modified_user = #{record.postModifiedUser,jdbcType=BIGINT},
+      <if test="row.postModifiedUser != null">
+        post_modified_user = #{row.postModifiedUser,jdbcType=BIGINT},
       </if>
-      <if test="record.postParent != null">
-        post_parent = #{record.postParent,jdbcType=BIGINT},
+      <if test="row.postParent != null">
+        post_parent = #{row.postParent,jdbcType=BIGINT},
       </if>
-      <if test="record.versionNumber != null">
-        version_number = #{record.versionNumber,jdbcType=INTEGER},
+      <if test="row.versionNumber != null">
+        version_number = #{row.versionNumber,jdbcType=INTEGER},
       </if>
-      <if test="record.thumbsUp != null">
-        thumbs_up = #{record.thumbsUp,jdbcType=BIGINT},
+      <if test="row.thumbsUp != null">
+        thumbs_up = #{row.thumbsUp,jdbcType=BIGINT},
       </if>
-      <if test="record.thumbsDown != null">
-        thumbs_down = #{record.thumbsDown,jdbcType=BIGINT},
+      <if test="row.thumbsDown != null">
+        thumbs_down = #{row.thumbsDown,jdbcType=BIGINT},
       </if>
-      <if test="record.avgViews != null">
-        avg_views = #{record.avgViews,jdbcType=DOUBLE},
+      <if test="row.avgViews != null">
+        avg_views = #{row.avgViews,jdbcType=DOUBLE},
       </if>
-      <if test="record.avgComment != null">
-        avg_comment = #{record.avgComment,jdbcType=DOUBLE},
+      <if test="row.avgComment != null">
+        avg_comment = #{row.avgComment,jdbcType=DOUBLE},
       </if>
-      <if test="record.pageRank != null">
-        page_rank = #{record.pageRank,jdbcType=DOUBLE},
+      <if test="row.pageRank != null">
+        page_rank = #{row.pageRank,jdbcType=DOUBLE},
       </if>
-      <if test="record.secretLevel != null">
-        secret_level = #{record.secretLevel,jdbcType=INTEGER},
+      <if test="row.secretLevel != null">
+        secret_level = #{row.secretLevel,jdbcType=INTEGER},
       </if>
-      <if test="record.isOriginal != null">
-        is_original = #{record.isOriginal,jdbcType=BIT},
+      <if test="row.isOriginal != null">
+        is_original = #{row.isOriginal,jdbcType=BIT},
       </if>
-      <if test="record.featuredImage != null">
-        featured_image = #{record.featuredImage,jdbcType=LONGVARCHAR},
+      <if test="row.postTitle != null">
+        post_title = #{row.postTitle,jdbcType=VARCHAR},
       </if>
-      <if test="record.postTitle != null">
-        post_title = #{record.postTitle,jdbcType=LONGVARCHAR},
+      <if test="row.postKeyword != null">
+        post_keyword = #{row.postKeyword,jdbcType=VARCHAR},
       </if>
-      <if test="record.postKeyword != null">
-        post_keyword = #{record.postKeyword,jdbcType=LONGVARCHAR},
+      <if test="row.postExcerpt != null">
+        post_excerpt = #{row.postExcerpt,jdbcType=VARCHAR},
       </if>
-      <if test="record.postExcerpt != null">
-        post_excerpt = #{record.postExcerpt,jdbcType=LONGVARCHAR},
+      <if test="row.sourceName != null">
+        source_name = #{row.sourceName,jdbcType=VARCHAR},
       </if>
-      <if test="record.postContent != null">
-        post_content = #{record.postContent,jdbcType=LONGVARCHAR},
+      <if test="row.sourceUrl != null">
+        source_url = #{row.sourceUrl,jdbcType=VARCHAR},
       </if>
-      <if test="record.sourceName != null">
-        source_name = #{record.sourceName,jdbcType=LONGVARCHAR},
+      <if test="row.featuredImage != null">
+        featured_image = #{row.featuredImage,jdbcType=LONGVARCHAR},
       </if>
-      <if test="record.sourceUrl != null">
-        source_url = #{record.sourceUrl,jdbcType=LONGVARCHAR},
+      <if test="row.postContent != null">
+        post_content = #{row.postContent,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update cms_posts
-    set id = #{record.id,jdbcType=BIGINT},
-      category_id = #{record.categoryId,jdbcType=BIGINT},
-      post_author = #{record.postAuthor,jdbcType=BIGINT},
-      post_date = #{record.postDate,jdbcType=TIMESTAMP},
-      post_status = #{record.postStatus,jdbcType=VARCHAR},
-      post_views = #{record.postViews,jdbcType=BIGINT},
-      comment_status = #{record.commentStatus,jdbcType=VARCHAR},
-      post_password = #{record.postPassword,jdbcType=VARCHAR},
-      post_modified = #{record.postModified,jdbcType=TIMESTAMP},
-      post_modified_user = #{record.postModifiedUser,jdbcType=BIGINT},
-      post_parent = #{record.postParent,jdbcType=BIGINT},
-      version_number = #{record.versionNumber,jdbcType=INTEGER},
-      thumbs_up = #{record.thumbsUp,jdbcType=BIGINT},
-      thumbs_down = #{record.thumbsDown,jdbcType=BIGINT},
-      avg_views = #{record.avgViews,jdbcType=DOUBLE},
-      avg_comment = #{record.avgComment,jdbcType=DOUBLE},
-      page_rank = #{record.pageRank,jdbcType=DOUBLE},
-      secret_level = #{record.secretLevel,jdbcType=INTEGER},
-      is_original = #{record.isOriginal,jdbcType=BIT},
-      featured_image = #{record.featuredImage,jdbcType=LONGVARCHAR},
-      post_title = #{record.postTitle,jdbcType=LONGVARCHAR},
-      post_keyword = #{record.postKeyword,jdbcType=LONGVARCHAR},
-      post_excerpt = #{record.postExcerpt,jdbcType=LONGVARCHAR},
-      post_content = #{record.postContent,jdbcType=LONGVARCHAR},
-      source_name = #{record.sourceName,jdbcType=LONGVARCHAR},
-      source_url = #{record.sourceUrl,jdbcType=LONGVARCHAR}
-    <if test="_parameter != null">
+    set id = #{row.id,jdbcType=BIGINT},
+      category_id = #{row.categoryId,jdbcType=BIGINT},
+      post_author = #{row.postAuthor,jdbcType=BIGINT},
+      post_date = #{row.postDate,jdbcType=TIMESTAMP},
+      post_status = #{row.postStatus,jdbcType=VARCHAR},
+      post_views = #{row.postViews,jdbcType=BIGINT},
+      comment_status = #{row.commentStatus,jdbcType=VARCHAR},
+      post_password = #{row.postPassword,jdbcType=VARCHAR},
+      post_modified = #{row.postModified,jdbcType=TIMESTAMP},
+      post_modified_user = #{row.postModifiedUser,jdbcType=BIGINT},
+      post_parent = #{row.postParent,jdbcType=BIGINT},
+      version_number = #{row.versionNumber,jdbcType=INTEGER},
+      thumbs_up = #{row.thumbsUp,jdbcType=BIGINT},
+      thumbs_down = #{row.thumbsDown,jdbcType=BIGINT},
+      avg_views = #{row.avgViews,jdbcType=DOUBLE},
+      avg_comment = #{row.avgComment,jdbcType=DOUBLE},
+      page_rank = #{row.pageRank,jdbcType=DOUBLE},
+      secret_level = #{row.secretLevel,jdbcType=INTEGER},
+      is_original = #{row.isOriginal,jdbcType=BIT},
+      post_title = #{row.postTitle,jdbcType=VARCHAR},
+      post_keyword = #{row.postKeyword,jdbcType=VARCHAR},
+      post_excerpt = #{row.postExcerpt,jdbcType=VARCHAR},
+      source_name = #{row.sourceName,jdbcType=VARCHAR},
+      source_url = #{row.sourceUrl,jdbcType=VARCHAR},
+      featured_image = #{row.featuredImage,jdbcType=LONGVARCHAR},
+      post_content = #{row.postContent,jdbcType=LONGVARCHAR}
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
     update cms_posts
-    set id = #{record.id,jdbcType=BIGINT},
-      category_id = #{record.categoryId,jdbcType=BIGINT},
-      post_author = #{record.postAuthor,jdbcType=BIGINT},
-      post_date = #{record.postDate,jdbcType=TIMESTAMP},
-      post_status = #{record.postStatus,jdbcType=VARCHAR},
-      post_views = #{record.postViews,jdbcType=BIGINT},
-      comment_status = #{record.commentStatus,jdbcType=VARCHAR},
-      post_password = #{record.postPassword,jdbcType=VARCHAR},
-      post_modified = #{record.postModified,jdbcType=TIMESTAMP},
-      post_modified_user = #{record.postModifiedUser,jdbcType=BIGINT},
-      post_parent = #{record.postParent,jdbcType=BIGINT},
-      version_number = #{record.versionNumber,jdbcType=INTEGER},
-      thumbs_up = #{record.thumbsUp,jdbcType=BIGINT},
-      thumbs_down = #{record.thumbsDown,jdbcType=BIGINT},
-      avg_views = #{record.avgViews,jdbcType=DOUBLE},
-      avg_comment = #{record.avgComment,jdbcType=DOUBLE},
-      page_rank = #{record.pageRank,jdbcType=DOUBLE},
-      secret_level = #{record.secretLevel,jdbcType=INTEGER},
-      is_original = #{record.isOriginal,jdbcType=BIT}
-    <if test="_parameter != null">
+    set id = #{row.id,jdbcType=BIGINT},
+      category_id = #{row.categoryId,jdbcType=BIGINT},
+      post_author = #{row.postAuthor,jdbcType=BIGINT},
+      post_date = #{row.postDate,jdbcType=TIMESTAMP},
+      post_status = #{row.postStatus,jdbcType=VARCHAR},
+      post_views = #{row.postViews,jdbcType=BIGINT},
+      comment_status = #{row.commentStatus,jdbcType=VARCHAR},
+      post_password = #{row.postPassword,jdbcType=VARCHAR},
+      post_modified = #{row.postModified,jdbcType=TIMESTAMP},
+      post_modified_user = #{row.postModifiedUser,jdbcType=BIGINT},
+      post_parent = #{row.postParent,jdbcType=BIGINT},
+      version_number = #{row.versionNumber,jdbcType=INTEGER},
+      thumbs_up = #{row.thumbsUp,jdbcType=BIGINT},
+      thumbs_down = #{row.thumbsDown,jdbcType=BIGINT},
+      avg_views = #{row.avgViews,jdbcType=DOUBLE},
+      avg_comment = #{row.avgComment,jdbcType=DOUBLE},
+      page_rank = #{row.pageRank,jdbcType=DOUBLE},
+      secret_level = #{row.secretLevel,jdbcType=INTEGER},
+      is_original = #{row.isOriginal,jdbcType=BIT},
+      post_title = #{row.postTitle,jdbcType=VARCHAR},
+      post_keyword = #{row.postKeyword,jdbcType=VARCHAR},
+      post_excerpt = #{row.postExcerpt,jdbcType=VARCHAR},
+      source_name = #{row.sourceName,jdbcType=VARCHAR},
+      source_url = #{row.sourceUrl,jdbcType=VARCHAR}
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
@@ -535,26 +540,26 @@
       <if test="isOriginal != null">
         is_original = #{isOriginal,jdbcType=BIT},
       </if>
+      <if test="postTitle != null">
+        post_title = #{postTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="postKeyword != null">
+        post_keyword = #{postKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="postExcerpt != null">
+        post_excerpt = #{postExcerpt,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceName != null">
+        source_name = #{sourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceUrl != null">
+        source_url = #{sourceUrl,jdbcType=VARCHAR},
+      </if>
       <if test="featuredImage != null">
         featured_image = #{featuredImage,jdbcType=LONGVARCHAR},
       </if>
-      <if test="postTitle != null">
-        post_title = #{postTitle,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="postKeyword != null">
-        post_keyword = #{postKeyword,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="postExcerpt != null">
-        post_excerpt = #{postExcerpt,jdbcType=LONGVARCHAR},
-      </if>
       <if test="postContent != null">
         post_content = #{postContent,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="sourceName != null">
-        source_name = #{sourceName,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="sourceUrl != null">
-        source_url = #{sourceUrl,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -579,13 +584,13 @@
       page_rank = #{pageRank,jdbcType=DOUBLE},
       secret_level = #{secretLevel,jdbcType=INTEGER},
       is_original = #{isOriginal,jdbcType=BIT},
+      post_title = #{postTitle,jdbcType=VARCHAR},
+      post_keyword = #{postKeyword,jdbcType=VARCHAR},
+      post_excerpt = #{postExcerpt,jdbcType=VARCHAR},
+      source_name = #{sourceName,jdbcType=VARCHAR},
+      source_url = #{sourceUrl,jdbcType=VARCHAR},
       featured_image = #{featuredImage,jdbcType=LONGVARCHAR},
-      post_title = #{postTitle,jdbcType=LONGVARCHAR},
-      post_keyword = #{postKeyword,jdbcType=LONGVARCHAR},
-      post_excerpt = #{postExcerpt,jdbcType=LONGVARCHAR},
-      post_content = #{postContent,jdbcType=LONGVARCHAR},
-      source_name = #{sourceName,jdbcType=LONGVARCHAR},
-      source_url = #{sourceUrl,jdbcType=LONGVARCHAR}
+      post_content = #{postContent,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="net.renfei.cms.repositories.entity.CmsPosts">
@@ -607,7 +612,12 @@
       avg_comment = #{avgComment,jdbcType=DOUBLE},
       page_rank = #{pageRank,jdbcType=DOUBLE},
       secret_level = #{secretLevel,jdbcType=INTEGER},
-      is_original = #{isOriginal,jdbcType=BIT}
+      is_original = #{isOriginal,jdbcType=BIT},
+      post_title = #{postTitle,jdbcType=VARCHAR},
+      post_keyword = #{postKeyword,jdbcType=VARCHAR},
+      post_excerpt = #{postExcerpt,jdbcType=VARCHAR},
+      source_name = #{sourceName,jdbcType=VARCHAR},
+      source_url = #{sourceUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

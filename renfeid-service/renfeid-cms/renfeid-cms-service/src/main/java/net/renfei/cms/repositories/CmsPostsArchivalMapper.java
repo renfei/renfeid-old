@@ -16,9 +16,9 @@ public interface CmsPostsArchivalMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(CmsPostsArchivalWithBLOBs record);
+    int insert(CmsPostsArchivalWithBLOBs row);
 
-    int insertSelective(CmsPostsArchivalWithBLOBs record);
+    int insertSelective(CmsPostsArchivalWithBLOBs row);
 
     List<CmsPostsArchivalWithBLOBs> selectByExampleWithBLOBs(CmsPostsArchivalExample example);
 
@@ -26,15 +26,15 @@ public interface CmsPostsArchivalMapper {
 
     CmsPostsArchivalWithBLOBs selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") CmsPostsArchivalWithBLOBs record, @Param("example") CmsPostsArchivalExample example);
+    int updateByExampleSelective(@Param("row") CmsPostsArchivalWithBLOBs row, @Param("example") CmsPostsArchivalExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") CmsPostsArchivalWithBLOBs record, @Param("example") CmsPostsArchivalExample example);
+    int updateByExampleWithBLOBs(@Param("row") CmsPostsArchivalWithBLOBs row, @Param("example") CmsPostsArchivalExample example);
 
-    int updateByExample(@Param("record") CmsPostsArchival record, @Param("example") CmsPostsArchivalExample example);
+    int updateByExample(@Param("row") CmsPostsArchival row, @Param("example") CmsPostsArchivalExample example);
 
-    int updateByPrimaryKeySelective(CmsPostsArchivalWithBLOBs record);
+    int updateByPrimaryKeySelective(CmsPostsArchivalWithBLOBs row);
 
-    int updateByPrimaryKeyWithBLOBs(CmsPostsArchivalWithBLOBs record);
+    int updateByPrimaryKeyWithBLOBs(CmsPostsArchivalWithBLOBs row);
 
-    int updateByPrimaryKey(CmsPostsArchival record);
+    int updateByPrimaryKey(CmsPostsArchival row);
 }

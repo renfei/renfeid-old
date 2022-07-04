@@ -50,7 +50,7 @@ public interface PostService {
      * @param rows       每页行数
      * @return
      */
-    APIResult<ListData<Post>> queryPostList(Long categoryId, PostStatusEnum postStatus,
+    APIResult<ListData<Post>> queryPostList(Long categoryId, String title, PostStatusEnum postStatus,
                                             Date startDate, Date endDate, int pages, int rows);
 
     /**

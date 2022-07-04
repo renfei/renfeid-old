@@ -96,17 +96,17 @@ public class PostServiceImpl implements PostService {
                 }
             }
             if (postListData == null) {
-                postListData = this.queryPostList(categoryId, PostStatusEnum.PUBLISH, null, new Date(), pages, rows).getData();
+                postListData = this.queryPostList(categoryId, null, PostStatusEnum.PUBLISH, null, new Date(), pages, rows).getData();
                 redisService.set(redisKey, postListData);
             }
             return new APIResult<>(postListData);
         } else {
-            return this.queryPostList(categoryId, PostStatusEnum.PUBLISH, null, new Date(), pages, rows);
+            return this.queryPostList(categoryId, null, PostStatusEnum.PUBLISH, null, new Date(), pages, rows);
         }
     }
 
     @Override
-    public APIResult<ListData<Post>> queryPostList(Long categoryId, PostStatusEnum postStatus,
+    public APIResult<ListData<Post>> queryPostList(Long categoryId, String title, PostStatusEnum postStatus,
                                                    Date startDate, Date endDate, int pages, int rows) {
         UserDetail userDetail = systemService.currentUserDetail();
         SecretLevelEnum userSecretLevel =
@@ -126,6 +126,9 @@ public class PostServiceImpl implements PostService {
         }
         if (categoryId != null) {
             criteria.andCategoryIdEqualTo(categoryId);
+        }
+        if (title != null) {
+            criteria.andPostTitleLike("%" + title + "%");
         }
         ListData<Post> postListData = new ListData<>();
         try (Page<CmsPostsWithBLOBs> page = PageHelper.startPage(pages, rows)) {
