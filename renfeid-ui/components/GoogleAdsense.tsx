@@ -1,15 +1,6 @@
-import React, {useEffect} from "react";
+import Script from 'next/script';
 
 const GoogleAdsense = (props: any) => {
-    useEffect(() => {
-        try {
-            // @ts-ignore
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (err) {
-            console.log(err);
-        }
-    }, [])
-
     return (
         <>
             <ins className="adsbygoogle"
@@ -18,6 +9,11 @@ const GoogleAdsense = (props: any) => {
                  data-ad-slot={props.slot}
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
+            <Script
+                id={props.slot}
+            >
+                {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+            </Script>
         </>
     )
 }

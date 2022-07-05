@@ -11,7 +11,86 @@ import GoogleAdsense from '../components/GoogleAdsense'
 const {Title} = Typography;
 const {Meta} = Card;
 
-const data = [
+// 文章 1到2
+const postsDataTop2 = [
+    {
+        id: 123,
+        postTitle: '关于我在极狐GitLab造机器人这件事儿我觉得很酷',
+        postExcerpt: '我在参与极狐GitLab创作营 JIHULAB 101活动的时候，发现极狐GitLab官方启用了一个机器人，会在issue哪里进行服务，我就突发奇想，很多地方都有自动回复的客服机器人，那在极狐GitLab能不能造个机器人玩？',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/2af9436a41c945e58b98d5ac09835179.webp',
+    },
+    {
+        id: 123,
+        postTitle: '如何参与极狐GitLab开源项目成为贡献者',
+        postExcerpt: '嗨，小伙伴，你是否也希望参与到极狐GitLab开源项目的建设，成为贡献者？但作为新手似乎无从下手？其实，每个人都可以参与到极狐GitLab开源项目中成为贡献者，无论你是否是技术人员。',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/9b69f9f788e74d30a845a3f85f0a2797.webp',
+    },
+]
+
+// 文章 3到5
+const postsData3To5 = [
+    {
+        id: 123,
+        postTitle: '关于 Cloudflare R2 Storage 的使用体验测评和我的观点',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg',
+    },
+    {
+        id: 123,
+        postTitle: '西部数据（WD40NMZW） 4TB Elements（2060-800041-003）移动硬盘拆解记录',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg',
+    },
+    {
+        id: 123,
+        postTitle: '获取公网IP服务「ip.renfei.net」升级，支持根据请求头 Accept 响应不同格式数据',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/108b72905f1a4cf59b9bf3431c78e480.jpg',
+    },
+]
+
+// 文章 6到11
+const postsData6To11 = [
+    {
+        id: 123,
+        postTitle: '关于 Cloudflare R2 Storage 的使用体验测评和我的观点',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg',
+    },
+    {
+        id: 123,
+        postTitle: '西部数据（WD40NMZW） 4TB Elements（2060-800041-003）移动硬盘拆解记录',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg',
+    },
+    {
+        id: 123,
+        postTitle: '获取公网IP服务「ip.renfei.net」升级，支持根据请求头 Accept 响应不同格式数据',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/108b72905f1a4cf59b9bf3431c78e480.jpg',
+    },
+    {
+        id: 123,
+        postTitle: '西部数据（WD40NMZW） 4TB Elements（2060-800041-003）移动硬盘拆解记录',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg',
+    },
+    {
+        id: 123,
+        postTitle: '关于 Cloudflare R2 Storage 的使用体验测评和我的观点',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg',
+    },
+    {
+        id: 123,
+        postTitle: '获取公网IP服务「ip.renfei.net」升级，支持根据请求头 Accept 响应不同格式数据',
+        postExcerpt: '',
+        featuredImage: 'https://cdn.renfei.net/upload/2022/108b72905f1a4cf59b9bf3431c78e480.jpg',
+    },
+]
+
+// 微博数据
+const weiboData = [
     {
         author: '任霏',
         avatar: 'https://cdn.renfei.net/images/renfei_600.jpg',
@@ -42,7 +121,7 @@ const data = [
             </Tooltip>
         ),
     },
-];
+]
 
 const Home = () => {
     return (
@@ -53,265 +132,140 @@ const Home = () => {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
 
-            <div className={styles.banner_wrapper}>
-                <div className={styles.banner}>
-                    <Row>
-                        <Col span={15} className={styles.banner_col}>
-                            <div className={styles.banner_img_wrapper}>
-                                <img
-                                    className={styles.banner_img}
-                                    src={"https://cdn.renfei.net/upload/2022/2af9436a41c945e58b98d5ac09835179.webp"}
-                                    alt={""}/>
-                            </div>
-                        </Col>
-                        <Col span={9} className={styles.banner_col}>
-                            <div className={styles.banner_content_wrapper}>
-                                <Link href="/" style={{display: 'block'}}>
-                                    <a>
-                                        <Title level={2}
-                                               className={styles.banner_content_h2}>关于我在极狐GitLab造机器人这件事儿我觉得很酷</Title>
-                                        <p className={styles.banner_content_p}>我在参与极狐GitLab创作营 JIHULAB
-                                            101活动的时候，发现极狐GitLab官方启用了一个机器人，会在issue哪里进行服务，我就突发奇想，很多地方都有自动回复的客服机器人，那在极狐GitLab能不能造个机器人玩？</p>
-                                        <span className={styles.banner_content_icon}><ArrowRightOutlined/></span>
-                                    </a>
-                                </Link>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-            </div>
+            {
+                postsDataTop2.length > 0 ? (
+                    <div className={styles.banner_wrapper}>
+                        <div className={styles.banner}>
+                            <Row>
+                                <Col span={15} className={styles.banner_col}>
+                                    <div className={styles.banner_img_wrapper}>
+                                        <img
+                                            className={styles.banner_img}
+                                            src={postsDataTop2[0].featuredImage}
+                                            alt={postsDataTop2[0].postTitle}/>
+                                    </div>
+                                </Col>
+                                <Col span={9} className={styles.banner_col}>
+                                    <div className={styles.banner_content_wrapper}>
+                                        <Link href={`/posts/${postsDataTop2[0].id}`} style={{display: 'block'}}>
+                                            <a>
+                                                <Title level={2}
+                                                       className={styles.banner_content_h2}>
+                                                    {postsDataTop2[0].postTitle}
+                                                </Title>
+                                                <p className={styles.banner_content_p}>
+                                                    {postsDataTop2[0].postExcerpt}
+                                                </p>
+                                                <span
+                                                    className={styles.banner_content_icon}><ArrowRightOutlined/></span>
+                                            </a>
+                                        </Link>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
+                    </div>
+                ) : ''
+            }
             <main className={styles.main}>
                 <section className={"renfeid-content"}>
                     <div className={styles.posts_top5}>
                         <Title level={3}>任霏博客</Title>
                         <Row>
                             <Col span={12} className={styles.posts_top5_left}>
-                                <Link href="/" style={{display: 'block'}}>
-                                    <a>
-                                        <Card
-                                            bordered={false}
-                                            cover={
-                                                <img
-                                                    style={{borderRadius: '16px 16px 16px 16px'}}
-                                                    alt="example"
-                                                    src="https://cdn.renfei.net/upload/2022/9b69f9f788e74d30a845a3f85f0a2797.webp"/>
-                                            }
-                                        >
-                                            <Title level={3} ellipsis>如何参与极狐GitLab开源项目成为贡献者</Title>
-                                            <Meta
-                                                title="嗨，小伙伴，你是否也希望参与到极狐GitLab开源项目的建设，成为贡献者？但作为新手似乎无从下手？其实，每个人都可以参与到极狐GitLab开源项目中成为贡献者，无论你是否是技术人员。"/>
-                                        </Card>
-                                    </a>
-                                </Link>
+                                {
+                                    postsDataTop2.length > 1 ? (
+                                        <Link href={`/posts/${postsDataTop2[1].id}`} style={{display: 'block'}}>
+                                            <a>
+                                                <Card
+                                                    bordered={false}
+                                                    cover={
+                                                        <img
+                                                            style={{borderRadius: '16px 16px 16px 16px'}}
+                                                            alt={postsDataTop2[1].postTitle}
+                                                            src={postsDataTop2[1].featuredImage}/>
+                                                    }
+                                                >
+                                                    <Title level={3} ellipsis>
+                                                        {postsDataTop2[1].postTitle}
+                                                    </Title>
+                                                    <Meta
+                                                        title={postsDataTop2[1].postExcerpt}/>
+                                                </Card>
+                                            </a>
+                                        </Link>
+                                    ) : ''
+                                }
                             </Col>
                             <Col span={12} className={styles.posts_top5_right}>
                                 <Row>
-                                    <Col span={24}>
-                                        <Link href={"/"}>
-                                            <a>
-                                                <Row>
-                                                    <Col span={15}>
-                                                        <Title level={3}>关于 Cloudflare R2 Storage 的使用体验测评和我的观点</Title>
-                                                    </Col>
-                                                    <Col span={9}>
-                                                        <Image
-                                                            className={styles.posts_img_radius}
-                                                            src={"https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg"}
-                                                            layout={"intrinsic"}
-                                                            width={"1280"}
-                                                            height={"640"}
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            </a>
-                                        </Link>
-                                    </Col>
-                                    <Divider/>
-                                    <Col span={24}>
-                                        <Link href={"/"}>
-                                            <a>
-                                                <Row>
-                                                    <Col span={15}>
-                                                        <Title level={3}>西部数据（WD40NMZW） 4TB
-                                                            Elements（2060-800041-003）移动硬盘拆解记录</Title>
-                                                    </Col>
-                                                    <Col span={9}>
-                                                        <Image
-                                                            className={styles.posts_img_radius}
-                                                            src={"https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg"}
-                                                            layout={"intrinsic"}
-                                                            width={"1280"}
-                                                            height={"640"}
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            </a>
-                                        </Link>
-                                    </Col>
-                                    <Divider/>
-                                    <Col span={24}>
-                                        <Link href={"/"}>
-                                            <a>
-                                                <Row>
-                                                    <Col span={15}>
-                                                        <Title level={3}>获取公网IP服务「ip.renfei.net」升级，支持根据请求头 Accept
-                                                            响应不同格式数据</Title>
-                                                    </Col>
-                                                    <Col span={9}>
-                                                        <Image
-                                                            className={styles.posts_img_radius}
-                                                            src={"https://cdn.renfei.net/upload/2022/108b72905f1a4cf59b9bf3431c78e480.jpg"}
-                                                            layout={"intrinsic"}
-                                                            width={"1280"}
-                                                            height={"640"}
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            </a>
-                                        </Link>
-                                    </Col>
+                                    {
+                                        postsData3To5.length > 0 ? (
+                                            postsData3To5.map(post => (
+                                                <Col key={post.id} span={24}>
+                                                    <Link href={`/posts/${post.id}`}>
+                                                        <a>
+                                                            <Row>
+                                                                <Col span={15}>
+                                                                    <Title level={3}>
+                                                                        {post.postTitle}
+                                                                    </Title>
+                                                                </Col>
+                                                                <Col span={9}>
+                                                                    <Image
+                                                                        className={styles.posts_img_radius}
+                                                                        src={post.featuredImage}
+                                                                        alt={post.postTitle}
+                                                                        layout={"intrinsic"}
+                                                                        width={"1280"}
+                                                                        height={"640"}
+                                                                    />
+                                                                </Col>
+                                                            </Row>
+                                                        </a>
+                                                    </Link>
+                                                    <Divider/>
+                                                </Col>
+                                            ))
+                                        ) : ''
+                                    }
                                 </Row>
                             </Col>
                         </Row>
                     </div>
                     <Divider>更多内容</Divider>
                     <Row>
-                        <Col md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
-                            <div className={styles.posts_more}>
-                                <Link href={"/"}>
-                                    <a>
-                                        <Row>
-                                            <Col span={15}>
-                                                <Title level={4}>关于 Cloudflare R2 Storage 的使用体验测评和我的观点</Title>
-                                            </Col>
-                                            <Col span={9}>
-                                                <Image
-                                                    className={styles.posts_img_radius}
-                                                    src={"https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg"}
-                                                    layout={"intrinsic"}
-                                                    width={"1280"}
-                                                    height={"640"}
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </a>
-                                </Link>
-                            </div>
-                        </Col>
-                        <Col md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
-                            <div className={styles.posts_more}>
-                                <Link href={"/"}>
-                                    <a>
-                                        <Row>
-                                            <Col span={15}>
-                                                <Title level={4}>
-                                                    西部数据（WD40NMZW）4TB Elements（2060
-                                                </Title>
-                                            </Col>
-                                            <Col span={9}>
-                                                <Image
-                                                    className={styles.posts_img_radius}
-                                                    src={"https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg"}
-                                                    layout={"intrinsic"}
-                                                    width={"1280"}
-                                                    height={"640"}
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </a>
-                                </Link>
-                            </div>
-                        </Col>
-                        <Col md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
-                            <div className={styles.posts_more}>
-                                <Link href={"/"}>
-                                    <a>
-                                        <Row>
-                                            <Col span={15}>
-                                                <Title level={4}>关于 Cloudflare R2 Storage 的使用体验测评和我的观点</Title>
-                                            </Col>
-                                            <Col span={9}>
-                                                <Image
-                                                    className={styles.posts_img_radius}
-                                                    src={"https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg"}
-                                                    layout={"intrinsic"}
-                                                    width={"1280"}
-                                                    height={"640"}
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </a>
-                                </Link>
-                            </div>
-                        </Col>
-                        <Col md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
-                            <div className={styles.posts_more}>
-                                <Link href={"/"}>
-                                    <a>
-                                        <Row>
-                                            <Col span={15}>
-                                                <Title level={4}>关于 Cloudflare R2 Storage 的使用体验测评和我的观点</Title>
-                                            </Col>
-                                            <Col span={9}>
-                                                <Image
-                                                    className={styles.posts_img_radius}
-                                                    src={"https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg"}
-                                                    layout={"intrinsic"}
-                                                    width={"1280"}
-                                                    height={"640"}
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </a>
-                                </Link>
-                            </div>
-                        </Col>
-                        <Col md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
-                            <div className={styles.posts_more}>
-                                <Link href={"/"}>
-                                    <a>
-                                        <Row>
-                                            <Col span={15}>
-                                                <Title level={4}>
-                                                    西部数据（WD40NMZW）4TB Elements（2060
-                                                </Title>
-                                            </Col>
-                                            <Col span={9}>
-                                                <Image
-                                                    className={styles.posts_img_radius}
-                                                    src={"https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg"}
-                                                    layout={"intrinsic"}
-                                                    width={"1280"}
-                                                    height={"640"}
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </a>
-                                </Link>
-                            </div>
-                        </Col>
-                        <Col md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
-                            <div className={styles.posts_more}>
-                                <Link href={"/"}>
-                                    <a>
-                                        <Row>
-                                            <Col span={15}>
-                                                <Title level={4}>关于 Cloudflare R2 Storage 的使用体验测评和我的观点</Title>
-                                            </Col>
-                                            <Col span={9}>
-                                                <Image
-                                                    className={styles.posts_img_radius}
-                                                    src={"https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg"}
-                                                    layout={"intrinsic"}
-                                                    width={"1280"}
-                                                    height={"640"}
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </a>
-                                </Link>
-                            </div>
-                        </Col>
+                        {
+                            postsData6To11.length > 0 ? (
+                                postsData6To11.map(post => (
+                                    <Col key={post.id} md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
+                                        <div className={styles.posts_more}>
+                                            <Link href={"/"}>
+                                                <a>
+                                                    <Row>
+                                                        <Col span={15}>
+                                                            <Title level={4}>
+                                                                {post.postTitle}
+                                                            </Title>
+                                                        </Col>
+                                                        <Col span={9}>
+                                                            <Image
+                                                                className={styles.posts_img_radius}
+                                                                src={post.featuredImage}
+                                                                alt={post.postTitle}
+                                                                layout={"intrinsic"}
+                                                                width={"1280"}
+                                                                height={"640"}
+                                                            />
+                                                        </Col>
+                                                    </Row>
+                                                </a>
+                                            </Link>
+                                        </div>
+                                    </Col>
+                                ))
+                            ) : ''
+                        }
                     </Row>
                     <div style={{textAlign: 'center', padding: '20px 0 40px 0'}}>
                         <Link href={"/posts"}>
@@ -326,7 +280,7 @@ const Home = () => {
                             <List
                                 className="comment-list"
                                 itemLayout="horizontal"
-                                dataSource={data}
+                                dataSource={weiboData}
                                 renderItem={item => (
                                     <li>
                                         <Comment
@@ -343,8 +297,8 @@ const Home = () => {
                         <Col sm={12} xs={24} style={{padding: '0 0 0 20px'}}>
                             <Divider>更多内容</Divider>
                             <GoogleAdsense
-                                client={"ca-pub-8859756463807757"}
-                                slot={"6410951712"}
+                                client={"ca-pub-885975646380"}
+                                slot={"641095"}
                             />
                         </Col>
                     </Row>
