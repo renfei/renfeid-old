@@ -1,13 +1,13 @@
-import { Layout } from 'antd';
+import {Layout} from 'antd';
 
-const { Footer } = Layout;
+const {Footer} = Layout;
 
 const MyFooter = () => {
-  return (
-      <>
-          <Footer>Ant Design ©2018 Created by Ant UED</Footer>
-      </>
-  )
+    return (
+        <>
+            <Footer>Ant Design ©2018 Created by Ant UED</Footer>
+        </>
+    )
 }
 
 export default MyFooter
