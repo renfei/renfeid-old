@@ -1,0 +1,8 @@
+.signInForm{
+    background-color: #ffffff;
+    max-width: 800px;
+    margin: auto;
+    box-shadow: 0 0 15px rgb(0 0 0 / 10%);
+    border-radius: 8px;
+    padding: 20px;
+}

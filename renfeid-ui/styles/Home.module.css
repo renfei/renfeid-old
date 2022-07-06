@@ -47,12 +47,16 @@
 }
 
 .banner_content_h2 {
-    font-size: clamp(20px, 3.645vw, 28px);
+    font-size: 26px!important;
+}
+
+.banner_content_h3 {
+    font-size: 24px!important;
 }
 
 .banner_content_p {
-    font-size: clamp(14px, 1.11vw, 16px);
-    line-height: clamp(24px, 1.94vw, 28px);
+    font-size: 16px!important;
+    line-height: 28px!important;
 }
 
 .banner_content_icon {
@@ -94,7 +98,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
 @media only screen and (max-width: 833px) {

@@ -1,4 +1,12 @@
 html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+    height: 100%;
+}
+
+html,
 body {
     padding: 0;
     margin: 0;
@@ -106,6 +114,35 @@ a {
 
 .nav-menu li span {
     vertical-align: middle;
+}
+
+.footer-menu {
+    font-size: 12px;
+    padding-bottom: 40px;
+}
+
+.footer-menu-title {
+    color: #1d1d1f !important;
+    font-size: 14px !important;
+    line-height: 1.33337 !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.8em !important;
+}
+
+.footer-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-menu ul li {
+    display: block;
+    pointer-events: auto;
+    margin-bottom: 0.8em;
+}
+
+.footer-menu ul li a {
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 100;
 }
 
 @media only screen and (max-width: 833px) {

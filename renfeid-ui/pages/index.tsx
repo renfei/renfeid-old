@@ -1,10 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import Layout from "../components/layout";
-import {Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip} from 'antd';
-import moment from 'moment';
-import {ArrowRightOutlined} from '@ant-design/icons';
+import Layout from '../components/layout'
+import {Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space} from 'antd'
+import moment from 'moment'
+import {ArrowRightOutlined} from '@ant-design/icons'
 import styles from '../styles/Home.module.css'
 import GoogleAdsense from '../components/GoogleAdsense'
 
@@ -123,6 +123,13 @@ const weiboData = [
     },
 ]
 
+const friendlyLinks = [
+    {
+        title: '任霏博客',
+        link: 'https://www.renfei.net',
+    },
+]
+
 const Home = () => {
     return (
         <div className={styles.container}>
@@ -207,7 +214,8 @@ const Home = () => {
                                                         <a>
                                                             <Row>
                                                                 <Col span={15}>
-                                                                    <Title level={3}>
+                                                                    <Title level={3}
+                                                                           className={styles.banner_content_h3}>
                                                                         {post.postTitle}
                                                                     </Title>
                                                                 </Col>
@@ -303,6 +311,32 @@ const Home = () => {
                         </Col>
                     </Row>
                 </section>
+                <div
+                    className={"renfeid-content"}
+                    style={{fontSize: '12px', color: 'rgba(0, 0, 0, 0.6)!important', fontWeight: '100'}}
+                >
+                    {
+                        friendlyLinks.length > 0 ? (
+                            <div style={{padding: '20px 0'}}>
+                                友情链接：
+                                <Space>
+                                    {
+                                        friendlyLinks.map(friendly => (
+                                            <a
+                                                key={friendly.title}
+                                                href={friendly.link}
+                                                target="_blank"
+                                                rel="noopener"
+                                            >
+                                                {friendly.title}
+                                            </a>
+                                        ))
+                                    }
+                                </Space>
+                            </div>
+                        ) : ''
+                    }
+                </div>
             </main>
         </div>
     )
