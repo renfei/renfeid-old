@@ -6,12 +6,12 @@
 
 我的网站结构为前后端分离，所以会产生前后端两个子项目：
 
-| 后端                                                                             | 前端                                                                               |
-|--------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| 所在目录：[renfeidboot](./renfeidboot)                                              | 所在目录：[renfeidvue](./renfeidvue)                                                  |
-| 技术栈：Java8、SpringBoot、MyBatis、MariaDB、Druid、RestfulAPI、Maven                    | 技术栈： Node.js、 Webpack、Vue.js、Nuxt.js、Vuetify、Yarn                                |
-| 简要说明：尝试过SpringCloud微服务架构，但对于个人网站来说过于沉重和耗费资源，所以我用maven多模块的方式进行了拆分，将来可以改造为微服务架构。 | 简要说明：之前一直没有使用Vue是因为SPA对SEO不友好，但随着前端技术的完善，Nuxt的SSR服务器端渲染已经很成熟了，本次是我第一次尝试前台也使用Vue。 |
-| 自我点评：采用前后端分离架构，是目前行业比较流行的结构，SpringBoot也是最新版本的依赖。                               | 自我点评：本人非前端专业，只是业余学习，很可能使用姿势不符合行业规范，前端项目仅供参考。                                     |
+| 后端                                                                             | 前端                                                                                       |
+|--------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| 所在目录：[renfeid-service](./renfeid-service)                                      | 所在目录：[renfeid-ui](./renfeid-ui)                                                          |
+| 技术栈：Java8、SpringBoot、MyBatis、MariaDB、Druid、RestfulAPI、Maven                    | 技术栈： Node.js、 React、 Next.js、AntD                                                        |
+| 简要说明：尝试过SpringCloud微服务架构，但对于个人网站来说过于沉重和耗费资源，所以我用maven多模块的方式进行了拆分，将来可以改造为微服务架构。 | 简要说明：之前一直没有使用Vue/React是因为SPA对SEO不友好，但随着前端技术的完善，Next的SSR服务器端渲染已经很成熟了，本次是我第一次尝试前台也使用React。 |
+| 自我点评：采用前后端分离架构，是目前行业比较流行的结构，SpringBoot也是最新版本的依赖。                               | 自我点评：本人非前端专业，只是业余学习，很可能使用姿势不符合行业规范，前端项目仅供参考。                                             |
 
 ## 目录结构
 
@@ -47,11 +47,12 @@
 
 </details>
 
-关于 ```renfeid-proprietary``` 模块的说明，这个模块中是我自己网站特有的功能，你可以直接删除掉。 ```mybatis-generator``` 模块只是为了方便自动生成 mybatis dao层，没有实际的作用，可以删除。
+关于 ```renfeid-proprietary``` 模块的说明，这个模块中是我自己网站特有的功能，你可以直接删除掉。 ```mybatis-generator``` 模块只是为了方便自动生成 mybatis
+dao层，没有实际的作用，可以删除。
 
 ### 前端项目目录结构
 
-为啥选择了 Vue？ 我当然知道大厂都用 React，但我招不到人啊，所以基本 Vue 还是中小厂的首选，如果我选用 React，中小厂用不上，大厂看不上，由于公司内部大部分是 Vue 的项目，所以我还是选择 Vue 来构建前端项目。
+为啥选择了 React？ 我作为后端开发，尝试了 Vue 和 React，最后我觉得 React 更像后端开发，我更喜欢、看着舒服、用着顺手，所以就选择了 React。
 
 ## 构建
 
@@ -92,29 +93,42 @@ mvn package
 
 ```bash
 # install dependencies
-$ yarn install
+$ npm install
 
 # serve with hot reload at localhost:3000
-$ yarn dev
+$ npm run dev
 
 # build for production and launch server
-$ yarn build
-$ yarn start
-
-# generate static project
-$ yarn generate
+$ npm run build
+$ npm run start
 ```
 
 </details>
+
+## 配置文件
+
+无论前端后端，我基本会使用`development`、`staging`、`production`三种环境配置文件：
+
+### 后端配置文件
+
+* [application-development.yml](renfeid-service/renfeid-server/src/main/resources/application-development.yml): 开发环境配置文件
+* application-staging.yml: UAT测试环境配置文件
+* application-production.yml: 生产环境配置文件
+
+### 前端配置文件
+
+* [.env.development](renfeid-ui/.env.development): 开发环境配置文件
+* .env.staging: UAT测试环境配置文件
+* .env.production: 生产环境配置文件
 
 ## 涉密应用系统"三员"
 
 系统设计时采用了系统管理员、安全保密管理员、安全审计管理员三员分立，分别负责系统的运行、安全保密和安全审计工作。三员权限划分如下：
 
->【注意】涉密系统需要重新审查前端项目！！
-> 
+> 【注意】涉密系统需要重新审查前端项目！！
+>
 > 前端依赖第三方包过多，导致我无法逐一审查，目前已知的是项目中使用的富文本编辑器 TinyMCE 会要求联网
-> 
+>
 > 所以涉密系统需要更换富文本编辑器 TinyMCE，其他请自查
 
 <details>

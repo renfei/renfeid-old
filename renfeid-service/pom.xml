@@ -152,9 +152,9 @@
 
     <profiles>
         <profile>
-            <id>dev</id>
+            <id>development</id>
             <properties>
-                <activatedProperties>dev</activatedProperties>
+                <activatedProperties>development</activatedProperties>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -179,9 +179,15 @@
             </properties>
         </profile>
         <profile>
-            <id>prod</id>
+            <id>staging</id>
             <properties>
-                <activatedProperties>prod</activatedProperties>
+                <activatedProperties>staging</activatedProperties>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <activatedProperties>production</activatedProperties>
             </properties>
         </profile>
     </profiles>
