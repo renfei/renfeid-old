@@ -17,10 +17,7 @@ package net.renfei.common.core.config;
 
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
-import net.renfei.common.api.exception.BusinessException;
-import net.renfei.common.api.exception.IP2LocationException;
-import net.renfei.common.api.exception.NeedU2FException;
-import net.renfei.common.api.exception.OutOfSecretLevelException;
+import net.renfei.common.api.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -44,6 +41,16 @@ public class GlobalExceptionHandler {
         logger.info("Request'{}':{}", request.getRequestURI(), e.getMessage());
         return APIResult.builder()
                 .code(StateCodeEnum.Failure)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(value = NotFoundException.class)
+    public APIResult notFoundExceptionError(HttpServletRequest request,
+                                            NotFoundException e) {
+        logger.info("Request'{}':{}", request.getRequestURI(), e.getMessage());
+        return APIResult.builder()
+                .code(StateCodeEnum.NotFound)
                 .message(e.getMessage())
                 .build();
     }

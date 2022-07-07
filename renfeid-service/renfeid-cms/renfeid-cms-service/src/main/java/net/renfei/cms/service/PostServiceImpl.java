@@ -32,6 +32,7 @@ import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.exception.BusinessException;
+import net.renfei.common.api.exception.NotFoundException;
 import net.renfei.common.api.exception.OutOfSecretLevelException;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.service.RedisService;
@@ -174,7 +175,7 @@ public class PostServiceImpl implements PostService {
             }
         }
         if (post == null) {
-            throw new BusinessException("内容不存在");
+            throw new NotFoundException("内容不存在");
         }
         if (SecretLevelEnum.outOfSecretLevel(userSecretLevel, post.getSecretLevel())) {
             throw new BusinessException("您所在密级无权查看此内容");
@@ -182,10 +183,10 @@ public class PostServiceImpl implements PostService {
         if (!isAdmin) {
             // 如果不是管理员，那么还需要判断内容的状态是否已经发布
             if (!PostStatusEnum.PUBLISH.equals(post.getPostStatus())) {
-                throw new BusinessException("内容不存在");
+                throw new NotFoundException("内容不存在");
             }
             if (new Date().before(post.getPostDate())) {
-                throw new BusinessException("内容不存在");
+                throw new NotFoundException("内容不存在");
             }
             if (post.getPostPassword() != null && !post.getPostPassword().isEmpty()) {
                 if (password == null || password.isEmpty()) {
