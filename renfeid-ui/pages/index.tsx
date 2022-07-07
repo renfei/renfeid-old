@@ -146,7 +146,7 @@ const Home = () => {
                             <Row>
                                 <Col span={15} className={styles.banner_col}>
                                     <div className={styles.banner_img_wrapper}>
-                                        <img
+                                        <Image
                                             className={styles.banner_img}
                                             src={postsDataTop2[0].featuredImage}
                                             alt={postsDataTop2[0].postTitle}/>
@@ -187,7 +187,7 @@ const Home = () => {
                                                 <Card
                                                     bordered={false}
                                                     cover={
-                                                        <img
+                                                        <Image
                                                             style={{borderRadius: '16px 16px 16px 16px'}}
                                                             alt={postsDataTop2[1].postTitle}
                                                             src={postsDataTop2[1].featuredImage}/>
@@ -326,7 +326,7 @@ const Home = () => {
                                                 key={friendly.title}
                                                 href={friendly.link}
                                                 target="_blank"
-                                                rel="noopener"
+                                                rel="noopener noreferrer"
                                             >
                                                 {friendly.title}
                                             </a>

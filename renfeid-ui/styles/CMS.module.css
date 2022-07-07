@@ -1,0 +1,12 @@
+.container {
+    padding: 20px 0;
+}
+
+.title {
+    margin-top: 0.1em!important;
+    margin-bottom: 0.1em!important;
+    font-size: 36px;
+    line-height: 1.08349;
+    font-weight: 600;
+    letter-spacing: -.003em;
+}

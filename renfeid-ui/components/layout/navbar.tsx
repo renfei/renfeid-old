@@ -63,7 +63,7 @@ const Navbar = () => {
                                 </Link>
                             </li>
                             <li>
-                                <a href={"https://bbs.renfei.net"} target={"_blank"}>论坛</a>
+                                <a href={"https://bbs.renfei.net"} target={"_blank"} rel="noreferrer">论坛</a>
                             </li>
                             <li>
                                 <Link href={"/kitbox"}>

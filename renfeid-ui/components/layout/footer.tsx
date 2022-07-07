@@ -165,6 +165,7 @@ const MyFooter = (props: any) => {
                                                 lists.links.length > 0 ? (
                                                     lists.links.map(link => (
                                                         <li key={link.title}>
+                                                            {/* eslint-disable-next-line react/jsx-no-target-blank */}
                                                             <a
                                                                 href={link.link}
                                                                 target={link.newWindow ? '_blank' : '_self'}
@@ -187,6 +188,7 @@ const MyFooter = (props: any) => {
                             {
                                 footLinks.length > 0 ? (
                                     footLinks.map(link => (
+                                        // eslint-disable-next-line react/jsx-no-target-blank
                                         <a
                                             key={link.title}
                                             href={link.link}
