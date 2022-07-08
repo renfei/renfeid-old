@@ -148,6 +148,7 @@ const Home = () => {
                                     <div className={styles.banner_img_wrapper}>
                                         <Image
                                             className={styles.banner_img}
+                                            layout='fill'
                                             src={postsDataTop2[0].featuredImage}
                                             alt={postsDataTop2[0].postTitle}/>
                                     </div>
@@ -189,6 +190,8 @@ const Home = () => {
                                                     cover={
                                                         <Image
                                                             style={{borderRadius: '16px 16px 16px 16px'}}
+                                                            width={1280}
+                                                            height={640}
                                                             alt={postsDataTop2[1].postTitle}
                                                             src={postsDataTop2[1].featuredImage}/>
                                                     }

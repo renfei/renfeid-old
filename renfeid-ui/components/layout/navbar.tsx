@@ -19,13 +19,15 @@ const Navbar = () => {
                             </li>
                             <li>
                                 <Link href={"/"}>
-                                    <Image
-                                        className={"nav-logo"}
-                                        src="https://cdn.renfei.net/Logo/RF_white.svg"
-                                        alt={""}
-                                        height={30}
-                                        width={30}
-                                    />
+                                    <a>
+                                        <Image
+                                            className={"nav-logo"}
+                                            src="https://cdn.renfei.net/Logo/RF_white.svg"
+                                            alt={"任霏博客"}
+                                            height={30}
+                                            width={30}
+                                        />
+                                    </a>
                                 </Link>
                             </li>
                             <li><SearchOutlined/></li>
@@ -33,13 +35,15 @@ const Navbar = () => {
                         <ul className={"nav-menu"}>
                             <li>
                                 <Link href={"/"}>
-                                    <Image
-                                        className={"nav-logo"}
-                                        src="https://cdn.renfei.net/Logo/RF_white.svg"
-                                        alt={""}
-                                        height={30}
-                                        width={30}
-                                    />
+                                    <a>
+                                        <Image
+                                            className={"nav-logo"}
+                                            src="https://cdn.renfei.net/Logo/RF_white.svg"
+                                            alt={"任霏博客"}
+                                            height={30}
+                                            width={30}
+                                        />
+                                    </a>
                                 </Link>
                             </li>
                             <li>

@@ -3,23 +3,23 @@
 
 declare namespace API {
     // 登录请求对象
-    type SignInAo = {
+    interface SignInAo {
         username: string,
         password: string,
         redirect: string,
     }
 
-    type APIResult<T> = {
+    interface APIResult<T> {
         code: number,
         message: string,
         timestamp: number,
         signature: string,
         nonce: string,
-        data: T
+        data?: T
     }
 
     // 文章内容对象
-    type PostVo = {
+    interface PostVo {
         id: number,
         categoryId: number,
         postAuthor: number,
@@ -41,5 +41,17 @@ declare namespace API {
         sourceName: string,
         sourceUrl: string,
         original: true,
+    }
+
+    // 评论树
+    interface CommentTree {
+        id: number,
+        addtime: string,
+        isOwner: boolean,
+        author: string,
+        authorUrl: string,
+        authorAddress: string,
+        content: string,
+        children?: CommentTree[]
     }
 }
