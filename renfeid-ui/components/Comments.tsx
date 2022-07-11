@@ -23,14 +23,15 @@ const CommentGroup = ({data}: { data: CommentTree[] }) => {
                         <>
                             <Comment
                                 className={"renfeid-comment"}
-                                key={"comment-"+comment.id}
+                                key={"comment-" + comment.id}
                                 actions={[
                                     <span key="comment-nested-datetime">{comment.addtime}</span>,
                                     <span key="comment-nested-author-address">{comment.authorAddress}</span>,
                                     <span key="comment-nested-reply-to">回复</span>
                                 ]}
                                 author={(
-                                    <Link key="comment-author-url" href={comment.authorUrl}>
+                                    <Link key="comment-author-url"
+                                          href={comment.authorUrl ? comment.authorUrl : 'javascript:void(0)'}>
                                         <a target="_blank" key="comment-author-url-a">{comment.author}</a>
                                     </Link>
                                 )}
