@@ -2,28 +2,73 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
 import {useRouter} from 'next/router'
-import {Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space, Form, Input} from 'antd'
+import React, {useEffect, useState} from 'react';
+import type {NextApiRequest} from 'next'
+import {Button, Col, Form, Input, message, Row, Space, Typography} from 'antd'
 import Layout from '../../components/layout'
 import styles from '../../styles/auth/SignIn.module.css'
-import {
-    LockOutlined,
-    UserOutlined,
-    KeyOutlined,
-} from '@ant-design/icons';
+import {KeyOutlined, LockOutlined, UserOutlined,} from '@ant-design/icons';
+import {getAesKey} from "../../services/uaa";
+import {aesEncrypt} from "../../utils/encryption";
 import SignInAo = API.SignInAo;
+import SecretKey = API.SecretKey;
 
 const {Title} = Typography;
 
 let showMFA = false;
 
-const signInSubmit = (values: SignInAo) => {
+const signInSubmit = async (req: NextApiRequest, values: SignInAo) => {
     console.warn(values)
+
+    if (typeof window !== 'undefined') {
+        // 获取AESKey
+        let aesKeyJson = window.localStorage.getItem("aesKeyJson")
+        if (!aesKeyJson) {
+            const aesKey = await getAesKey()
+            if (aesKey) {
+                aesKeyJson = JSON.stringify(aesKey)
+                window.localStorage.setItem("aesKeyJson", aesKeyJson)
+            } else {
+                message.error("与服务器交换秘钥失败，请重试")
+                return
+            }
+        }
+        // 加密密码
+        let aesSecretKey: SecretKey = JSON.parse(aesKeyJson)
+        values.password = aesEncrypt(values.plainPassword, aesSecretKey.privateKey)
+        // 登录
+        message.info(JSON.stringify(values))
+    } else {
+        message.error("非浏览器运行环境，程序被终止")
+    }
 }
 
-const SignInPage = () => {
-    const [form] = Form.useForm();
+const gotoRedirect = (redirect: string | string[] | undefined) => {
+    if (typeof window !== 'undefined') {
+        if (redirect && typeof redirect == 'string') {
+            window.location.replace(redirect)
+        } else {
+            window.location.replace('/')
+        }
+    }
+}
+
+const SignInPage = (req: NextApiRequest) => {
+    const [form] = Form.useForm()
     const router = useRouter()
     const {redirect} = router.query
+    const [accessToken, setAccessToken] = useState('')
+    const [loading, setLoading] = useState<boolean>()
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const token = window.localStorage.getItem("accessToken")
+            if (token) {
+                // 存在 Token，已经登录了，直接跳转
+                gotoRedirect(redirect)
+            }
+        }
+    })
 
     return (
         <>
@@ -58,7 +103,9 @@ const SignInPage = () => {
                                         initialValues={{remember: true}}
                                         autoComplete="off"
                                         onFinish={async (values) => {
-                                            await signInSubmit(values)
+                                            setLoading(true)
+                                            await signInSubmit(req, values)
+                                            setLoading(false)
                                         }}
                                     >
                                         <Form.Item
@@ -72,7 +119,7 @@ const SignInPage = () => {
                                         </Form.Item>
 
                                         <Form.Item
-                                            name="password"
+                                            name="plainPassword"
                                             rules={[{required: true, message: '请输入您的密码！'}]}
                                         >
                                             <Input.Password
@@ -111,6 +158,7 @@ const SignInPage = () => {
                                                         type="primary"
                                                         shape="round"
                                                         htmlType="submit"
+                                                        loading={loading}
                                                         disabled={
                                                             !form.isFieldsTouched(true) ||
                                                             !!form.getFieldsError().filter(({errors}) => errors.length).length

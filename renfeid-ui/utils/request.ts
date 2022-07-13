@@ -1,9 +1,11 @@
+import {message} from 'antd'
+
 const request = (url: string, config: any) => {
     return fetch(url, config)
         .then((res: any) => {
             if (!res.ok) {
-                // 服务器异常返回
-                throw Error('接口请求异常');
+                message.error("接口请求异常: " + url)
+                return {}
             }
             return res.json();
         })

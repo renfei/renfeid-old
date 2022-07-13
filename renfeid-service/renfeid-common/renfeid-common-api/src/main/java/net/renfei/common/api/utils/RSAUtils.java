@@ -33,6 +33,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RSAUtils {
     private final static Logger logger = LoggerFactory.getLogger(RSAUtils.class);
+    private final static String PRIVATE_HEADER = "-----BEGIN PRIVATE KEY-----";
+    private final static String PRIVATE_FOOTER = "-----END PRIVATE KEY-----";
+    private final static String PUBLIC_HEADER = "-----BEGIN PUBLIC KEY-----";
+    private final static String PUBLIC_FOOTER = "-----END PUBLIC KEY-----";
     public static final String ALGORITHM = "RSA";
     public static final Integer MAX_KEY_SIZE = 16384;
 
@@ -45,19 +49,20 @@ public class RSAUtils {
         Map<Integer, String> keyMap = new ConcurrentHashMap<>();
         PrivateKey privateKey;
         PublicKey publicKey;
+        Base64.Encoder encoder = Base64.getEncoder();
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
             keyGen.initialize(keySize);
             KeyPair pair = keyGen.generateKeyPair();
             privateKey = pair.getPrivate();
             publicKey = pair.getPublic();
-            String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-            String privateKeyString = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+            String publicKeyString = encoder.encodeToString(publicKey.getEncoded());
+            String privateKeyString = encoder.encodeToString(privateKey.getEncoded());
             // 将公钥和私钥保存到Map
             //0表示公钥
-            keyMap.put(0, publicKeyString);
+            keyMap.put(0, PUBLIC_HEADER + "\n" + publicKeyString + "\n" + PUBLIC_FOOTER);
             //1表示私钥
-            keyMap.put(1, privateKeyString);
+            keyMap.put(1, PRIVATE_HEADER + "\n" + privateKeyString + "\n" + PRIVATE_FOOTER);
         } catch (NoSuchAlgorithmException e) {
             logger.error(e.getMessage(), e);
         }
@@ -121,6 +126,7 @@ public class RSAUtils {
     }
 
     public static PublicKey getPublicKey(String base64PublicKey) {
+        base64PublicKey = base64PublicKey.replace("\n", "").replace(PUBLIC_HEADER, "").replace(PUBLIC_FOOTER, "");
         PublicKey publicKey = null;
         try {
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey.getBytes()));
@@ -134,6 +140,7 @@ public class RSAUtils {
     }
 
     public static PrivateKey getPrivateKey(String base64PrivateKey) {
+        base64PrivateKey = base64PrivateKey.replace("\n", "").replace(PRIVATE_HEADER, "").replace(PRIVATE_FOOTER, "");
         PrivateKey privateKey = null;
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey.getBytes()));
         KeyFactory keyFactory = null;

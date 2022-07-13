@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import {GetServerSideProps} from 'next'
 import {InferGetServerSidePropsType} from 'next'
 import Layout from "../../components/layout";
 import PostVo = API.PostVo;
@@ -121,7 +122,7 @@ const CommentList: CommentTree[] = [
     }
 ]
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
     let data: APIResult<PostVo>
     if (process.env.RENFEID_ENV == 'development') {
         // 开发环境不请求接口，直接返回假数据，方便写 UI

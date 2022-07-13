@@ -2,10 +2,24 @@
 /* eslint-disable */
 
 declare namespace API {
+    // 秘钥交互对象
+    interface SecretKey {
+        uuid: string,
+        publicKey: string,
+        privateKey: string,
+    }
+
+    // 加密后对象
+    interface EncryptionVo{
+        uuid: string,
+        ciphertext: string,
+    }
+
     // 登录请求对象
     interface SignInAo {
         username: string,
         password: string,
+        plainPassword: string,
         redirect: string,
     }
 

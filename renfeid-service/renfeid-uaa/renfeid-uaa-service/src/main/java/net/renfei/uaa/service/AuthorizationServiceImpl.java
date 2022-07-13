@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -136,17 +137,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         }
         String clientKey;
         try {
-            clientKey = RSAUtils.decrypt(secretKey.getPublicKey(), secretKey.getPrivateKey());
+            clientKey = URLDecoder.decode(RSAUtils.decrypt(secretKey.getPublicKey(), uaaSecretKey.getPrivateKey()), "utf-8");
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new BusinessException("客户端公钥解密失败。");
         }
         String aes = StringUtils.getRandomString(16);
         String aesEnc;
         try {
-            aesEnc = RSAUtils.encrypt(aes, clientKey.replaceAll("\n", ""));
+            aesEnc = RSAUtils.encrypt(aes, clientKey);
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
             throw new RuntimeException("服务器内部错误，使用RSA客户端公钥加密失败。");
         }
         //保存AES

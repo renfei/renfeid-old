@@ -12,11 +12,15 @@
     "@ant-design/icons": "^4.7.0",
     "antd": "^4.21.6",
     "next": "12.2.2",
+    "crypto-js": "^4.1.1",
+    "node-rsa": "^1.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.1.1",
     "@types/node": "18.0.3",
+    "@types/node-rsa": "^1.1.1",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
     "eslint": "8.19.0",

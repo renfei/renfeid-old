@@ -83,46 +83,48 @@ public class OperationLogAspect {
         SystemLogEntity systemLogEntity = new SystemLogEntity();
         Signature signature = joinPoint.getSignature();
         Method method = currentMethod(joinPoint, signature.getName());
-        // 注解信息
-        OperationLog annotation = method.getAnnotation(OperationLog.class);
-        systemLogEntity.setLogLevel(annotation.leve().toString());
-        systemLogEntity.setLogModule(annotation.module().toString());
-        systemLogEntity.setLogType(annotation.operation().toString());
-        // 请求信息
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        assert servletRequestAttributes != null;
-        HttpServletRequest request = servletRequestAttributes.getRequest();
-        UserDetail userDetail = systemService.currentUserDetail();
-        if (userDetail != null) {
-            systemLogEntity.setUserUuid(userDetail.getUuid());
-            systemLogEntity.setUserName(userDetail.getUsername());
-        }
-        systemLogEntity.setRequMethod(request.getMethod());
-        systemLogEntity.setRequUri(request.getRequestURI());
-        systemLogEntity.setRequIp(IpUtils.getIpAddress(request));
-        Map<String, String> rtnMap = convertMap(request.getParameterMap());
-        if ("POST".equals(request.getMethod()) || "PUT".equals(request.getMethod())) {
-            if (joinPoint.getArgs().length > 0) {
-                Object object = joinPoint.getArgs()[0];
-                rtnMap.put("RequestBody", JacksonUtil.obj2String(getKeyAndValue(object)));
+        if (method != null) {
+            // 注解信息
+            OperationLog annotation = method.getAnnotation(OperationLog.class);
+            systemLogEntity.setLogLevel(annotation.leve().toString());
+            systemLogEntity.setLogModule(annotation.module().toString());
+            systemLogEntity.setLogType(annotation.operation().toString());
+            // 请求信息
+            ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            assert servletRequestAttributes != null;
+            HttpServletRequest request = servletRequestAttributes.getRequest();
+            UserDetail userDetail = systemService.currentUserDetail();
+            if (userDetail != null) {
+                systemLogEntity.setUserUuid(userDetail.getUuid());
+                systemLogEntity.setUserName(userDetail.getUsername());
             }
-        }
-        // 将参数所在的数组转换成json
-        String params = JacksonUtil.obj2String(rtnMap);
-        systemLogEntity.setRequParam(params);
-        systemLogEntity.setRequAgent(request.getHeader("User-Agent"));
-        systemLogEntity.setRequReferrer(request.getHeader("Referer"));
-        if (!SystemTypeEnum.SYS_LOGS.equals(annotation.module())) {
-            // 如果是查看日志请求，那么不记录返回内容，否则返回内容会刷新一次大一倍
-            if (retObj != null) {
-                if (!(retObj instanceof ModelAndView)) {
-                    systemLogEntity.setRespParam(JacksonUtil.obj2String(retObj));
+            systemLogEntity.setRequMethod(request.getMethod());
+            systemLogEntity.setRequUri(request.getRequestURI());
+            systemLogEntity.setRequIp(IpUtils.getIpAddress(request));
+            Map<String, String> rtnMap = convertMap(request.getParameterMap());
+            if ("POST".equals(request.getMethod()) || "PUT".equals(request.getMethod())) {
+                if (joinPoint.getArgs().length > 0) {
+                    Object object = joinPoint.getArgs()[0];
+                    rtnMap.put("RequestBody", JacksonUtil.obj2String(getKeyAndValue(object)));
                 }
             }
+            // 将参数所在的数组转换成json
+            String params = JacksonUtil.obj2String(rtnMap);
+            systemLogEntity.setRequParam(params);
+            systemLogEntity.setRequAgent(request.getHeader("User-Agent"));
+            systemLogEntity.setRequReferrer(request.getHeader("Referer"));
+            if (!SystemTypeEnum.SYS_LOGS.equals(annotation.module())) {
+                // 如果是查看日志请求，那么不记录返回内容，否则返回内容会刷新一次大一倍
+                if (retObj != null) {
+                    if (!(retObj instanceof ModelAndView)) {
+                        systemLogEntity.setRespParam(JacksonUtil.obj2String(retObj));
+                    }
+                }
+            }
+            systemLogEntity.setLogTime(new Date());
+            systemLogEntity.setLogDesc(annotation.desc());
+            systemLogService.save(systemLogEntity);
         }
-        systemLogEntity.setLogTime(new Date());
-        systemLogEntity.setLogDesc(annotation.desc());
-        systemLogService.save(systemLogEntity);
     }
 
     /**
