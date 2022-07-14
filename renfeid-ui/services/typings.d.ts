@@ -10,17 +10,25 @@ declare namespace API {
     }
 
     // 加密后对象
-    interface EncryptionVo{
+    interface EncryptionVo {
         uuid: string,
         ciphertext: string,
     }
 
     // 登录请求对象
     interface SignInAo {
-        username: string,
+        userName: string,
         password: string,
+        tOtp?: string,
+        keyUuid: string,
+        useVerCode?: boolean,
         plainPassword: string,
         redirect: string,
+    }
+
+    interface SignInVo {
+        accessToken: string,
+        ucScript?: string,
     }
 
     interface APIResult<T> {

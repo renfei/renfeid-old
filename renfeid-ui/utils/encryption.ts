@@ -27,12 +27,21 @@ export const generateRsaKey = (): SecretKey => {
     }
 }
 
-// AES 加密
+// AES 加密 AES/CBC/PKCS7Padding
 export const aesEncrypt = (plaintext: string, aesKey: string): string => {
-    return CryptoJS.AES.encrypt(plaintext, aesKey).toString()
+    const key = CryptoJS.enc.Utf8.parse(aesKey);
+    const iv = CryptoJS.enc.Utf8.parse(aesKey);
+    const srcs = CryptoJS.enc.Utf8.parse(plaintext);
+    return CryptoJS.AES.encrypt(srcs, key, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+    }).toString()
 }
 
-// AES 解密
+// AES 解密 AES/CBC/PKCS7Padding
 export const aesDecrypt = (ciphertext: string, aesKey: string): string => {
-    return CryptoJS.AES.decrypt(ciphertext, aesKey).toString()
+    const key = CryptoJS.enc.Utf8.parse(aesKey);//Latin1 w8m31+Yy/Nw6thPsMpO5fg==
+    const decrypt = CryptoJS.AES.decrypt(ciphertext, key, {mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
+    return CryptoJS.enc.Utf8.stringify(decrypt).toString()
 }

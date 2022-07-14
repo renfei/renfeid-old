@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import nookies from 'nookies'
 import Layout from '../components/layout'
 import {Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space} from 'antd'
 import moment from 'moment'

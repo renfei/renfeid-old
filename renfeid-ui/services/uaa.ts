@@ -13,10 +13,7 @@ export const getAesKey = async (): Promise<SecretKey | false> => {
     }
     const clientSecretKey: SecretKey = encryptionUtils.generateRsaKey()
     // 使用服务器端公钥加密客户端公钥，注意服务器端公钥是2048，客户端公钥是512
-    console.info("服务端公钥：" + serverSecretKeyResult.data?.publicKey)
-    console.info("客户端公钥：" + clientSecretKey.publicKey)
     const clientEncryptPublicKey = encryptionUtils.rsaEncryptByPublicKey(clientSecretKey.publicKey, serverSecretKeyResult.data?.publicKey)
-    console.info("使用服务器端公钥加密客户端公钥:" + clientEncryptPublicKey.toString())
     if (!clientEncryptPublicKey) {
         message.error('加密客户端公钥失败');
         return false

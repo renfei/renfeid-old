@@ -383,7 +383,7 @@ DROP TABLE IF EXISTS `uaa_user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `uaa_user` (
   `id` bigint(20) unsigned NOT NULL,
-  `uuid` int(11) NOT NULL COMMENT 'UUID',
+  `uuid` varchar(36) NOT NULL COMMENT 'UUID',
   `username` varchar(255) NOT NULL COMMENT '用户名',
   `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
   `email_verified` tinyint(1) unsigned DEFAULT 0 COMMENT '邮箱是否验证',

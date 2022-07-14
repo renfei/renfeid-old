@@ -1,9 +1,13 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
+import {parseCookies, setCookie, destroyCookie} from 'nookies'
 import {useRouter} from 'next/router'
+import {GetServerSideProps} from 'next'
+import nookies from 'nookies'
+import {InferGetServerSidePropsType} from 'next'
 import React, {useEffect, useState} from 'react';
-import type {NextApiRequest} from 'next'
+import type {NextApiRequest, NextApiResponse} from 'next'
 import {Button, Col, Form, Input, message, Row, Space, Typography} from 'antd'
 import Layout from '../../components/layout'
 import styles from '../../styles/auth/SignIn.module.css'
@@ -12,14 +16,29 @@ import {getAesKey} from "../../services/uaa";
 import {aesEncrypt} from "../../utils/encryption";
 import SignInAo = API.SignInAo;
 import SecretKey = API.SecretKey;
+import * as api from "../../services/api";
+import SignInVo = API.SignInVo;
+import APIResult = API.APIResult;
 
 const {Title} = Typography;
 
-let showMFA = false;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const accessToken = nookies.get(context)['accessToken']
+    if (accessToken) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+    return {
+        props: {},
+    }
+}
 
-const signInSubmit = async (req: NextApiRequest, values: SignInAo) => {
-    console.warn(values)
-
+const signInSubmit = async (req: NextApiRequest, res: NextApiResponse, values: SignInAo): Promise<string> => {
+    values.useVerCode = false
     if (typeof window !== 'undefined') {
         // 获取AESKey
         let aesKeyJson = window.localStorage.getItem("aesKeyJson")
@@ -30,16 +49,46 @@ const signInSubmit = async (req: NextApiRequest, values: SignInAo) => {
                 window.localStorage.setItem("aesKeyJson", aesKeyJson)
             } else {
                 message.error("与服务器交换秘钥失败，请重试")
-                return
+                return "与服务器交换秘钥失败，请重试"
             }
         }
         // 加密密码
         let aesSecretKey: SecretKey = JSON.parse(aesKeyJson)
+        values.keyUuid = aesSecretKey.uuid
         values.password = aesEncrypt(values.plainPassword, aesSecretKey.privateKey)
         // 登录
-        message.info(JSON.stringify(values))
+        const signInVo: APIResult<SignInVo> = await api.signIn(values)
+        if (signInVo.code == 402) {
+            return '402'
+        } else if (signInVo.code != 200) {
+            if (signInVo.message == "AESKeyId不存在") {
+                window.localStorage.removeItem("aesKeyJson")
+                return signInSubmit(req, res, values)
+            }
+            message.error(signInVo.message)
+            return signInVo.message
+        } else if (!signInVo.data) {
+            message.error('数据异常，请重试')
+            return signInVo.message
+        } else {
+            setCookie(null, 'userName', values.userName.trim().toLowerCase(), {
+                domain: '.renfei.net',
+                maxAge: 8 * 60 * 60,
+                path: '/',
+            })
+            if (signInVo.data?.ucScript) {
+                // TODO 登录 Discuz!
+            }
+        }
+        if (values.redirect) {
+            gotoRedirect(values.redirect)
+        } else {
+            gotoRedirect('/')
+        }
+        return ""
     } else {
         message.error("非浏览器运行环境，程序被终止")
+        return "非浏览器运行环境，程序被终止"
     }
 }
 
@@ -53,17 +102,18 @@ const gotoRedirect = (redirect: string | string[] | undefined) => {
     }
 }
 
-const SignInPage = (req: NextApiRequest) => {
+const SignInPage = (req: NextApiRequest, res: NextApiResponse) => {
     const [form] = Form.useForm()
     const router = useRouter()
     const {redirect} = router.query
-    const [accessToken, setAccessToken] = useState('')
-    const [loading, setLoading] = useState<boolean>()
+    const [accessToken, setAccessToken] = useState<string>('')
+    const [showMFA, setShowMFA] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const token = window.localStorage.getItem("accessToken")
-            if (token) {
+            const cookies = parseCookies()
+            if (cookies['accessToken']) {
                 // 存在 Token，已经登录了，直接跳转
                 gotoRedirect(redirect)
             }
@@ -104,12 +154,15 @@ const SignInPage = (req: NextApiRequest) => {
                                         autoComplete="off"
                                         onFinish={async (values) => {
                                             setLoading(true)
-                                            await signInSubmit(req, values)
+                                            const rtn = await signInSubmit(req, res, values)
+                                            if (rtn == '402') {
+                                                setShowMFA(true)
+                                            }
                                             setLoading(false)
                                         }}
                                     >
                                         <Form.Item
-                                            name="username"
+                                            name="userName"
                                             rules={[{required: true, message: '请输入您的账号！'}]}
                                         >
                                             <Input
@@ -131,7 +184,7 @@ const SignInPage = (req: NextApiRequest) => {
                                         {
                                             showMFA ? (
                                                 <Form.Item
-                                                    name="mfa"
+                                                    name="tOtp"
                                                     rules={[{required: false, message: 'Please input your username!'}]}
                                                 >
                                                     <Input

@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import nookies from 'nookies'
 import {GetServerSideProps} from 'next'
 import {InferGetServerSidePropsType} from 'next'
 import Layout from "../../components/layout";
@@ -123,6 +124,7 @@ const CommentList: CommentTree[] = [
 ]
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
+    const accessToken = nookies.get(context)['accessToken']
     let data: APIResult<PostVo>
     if (process.env.RENFEID_ENV == 'development') {
         // 开发环境不请求接口，直接返回假数据，方便写 UI
@@ -157,7 +159,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
             }
         }
     } else {
-        data = await api.getPostsById(context.query.id)
+        data = await api.getPostsById(context.query.id, undefined, accessToken)
     }
     if (data.code == 404) {
         return {
