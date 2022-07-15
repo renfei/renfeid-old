@@ -1,18 +1,19 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
 import * as Fetch from '../../../utils/request'
+import {server} from '../../../config'
 import SecretKey = API.SecretKey;
 import APIResult = API.APIResult;
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<SecretKey>>) => {
     try {
         if (req.method === 'GET') {
-            let url = `${process.env.NEXT_PUBLIC_RENFEID_SERVICE_API}/api/auth/secretKey`
+            let url = `${server}/api/auth/secretKey`
             await Fetch.get(url, req.cookies['accessToken']).then(result => {
                 res.status(200).json(result)
             })
         } else if (req.method === 'POST') {
-            let url = `${process.env.NEXT_PUBLIC_RENFEID_SERVICE_API}/api/auth/secretKey`
+            let url = `${server}/api/auth/secretKey`
             await Fetch.post(url, req.body, req.cookies['accessToken']).then(result => {
                 res.status(200).json(result)
             })

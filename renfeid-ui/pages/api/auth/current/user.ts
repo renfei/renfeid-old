@@ -1,14 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
 import * as Fetch from '../../../../utils/request'
-import SecretKey = API.SecretKey;
+import {server} from '../../../../config'
+import UserInfo = API.UserInfo;
 import APIResult = API.APIResult;
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<SecretKey>>) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<UserInfo>>) => {
     if (req.cookies['accessToken']) {
         try {
             if (req.method === 'GET') {
-                let url = `${process.env.NEXT_PUBLIC_RENFEID_SERVICE_API}/api/auth/signIn`
+                let url = `${server}/api/auth/current/user`
                 await Fetch.get(url, req.cookies['accessToken']).then(result => {
                     res.status(200).json(result)
                 })

@@ -9,7 +9,7 @@ import {ArrowRightOutlined} from '@ant-design/icons'
 import styles from '../styles/Home.module.css'
 import GoogleAdsense from '../components/GoogleAdsense'
 
-const {Title} = Typography;
+const {Title, Paragraph} = Typography;
 const {Meta} = Card;
 
 // 文章 1到2
@@ -158,8 +158,9 @@ const Home = () => {
                                     <div className={styles.banner_content_wrapper}>
                                         <Link href={`/posts/${postsDataTop2[0].id}`} style={{display: 'block'}}>
                                             <a>
-                                                <Title level={2}
-                                                       className={styles.banner_content_h2}>
+                                                <Title
+                                                    level={2}
+                                                    className={styles.banner_content_h2}>
                                                     {postsDataTop2[0].postTitle}
                                                 </Title>
                                                 <p className={styles.banner_content_p}>
@@ -197,9 +198,14 @@ const Home = () => {
                                                             src={postsDataTop2[1].featuredImage}/>
                                                     }
                                                 >
-                                                    <Title level={3} ellipsis>
+                                                    <Paragraph
+                                                        ellipsis={{
+                                                            rows: 2,
+                                                            expandable: false,
+                                                        }}
+                                                        className={styles.banner_content_h3}>
                                                         {postsDataTop2[1].postTitle}
-                                                    </Title>
+                                                    </Paragraph>
                                                     <Meta
                                                         title={postsDataTop2[1].postExcerpt}/>
                                                 </Card>
@@ -218,10 +224,14 @@ const Home = () => {
                                                         <a>
                                                             <Row>
                                                                 <Col span={15}>
-                                                                    <Title level={3}
-                                                                           className={styles.banner_content_h3}>
+                                                                    <Paragraph
+                                                                        ellipsis={{
+                                                                            rows: 3,
+                                                                            expandable: false,
+                                                                        }}
+                                                                        className={styles.banner_content_h3}>
                                                                         {post.postTitle}
-                                                                    </Title>
+                                                                    </Paragraph>
                                                                 </Col>
                                                                 <Col span={9}>
                                                                     <Image
@@ -236,7 +246,7 @@ const Home = () => {
                                                             </Row>
                                                         </a>
                                                     </Link>
-                                                    <Divider/>
+                                                    <Divider style={{margin: '12px 0'}}/>
                                                 </Col>
                                             ))
                                         ) : ''
@@ -256,9 +266,15 @@ const Home = () => {
                                                 <a>
                                                     <Row>
                                                         <Col span={15}>
-                                                            <Title level={4}>
+                                                            <Paragraph
+                                                                ellipsis={{
+                                                                    rows: 2,
+                                                                    expandable: false,
+                                                                }}
+                                                                className={styles.banner_content_h4}
+                                                            >
                                                                 {post.postTitle}
-                                                            </Title>
+                                                            </Paragraph>
                                                         </Col>
                                                         <Col span={9}>
                                                             <Image

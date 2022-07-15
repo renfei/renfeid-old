@@ -3,18 +3,17 @@ import type {NextApiRequest, NextApiResponse} from 'next'
 import * as Fetch from '../../../utils/request'
 import {setCookie} from '../../../utils/cookies'
 import {server} from '../../../config'
-import SecretKey = API.SecretKey;
 import APIResult = API.APIResult;
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<SecretKey>>) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<any>>) => {
     try {
-        if (req.method === 'POST') {
-            let url = `${server}/api/auth/signIn`
-            await Fetch.post(url, req.body, req.cookies['accessToken']).then(result => {
+        if (req.method === 'DELETE') {
+            let url = `${server}/api/auth/signOut`
+            await Fetch.delet(url, req.cookies['accessToken']).then(result => {
                 if (result.code == 200) {
-                    setCookie(res, 'accessToken', result.data.accessToken, {
+                    setCookie(res, 'accessToken', '', {
                         domain: 'renfei.net',
-                        expires: new Date(Date.now() + (8 * 60 * 60 * 1000)),
+                        expires: new Date(Date.now() - 1),
                         httpOnly: true,
                         path: '/',
                     })

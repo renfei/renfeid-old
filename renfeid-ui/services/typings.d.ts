@@ -76,4 +76,20 @@ declare namespace API {
         content: string,
         children?: CommentTree[]
     }
+
+    // 用户登录信息
+    interface UserInfo {
+        email?: string
+        emailVerified: boolean
+        firstName?: string
+        id: number
+        lastName?: string
+        phone?: string
+        phoneVerified: boolean
+        registrationDate: string
+        registrationIp: string
+        secretLevel: string
+        username: string
+        uuid: string
+    }
 }

@@ -17,6 +17,11 @@ export const signIn = async (signInAo: SignInAo) => {
     return Fetch.post(url, signInAo)
 }
 
+export const signOut = async () => {
+    let url = `/api/auth/signOut`
+    return Fetch.delet(url)
+}
+
 export const requestCurrentUserInfo = async () => {
     let url = `/api/auth/current/user`
     return Fetch.get(url)
