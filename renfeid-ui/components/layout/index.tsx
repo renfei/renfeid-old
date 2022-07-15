@@ -6,6 +6,7 @@ import Script from 'next/script';
 
 const {Content} = Layout
 
+
 const MyLayout = ({children}: any) => {
     return (
         <>
