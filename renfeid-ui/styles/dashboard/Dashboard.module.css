@@ -1,0 +1,7 @@
+.dashboard_header {
+    display: flex;
+    color: #ffffff;
+    padding: 0 16px;
+    height: 48px;
+    line-height: 48px;
+}
