@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@tinymce/tinymce-react": "^4.1.0",
     "antd": "^4.21.6",
     "cookie": "^0.5.0",
     "crypto-js": "^4.1.1",

@@ -1,7 +1,8 @@
+import React from 'react';
+import {useRouter} from 'next/router'
 import {Layout, Menu} from 'antd';
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons';
 import type {MenuProps} from 'antd';
-import React from 'react';
 
 const {Sider} = Layout
 
@@ -25,16 +26,35 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
     },
 );
 
+const menu = [
+    {
+        key: '/dashboard',
+        label: '控制面板',
+    },
+    {
+        key: '/dashboard/cms',
+        label: '内容管理系统',
+        children: [
+            {
+                key: '/dashboard/cms/posts',
+                label: '内容列表',
+            }
+        ]
+    }
+]
+
 const DashboardMenu = () => {
+    const router = useRouter()
     return (
         <>
             <Sider width={200} style={{background: '#ffffff'}}>
                 <Menu
                     mode="inline"
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
                     style={{height: '100%', borderRight: 0}}
-                    items={items2}
+                    items={menu}
+                    onClick={({item, key, keyPath, domEvent}: any) => {
+                        router.push(key)
+                    }}
                 />
             </Sider>
         </>

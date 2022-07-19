@@ -7,14 +7,13 @@ const {Content} = Layout
 const DashboardLayout = ({children}: any) => {
     return (
         <>
-            <Layout style={{height: '100%'}}>
+            <Layout style={{minHeight: '100%'}}>
                 <DashboardNavbar/>
                 <Layout>
                     <DashboardMenu></DashboardMenu>
-                    <Layout style={{padding: '0 24px 24px'}}>
+                    <Layout>
                         <Content
                             style={{
-                                padding: 24,
                                 margin: 0,
                                 minHeight: 280,
                             }}
