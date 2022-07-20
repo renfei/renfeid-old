@@ -31,6 +31,12 @@ const footMenuList = [
                 newWindow: true,
                 nofollow: true,
             },
+            {
+                title: 'Feedback',
+                link: 'https://github.com/renfei/feedback/discussions',
+                newWindow: true,
+                nofollow: true,
+            },
         ]
     },
     {

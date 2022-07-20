@@ -46,6 +46,7 @@ public class MenuServiceImpl implements MenuService {
 
     public APIResult<List<MenuTree>> queryAllMenuTree() {
         UaaMenuExample example = new UaaMenuExample();
+        example.setOrderByClause("menu_order");
         example.createCriteria()
                 .andPidIsNull();
         List<UaaMenuWithBLOBs> uaaMenuList = uaaMenuMapper.selectByExampleWithBLOBs(example);

@@ -40,7 +40,39 @@ const menu = [
                 label: '内容列表',
             }
         ]
-    }
+    },
+    {
+        key: '/dashboard/uaa',
+        label: '用户账户与认证',
+        children: [
+            {
+                key: '/dashboard/uaa/user',
+                label: '用户账号管理',
+            },
+            {
+                key: '/dashboard/uaa/perm',
+                label: '用户权限管理',
+            },
+            {
+                key: '/dashboard/uaa/role',
+                label: '角色管理',
+            },
+            {
+                key: '/dashboard/uaa/menu',
+                label: '菜单管理',
+            }
+        ]
+    },
+    {
+        key: '/dashboard/sys',
+        label: '系统设置',
+        children: [
+            {
+                key: '/dashboard/sys/environment',
+                label: '系统运行环境',
+            }
+        ]
+    },
 ]
 
 const DashboardMenu = () => {
