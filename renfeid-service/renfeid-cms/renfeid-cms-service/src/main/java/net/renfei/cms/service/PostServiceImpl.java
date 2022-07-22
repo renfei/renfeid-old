@@ -218,6 +218,7 @@ public class PostServiceImpl implements PostService {
         postCheckSecretLevel(post);
         UserDetail currentUserDetail = systemService.currentUserDetail();
         post.setPostAuthor(currentUserDetail.getId());
+        post.setAuthorUsername(currentUserDetail.getUsername());
         if (systemConfig.getEnablePostAuditing()) {
             // TODO 文章审核流程机制
             post.setPostStatus(PostStatusEnum.REVIEW);
@@ -225,8 +226,9 @@ public class PostServiceImpl implements PostService {
             post.setPostStatus(PostStatusEnum.PUBLISH);
         }
         post.setPostViews(0L);
-        post.setPostModified(null);
-        post.setPostModifiedUser(null);
+        post.setPostModified(new Date());
+        post.setPostModifiedUser(currentUserDetail.getId());
+        post.setModifiedUsername(currentUserDetail.getUsername());
         post.setPostParent(0L);
         post.setVersionNumber(1);
         post.setThumbsUp(0L);
@@ -397,6 +399,8 @@ public class PostServiceImpl implements PostService {
         post.setPostContent(cmsPosts.getPostContent());
         post.setSourceName(cmsPosts.getSourceName());
         post.setSourceUrl(cmsPosts.getSourceUrl());
+        post.setAuthorUsername(cmsPosts.getPostAuthorUsername());
+        post.setModifiedUsername(cmsPosts.getPostModifiedUsername());
         return post;
     }
 
@@ -431,6 +435,8 @@ public class PostServiceImpl implements PostService {
         cmsPosts.setPostContent(post.getPostContent());
         cmsPosts.setSourceName(post.getSourceName());
         cmsPosts.setSourceUrl(post.getSourceUrl());
+        cmsPosts.setPostAuthorUsername(post.getAuthorUsername());
+        cmsPosts.setPostModifiedUsername(post.getModifiedUsername());
         return cmsPosts;
     }
 
@@ -465,6 +471,8 @@ public class PostServiceImpl implements PostService {
         cmsPosts.setPostContent(post.getPostContent());
         cmsPosts.setSourceName(post.getSourceName());
         cmsPosts.setSourceUrl(post.getSourceUrl());
+        cmsPosts.setPostAuthorUsername(post.getAuthorUsername());
+        cmsPosts.setPostModifiedUsername(post.getModifiedUsername());
         return cmsPosts;
     }
 }

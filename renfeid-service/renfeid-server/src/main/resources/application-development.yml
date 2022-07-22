@@ -58,7 +58,7 @@ system:
   siteDomainName: https://www.renfei.net
   staticDomainName: https://cdn.renfei.net
   # 超管用户名
-  superTubeUserName: admin
+  superTubeUserName: renfei
   # 是否启用超管，涉密系统不允许出现超管账号
   enableSuperTubeUser: true
   # 是否启用缓存

@@ -8,6 +8,8 @@ public class CmsPostsArchival implements Serializable {
 
     private Long categoryId;
 
+    private String postAuthorUsername;
+
     private Long postAuthor;
 
     private Date postDate;
@@ -21,6 +23,8 @@ public class CmsPostsArchival implements Serializable {
     private String postPassword;
 
     private Date postModified;
+
+    private String postModifiedUsername;
 
     private Long postModifiedUser;
 
@@ -68,6 +72,14 @@ public class CmsPostsArchival implements Serializable {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getPostAuthorUsername() {
+        return postAuthorUsername;
+    }
+
+    public void setPostAuthorUsername(String postAuthorUsername) {
+        this.postAuthorUsername = postAuthorUsername;
     }
 
     public Long getPostAuthor() {
@@ -124,6 +136,14 @@ public class CmsPostsArchival implements Serializable {
 
     public void setPostModified(Date postModified) {
         this.postModified = postModified;
+    }
+
+    public String getPostModifiedUsername() {
+        return postModifiedUsername;
+    }
+
+    public void setPostModifiedUsername(String postModifiedUsername) {
+        this.postModifiedUsername = postModifiedUsername;
     }
 
     public Long getPostModifiedUser() {
@@ -254,6 +274,7 @@ public class CmsPostsArchival implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", categoryId=").append(categoryId);
+        sb.append(", postAuthorUsername=").append(postAuthorUsername);
         sb.append(", postAuthor=").append(postAuthor);
         sb.append(", postDate=").append(postDate);
         sb.append(", postStatus=").append(postStatus);
@@ -261,6 +282,7 @@ public class CmsPostsArchival implements Serializable {
         sb.append(", commentStatus=").append(commentStatus);
         sb.append(", postPassword=").append(postPassword);
         sb.append(", postModified=").append(postModified);
+        sb.append(", postModifiedUsername=").append(postModifiedUsername);
         sb.append(", postModifiedUser=").append(postModifiedUser);
         sb.append(", postParent=").append(postParent);
         sb.append(", versionNumber=").append(versionNumber);

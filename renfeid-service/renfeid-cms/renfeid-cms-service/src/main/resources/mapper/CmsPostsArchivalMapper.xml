@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="net.renfei.cms.repositories.entity.CmsPostsArchival">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="post_author_username" jdbcType="VARCHAR" property="postAuthorUsername" />
     <result column="post_author" jdbcType="BIGINT" property="postAuthor" />
     <result column="post_date" jdbcType="TIMESTAMP" property="postDate" />
     <result column="post_status" jdbcType="VARCHAR" property="postStatus" />
@@ -11,6 +12,7 @@
     <result column="comment_status" jdbcType="VARCHAR" property="commentStatus" />
     <result column="post_password" jdbcType="VARCHAR" property="postPassword" />
     <result column="post_modified" jdbcType="TIMESTAMP" property="postModified" />
+    <result column="post_modified_username" jdbcType="VARCHAR" property="postModifiedUsername" />
     <result column="post_modified_user" jdbcType="BIGINT" property="postModifiedUser" />
     <result column="post_parent" jdbcType="BIGINT" property="postParent" />
     <result column="version_number" jdbcType="INTEGER" property="versionNumber" />
@@ -90,10 +92,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, category_id, post_author, post_date, post_status, post_views, comment_status, 
-    post_password, post_modified, post_modified_user, post_parent, version_number, thumbs_up, 
-    thumbs_down, avg_views, avg_comment, page_rank, secret_level, is_original, post_title, 
-    post_keyword, post_excerpt, source_name, source_url
+    id, category_id, post_author_username, post_author, post_date, post_status, post_views, 
+    comment_status, post_password, post_modified, post_modified_username, post_modified_user, 
+    post_parent, version_number, thumbs_up, thumbs_down, avg_views, avg_comment, page_rank, 
+    secret_level, is_original, post_title, post_keyword, post_excerpt, source_name, source_url
   </sql>
   <sql id="Blob_Column_List">
     featured_image, post_content
@@ -147,24 +149,26 @@
     </if>
   </delete>
   <insert id="insert" parameterType="net.renfei.cms.repositories.entity.CmsPostsArchivalWithBLOBs">
-    insert into cms_posts_archival (id, category_id, post_author, 
-      post_date, post_status, post_views, 
-      comment_status, post_password, post_modified, 
-      post_modified_user, post_parent, version_number, 
-      thumbs_up, thumbs_down, avg_views, 
-      avg_comment, page_rank, secret_level, 
-      is_original, post_title, post_keyword, 
-      post_excerpt, source_name, source_url, 
-      featured_image, post_content)
-    values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{postAuthor,jdbcType=BIGINT}, 
-      #{postDate,jdbcType=TIMESTAMP}, #{postStatus,jdbcType=VARCHAR}, #{postViews,jdbcType=BIGINT}, 
-      #{commentStatus,jdbcType=VARCHAR}, #{postPassword,jdbcType=VARCHAR}, #{postModified,jdbcType=TIMESTAMP}, 
-      #{postModifiedUser,jdbcType=BIGINT}, #{postParent,jdbcType=BIGINT}, #{versionNumber,jdbcType=INTEGER}, 
-      #{thumbsUp,jdbcType=BIGINT}, #{thumbsDown,jdbcType=BIGINT}, #{avgViews,jdbcType=DOUBLE}, 
-      #{avgComment,jdbcType=DOUBLE}, #{pageRank,jdbcType=DOUBLE}, #{secretLevel,jdbcType=INTEGER}, 
-      #{isOriginal,jdbcType=BIT}, #{postTitle,jdbcType=VARCHAR}, #{postKeyword,jdbcType=VARCHAR}, 
-      #{postExcerpt,jdbcType=VARCHAR}, #{sourceName,jdbcType=VARCHAR}, #{sourceUrl,jdbcType=VARCHAR}, 
-      #{featuredImage,jdbcType=LONGVARCHAR}, #{postContent,jdbcType=LONGVARCHAR})
+    insert into cms_posts_archival (id, category_id, post_author_username, 
+      post_author, post_date, post_status, 
+      post_views, comment_status, post_password, 
+      post_modified, post_modified_username, post_modified_user, 
+      post_parent, version_number, thumbs_up, 
+      thumbs_down, avg_views, avg_comment, 
+      page_rank, secret_level, is_original, 
+      post_title, post_keyword, post_excerpt, 
+      source_name, source_url, featured_image, 
+      post_content)
+    values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{postAuthorUsername,jdbcType=VARCHAR}, 
+      #{postAuthor,jdbcType=BIGINT}, #{postDate,jdbcType=TIMESTAMP}, #{postStatus,jdbcType=VARCHAR}, 
+      #{postViews,jdbcType=BIGINT}, #{commentStatus,jdbcType=VARCHAR}, #{postPassword,jdbcType=VARCHAR}, 
+      #{postModified,jdbcType=TIMESTAMP}, #{postModifiedUsername,jdbcType=VARCHAR}, #{postModifiedUser,jdbcType=BIGINT}, 
+      #{postParent,jdbcType=BIGINT}, #{versionNumber,jdbcType=INTEGER}, #{thumbsUp,jdbcType=BIGINT}, 
+      #{thumbsDown,jdbcType=BIGINT}, #{avgViews,jdbcType=DOUBLE}, #{avgComment,jdbcType=DOUBLE}, 
+      #{pageRank,jdbcType=DOUBLE}, #{secretLevel,jdbcType=INTEGER}, #{isOriginal,jdbcType=BIT}, 
+      #{postTitle,jdbcType=VARCHAR}, #{postKeyword,jdbcType=VARCHAR}, #{postExcerpt,jdbcType=VARCHAR}, 
+      #{sourceName,jdbcType=VARCHAR}, #{sourceUrl,jdbcType=VARCHAR}, #{featuredImage,jdbcType=LONGVARCHAR}, 
+      #{postContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.cms.repositories.entity.CmsPostsArchivalWithBLOBs">
     insert into cms_posts_archival
@@ -174,6 +178,9 @@
       </if>
       <if test="categoryId != null">
         category_id,
+      </if>
+      <if test="postAuthorUsername != null">
+        post_author_username,
       </if>
       <if test="postAuthor != null">
         post_author,
@@ -195,6 +202,9 @@
       </if>
       <if test="postModified != null">
         post_modified,
+      </if>
+      <if test="postModifiedUsername != null">
+        post_modified_username,
       </if>
       <if test="postModifiedUser != null">
         post_modified_user,
@@ -255,6 +265,9 @@
       <if test="categoryId != null">
         #{categoryId,jdbcType=BIGINT},
       </if>
+      <if test="postAuthorUsername != null">
+        #{postAuthorUsername,jdbcType=VARCHAR},
+      </if>
       <if test="postAuthor != null">
         #{postAuthor,jdbcType=BIGINT},
       </if>
@@ -275,6 +288,9 @@
       </if>
       <if test="postModified != null">
         #{postModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="postModifiedUsername != null">
+        #{postModifiedUsername,jdbcType=VARCHAR},
       </if>
       <if test="postModifiedUser != null">
         #{postModifiedUser,jdbcType=BIGINT},
@@ -344,6 +360,9 @@
       <if test="row.categoryId != null">
         category_id = #{row.categoryId,jdbcType=BIGINT},
       </if>
+      <if test="row.postAuthorUsername != null">
+        post_author_username = #{row.postAuthorUsername,jdbcType=VARCHAR},
+      </if>
       <if test="row.postAuthor != null">
         post_author = #{row.postAuthor,jdbcType=BIGINT},
       </if>
@@ -364,6 +383,9 @@
       </if>
       <if test="row.postModified != null">
         post_modified = #{row.postModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.postModifiedUsername != null">
+        post_modified_username = #{row.postModifiedUsername,jdbcType=VARCHAR},
       </if>
       <if test="row.postModifiedUser != null">
         post_modified_user = #{row.postModifiedUser,jdbcType=BIGINT},
@@ -425,6 +447,7 @@
     update cms_posts_archival
     set id = #{row.id,jdbcType=BIGINT},
       category_id = #{row.categoryId,jdbcType=BIGINT},
+      post_author_username = #{row.postAuthorUsername,jdbcType=VARCHAR},
       post_author = #{row.postAuthor,jdbcType=BIGINT},
       post_date = #{row.postDate,jdbcType=TIMESTAMP},
       post_status = #{row.postStatus,jdbcType=VARCHAR},
@@ -432,6 +455,7 @@
       comment_status = #{row.commentStatus,jdbcType=VARCHAR},
       post_password = #{row.postPassword,jdbcType=VARCHAR},
       post_modified = #{row.postModified,jdbcType=TIMESTAMP},
+      post_modified_username = #{row.postModifiedUsername,jdbcType=VARCHAR},
       post_modified_user = #{row.postModifiedUser,jdbcType=BIGINT},
       post_parent = #{row.postParent,jdbcType=BIGINT},
       version_number = #{row.versionNumber,jdbcType=INTEGER},
@@ -457,6 +481,7 @@
     update cms_posts_archival
     set id = #{row.id,jdbcType=BIGINT},
       category_id = #{row.categoryId,jdbcType=BIGINT},
+      post_author_username = #{row.postAuthorUsername,jdbcType=VARCHAR},
       post_author = #{row.postAuthor,jdbcType=BIGINT},
       post_date = #{row.postDate,jdbcType=TIMESTAMP},
       post_status = #{row.postStatus,jdbcType=VARCHAR},
@@ -464,6 +489,7 @@
       comment_status = #{row.commentStatus,jdbcType=VARCHAR},
       post_password = #{row.postPassword,jdbcType=VARCHAR},
       post_modified = #{row.postModified,jdbcType=TIMESTAMP},
+      post_modified_username = #{row.postModifiedUsername,jdbcType=VARCHAR},
       post_modified_user = #{row.postModifiedUser,jdbcType=BIGINT},
       post_parent = #{row.postParent,jdbcType=BIGINT},
       version_number = #{row.versionNumber,jdbcType=INTEGER},
@@ -489,6 +515,9 @@
       <if test="categoryId != null">
         category_id = #{categoryId,jdbcType=BIGINT},
       </if>
+      <if test="postAuthorUsername != null">
+        post_author_username = #{postAuthorUsername,jdbcType=VARCHAR},
+      </if>
       <if test="postAuthor != null">
         post_author = #{postAuthor,jdbcType=BIGINT},
       </if>
@@ -509,6 +538,9 @@
       </if>
       <if test="postModified != null">
         post_modified = #{postModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="postModifiedUsername != null">
+        post_modified_username = #{postModifiedUsername,jdbcType=VARCHAR},
       </if>
       <if test="postModifiedUser != null">
         post_modified_user = #{postModifiedUser,jdbcType=BIGINT},
@@ -567,6 +599,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="net.renfei.cms.repositories.entity.CmsPostsArchivalWithBLOBs">
     update cms_posts_archival
     set category_id = #{categoryId,jdbcType=BIGINT},
+      post_author_username = #{postAuthorUsername,jdbcType=VARCHAR},
       post_author = #{postAuthor,jdbcType=BIGINT},
       post_date = #{postDate,jdbcType=TIMESTAMP},
       post_status = #{postStatus,jdbcType=VARCHAR},
@@ -574,6 +607,7 @@
       comment_status = #{commentStatus,jdbcType=VARCHAR},
       post_password = #{postPassword,jdbcType=VARCHAR},
       post_modified = #{postModified,jdbcType=TIMESTAMP},
+      post_modified_username = #{postModifiedUsername,jdbcType=VARCHAR},
       post_modified_user = #{postModifiedUser,jdbcType=BIGINT},
       post_parent = #{postParent,jdbcType=BIGINT},
       version_number = #{versionNumber,jdbcType=INTEGER},
@@ -596,6 +630,7 @@
   <update id="updateByPrimaryKey" parameterType="net.renfei.cms.repositories.entity.CmsPostsArchival">
     update cms_posts_archival
     set category_id = #{categoryId,jdbcType=BIGINT},
+      post_author_username = #{postAuthorUsername,jdbcType=VARCHAR},
       post_author = #{postAuthor,jdbcType=BIGINT},
       post_date = #{postDate,jdbcType=TIMESTAMP},
       post_status = #{postStatus,jdbcType=VARCHAR},
@@ -603,6 +638,7 @@
       comment_status = #{commentStatus,jdbcType=VARCHAR},
       post_password = #{postPassword,jdbcType=VARCHAR},
       post_modified = #{postModified,jdbcType=TIMESTAMP},
+      post_modified_username = #{postModifiedUsername,jdbcType=VARCHAR},
       post_modified_user = #{postModifiedUser,jdbcType=BIGINT},
       post_parent = #{postParent,jdbcType=BIGINT},
       version_number = #{versionNumber,jdbcType=INTEGER},

@@ -225,6 +225,76 @@ public class CmsPostsExample {
             return (Criteria) this;
         }
 
+        public Criteria andPostAuthorUsernameIsNull() {
+            addCriterion("post_author_username is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameIsNotNull() {
+            addCriterion("post_author_username is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameEqualTo(String value) {
+            addCriterion("post_author_username =", value, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameNotEqualTo(String value) {
+            addCriterion("post_author_username <>", value, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameGreaterThan(String value) {
+            addCriterion("post_author_username >", value, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameGreaterThanOrEqualTo(String value) {
+            addCriterion("post_author_username >=", value, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameLessThan(String value) {
+            addCriterion("post_author_username <", value, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameLessThanOrEqualTo(String value) {
+            addCriterion("post_author_username <=", value, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameLike(String value) {
+            addCriterion("post_author_username like", value, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameNotLike(String value) {
+            addCriterion("post_author_username not like", value, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameIn(List<String> values) {
+            addCriterion("post_author_username in", values, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameNotIn(List<String> values) {
+            addCriterion("post_author_username not in", values, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameBetween(String value1, String value2) {
+            addCriterion("post_author_username between", value1, value2, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostAuthorUsernameNotBetween(String value1, String value2) {
+            addCriterion("post_author_username not between", value1, value2, "postAuthorUsername");
+            return (Criteria) this;
+        }
+
         public Criteria andPostAuthorIsNull() {
             addCriterion("post_author is null");
             return (Criteria) this;
@@ -672,6 +742,76 @@ public class CmsPostsExample {
 
         public Criteria andPostModifiedNotBetween(Date value1, Date value2) {
             addCriterion("post_modified not between", value1, value2, "postModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameIsNull() {
+            addCriterion("post_modified_username is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameIsNotNull() {
+            addCriterion("post_modified_username is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameEqualTo(String value) {
+            addCriterion("post_modified_username =", value, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameNotEqualTo(String value) {
+            addCriterion("post_modified_username <>", value, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameGreaterThan(String value) {
+            addCriterion("post_modified_username >", value, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameGreaterThanOrEqualTo(String value) {
+            addCriterion("post_modified_username >=", value, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameLessThan(String value) {
+            addCriterion("post_modified_username <", value, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameLessThanOrEqualTo(String value) {
+            addCriterion("post_modified_username <=", value, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameLike(String value) {
+            addCriterion("post_modified_username like", value, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameNotLike(String value) {
+            addCriterion("post_modified_username not like", value, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameIn(List<String> values) {
+            addCriterion("post_modified_username in", values, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameNotIn(List<String> values) {
+            addCriterion("post_modified_username not in", values, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameBetween(String value1, String value2) {
+            addCriterion("post_modified_username between", value1, value2, "postModifiedUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostModifiedUsernameNotBetween(String value1, String value2) {
+            addCriterion("post_modified_username not between", value1, value2, "postModifiedUsername");
             return (Criteria) this;
         }
 

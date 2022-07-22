@@ -24,7 +24,7 @@ const SectionWrapper = ({children, ...props}: any) => {
                             </div>
                             <div style={{float: 'right'}}>
                                 {
-                                    userInfo && userInfo.id > 0 ? (
+                                    userInfo && parseInt(userInfo.id) > 0 ? (
                                         <>
                                             <Link
                                                 href={'/account/manage'}

@@ -5,12 +5,13 @@ import {setCookie} from '../../../utils/cookies'
 import {server} from '../../../config'
 import SecretKey = API.SecretKey;
 import APIResult = API.APIResult;
+import {convertToHeaders} from "../../../utils/request";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<SecretKey>>) => {
     try {
         if (req.method === 'POST') {
             let url = `${server}/api/auth/signIn`
-            await Fetch.post(url, req.body, req.cookies['accessToken']).then(result => {
+            await Fetch.post(url, req.body, convertToHeaders(req.headers), req.cookies['accessToken']).then(result => {
                 if (result.code == 200) {
                     setCookie(res, 'accessToken', result.data.accessToken, {
                         domain: 'renfei.net',
@@ -22,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<Secre
                 res.status(200).json(result)
             })
         } else {
-            res.status(200).json({
+            res.status(405).json({
                 code: 405,
                 message: '不支持的请求方法。',
                 timestamp: new Date().valueOf(),

@@ -58,8 +58,8 @@ public class PostCategoryDashController extends AbstractController {
     queryPostCategoryList(@RequestParam(value = "enName", required = false) String enName,
                           @RequestParam(value = "zhName", required = false) String zhName,
                           @RequestParam(value = "secretLevel", required = false) SecretLevelEnum secretLevel,
-                          @RequestParam(value = "pages", required = false) int pages,
-                          @RequestParam(value = "rows", required = false) int rows) {
+                          @RequestParam(value = "pages", required = false, defaultValue = "1") int pages,
+                          @RequestParam(value = "rows", required = false, defaultValue = "10") int rows) {
         return postCategoryService.queryPostCategoryList(enName, zhName, secretLevel, pages, rows);
     }
 

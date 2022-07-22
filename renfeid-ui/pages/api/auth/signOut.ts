@@ -4,12 +4,13 @@ import * as Fetch from '../../../utils/request'
 import {setCookie} from '../../../utils/cookies'
 import {server} from '../../../config'
 import APIResult = API.APIResult;
+import {convertToHeaders} from "../../../utils/request";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<any>>) => {
     try {
         if (req.method === 'DELETE') {
             let url = `${server}/api/auth/signOut`
-            await Fetch.delet(url, req.cookies['accessToken']).then(result => {
+            await Fetch.delet(url, convertToHeaders(req.headers), req.cookies['accessToken']).then(result => {
                 if (result.code == 200) {
                     setCookie(res, 'accessToken', '', {
                         domain: 'renfei.net',
@@ -21,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<any>>
                 res.status(200).json(result)
             })
         } else {
-            res.status(200).json({
+            res.status(405).json({
                 code: 405,
                 message: '不支持的请求方法。',
                 timestamp: new Date().valueOf(),

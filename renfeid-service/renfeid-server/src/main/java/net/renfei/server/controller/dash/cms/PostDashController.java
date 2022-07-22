@@ -63,8 +63,8 @@ public class PostDashController extends AbstractController {
                                                    @RequestParam(value = "postStatus", required = false) PostStatusEnum postStatus,
                                                    @RequestParam(value = "startDate", required = false) Date startDate,
                                                    @RequestParam(value = "endDate", required = false) Date endDate,
-                                                   @RequestParam(value = "pages", required = false) Integer pages,
-                                                   @RequestParam(value = "rows", required = false) Integer rows) {
+                                                   @RequestParam(value = "pages", required = false, defaultValue = "1") Integer pages,
+                                                   @RequestParam(value = "rows", required = false, defaultValue = "10") Integer rows) {
         return postService.queryPostList(categoryId, title, postStatus, startDate, endDate,
                 pages == null ? 1 : pages, rows == null ? 10 : rows);
     }

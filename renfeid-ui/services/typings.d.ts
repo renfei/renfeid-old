@@ -23,7 +23,6 @@ declare namespace API {
         keyUuid: string,
         useVerCode?: boolean,
         plainPassword: string,
-        redirect: string,
     }
 
     interface SignInVo {
@@ -40,11 +39,22 @@ declare namespace API {
         data?: T
     }
 
+    // 列表数据对象
+    interface ListData<T> {
+        pageNum: number,
+        pageSize: number,
+        startRow: number,
+        endRow: number,
+        total: number,
+        pages: number,
+        data: T[],
+    }
+
     // 文章内容对象
     interface PostVo {
-        id: number,
-        categoryId: number,
-        postAuthor: number,
+        id: string,
+        categoryId: string,
+        postAuthor: string,
         postDate: string,
         postStatus: string,
         postViews: number,
@@ -65,6 +75,51 @@ declare namespace API {
         original: true,
     }
 
+    // 后台内容管理对象
+    interface DashPost {
+        id: string,
+        categoryId: string,
+        postAuthor: string,
+        postDate: string,
+        postStatus: string,
+        postViews: number,
+        commentStatus: string,
+        postPassword: string,
+        postModified: string,
+        postModifiedUser: string,
+        postParent: number,
+        versionNumber: number,
+        thumbsUp: number,
+        thumbsDown: number,
+        avgViews: number,
+        avgComment: number,
+        pageRank: number,
+        secretLevel: string,
+        isOriginal: boolean,
+        featuredImage: string,
+        postTitle: string,
+        postKeyword: string,
+        postExcerpt: string,
+        postContent: string,
+        sourceName: string,
+        sourceUrl: string,
+        authorUsername: string,
+        modifiedUsername: string,
+    }
+
+    interface PostCategory {
+        id: number,
+        enName: string,
+        zhName: string,
+        secretLevel: string,
+    }
+
+    // 文件上传响应对象
+    interface UploadObjectVo {
+        location: string,
+        alt: string,
+    }
+
     // 评论树
     interface CommentTree {
         id: number,
@@ -82,7 +137,7 @@ declare namespace API {
         email?: string
         emailVerified: boolean
         firstName?: string
-        id: number
+        id: string
         lastName?: string
         phone?: string
         phoneVerified: boolean
@@ -91,5 +146,10 @@ declare namespace API {
         secretLevel: string
         username: string
         uuid: string
+    }
+
+    interface AntdSelectOption {
+        label: string,
+        value: string,
     }
 }

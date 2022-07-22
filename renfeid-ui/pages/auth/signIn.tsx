@@ -21,6 +21,8 @@ import APIResult = API.APIResult;
 
 const {Title} = Typography;
 
+let redirectPath: string = '/'
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const accessToken = nookies.get(context)['accessToken']
     if (accessToken) {
@@ -79,11 +81,7 @@ const signInSubmit = async (req: NextApiRequest, res: NextApiResponse, values: S
                 // TODO 登录 Discuz!
             }
         }
-        if (values.redirect) {
-            gotoRedirect(values.redirect)
-        } else {
-            gotoRedirect('/')
-        }
+        gotoRedirect(redirectPath)
         return ""
     } else {
         message.error("非浏览器运行环境，程序被终止")
@@ -108,6 +106,10 @@ const SignInPage = (req: NextApiRequest, res: NextApiResponse) => {
     const [accessToken, setAccessToken] = useState<string>('')
     const [showMFA, setShowMFA] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
+
+    if (redirect) {
+        redirectPath = redirect.toString()
+    }
 
     useEffect(() => {
         if (typeof window !== 'undefined') {

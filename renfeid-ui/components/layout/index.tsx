@@ -13,7 +13,7 @@ const MyLayout = ({children}: any) => {
     const {data, error} = useSWR('/api/auth/current/user', (...args) => fetch(...args).then((res) => res.json()))
     let userInfo: UserInfo = {
         emailVerified: false,
-        id: -1,
+        id: '-1',
         phoneVerified: false,
         registrationDate: "",
         registrationIp: "",

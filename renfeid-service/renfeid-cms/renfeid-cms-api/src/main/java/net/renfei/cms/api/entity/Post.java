@@ -82,6 +82,10 @@ public class Post implements Serializable {
     private String sourceName;
     @Schema(description = "原文链接")
     private String sourceUrl;
+    @Schema(description = "作者用户名")
+    private String authorUsername;
+    @Schema(description = "修改者用户名")
+    private String modifiedUsername;
 
     public Long getId() {
         return id;
@@ -289,5 +293,21 @@ public class Post implements Serializable {
 
     public void setSourceUrl(String sourceUrl) {
         this.sourceUrl = sourceUrl;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
+    public String getModifiedUsername() {
+        return modifiedUsername;
+    }
+
+    public void setModifiedUsername(String modifiedUsername) {
+        this.modifiedUsername = modifiedUsername;
     }
 }

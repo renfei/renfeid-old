@@ -1,12 +1,39 @@
 import Link from 'next/link'
+import {useRouter} from 'next/router'
+import React, {useState, useEffect} from 'react'
 import {Layout, Menu, Space, Dropdown, Button, Badge} from 'antd'
 import {LogoutOutlined, SettingOutlined, BellOutlined, UserOutlined} from '@ant-design/icons'
 import styles from '../../../styles/dashboard/Dashboard.module.css'
 import DashboardLogo from './DashboardLogo'
+import * as api from '../../../services/api'
 
 const {Header} = Layout
 
+const getMessage = () => {
+    console.info('定时执行获取消息')
+}
+
 const DashboardNavbar = () => {
+    const router = useRouter()
+    const [userName, setUserName] = useState<string>('');
+    const [intervalMessage, setIntervalMessage] = useState<boolean>(false);
+
+    useEffect(() => {
+        api.requestCurrentUserInfo().then(res => {
+            if (res.code == 401) {
+                router.push('/auth/signIn?redirect=' + router.asPath)
+            } else if (res.code == 200 && res.data) {
+                setUserName(res.data.username)
+            }
+        })
+        if (!intervalMessage) {
+            setInterval(() => {
+                getMessage()
+            }, 10000)
+            setIntervalMessage(true)
+        }
+    })
+
     const userMenu = (
         <Menu
             items={[
@@ -94,7 +121,7 @@ const DashboardNavbar = () => {
                             icon={<UserOutlined/>}
                             style={{color: '#ffffff'}}
                             onClick={e => e.preventDefault()}>
-                            renfei
+                            {userName}
                         </Button>
                     </Dropdown>
                 </Space>

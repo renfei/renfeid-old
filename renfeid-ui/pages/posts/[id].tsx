@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import nookies from 'nookies'
-import {GetServerSideProps} from 'next'
-import {InferGetServerSidePropsType} from 'next'
+import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
 import Layout from "../../components/layout";
 import PostVo = API.PostVo;
 import APIResult = API.APIResult;
@@ -125,42 +124,8 @@ const CommentList: CommentTree[] = [
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
-    let data: APIResult<PostVo>
-    if (process.env.RENFEID_ENV == 'development') {
-        // 开发环境不请求接口，直接返回假数据，方便写 UI
-        data = {
-            code: 200,
-            message: "string",
-            timestamp: 123,
-            signature: "string",
-            nonce: "string",
-            data: {
-                id: 123,
-                categoryId: 123,
-                postAuthor: 123,
-                postDate: "2022-05-21 12:32:16",
-                postStatus: "string",
-                postViews: 123,
-                commentStatus: "string",
-                thumbsUp: 1,
-                thumbsDown: 1,
-                avgViews: 1,
-                avgComment: 1,
-                pageRank: 1,
-                secretLevel: "string",
-                featuredImage: "string",
-                postTitle: "这是一篇用于开发调试的文章内容标题",
-                postKeyword: "开发,调试,文章,内容",
-                postExcerpt: "这里是用于开发调试的文章摘要字段，一般不会超过100字。",
-                postContent: "<p>这是开发调试文章的内容。</p><p>这是一个 HTML 片段，并包含一个图片：</p><img src='https://cdn.renfei.net/upload/2021/d466988be10541f6b572c350fe6ac835.jpg'/>",
-                sourceName: "google",
-                sourceUrl: "https://www.google.com",
-                original: true,
-            }
-        }
-    } else {
-        data = await api.getPostsById(context.query.id, undefined, accessToken)
-    }
+    const postPassword = context.req.query?.postPassword
+    let data: APIResult<PostVo> = await api.getPostsById(context.query.id, context.req.headers, postPassword, accessToken)
     if (data.code == 404) {
         return {
             notFound: true,

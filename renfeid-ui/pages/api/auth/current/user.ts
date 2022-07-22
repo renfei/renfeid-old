@@ -4,17 +4,18 @@ import * as Fetch from '../../../../utils/request'
 import {server} from '../../../../config'
 import UserInfo = API.UserInfo;
 import APIResult = API.APIResult;
+import {convertToHeaders} from "../../../../utils/request";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<UserInfo>>) => {
     if (req.cookies['accessToken']) {
         try {
             if (req.method === 'GET') {
                 let url = `${server}/api/auth/current/user`
-                await Fetch.get(url, req.cookies['accessToken']).then(result => {
+                await Fetch.get(url, convertToHeaders(req.headers), req.cookies['accessToken']).then(result => {
                     res.status(200).json(result)
                 })
             } else {
-                res.status(200).json({
+                res.status(405).json({
                     code: 405,
                     message: '不支持的请求方法。',
                     timestamp: new Date().valueOf(),
