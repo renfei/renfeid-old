@@ -33,6 +33,7 @@ public class LocalObjectStorageServiceImpl implements ObjectStorageService {
 
     @Override
     public boolean putObject(String objectKey, InputStream inputStream, long contentLength) {
+        objectKey = objectKey.replaceAll("\\.\\./","");
         File file = new File(objectKey);
         if (!file.exists()) {
             try {
