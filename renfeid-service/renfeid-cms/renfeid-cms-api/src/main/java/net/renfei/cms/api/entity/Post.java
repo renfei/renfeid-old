@@ -31,11 +31,11 @@ import java.util.Date;
 public class Post implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
     @Schema(description = "ID")
-    private Long id;
+    private String id;
     @Schema(description = "内容分类ID")
-    private Long categoryId;
+    private String categoryId;
     @Schema(description = "作者ID")
-    private Long postAuthor;
+    private String postAuthor;
     @Schema(description = "发布时间")
     private Date postDate;
     @Schema(description = "文章状态")
@@ -87,27 +87,27 @@ public class Post implements Serializable {
     @Schema(description = "修改者用户名")
     private String modifiedUsername;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Long categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 
-    public Long getPostAuthor() {
+    public String getPostAuthor() {
         return postAuthor;
     }
 
-    public void setPostAuthor(Long postAuthor) {
+    public void setPostAuthor(String postAuthor) {
         this.postAuthor = postAuthor;
     }
 

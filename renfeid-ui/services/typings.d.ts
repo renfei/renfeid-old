@@ -152,4 +152,12 @@ declare namespace API {
         label: string,
         value: string,
     }
+
+    interface TableListParams {
+        pagination?: TablePaginationConfig;
+        sorter?: SorterResult<any> | SorterResult<any>[];
+        total?: number;
+        sortField?: string;
+        sortOrder?: string;
+    }
 }

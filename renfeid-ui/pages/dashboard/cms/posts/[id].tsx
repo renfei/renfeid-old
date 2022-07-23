@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import nookies from 'nookies'
 import moment from 'moment'
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useEffect, useState} from 'react'
 import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
 import {Editor} from '@tinymce/tinymce-react'
 import {
@@ -17,7 +17,9 @@ import {
     Collapse,
     Table,
     Result,
-    message
+    message,
+    Image,
+    Space
 } from 'antd'
 import DashboardLayout from "../../../../components/layout/dashboard"
 import DashPageHeader from "../../../../components/layout/dashboard/DashPageHeader"
@@ -29,6 +31,7 @@ import PostCategory = API.PostCategory
 import ListData = API.ListData;
 import {updatePost} from "../../../../services/api/dashboard/api";
 import {convertToHeaders} from "../../../../utils/request";
+import {switchPostStatus} from "../../../../utils/posts";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -120,8 +123,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         modifiedUsername: '',
     }
     if (context.params.id && !isNaN(parseInt(context.params.id.toString()))) {
-        const result: APIResult<DashPost> = await api.queryPostById(accessToken, context.req.headers, context.params.id.toString())
-        console.info(result)
+        const result: APIResult<DashPost> = await api.queryPostById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString())
         if (result.code == 401) {
             return {
                 redirect: {
@@ -165,23 +167,6 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
                 postCatOptions: postCatOptions
             }
         }
-    }
-}
-
-const switchPostStatus = (postStatus: string) => {
-    switch (postStatus) {
-        case 'PUBLISH':
-            return '发布'
-        case 'REVISION':
-            return '修订'
-        case 'DELETED':
-            return '删除'
-        case 'OFFLINE':
-            return '下线'
-        case 'REVIEW':
-            return '审核'
-        default:
-            return postStatus
     }
 }
 
@@ -295,6 +280,8 @@ const submitForm = (values: any) => {
 const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [form] = Form.useForm();
     const editorRef = useRef<any>(null);
+    const [featuredImageVisible, setFeaturedImageVisible] = useState<boolean>(false);
+    const [featuredImage, setFeaturedImage] = useState<string>();
 
     if (data.post.id > 0) {
         form.setFieldsValue({id: data.post.id})
@@ -323,6 +310,9 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
         form.setFieldsValue({postContent: data.post.postContent})
         form.setFieldsValue({sourceName: data.post.sourceName})
         form.setFieldsValue({sourceUrl: data.post.sourceUrl})
+        if(!featuredImage) {
+            setFeaturedImage(data.post.featuredImage)
+        }
     }
 
     useEffect(() => {
@@ -334,6 +324,12 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
     const submit = () => {
         form.setFieldsValue({postContent: editorRef.current.getContent()})
         return true
+    }
+
+    const uploadOnChange = (change: any) => {
+        if (change.file.status == 'done') {
+            setFeaturedImage(change.file.response.location)
+        }
     }
 
     return (
@@ -421,15 +417,38 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                             </Form.Item>
                                         </Col>
                                         <Col span={24}>
+                                            <Form.Item name="featuredImage" style={{display: 'none'}}>
+                                                <Input/>
+                                            </Form.Item>
                                             <Form.Item label="特色图像" name="featuredImageUpload">
-                                                <Upload
-                                                    action="/api/core/system/upload"
-                                                    accept="image/*"
-                                                    listType="picture"
-                                                    maxCount={1}
-                                                >
-                                                    <Button>点击上传</Button>
-                                                </Upload>
+                                                <Space>
+                                                    <Upload
+                                                        action="/api/core/system/upload"
+                                                        accept="image/*"
+                                                        listType="picture"
+                                                        maxCount={1}
+                                                        onChange={uploadOnChange}
+                                                    >
+                                                        <Button>点击上传</Button>
+                                                    </Upload>
+                                                    <Button type="primary"
+                                                            disabled={featuredImage == undefined}
+                                                            onClick={() => setFeaturedImageVisible(true)}>
+                                                        预览特色图像
+                                                    </Button>
+                                                    <Image
+                                                        width={200}
+                                                        style={{display: 'none'}}
+                                                        src={featuredImage}
+                                                        preview={{
+                                                            visible: featuredImageVisible,
+                                                            src: featuredImage,
+                                                            onVisibleChange: value => {
+                                                                setFeaturedImageVisible(value);
+                                                            },
+                                                        }}
+                                                    />
+                                                </Space>
                                             </Form.Item>
                                         </Col>
                                     </Row>

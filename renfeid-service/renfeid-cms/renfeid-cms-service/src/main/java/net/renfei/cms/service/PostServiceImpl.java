@@ -217,7 +217,7 @@ public class PostServiceImpl implements PostService {
         }
         postCheckSecretLevel(post);
         UserDetail currentUserDetail = systemService.currentUserDetail();
-        post.setPostAuthor(currentUserDetail.getId());
+        post.setPostAuthor(currentUserDetail.getId() + "");
         post.setAuthorUsername(currentUserDetail.getUsername());
         if (systemConfig.getEnablePostAuditing()) {
             // TODO 文章审核流程机制
@@ -233,7 +233,7 @@ public class PostServiceImpl implements PostService {
         post.setVersionNumber(1);
         post.setThumbsUp(0L);
         post.setThumbsDown(0L);
-        post.setId(snowflakeService.getId("").getId());
+        post.setId(snowflakeService.getId("").getId() + "");
         cmsPostsMapper.insertSelective(convert(post));
         // 插入一份归档记录
         cmsPostsArchivalMapper.insertSelective(convertArchival(post));
@@ -281,10 +281,10 @@ public class PostServiceImpl implements PostService {
         oldPost.setPostModifiedUser(currentUserDetail.getId());
         oldPost.setVersionNumber(oldPost.getVersionNumber() + 1);
         cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(oldPost));
-        oldPost.setPostParent(oldPost.getId());
-        oldPost.setId(snowflakeService.getId("").getId());
+        oldPost.setPostParent(Long.parseLong(oldPost.getId()));
+        oldPost.setId(snowflakeService.getId("").getId() + "");
         cmsPostsArchivalMapper.insertSelective(convertArchival(oldPost));
-        oldPost.setId(oldPost.getPostParent());
+        oldPost.setId(oldPost.getPostParent() + "");
         return new APIResult<>(oldPost);
     }
 
@@ -307,8 +307,8 @@ public class PostServiceImpl implements PostService {
         oldPost.setPostModifiedUser(currentUserDetail.getId());
         oldPost.setVersionNumber(oldPost.getVersionNumber() + 1);
         cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(oldPost));
-        oldPost.setPostParent(oldPost.getId());
-        oldPost.setId(snowflakeService.getId("").getId());
+        oldPost.setPostParent(Long.parseLong(oldPost.getId()));
+        oldPost.setId(snowflakeService.getId("").getId() + "");
         cmsPostsArchivalMapper.insertSelective(convertArchival(oldPost));
         return APIResult.success();
     }
@@ -331,8 +331,8 @@ public class PostServiceImpl implements PostService {
         oldPost.setPostModifiedUser(currentUserDetail.getId());
         oldPost.setVersionNumber(oldPost.getVersionNumber() + 1);
         cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(oldPost));
-        oldPost.setPostParent(oldPost.getId());
-        oldPost.setId(snowflakeService.getId("").getId());
+        oldPost.setPostParent(Long.parseLong(oldPost.getId()));
+        oldPost.setId(snowflakeService.getId("").getId() + "");
         cmsPostsArchivalMapper.insertSelective(convertArchival(oldPost));
         return APIResult.success();
     }
@@ -359,7 +359,7 @@ public class PostServiceImpl implements PostService {
         if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), post.getSecretLevel())) {
             throw new OutOfSecretLevelException("内容密级超过您账号的密级，请求被拒绝");
         }
-        CmsCategory cmsCategory = cmsCategoryMapper.selectByPrimaryKey(post.getCategoryId());
+        CmsCategory cmsCategory = cmsCategoryMapper.selectByPrimaryKey(Long.parseLong(post.getCategoryId()));
         if (cmsCategory == null) {
             throw new BusinessException("分类栏目ID不正确，未能找到该分类");
         }
@@ -373,9 +373,9 @@ public class PostServiceImpl implements PostService {
             return null;
         }
         Post post = new Post();
-        post.setId(cmsPosts.getId());
-        post.setCategoryId(cmsPosts.getCategoryId());
-        post.setPostAuthor(cmsPosts.getPostAuthor());
+        post.setId(cmsPosts.getId() + "");
+        post.setCategoryId(cmsPosts.getCategoryId() + "");
+        post.setPostAuthor(cmsPosts.getPostAuthor() + "");
         post.setPostDate(cmsPosts.getPostDate());
         post.setPostStatus(PostStatusEnum.valueOf(cmsPosts.getPostStatus()));
         post.setPostViews(cmsPosts.getPostViews());
@@ -409,9 +409,9 @@ public class PostServiceImpl implements PostService {
             return null;
         }
         CmsPostsWithBLOBs cmsPosts = new CmsPostsWithBLOBs();
-        cmsPosts.setId(post.getId());
-        cmsPosts.setCategoryId(post.getCategoryId());
-        cmsPosts.setPostAuthor(post.getPostAuthor());
+        cmsPosts.setId(Long.parseLong(post.getId()));
+        cmsPosts.setCategoryId(Long.parseLong(post.getCategoryId()));
+        cmsPosts.setPostAuthor(Long.parseLong(post.getPostAuthor()));
         cmsPosts.setPostDate(post.getPostDate());
         cmsPosts.setPostStatus(post.getPostStatus().toString());
         cmsPosts.setPostViews(post.getPostViews());
@@ -445,9 +445,9 @@ public class PostServiceImpl implements PostService {
             return null;
         }
         CmsPostsArchivalWithBLOBs cmsPosts = new CmsPostsArchivalWithBLOBs();
-        cmsPosts.setId(post.getId());
-        cmsPosts.setCategoryId(post.getCategoryId());
-        cmsPosts.setPostAuthor(post.getPostAuthor());
+        cmsPosts.setId(Long.parseLong(post.getId()));
+        cmsPosts.setCategoryId(Long.parseLong(post.getCategoryId()));
+        cmsPosts.setPostAuthor(Long.parseLong(post.getPostAuthor()));
         cmsPosts.setPostDate(post.getPostDate());
         cmsPosts.setPostStatus(post.getPostStatus().toString());
         cmsPosts.setPostViews(post.getPostViews());

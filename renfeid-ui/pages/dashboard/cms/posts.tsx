@@ -1,6 +1,9 @@
 import Head from 'next/head'
+import nookies from 'nookies'
+import moment from 'moment'
 import React, {useEffect, useState} from 'react'
-import {Col, Row, Button, Typography, Table, Space, Form, Input, Select} from 'antd'
+import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
+import {Col, Row, Button, Typography, Table, Space, Form, Input, Select, DatePicker} from 'antd'
 import {
     DownOutlined,
     UpOutlined,
@@ -14,56 +17,63 @@ import type {ColumnsType, TablePaginationConfig} from 'antd/lib/table'
 import type {FilterValue, SorterResult} from 'antd/lib/table/interface'
 import DashboardLayout from "../../../components/layout/dashboard"
 import DashPageHeader from "../../../components/layout/dashboard/DashPageHeader"
+import * as api from "../../../services/api/dashboard/api";
+import {convertToHeaders} from "../../../utils/request";
+import AntdSelectOption = API.AntdSelectOption;
+import APIResult = API.APIResult;
+import ListData = API.ListData;
+import PostCategory = API.PostCategory;
+import {getPostStatusList, switchPostStatus} from "../../../utils/posts";
+import Params = API.TableListParams;
+import {queryPostList} from "../../../services/api/dashboard/api";
+import DashPost = API.DashPost;
 
 const {Title} = Typography;
 
-interface DataType {
-    name: {
-        first: string;
-        last: string;
-    };
-    gender: string;
-    email: string;
-    login: {
-        uuid: string;
-    };
-}
-
-interface Params {
-    pagination?: TablePaginationConfig;
-    sorter?: SorterResult<any> | SorterResult<any>[];
-    total?: number;
-    sortField?: string;
-    sortOrder?: string;
-}
-
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<DashPost> = [
     {
-        title: 'Name',
-        width: 300,
-        dataIndex: 'name',
-        render: name => `${name.first} ${name.last}`,
+        title: '标题',
+        dataIndex: 'postTitle',
     },
     {
-        title: 'Gender',
-        width: 100,
-        dataIndex: 'gender',
+        title: '状态',
+        dataIndex: 'postStatus',
+        width: 60,
+        render: post => {
+            return switchPostStatus(post)
+        },
     },
     {
-        title: 'Email',
-        dataIndex: 'email',
+        title: '浏览量',
+        width: 80,
+        dataIndex: 'postViews',
+    },
+    {
+        title: '版本号',
+        width: 75,
+        dataIndex: 'versionNumber',
+    },
+    {
+        title: '作者',
+        width: 80,
+        dataIndex: 'authorUsername',
+    },
+    {
+        title: '发布时间',
+        width: 165,
+        dataIndex: 'postDate',
     },
     {
         title: '操作',
-        dataIndex: '',
+        dataIndex: 'id',
         key: 'x',
         width: 100,
         fixed: 'right',
-        render: () => {
+        render: (id) => {
             return (
                 <Space>
-                    <Button type="primary" icon={<EditOutlined/>}>编辑</Button>
-                    <Button danger icon={<DeleteOutlined/>}>删除</Button>
+                    <Button type="primary" icon={<EditOutlined/>} href={`/dashboard/cms/posts/${id}`}>编辑</Button>
+                    <Button danger icon={<DeleteOutlined/>}>下线</Button>
                 </Space>
             )
         },
@@ -91,84 +101,49 @@ const routes = [
     },
 ]
 
-const {Option} = Select;
-
-const AdvancedSearchForm = () => {
-    const [expand, setExpand] = useState(false)
-    const [form] = Form.useForm()
-
-    const getFields = () => {
-        const count = expand ? 10 : 3;
-        const children = [];
-        for (let i = 0; i < count; i++) {
-            children.push(
-                <Col span={6} key={i}>
-                    <Form.Item
-                        name={`field-${i}`}
-                        label={`Field ${i}`}
-                    >
-                        {i % 3 !== 1 ? (
-                            <Input placeholder="placeholder"/>
-                        ) : (
-                            <Select defaultValue="2">
-                                <Option value="1">1</Option>
-                                <Option value="2">
-                                    longlonglonglonglonglonglonglonglonglonglongl
-                                </Option>
-                            </Select>
-                        )}
-                    </Form.Item>
-                </Col>,
-            );
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
+    const accessToken = nookies.get(context)['accessToken']
+    if (!accessToken) {
+        return {
+            redirect: {
+                destination: '/auth/signIn?redirect=' + context.req.url,
+                permanent: false,
+            },
         }
-        return children;
-    };
+    }
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-    };
+    let postCatOptions: AntdSelectOption[] = []
+    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(accessToken, convertToHeaders(context.req.headers),
+        undefined, undefined, undefined, "1", "2147483647")
+    if (resultPostCategory.code == 401) {
+        return {
+            redirect: {
+                destination: '/auth/signIn?redirect=' + context.req.url,
+                permanent: false,
+            },
+        }
+    }
+    if (resultPostCategory.code == 200 && resultPostCategory.data) {
+        for (let i = 0; i < resultPostCategory.data.data.length; i++) {
+            let option: AntdSelectOption = {
+                label: resultPostCategory.data.data[i].zhName,
+                value: resultPostCategory.data.data[i].id.toString(),
+            }
+            postCatOptions.push(option)
+        }
+    }
 
-    return (
-        <Form
-            form={form}
-            name="advanced_search"
-            className="ant-advanced-search-form"
-            onFinish={onFinish}
-        >
-            <Row gutter={24}>{getFields()}
-                <Col span={6} style={{textAlign: 'right'}}>
-                    <Space>
-                        <Button
-                            style={{margin: '0 8px'}}
-                            onClick={() => {
-                                form.resetFields();
-                            }}
-                            icon={<ReloadOutlined/>}
-                        >
-                            重置
-                        </Button>
-                        <Button type="primary" htmlType="submit" icon={<SearchOutlined/>}>
-                            查询
-                        </Button>
-                        <Button
-                            type="text"
-                            style={{fontSize: 12}}
-                            onClick={() => {
-                                setExpand(!expand);
-                            }}
-                            icon={expand ? <UpOutlined/> : <DownOutlined/>}
-                        >
-                            {expand ? '收起' : '展开'}
-                        </Button>
-                    </Space>
-                </Col>
-            </Row>
-        </Form>
-    );
+    return {
+        props: {
+            data: {
+                postCatOptions: postCatOptions
+            }
+        }
+    }
 }
 
-const DashboardCmsPosts = () => {
-    const [data, setData] = useState()
+const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    const [postList, setPostList] = useState<DashPost[]>()
     const [loading, setLoading] = useState(false)
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
@@ -179,23 +154,131 @@ const DashboardCmsPosts = () => {
         fetchData({pagination});
     })
 
-    const fetchData = (params: Params = {}) => {
-        if (!data) {
+    const fetchData = async (params: Params = {}) => {
+        if (!postList) {
             setLoading(true);
-            fetch(`https://randomuser.me/api?${getRandomuserParams(params)}`)
-                .then(res => res.json())
-                .then(({results}) => {
-                    setData(results);
-                    setLoading(false);
-                    setPagination({
-                        ...params.pagination,
-                        total: 200,
-                        // 200 is mock data, you should read it from server
-                        // total: data.totalCount,
-                    });
-                });
+            let listData: APIResult<ListData<DashPost>> = await queryPostList()
+            setPostList(listData.data?.data);
+            setLoading(false);
+            setPagination({
+                ...params.pagination,
+                total: listData.data?.total,
+                // 200 is mock data, you should read it from server
+                // total: data.totalCount,
+            });
         }
-    };
+    }
+
+    const AdvancedSearchForm = (props: any) => {
+        const [expand, setExpand] = useState(false)
+        const [form] = Form.useForm()
+
+        const getFields = () => {
+            const children = [];
+            children.push(
+                <Col span={6} key="categoryId">
+                    <Form.Item
+                        name="categoryId"
+                        label="内容分类"
+                    >
+                        <Select
+                            options={props.postCatOptions}
+                        >
+                        </Select>
+                    </Form.Item>
+                </Col>,
+                <Col span={6} key="title">
+                    <Form.Item
+                        name="title"
+                        label="内容标题"
+                    >
+                        <Input/>
+                    </Form.Item>
+                </Col>,
+                <Col span={6} key="postStatus">
+                    <Form.Item
+                        name="postStatus"
+                        label="内容状态"
+                    >
+                        <Select
+                            options={getPostStatusList()}
+                        >
+                        </Select>
+                    </Form.Item>
+                </Col>,
+            );
+            if (expand) {
+                children.push(
+                    <Col span={6}></Col>,
+                    <Col span={6} key="startDate">
+                        <Form.Item
+                            name="startDate"
+                            label="起始时间"
+                        >
+                            <DatePicker
+                                style={{width: '100%'}}
+                                showTime
+                                format="YYYY-MM-DD HH:mm:ss"/>
+                        </Form.Item>
+                    </Col>, <Col span={6} key="endDate">
+                        <Form.Item
+                            name="endDate"
+                            label="结束时间"
+                        >
+                            <DatePicker
+                                style={{width: '100%'}}
+                                showTime
+                                format="YYYY-MM-DD HH:mm:ss"/>
+                        </Form.Item>
+                    </Col>,
+                    <Col span={6}></Col>,
+                )
+            }
+            return children;
+        };
+
+        const advancedSearch = (values: any) => {
+            console.log('Received values of form: ', values);
+        };
+
+        return (
+            <Form
+                form={form}
+                name="advanced_search"
+                className="ant-advanced-search-form"
+                onFinish={advancedSearch}
+            >
+                <Row gutter={24}>{getFields()}
+                    <Col span={6} style={{textAlign: 'right'}}>
+                        <Space>
+                            <Button
+                                style={{margin: '0 8px'}}
+                                onClick={() => {
+                                    form.resetFields();
+                                }}
+                                icon={<ReloadOutlined/>}
+                            >
+                                重置
+                            </Button>
+                            <Button type="primary" htmlType="submit" icon={<SearchOutlined/>}>
+                                查询
+                            </Button>
+                            <Button
+                                type="text"
+                                style={{fontSize: 12}}
+                                onClick={() => {
+                                    setExpand(!expand);
+                                }}
+                                icon={expand ? <UpOutlined/> : <DownOutlined/>}
+                            >
+                                {expand ? '收起' : '展开'}
+                            </Button>
+                        </Space>
+                    </Col>
+                </Row>
+            </Form>
+        );
+    }
 
     const handleTableChange = (
         newPagination: any,
@@ -226,7 +309,7 @@ const DashboardCmsPosts = () => {
 
             <div style={{padding: '23px'}}>
                 <div style={{backgroundColor: '#fff', padding: '24px 24px 0', marginBottom: '16px'}}>
-                    <AdvancedSearchForm/>
+                    <AdvancedSearchForm postCatOptions={data.postCatOptions}/>
                 </div>
                 <div style={{backgroundColor: '#fff', padding: '24px', marginBottom: '16px'}}>
                     <Row>
@@ -246,8 +329,8 @@ const DashboardCmsPosts = () => {
                     </Row>
                     <Table
                         columns={columns}
-                        rowKey={record => record.login.uuid}
-                        dataSource={data}
+                        rowKey={record => record.id}
+                        dataSource={postList}
                         pagination={pagination}
                         loading={loading}
                         onChange={handleTableChange}

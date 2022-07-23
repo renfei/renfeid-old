@@ -65,7 +65,7 @@ public class PostsController extends AbstractController {
     public APIResult<Post> queryPostById(@PathVariable("id") long postId,
                                          @RequestParam(value = "password", required = false) String password) {
         APIResult<Post> postResult = postService.queryPostById(postId, password, false, true);
-        postService.addViews(postResult.getData().getId());
+        postService.addViews(Long.parseLong(postResult.getData().getId()));
         return postResult;
     }
 }

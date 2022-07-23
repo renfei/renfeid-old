@@ -20,10 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * 本地磁盘实现的对象存储服务
@@ -36,7 +33,31 @@ public class LocalObjectStorageServiceImpl implements ObjectStorageService {
 
     @Override
     public boolean putObject(String objectKey, InputStream inputStream, long contentLength) {
-        return false;
+        File file = new File(objectKey);
+        if (!file.exists()) {
+            try {
+                if (!file.createNewFile()) {
+                    logger.error("文件创建失败：{}", objectKey);
+                    return false;
+                }
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+                return false;
+            }
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(objectKey);
+            byte[] b = new byte[1024];
+            while ((inputStream.read(b)) != -1) {
+                fos.write(b);
+            }
+            inputStream.close();
+            fos.close();
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            return false;
+        }
+        return true;
     }
 
     @Override
