@@ -23,10 +23,7 @@ import net.renfei.cms.api.entity.Post;
 import net.renfei.cms.repositories.CmsCategoryMapper;
 import net.renfei.cms.repositories.CmsPostsArchivalMapper;
 import net.renfei.cms.repositories.CmsPostsMapper;
-import net.renfei.cms.repositories.entity.CmsCategory;
-import net.renfei.cms.repositories.entity.CmsPostsArchivalWithBLOBs;
-import net.renfei.cms.repositories.entity.CmsPostsExample;
-import net.renfei.cms.repositories.entity.CmsPostsWithBLOBs;
+import net.renfei.cms.repositories.entity.*;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
@@ -201,6 +198,34 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public APIResult<List<Post>> queryPostArchivalListById(long postId) {
+        CmsPostsArchivalExample example = new CmsPostsArchivalExample();
+        example.setOrderByClause("version_number DESC");
+        example.createCriteria().andPostParentEqualTo(postId);
+        List<CmsPostsArchivalWithBLOBs> cmsPostsArchivalList = cmsPostsArchivalMapper.selectByExampleWithBLOBs(example);
+        List<Post> posts = new ArrayList<>();
+        for (CmsPostsArchivalWithBLOBs cmsPostsArchival : cmsPostsArchivalList
+        ) {
+            posts.add(convert(cmsPostsArchival));
+        }
+        return new APIResult<>(posts);
+    }
+
+    @Override
+    public APIResult<Post> queryPostArchivalById(long postId, long archivalId) {
+        CmsPostsArchivalExample example = new CmsPostsArchivalExample();
+        example.createCriteria().andPostParentEqualTo(postId).andIdEqualTo(archivalId);
+        List<CmsPostsArchivalWithBLOBs> cmsPostsArchivalList = cmsPostsArchivalMapper.selectByExampleWithBLOBs(example);
+        if (cmsPostsArchivalList.isEmpty()) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.NotFound)
+                    .message("未找到该历史记录")
+                    .build();
+        }
+        return new APIResult<>(convert(cmsPostsArchivalList.get(0)));
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public APIResult<Post> createPost(Post post) {
         postCheck(post.getPostTitle(), "标题不能为空");
@@ -369,6 +394,42 @@ public class PostServiceImpl implements PostService {
     }
 
     private Post convert(CmsPostsWithBLOBs cmsPosts) {
+        if (cmsPosts == null) {
+            return null;
+        }
+        Post post = new Post();
+        post.setId(cmsPosts.getId() + "");
+        post.setCategoryId(cmsPosts.getCategoryId() + "");
+        post.setPostAuthor(cmsPosts.getPostAuthor() + "");
+        post.setPostDate(cmsPosts.getPostDate());
+        post.setPostStatus(PostStatusEnum.valueOf(cmsPosts.getPostStatus()));
+        post.setPostViews(cmsPosts.getPostViews());
+        post.setCommentStatus(cmsPosts.getCommentStatus());
+        post.setPostPassword(cmsPosts.getPostPassword());
+        post.setPostModified(cmsPosts.getPostModified());
+        post.setPostModifiedUser(cmsPosts.getPostModifiedUser());
+        post.setPostParent(cmsPosts.getPostParent());
+        post.setVersionNumber(cmsPosts.getVersionNumber());
+        post.setThumbsUp(cmsPosts.getThumbsUp());
+        post.setThumbsDown(cmsPosts.getThumbsDown());
+        post.setAvgViews(cmsPosts.getAvgViews());
+        post.setAvgComment(cmsPosts.getAvgComment());
+        post.setPageRank(cmsPosts.getPageRank());
+        post.setSecretLevel(SecretLevelEnum.valueOf(cmsPosts.getSecretLevel()));
+        post.setOriginal(cmsPosts.getIsOriginal());
+        post.setFeaturedImage(cmsPosts.getFeaturedImage());
+        post.setPostTitle(cmsPosts.getPostTitle());
+        post.setPostKeyword(cmsPosts.getPostKeyword());
+        post.setPostExcerpt(cmsPosts.getPostExcerpt());
+        post.setPostContent(cmsPosts.getPostContent());
+        post.setSourceName(cmsPosts.getSourceName());
+        post.setSourceUrl(cmsPosts.getSourceUrl());
+        post.setAuthorUsername(cmsPosts.getPostAuthorUsername());
+        post.setModifiedUsername(cmsPosts.getPostModifiedUsername());
+        return post;
+    }
+
+    private Post convert(CmsPostsArchivalWithBLOBs cmsPosts) {
         if (cmsPosts == null) {
             return null;
         }

@@ -27,9 +27,11 @@ import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * CMS管理接口
@@ -61,8 +63,10 @@ public class PostDashController extends AbstractController {
     public APIResult<ListData<Post>> queryPostList(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                                    @RequestParam(value = "title", required = false) String title,
                                                    @RequestParam(value = "postStatus", required = false) PostStatusEnum postStatus,
-                                                   @RequestParam(value = "startDate", required = false) Date startDate,
-                                                   @RequestParam(value = "endDate", required = false) Date endDate,
+                                                   @RequestParam(value = "startDate", required = false)
+                                                   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startDate,
+                                                   @RequestParam(value = "endDate", required = false)
+                                                   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endDate,
                                                    @RequestParam(value = "pages", required = false, defaultValue = "1") Integer pages,
                                                    @RequestParam(value = "rows", required = false, defaultValue = "10") Integer rows) {
         return postService.queryPostList(categoryId, title, postStatus, startDate, endDate,
@@ -76,6 +80,25 @@ public class PostDashController extends AbstractController {
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "获取文章内容详情")
     public APIResult<Post> queryPostById(@PathVariable("id") long postId) {
         return postService.queryPostById(postId, null, true, false);
+    }
+
+    @GetMapping("posts/archival/{id}")
+    @Operation(summary = "获取历史版本文章内容列表", tags = {"历史版本文章内容接口"}, parameters = {
+            @Parameter(name = "id", description = "文章内容ID")
+    })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "获取历史版本文章内容列表")
+    public APIResult<List<Post>> queryPostArchivalListById(@PathVariable("id") long postId) {
+        return postService.queryPostArchivalListById(postId);
+    }
+
+    @GetMapping("posts/archival/{id}/{archivalId}")
+    @Operation(summary = "获取历史版本文章内容详情", tags = {"历史版本文章内容接口"}, parameters = {
+            @Parameter(name = "id", description = "文章内容ID")
+    })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "获取历史版本文章内容详情")
+    public APIResult<Post> queryPostArchivalById(@PathVariable("id") long postId,
+                                                 @PathVariable("archivalId") long archivalId) {
+        return postService.queryPostArchivalById(postId, archivalId);
     }
 
     @PostMapping("posts")

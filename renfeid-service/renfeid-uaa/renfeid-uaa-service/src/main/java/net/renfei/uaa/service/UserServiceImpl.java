@@ -111,19 +111,28 @@ public class UserServiceImpl implements UserService {
             if (jwtService.validate(token).getCode() != 200) {
                 // JWT 校验失败
                 logger.warn("Token校验失败：{}", token);
-                throw new RuntimeException("Token校验失败。");
+                return APIResult.builder()
+                        .code(StateCodeEnum.Unauthorized)
+                        .message("Token校验失败")
+                        .build();
             }
         } else if (jwtService.validate(token, ip).getCode() != 200) {
             // JWT 校验失败
             logger.warn("Token校验失败：{}", token);
-            throw new RuntimeException("Token校验失败。");
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message("Token校验失败")
+                    .build();
         }
         String username = jwtService.getUsername(token).getData();
         // 查验 redis
         Object object = redisService.get(REDIS_TOKEN_KEY + username);
         if (object == null || !token.equals(object.toString())) {
             logger.warn("Token on redis校验失败：{}", token);
-            throw new RuntimeException("Token校验失败。");
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message("Token校验失败")
+                    .build();
         }
         // 根据 username 获取 UserDetail
         UaaUserExample example = new UaaUserExample();
@@ -132,7 +141,10 @@ public class UserServiceImpl implements UserService {
         UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
         if (uaaUser == null) {
             logger.error("根据用户名：{}，未找到用户信息", username);
-            throw new RuntimeException("未找到用户信息。");
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message("未找到用户信息")
+                    .build();
         }
         UserDetail userDetail = convert(uaaUser);
         this.fillRoleDetailList(userDetail);

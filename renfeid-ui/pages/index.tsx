@@ -102,7 +102,7 @@ const weiboData = [
             </p>
         ),
         datetime: (
-            <Tooltip title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
+            <Tooltip title={moment().subtract(1, 'days').format('yyyy-MM-DD HH:mm:ss')}>
                 <span>{moment().subtract(1, 'days').fromNow()}</span>
             </Tooltip>
         ),
@@ -117,7 +117,7 @@ const weiboData = [
             </p>
         ),
         datetime: (
-            <Tooltip title={moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}>
+            <Tooltip title={moment().subtract(2, 'days').format('yyyy-MM-DD HH:mm:ss')}>
                 <span>{moment().subtract(2, 'days').fromNow()}</span>
             </Tooltip>
         ),

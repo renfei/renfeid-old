@@ -3,7 +3,7 @@ import nookies from 'nookies'
 import moment from 'moment'
 import React, {useEffect, useState} from 'react'
 import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
-import {Col, Row, Button, Typography, Table, Space, Form, Input, Select, DatePicker} from 'antd'
+import {Col, Row, Button, Typography, Table, Space, Form, Input, Select, DatePicker, Modal, message} from 'antd'
 import {
     DownOutlined,
     UpOutlined,
@@ -11,10 +11,10 @@ import {
     SearchOutlined,
     ReloadOutlined,
     EditOutlined,
-    DeleteOutlined
+    DeleteOutlined,
+    QuestionCircleOutlined
 } from '@ant-design/icons'
 import type {ColumnsType, TablePaginationConfig} from 'antd/lib/table'
-import type {FilterValue, SorterResult} from 'antd/lib/table/interface'
 import DashboardLayout from "../../../components/layout/dashboard"
 import DashPageHeader from "../../../components/layout/dashboard/DashPageHeader"
 import * as api from "../../../services/api/dashboard/api";
@@ -69,11 +69,24 @@ const columns: ColumnsType<DashPost> = [
         key: 'x',
         width: 100,
         fixed: 'right',
-        render: (id) => {
+        render: (_: any, record: DashPost) => {
             return (
                 <Space>
-                    <Button type="primary" icon={<EditOutlined/>} href={`/dashboard/cms/posts/${id}`}>编辑</Button>
-                    <Button danger icon={<DeleteOutlined/>}>下线</Button>
+                    <Button type="primary" icon={<EditOutlined/>} href={`/dashboard/cms/posts/${record.id}`}>编辑</Button>
+                    <Button
+                        danger
+                        icon={<DeleteOutlined/>}
+                        disabled={record.postStatus != 'PUBLISH'}
+                        onClick={() => {
+                            api.offlinePost(record.id).then(res => {
+                                if (res.code == 200) {
+                                    message.success('下线成功，请刷新查看')
+                                } else {
+                                    message.error(res.message)
+                                }
+                            })
+                        }}
+                    >下线</Button>
                 </Space>
             )
         },
@@ -142,6 +155,37 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     }
 }
 
+const helpModal = () => {
+    Modal.info({
+        title: '帮助说明',
+        width: 520,
+        icon: (<QuestionCircleOutlined/>),
+        content: (
+            <div>
+                <p>此处为CMS内容管理系统。</p>
+                <p>状态：</p>
+                <ol>
+                    <li>发布：正在公开的内容</li>
+                    <li>修订：历史版本，仅后台可见/只读</li>
+                    <li>下线：内容被撤回，仅后台可见，重新编辑保存（开启审核流程进入审核，否则为发布状态）</li>
+                    <li>审核：审核流程中转中，仅后台可见</li>
+                    <li>删除：删除状态，仅后台可见</li>
+                </ol>
+                <p>版本号：</p>
+                <ul>
+                    <li>出于安全管理要求，操作留痕，数据每次操作、修改，版本号会自增</li>
+                </ul>
+                <p>发布时间：</p>
+                <ul>
+                    <li>您可以设置在未来的时间自动发布内容，在发布时间未到时，仅后台可见</li>
+                </ul>
+            </div>
+        ),
+        onOk() {
+        },
+    })
+}
+
 const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [postList, setPostList] = useState<DashPost[]>()
     const [loading, setLoading] = useState(false)
@@ -150,23 +194,35 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
         pageSize: 10,
     })
 
+    type QueryCriteria = {
+        categoryId?: number, title?: string, postStatus?: string, startDate?: string,
+        endDate?: string, pagination: TablePaginationConfig
+    }
+
     useEffect(() => {
         fetchData({pagination});
     })
 
-    const fetchData = async (params: Params = {}) => {
+    const fetchData = async (params: QueryCriteria) => {
         if (!postList) {
-            setLoading(true);
-            let listData: APIResult<ListData<DashPost>> = await queryPostList()
-            setPostList(listData.data?.data);
-            setLoading(false);
-            setPagination({
-                ...params.pagination,
-                total: listData.data?.total,
-                // 200 is mock data, you should read it from server
-                // total: data.totalCount,
-            });
+            await queryData(params)
         }
+    }
+
+    const queryData = async (params: QueryCriteria) => {
+        setLoading(true);
+        let listData: APIResult<ListData<DashPost>> = await queryPostList(
+            params.categoryId, params.title, params.postStatus, params.startDate,
+            params.endDate, params.pagination.current, params.pagination.pageSize
+        )
+        setPostList(listData.data?.data);
+        setLoading(false);
+        setPagination({
+            ...params.pagination,
+            total: listData.data?.total,
+            // 200 is mock data, you should read it from server
+            // total: data.totalCount,
+        })
     }
 
     const AdvancedSearchForm = (props: any) => {
@@ -218,7 +274,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                             <DatePicker
                                 style={{width: '100%'}}
                                 showTime
-                                format="YYYY-MM-DD HH:mm:ss"/>
+                                format="yyyy-MM-DD HH:mm:ss"/>
                         </Form.Item>
                     </Col>, <Col span={6} key="endDate">
                         <Form.Item
@@ -228,7 +284,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                             <DatePicker
                                 style={{width: '100%'}}
                                 showTime
-                                format="YYYY-MM-DD HH:mm:ss"/>
+                                format="yyyy-MM-DD HH:mm:ss"/>
                         </Form.Item>
                     </Col>,
                     <Col span={6}></Col>,
@@ -237,8 +293,16 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
             return children;
         };
 
-        const advancedSearch = (values: any) => {
-            console.log('Received values of form: ', values);
+        const advancedSearch = async (values: any) => {
+            let params: QueryCriteria = {
+                categoryId: values.categoryId,
+                endDate: values.endDate ? moment(values.endDate).format('yyyy-MM-DD HH:mm:ss') : undefined,
+                pagination: pagination,
+                postStatus: values.postStatus,
+                startDate: values.startDate ? moment(values.startDate).format('yyyy-MM-DD HH:mm:ss') : undefined,
+                title: values.title
+            }
+            await queryData(params)
         };
 
         return (
@@ -316,8 +380,13 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                         <Col span={12}>
                             <Title level={5}>内容管理列表</Title>
                         </Col>
-                        <Col span={12} style={{textAlign: 'right'}}>
+                        <Col span={12} style={{textAlign: 'right', paddingBottom: '10px'}}>
                             <Space>
+                                <Button
+                                    onClick={helpModal}
+                                    icon={<QuestionCircleOutlined/>}>
+                                    帮助说明
+                                </Button>
                                 <Button
                                     href="/dashboard/cms/posts/new"
                                     type="primary"

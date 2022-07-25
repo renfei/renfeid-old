@@ -32,7 +32,7 @@ const DashboardNavbar = () => {
             }, 10000)
             setIntervalMessage(true)
         }
-    })
+    }, [intervalMessage, router])
 
     const userMenu = (
         <Menu

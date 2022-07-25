@@ -1,8 +1,7 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import nookies from 'nookies'
 import moment from 'moment'
-import React, {useRef, useState} from 'react'
+import React, {useState} from 'react'
 import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
 import {Editor} from '@tinymce/tinymce-react'
 import {
@@ -13,31 +12,24 @@ import {
     Col,
     Select,
     DatePicker,
-    Upload,
     Descriptions,
-    Collapse,
-    Table,
     Result,
-    message,
     Image,
     Space
 } from 'antd'
-import DashboardLayout from "../../../../components/layout/dashboard"
-import DashPageHeader from "../../../../components/layout/dashboard/DashPageHeader"
-import * as api from '../../../../services/api/dashboard/api'
+import DashboardLayout from "../../../../../components/layout/dashboard"
+import DashPageHeader from "../../../../../components/layout/dashboard/DashPageHeader"
+import * as api from '../../../../../services/api/dashboard/api'
 import APIResult = API.APIResult
 import DashPost = API.DashPost
 import AntdSelectOption = API.AntdSelectOption
 import PostCategory = API.PostCategory
 import ListData = API.ListData;
-import {queryPostArchivalListById, updatePost} from "../../../../services/api/dashboard/api"
-import {convertToHeaders} from "../../../../utils/request"
-import {switchPostStatus} from "../../../../utils/posts"
+import {convertToHeaders} from "../../../../../utils/request";
+import {switchPostStatus} from "../../../../../utils/posts";
 
 const {Option} = Select
 const {TextArea} = Input
-const {Panel} = Collapse
-const {Column} = Table
 
 const routes = [
     {
@@ -54,7 +46,7 @@ const routes = [
     },
     {
         path: '/dashboard/cms/posts/new',
-        breadcrumbName: '内容编辑',
+        breadcrumbName: '内容历史版本',
     },
 ]
 
@@ -98,9 +90,8 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         authorUsername: '',
         modifiedUsername: '',
     }
-    let postArchivalList: DashPost[] = []
     if (context.params.id && !isNaN(parseInt(context.params.id.toString()))) {
-        const result: APIResult<DashPost> = await api.queryPostById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString())
+        const result: APIResult<DashPost> = await api.queryPostArchivalById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString(), context.params.archivalId.toString())
         if (result.code == 401) {
             return {
                 redirect: {
@@ -111,10 +102,6 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         }
         if (result.code == 200 && result.data) {
             post = result.data
-            const postArchivalListResult: APIResult<DashPost[]> = await api.queryPostArchivalListById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString())
-            if (postArchivalListResult.code == 200 && postArchivalListResult.data) {
-                postArchivalList = postArchivalListResult.data
-            }
         } else {
             post.id = (0 - result.code).toString()
             post.postTitle = result.message
@@ -146,124 +133,13 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
             data: {
                 post: post,
                 postCatOptions: postCatOptions,
-                postArchivalList: postArchivalList
             }
         }
-    }
-}
-
-const checkPostContent = (values: any) => {
-    if (!values.categoryId) {
-        message.error('请选择内容分类')
-        return false
-    }
-    if (!values.postDate) {
-        message.error('请选择内容发布时间')
-        return false
-    }
-    if (!values.commentStatus) {
-        message.error('请选择内容评论状态')
-        return false
-    }
-    if (!values.secretLevel) {
-        message.error('请选择内容保密等级')
-        return false
-    }
-    if (values.isOriginal == undefined) {
-        message.error('请选择内容是否原创')
-        return false
-    } else if (values.isOriginal == 'false') {
-        if (!values.sourceName || !values.sourceUrl) {
-            message.error('非原创内容，请填写原文作者和原文链接')
-            return false
-        }
-    }
-    if (!values.featuredImage) {
-        if (!values.featuredImageUpload) {
-            message.error('请上传特色图像')
-            return false
-        }
-    }
-    if (!values.postTitle) {
-        message.error('请填写内容标题')
-        return false
-    }
-    if (!values.postExcerpt) {
-        message.error('请填写内容摘要')
-        return false
-    }
-    if (!values.postContent) {
-        message.error('请填写内容')
-        return false
-    }
-    return true
-}
-
-const submitForm = (values: any) => {
-    if (!checkPostContent(values)) {
-        return false
-    }
-    let dashPost: DashPost = {
-        id: values.id,
-        categoryId: values.categoryId,
-        postAuthor: '0',
-        postDate: values.postDate.format('yyyy-MM-DD HH:mm:ss'),
-        postStatus: 'PUBLISH',
-        postViews: 0,
-        commentStatus: values.commentStatus,
-        postPassword: values.postPassword,
-        postModified: '',
-        postModifiedUser: '0',
-        postParent: 0,
-        versionNumber: 1,
-        thumbsUp: 0,
-        thumbsDown: 0,
-        avgViews: 0,
-        avgComment: 0,
-        pageRank: 0,
-        secretLevel: values.secretLevel,
-        isOriginal: values.isOriginal,
-        featuredImage: values.featuredImage,
-        postTitle: values.postTitle,
-        postKeyword: '',
-        postExcerpt: values.postExcerpt,
-        postContent: values.postContent,
-        sourceName: values.sourceName,
-        sourceUrl: values.sourceUrl,
-        authorUsername: '',
-        modifiedUsername: '',
-    }
-    if (dashPost.id == '-1') {
-        // 创建文章
-        api.createPost(dashPost).then(res => {
-            if (res.code == 200) {
-                if (typeof window !== 'undefined') {
-                    window.location.replace('/dashboard/cms/posts')
-                }
-            } else {
-                message.error(res.message)
-            }
-        })
-    } else if (parseInt(dashPost.id) > 0) {
-        // 编辑文章
-        api.updatePost(dashPost).then(res => {
-            if (res.code == 200) {
-                if (typeof window !== 'undefined') {
-                    window.location.replace('/dashboard/cms/posts')
-                }
-            } else {
-                message.error(res.message)
-            }
-        })
-    } else {
-        message.error('意外的文章状态，请联系软件厂商')
-        return false
     }
 }
 
 const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [form] = Form.useForm();
-    const editorRef = useRef<any>(null);
     const [featuredImageVisible, setFeaturedImageVisible] = useState<boolean>(false);
     const [featuredImage, setFeaturedImage] = useState<string>();
 
@@ -299,27 +175,15 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
         }
     }
 
-    const submit = () => {
-        form.setFieldsValue({postContent: editorRef.current.getContent()})
-        form.setFieldsValue({featuredImage: featuredImage})
-        return true
-    }
-
-    const uploadOnChange = (change: any) => {
-        if (change.file.status == 'done') {
-            setFeaturedImage(change.file.response.location)
-        }
-    }
-
     return (
         <>
             <Head>
-                <title>内容编辑 - CMS 内容管理系统 (Content Management System)</title>
+                <title>内容历史版本回看 - CMS 内容管理系统 (Content Management System)</title>
             </Head>
 
             <div style={{backgroundColor: '#fff'}}>
                 <DashPageHeader
-                    title="内容编辑"
+                    title="内容历史版本回看"
                     routes={routes}
                     subTitle="CMS 内容管理系统 (Content Management System)"
                 />
@@ -360,35 +224,13 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                             <Descriptions.Item label="内容点赞量">{data.post.thumbsUp}</Descriptions.Item>
                                             <Descriptions.Item label="内容点踩量">{data.post.thumbsDown}</Descriptions.Item>
                                         </Descriptions>
-                                        <Collapse accordion>
-                                            <Panel header="历史版本" key="1">
-                                                <Table dataSource={data.postArchivalList} pagination={false}>
-                                                    <Column title="内容标题" dataIndex="postTitle" key="postTitle"/>
-                                                    <Column title="版本号" dataIndex="versionNumber" key="versionNumber"/>
-                                                    <Column title="修改时间" dataIndex="postModified" key="postModified"/>
-                                                    <Column title="修改人" dataIndex="modifiedUsername"
-                                                            key="modifiedUsername"/>
-                                                    <Column
-                                                        title="操作"
-                                                        key="action"
-                                                        render={(_: any, record: DashPost) => (
-                                                            <Link
-                                                                href={`/dashboard/cms/posts/` + data.post.id + `/` + record.id}
-                                                            >
-                                                                <a target="_blank">查看快照</a>
-                                                            </Link>
-                                                        )}
-                                                    />
-                                                </Table>
-                                            </Panel>
-                                        </Collapse>
                                     </div>
                                 ) : ''
                             }
                             <div style={{backgroundColor: '#fff', padding: '24px 24px 0', marginBottom: '16px'}}>
                                 <Form
                                     form={form}
-                                    onFinish={submitForm}
+                                    disabled
                                     layout="horizontal"
                                 >
                                     <Row>
@@ -406,15 +248,6 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                             </Form.Item>
                                             <Form.Item label="特色图像" name="featuredImageUpload">
                                                 <Space>
-                                                    <Upload
-                                                        action="/api/core/system/upload"
-                                                        accept="image/*"
-                                                        listType="picture"
-                                                        maxCount={1}
-                                                        onChange={uploadOnChange}
-                                                    >
-                                                        <Button>点击上传</Button>
-                                                    </Upload>
                                                     <Button type="primary"
                                                             disabled={featuredImage == undefined}
                                                             onClick={() => setFeaturedImageVisible(true)}>
@@ -522,54 +355,21 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                             </Form.Item>
                                         </Col>
                                     </Row>
-                                    <Row>
+                                    <Row style={{paddingBottom: '20px'}}>
                                         <Col span={24}>
                                             <Form.Item name="postContent" style={{display: 'none'}}>
                                                 <Input/>
                                             </Form.Item>
                                             <Editor
                                                 apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_TOKEN}
-                                                onInit={(evt, editor) => {
-                                                    editorRef.current = editor
-                                                }}
                                                 initialValue={data.post.postContent}
                                                 init={{
+                                                    readonly: true,
                                                     height: 650,
                                                     min_height: 400,
                                                     language: 'zh_CN',
-                                                    menubar: true,
-                                                    file_picker_types: 'image',
-                                                    toolbar_mode: 'wrap',
-                                                    automatic_uploads: true,
-                                                    images_upload_url: '/api/core/system/upload',
-                                                    fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
-                                                    plugins: [
-                                                        'preview', 'importcss',
-                                                        'searchreplace', 'autolink', 'autosave', 'save', 'directionality',
-                                                        'visualblocks', 'visualchars', 'fullscreen', 'image',
-                                                        'link', 'media', 'template', 'code', 'codesample', 'table',
-                                                        'charmap', 'pagebreak', 'nonbreaking', 'anchor',
-                                                        'insertdatetime', 'advlist', 'lists', 'wordcount',
-                                                        'help', 'charmap', 'quickbars', 'emoticons', 'autoresize'
-                                                    ],
-                                                    toolbar: 'undo redo | bold italic underline strikethrough | '
-                                                        + 'fontfamily fontsize blocks | alignleft aligncenter '
-                                                        + 'alignright alignjustify | outdent indent |  numlist '
-                                                        + 'bullist | forecolor backcolor removeformat | pagebreak'
-                                                        + ' | charmap emoticons | '
-                                                        + 'image media link anchor codesample | ltr rtl | '
-                                                        + 'insertdatetime nonbreaking searchreplace | '
-                                                        + 'table tabledelete | tableprops tablerowprops tablecellprops | '
-                                                        + 'tableinsertrowbefore tableinsertrowafter tabledeleterow | '
-                                                        + 'tableinsertcolbefore tableinsertcolafter tabledeletecol | '
-                                                        + 'visualblocks visualchars wordcount | fullscreen  preview save print code',
                                                 }}
                                             />
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col span={24} style={{padding: '24px 0', textAlign: 'right'}}>
-                                            <Button type="primary" onClick={submit} htmlType="submit">保存</Button>
                                         </Col>
                                     </Row>
                                 </Form>

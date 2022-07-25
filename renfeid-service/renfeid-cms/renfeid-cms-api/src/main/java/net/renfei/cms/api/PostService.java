@@ -21,6 +21,7 @@ import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.entity.ListData;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 文章服务
@@ -64,6 +65,23 @@ public interface PostService {
      * @return
      */
     APIResult<Post> queryPostById(long postId, String password, boolean isAdmin, boolean useCache);
+
+    /**
+     * 根据ID获取历史文章列表
+     *
+     * @param postId 文章ID
+     * @return
+     */
+    APIResult<List<Post>> queryPostArchivalListById(long postId);
+
+    /**
+     * 根据ID获取历史文章详情
+     *
+     * @param postId     文章ID
+     * @param archivalId 历史版本ID
+     * @return
+     */
+    APIResult<Post> queryPostArchivalById(long postId, long archivalId);
 
     /**
      * 创建一篇新内容

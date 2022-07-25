@@ -73,6 +73,27 @@ export const queryPostById = async (token: string, headers: Headers, id: string)
     return Fetch.get(url, headers, token)
 }
 
+export const queryPostArchivalListById = async (token: string, headers: Headers, id: string) => {
+    const url = `${process.env.RENFEID_SERVICE_API}/_/api/cms/posts/archival/` + id
+    return Fetch.get(url, headers, token)
+}
+
+export const queryPostArchivalById = async (token: string, headers: Headers, id: string, archivalId: string) => {
+    const url = `${process.env.RENFEID_SERVICE_API}/_/api/cms/posts/archival/` + id + `/` + archivalId
+    return Fetch.get(url, headers, token)
+}
+
+export const offlinePost = async (id: string) => {
+    const url = `/api/dash/cms/posts/` + id + `/offline`
+    return await fetch(url, {
+        method: 'PUT',
+    }).then((res: any) => {
+        return res.json();
+    }).catch((error: any) => {
+        return Promise.reject(error);
+    })
+}
+
 export const queryPostCategoryList = async (token: string, headers: Headers, enName?: string, zhName?: string,
                                             secretLevel?: string, pages?: string, rows?: string) => {
     let url = `${process.env.RENFEID_SERVICE_API}/_/api/cms/posts/category?`

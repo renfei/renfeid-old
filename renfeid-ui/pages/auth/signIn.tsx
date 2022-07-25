@@ -23,21 +23,6 @@ const {Title} = Typography;
 
 let redirectPath: string = '/'
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const accessToken = nookies.get(context)['accessToken']
-    if (accessToken) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        }
-    }
-    return {
-        props: {},
-    }
-}
-
 const signInSubmit = async (req: NextApiRequest, res: NextApiResponse, values: SignInAo): Promise<string> => {
     values.useVerCode = false
     if (typeof window !== 'undefined') {

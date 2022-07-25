@@ -6,6 +6,7 @@ import APIResult = API.APIResult
 import UploadObjectVo = API.UploadObjectVo
 import {convertToHeaders} from "../../../../utils/request"
 import fs from 'fs'
+import FormData from 'form-data'
 import formidable, {File} from 'formidable'
 
 export const config = {
