@@ -5,21 +5,21 @@ import {parseCookies, setCookie, destroyCookie} from 'nookies'
 import {useRouter} from 'next/router'
 import {GetServerSideProps} from 'next'
 import nookies from 'nookies'
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react'
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {Button, Col, Form, Input, message, Row, Space, Typography} from 'antd'
 import Layout from '../../components/layout'
 import styles from '../../styles/auth/SignIn.module.css'
-import {KeyOutlined, LockOutlined, UserOutlined,} from '@ant-design/icons';
-import {getAesKey} from "../../services/uaa";
-import {aesEncrypt} from "../../utils/encryption";
-import SignInAo = API.SignInAo;
-import SecretKey = API.SecretKey;
-import * as api from "../../services/api";
-import SignInVo = API.SignInVo;
-import APIResult = API.APIResult;
+import {KeyOutlined, LockOutlined, UserOutlined,} from '@ant-design/icons'
+import {getAesKey} from "../../services/uaa"
+import {aesEncrypt} from "../../utils/encryption"
+import SignInAo = API.SignInAo
+import SecretKey = API.SecretKey
+import * as api from "../../services/api"
+import SignInVo = API.SignInVo
+import APIResult = API.APIResult
 
-const {Title} = Typography;
+const {Title} = Typography
 
 let redirectPath: string = '/'
 

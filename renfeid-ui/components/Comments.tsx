@@ -1,17 +1,17 @@
-import {Typography, Button, Comment, Form, Input, List, Divider} from 'antd';
+import {Typography, Button, Comment, Form, Input, List, Divider} from 'antd'
 import Link from 'next/link'
-import React, {useState} from 'react';
-import {CheckCircleFilled} from '@ant-design/icons';
-import CommentTree = API.CommentTree;
+import React, {useState} from 'react'
+import {CheckCircleFilled} from '@ant-design/icons'
+import CommentTree = API.CommentTree
 
-const {TextArea} = Input;
-const {Title, Text} = Typography;
+const {TextArea} = Input
+const {Title, Text} = Typography
 
 interface EditorProps {
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    onSubmit: () => void;
-    submitting: boolean;
-    value: string;
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+    onSubmit: () => void
+    submitting: boolean
+    value: string
 }
 
 const CommentGroup = ({data}: { data: CommentTree[] }) => {
@@ -95,24 +95,24 @@ const Editor = ({onChange, onSubmit, submitting, value}: EditorProps) => (
             </Button>
         </Form.Item>
     </>
-);
+)
 const Comments = ({data}: { data?: CommentTree[] }) => {
-    const [comments, setComments] = useState<CommentTree[]>(data ? data : []);
-    const [submitting, setSubmitting] = useState(false);
-    const [value, setValue] = useState('');
+    const [comments, setComments] = useState<CommentTree[]>(data ? data : [])
+    const [submitting, setSubmitting] = useState(false)
+    const [value, setValue] = useState('')
 
     const handleSubmit = () => {
-        if (!value) return;
+        if (!value) return
 
-        setSubmitting(true);
+        setSubmitting(true)
 
         setTimeout(() => {
-            setSubmitting(false);
-            setValue('');
+            setSubmitting(false)
+            setValue('')
             setComments([
                 ...comments,
                 {
-                    id: 1,
+                    id: '1',
                     addtime: '2022-07-21 12:35:23',
                     isOwner: false,
                     author: 'Han Solo',
@@ -120,13 +120,13 @@ const Comments = ({data}: { data?: CommentTree[] }) => {
                     authorAddress: 'Beijing, Beijing, China',
                     content: `${value}`,
                 },
-            ]);
-        }, 1000);
-    };
+            ])
+        }, 1000)
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setValue(e.target.value);
-    };
+        setValue(e.target.value)
+    }
 
     return (
         <>
@@ -150,4 +150,4 @@ const Comments = ({data}: { data?: CommentTree[] }) => {
     )
 }
 
-export default Comments;
+export default Comments

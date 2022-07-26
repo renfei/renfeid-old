@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import DashboardLayout from "../../components/layout/dashboard";
+import DashboardLayout from "../../components/layout/dashboard"
 
 const Dashboard = () => {
     return (

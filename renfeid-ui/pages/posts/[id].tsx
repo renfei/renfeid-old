@@ -2,9 +2,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import nookies from 'nookies'
 import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
-import Layout from "../../components/layout";
-import PostVo = API.PostVo;
-import APIResult = API.APIResult;
+import Layout from "../../components/layout"
+import PostVo = API.PostVo
+import APIResult = API.APIResult
 import {Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space} from 'antd'
 import {
     WechatFilled,
@@ -15,14 +15,14 @@ import {
     LinkedinFilled,
     LinkOutlined,
     EyeFilled
-} from '@ant-design/icons';
+} from '@ant-design/icons'
 import * as api from '../../services/api'
-import styles from "../../styles/CMS.module.css";
-import GoogleAdsense from "../../components/GoogleAdsense";
+import styles from "../../styles/CMS.module.css"
+import GoogleAdsense from "../../components/GoogleAdsense"
 import Comments from '../../components/Comments'
-import CommentTree = API.CommentTree;
+import CommentTree = API.CommentTree
 
-const {Title, Text} = Typography;
+const {Title, Text} = Typography
 
 const postRelevant5 = [
     {
@@ -72,7 +72,7 @@ const postRelevant10 = [
 
 const CommentList: CommentTree[] = [
     {
-        id: 1,
+        id: '1',
         addtime: '2022-07-08 15:32:32',
         isOwner: false,
         author: '用户1',
@@ -81,7 +81,7 @@ const CommentList: CommentTree[] = [
         content: '评论演示数据',
         children: [
             {
-                id: 3,
+                id: '3',
                 addtime: '2022-07-08 15:32:32',
                 isOwner: true,
                 author: '用户3',
@@ -90,7 +90,7 @@ const CommentList: CommentTree[] = [
                 content: '评论演示数据',
                 children: [
                     {
-                        id: 4,
+                        id: '4',
                         addtime: '2022-07-08 15:32:32',
                         isOwner: false,
                         author: '用户4',
@@ -101,7 +101,7 @@ const CommentList: CommentTree[] = [
                 ]
             },
             {
-                id: 5,
+                id: '5',
                 addtime: '2022-07-08 15:32:32',
                 isOwner: false,
                 author: '用户5',
@@ -112,7 +112,7 @@ const CommentList: CommentTree[] = [
         ]
     },
     {
-        id: 2,
+        id: '2',
         addtime: '2022-07-08 15:32:32',
         isOwner: false,
         author: '用户6',

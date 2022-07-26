@@ -1,6 +1,6 @@
-import {Layout} from 'antd';
-import DashboardNavbar from "./navbar";
-import DashboardMenu from "./menu";
+import {Layout} from 'antd'
+import DashboardNavbar from "./navbar"
+import DashboardMenu from "./menu"
 
 const {Content} = Layout
 

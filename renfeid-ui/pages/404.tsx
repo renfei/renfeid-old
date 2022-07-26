@@ -1,7 +1,7 @@
 import Head from 'next/head'
-import {Button, Result} from 'antd';
-import Layout from "../components/layout";
-import styles from "../styles/Home.module.css";
+import {Button, Result} from 'antd'
+import Layout from "../components/layout"
+import styles from "../styles/Home.module.css"
 
 const Error404Page = () => {
     return (

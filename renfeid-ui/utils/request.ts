@@ -4,12 +4,12 @@ import http from 'http'
 const request = (url: string, config: any) => {
     return fetch(url, config)
         .then((res: any) => {
-            return res.json();
+            return res.json()
         })
         .catch((error: any) => {
-            return Promise.reject(error);
-        });
-};
+            return Promise.reject(error)
+        })
+}
 
 const addAuthorizationHeader = (headers: Headers, token?: string) => {
     if (token) {
@@ -20,7 +20,7 @@ const addAuthorizationHeader = (headers: Headers, token?: string) => {
         }
     }
     return headers
-};
+}
 
 // GET请求
 export const get = (url: string, headers: Headers, token?: string) => {
@@ -30,7 +30,7 @@ export const get = (url: string, headers: Headers, token?: string) => {
         headers: header,
     }
     return request(url, config)
-};
+}
 
 // POST请求
 export const post = (url: string, data: any, headers: Headers, token?: string) => {
@@ -44,7 +44,7 @@ export const post = (url: string, data: any, headers: Headers, token?: string) =
         config.body = JSON.stringify(data)
     }
     return request(url, config)
-};
+}
 
 // PUT请求
 export const put = (url: string, data: any, headers: Headers, token?: string) => {
@@ -58,7 +58,7 @@ export const put = (url: string, data: any, headers: Headers, token?: string) =>
         config.body = JSON.stringify(data)
     }
     return request(url, config)
-};
+}
 
 // DELETE请求
 export const delet = (url: string, headers: Headers, token?: string) => {
@@ -68,7 +68,7 @@ export const delet = (url: string, headers: Headers, token?: string) => {
         headers: header,
     }
     return request(url, config)
-};
+}
 
 // POST提交Form表单，例如上传文件
 export const postForm = (url: string, data: FormData, headers: Headers, token: string) => {
@@ -79,7 +79,7 @@ export const postForm = (url: string, data: FormData, headers: Headers, token: s
         body: data,
     }
     return request(url, config)
-};
+}
 
 export const convertToHeaders = (incomingHttpHeaders: http.IncomingHttpHeaders): Headers => {
     let headers: Headers = new Headers()

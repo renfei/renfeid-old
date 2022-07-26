@@ -108,7 +108,7 @@ declare namespace API {
     }
 
     interface PostCategory {
-        id: number,
+        id: string,
         enName: string,
         zhName: string,
         secretLevel: string,
@@ -122,7 +122,7 @@ declare namespace API {
 
     // 评论树
     interface CommentTree {
-        id: number,
+        id: string,
         addtime: string,
         isOwner: boolean,
         author: string,
@@ -154,10 +154,10 @@ declare namespace API {
     }
 
     interface TableListParams {
-        pagination?: TablePaginationConfig;
-        sorter?: SorterResult<any> | SorterResult<any>[];
-        total?: number;
-        sortField?: string;
-        sortOrder?: string;
+        pagination?: TablePaginationConfig
+        sorter?: SorterResult<any> | SorterResult<any>[]
+        total?: number
+        sortField?: string
+        sortOrder?: string
     }
 }

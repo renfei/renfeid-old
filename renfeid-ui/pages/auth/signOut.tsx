@@ -2,7 +2,7 @@ import Head from 'next/head'
 import {GetServerSideProps} from 'next'
 import nookies from 'nookies'
 import type {NextApiRequest, NextApiResponse} from 'next'
-import React, {useEffect} from 'react';
+import React, {useEffect} from 'react'
 import {Button, Result} from 'antd'
 import Layout from '../../components/layout'
 import {signOut} from "../../services/api/uaa"

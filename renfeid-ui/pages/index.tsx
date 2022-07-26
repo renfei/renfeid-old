@@ -9,8 +9,8 @@ import {ArrowRightOutlined} from '@ant-design/icons'
 import styles from '../styles/Home.module.css'
 import GoogleAdsense from '../components/GoogleAdsense'
 
-const {Title, Paragraph} = Typography;
-const {Meta} = Card;
+const {Title, Paragraph} = Typography
+const {Meta} = Card
 
 // 文章 1到2
 const postsDataTop2 = [

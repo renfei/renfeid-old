@@ -1,17 +1,17 @@
 import 'antd/dist/antd.css'
 import '../styles/globals.css'
-import React, {ReactNode, useEffect, useState} from 'react';
-import {NextPage} from "next";
+import React, {ReactNode, useEffect, useState} from 'react'
+import {NextPage} from "next"
 import Head from 'next/head'
 import type {AppProps} from 'next/app'
 
 type Page<P = {}> = NextPage<P> & {
-    getLayout?: (page: ReactNode) => ReactNode;
-};
+    getLayout?: (page: ReactNode) => ReactNode
+}
 
 type Props = AppProps & {
-    Component: Page;
-};
+    Component: Page
+}
 
 const App = ({Component, pageProps}: Props) => {
     const getLayout = Component.getLayout ?? ((page: ReactNode) => page)

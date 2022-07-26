@@ -3,8 +3,8 @@ import type {NextApiRequest, NextApiResponse} from 'next'
 import * as Fetch from '../../../utils/request'
 import {setCookie} from '../../../utils/cookies'
 import {server} from '../../../config'
-import APIResult = API.APIResult;
-import {convertToHeaders} from "../../../utils/request";
+import APIResult = API.APIResult
+import {convertToHeaders} from "../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<any>>) => {
     try {

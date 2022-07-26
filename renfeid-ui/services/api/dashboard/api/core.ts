@@ -6,8 +6,8 @@ export const uploadFile = async (token: string, file: any) => {
         method: 'POST',
         body: formData
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }

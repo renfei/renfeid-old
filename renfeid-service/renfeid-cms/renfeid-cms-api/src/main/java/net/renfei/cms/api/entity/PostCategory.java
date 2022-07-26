@@ -29,7 +29,7 @@ import java.io.Serializable;
 public class PostCategory implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
     @Schema(description = "ID")
-    private Long id;
+    private String id;
     @Schema(description = "英文名称")
     private String enName;
     @Schema(description = "中文名称")
@@ -37,11 +37,11 @@ public class PostCategory implements Serializable {
     @Schema(description = "密级")
     private SecretLevelEnum secretLevel;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

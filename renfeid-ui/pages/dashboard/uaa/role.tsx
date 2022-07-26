@@ -21,22 +21,22 @@ const {Option} = Select
 
 interface DataType {
     name: {
-        first: string;
-        last: string;
-    };
-    gender: string;
-    email: string;
+        first: string
+        last: string
+    }
+    gender: string
+    email: string
     login: {
-        uuid: string;
-    };
+        uuid: string
+    }
 }
 
 interface Params {
-    pagination?: TablePaginationConfig;
-    sorter?: SorterResult<any> | SorterResult<any>[];
-    total?: number;
-    sortField?: string;
-    sortOrder?: string;
+    pagination?: TablePaginationConfig
+    sorter?: SorterResult<any> | SorterResult<any>[]
+    total?: number
+    sortField?: string
+    sortOrder?: string
 }
 
 const columns: ColumnsType<DataType> = [
@@ -70,13 +70,13 @@ const columns: ColumnsType<DataType> = [
             )
         },
     },
-];
+]
 
 const getRandomuserParams = (params: Params) => ({
     results: params.pagination?.pageSize,
     page: params.pagination?.current,
     ...params,
-});
+})
 
 const routes = [
     {
@@ -98,7 +98,7 @@ const AdvancedSearchForm = () => {
     const [form] = Form.useForm()
 
     const getFields = () => {
-        const children = [];
+        const children = []
         children.push(
             <Col span={6} key="username">
                 <Form.Item
@@ -111,12 +111,12 @@ const AdvancedSearchForm = () => {
             <Col span={6}> </Col>,
             <Col span={6}> </Col>,
         )
-        return children;
-    };
+        return children
+    }
 
     const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-    };
+        console.log('Received values of form: ', values)
+    }
 
     return (
         <Form
@@ -131,7 +131,7 @@ const AdvancedSearchForm = () => {
                         <Button
                             style={{margin: '0 8px'}}
                             onClick={() => {
-                                form.resetFields();
+                                form.resetFields()
                             }}
                             icon={<ReloadOutlined/>}
                         >
@@ -144,7 +144,7 @@ const AdvancedSearchForm = () => {
                             type="text"
                             style={{fontSize: 12}}
                             onClick={() => {
-                                setExpand(!expand);
+                                setExpand(!expand)
                             }}
                             icon={expand ? <UpOutlined/> : <DownOutlined/>}
                         >
@@ -154,7 +154,7 @@ const AdvancedSearchForm = () => {
                 </Col>
             </Row>
         </Form>
-    );
+    )
 }
 
 const DashboardUaaRole = () => {
@@ -167,24 +167,24 @@ const DashboardUaaRole = () => {
     })
 
     useEffect(() => {
-        fetchData({pagination});
+        fetchData({pagination})
     })
 
     const fetchData = (params: Params = {}) => {
         if (!data) {
-            setLoading(true);
+            setLoading(true)
             fetch(`https://randomuser.me/api?${getRandomuserParams(params)}`)
                 .then(res => res.json())
                 .then(({results}) => {
-                    setData(results);
-                    setLoading(false);
+                    setData(results)
+                    setLoading(false)
                     setPagination({
                         ...params.pagination,
                         total: 200,
                         // 200 is mock data, you should read it from server
                         // total: data.totalCount,
-                    });
-                });
+                    })
+                })
         }
     }
 
@@ -198,7 +198,7 @@ const DashboardUaaRole = () => {
             sortOrder: sorter.order as string,
             pagination: newPagination,
             ...filters,
-        });
+        })
     }
 
     const helpModal = () => {

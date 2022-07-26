@@ -15,8 +15,8 @@ const getMessage = () => {
 
 const DashboardNavbar = () => {
     const router = useRouter()
-    const [userName, setUserName] = useState<string>('');
-    const [intervalMessage, setIntervalMessage] = useState<boolean>(false);
+    const [userName, setUserName] = useState<string>('')
+    const [intervalMessage, setIntervalMessage] = useState<boolean>(false)
 
     useEffect(() => {
         api.requestCurrentUserInfo().then(res => {

@@ -4,9 +4,9 @@ export const clientGet = async (url: string) => {
     return await fetch(url, {
         method: 'GET'
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }
 
@@ -18,9 +18,9 @@ export const clientPost = async (url: string, data?: any) => {
         },
         body: JSON.stringify(data)
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }
 
@@ -32,9 +32,9 @@ export const clientPut = async (url: string, data?: any) => {
         },
         body: JSON.stringify(data)
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }
 
@@ -42,8 +42,8 @@ export const clientDelete = async (url: string) => {
     return await fetch(url, {
         method: 'DELETE'
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }

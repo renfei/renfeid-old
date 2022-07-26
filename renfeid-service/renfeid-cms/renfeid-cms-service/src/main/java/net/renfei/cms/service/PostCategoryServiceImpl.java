@@ -215,7 +215,7 @@ public class PostCategoryServiceImpl implements PostCategoryService {
 
     private PostCategory convert(CmsCategory cmsCategory) {
         PostCategory postCategory = new PostCategory();
-        postCategory.setId(cmsCategory.getId());
+        postCategory.setId(cmsCategory.getId() + "");
         postCategory.setEnName(cmsCategory.getEnName());
         postCategory.setZhName(cmsCategory.getZhName());
         postCategory.setSecretLevel(SecretLevelEnum.valueOf(cmsCategory.getSecretLevel()));
@@ -224,7 +224,7 @@ public class PostCategoryServiceImpl implements PostCategoryService {
 
     private CmsCategory convert(PostCategory postCategory) {
         CmsCategory cmsCategory = new CmsCategory();
-        cmsCategory.setId(postCategory.getId());
+        cmsCategory.setId(Long.parseLong(postCategory.getId()));
         cmsCategory.setEnName(postCategory.getEnName());
         cmsCategory.setZhName(postCategory.getZhName());
         cmsCategory.setSecretLevel(postCategory.getSecretLevel().getLevel());

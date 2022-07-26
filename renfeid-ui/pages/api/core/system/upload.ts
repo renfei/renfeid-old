@@ -23,19 +23,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         let url = `${server}/_/api/core/system/upload`
         /* Get files using formidable */
         const files = await new Promise<ProcessedFiles | undefined>((resolve, reject) => {
-            const form = new formidable.IncomingForm();
-            const files: ProcessedFiles = [];
+            const form = new formidable.IncomingForm()
+            const files: ProcessedFiles = []
             form.on('file', function (field, file) {
-                files.push([field, file]);
+                files.push([field, file])
             })
-            form.on('end', () => resolve(files));
-            form.on('error', err => reject(err));
+            form.on('end', () => resolve(files))
+            form.on('error', err => reject(err))
             form.parse(req, () => {
                 //
-            });
+            })
             return files
         }).catch(e => {
-            console.error(e);
+            console.error(e)
             res.status(500).json({
                 code: 500,
                 message: '内部服务器错误。',
@@ -47,16 +47,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         if (files?.length) {
             /* Add files to FormData */
-            const formData: any = new FormData();
+            const formData: any = new FormData()
             for (const file of files) {
-                const tempPath = file[1].filepath;
+                const tempPath = file[1].filepath
                 const newPath = `${process.env.RENFEID_UPLOAD_DIR}` + file[1].originalFilename
                 await fs.rename(tempPath, newPath,(err)=>{
                    if(err){
                        console.error(err)
                    }
                 })
-                formData.append(file[0], fs.createReadStream(newPath));
+                formData.append(file[0], fs.createReadStream(newPath))
             }
             await Fetch.postForm(url, formData, convertToHeaders(formData.getHeaders()), token).then(result => {
                 const apiresult: APIResult<UploadObjectVo> = result
@@ -67,7 +67,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }
             })
         } else {
-            console.error("未收到文件");
+            console.error("未收到文件")
             res.status(400).json({
                 code: 400,
                 message: '未收到文件。',

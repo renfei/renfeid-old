@@ -2,9 +2,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import nookies from 'nookies'
 import moment from 'moment'
-import React, {useRef, useState} from 'react'
-import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
-import {Editor} from '@tinymce/tinymce-react'
+import React, { useRef, useState } from 'react'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { Editor } from '@tinymce/tinymce-react'
 import {
     Button,
     Form,
@@ -29,15 +29,15 @@ import APIResult = API.APIResult
 import DashPost = API.DashPost
 import AntdSelectOption = API.AntdSelectOption
 import PostCategory = API.PostCategory
-import ListData = API.ListData;
-import {queryPostArchivalListById, updatePost} from "../../../../services/api/dashboard/api"
-import {convertToHeaders} from "../../../../utils/request"
-import {switchPostStatus} from "../../../../utils/posts"
+import ListData = API.ListData
+import { queryPostArchivalListById, updatePost } from "../../../../services/api/dashboard/api"
+import { convertToHeaders } from "../../../../utils/request"
+import { switchPostStatus } from "../../../../utils/posts"
 
-const {Option} = Select
-const {TextArea} = Input
-const {Panel} = Collapse
-const {Column} = Table
+const { Option } = Select
+const { TextArea } = Input
+const { Panel } = Collapse
+const { Column } = Table
 
 const routes = [
     {
@@ -122,8 +122,8 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     }
 
     let postCatOptions: AntdSelectOption[] = []
-    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(accessToken, convertToHeaders(context.req.headers),
-        undefined, undefined, undefined, "1", "2147483647")
+    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryListUseInner(accessToken, convertToHeaders(context.req.headers),
+        undefined, undefined, undefined, 1, 2147483647)
     if (resultPostCategory.code == 401) {
         return {
             redirect: {
@@ -261,47 +261,47 @@ const submitForm = (values: any) => {
     }
 }
 
-const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-    const [form] = Form.useForm();
-    const editorRef = useRef<any>(null);
-    const [featuredImageVisible, setFeaturedImageVisible] = useState<boolean>(false);
-    const [featuredImage, setFeaturedImage] = useState<string>();
+const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    const [form] = Form.useForm()
+    const editorRef = useRef<any>(null)
+    const [featuredImageVisible, setFeaturedImageVisible] = useState<boolean>(false)
+    const [featuredImage, setFeaturedImage] = useState<string>()
 
     if (data.post.id > 0) {
-        form.setFieldsValue({id: data.post.id})
-        form.setFieldsValue({categoryId: data.post.categoryId})
-        form.setFieldsValue({postAuthor: data.post.postAuthor})
-        form.setFieldsValue({postDate: moment(data.post.postDate)})
-        form.setFieldsValue({postStatus: data.post.postStatus})
-        form.setFieldsValue({postViews: data.post.postViews})
-        form.setFieldsValue({commentStatus: data.post.commentStatus})
-        form.setFieldsValue({postPassword: data.post.postPassword})
-        form.setFieldsValue({postModified: data.post.postModified})
-        form.setFieldsValue({postModifiedUser: data.post.postModifiedUser})
-        form.setFieldsValue({postParent: data.post.postParent})
-        form.setFieldsValue({versionNumber: data.post.versionNumber})
-        form.setFieldsValue({thumbsUp: data.post.thumbsUp})
-        form.setFieldsValue({thumbsDown: data.post.thumbsDown})
-        form.setFieldsValue({avgViews: data.post.avgViews})
-        form.setFieldsValue({avgComment: data.post.avgComment})
-        form.setFieldsValue({pageRank: data.post.pageRank})
-        form.setFieldsValue({secretLevel: data.post.secretLevel})
-        form.setFieldsValue({isOriginal: data.post.isOriginal})
-        form.setFieldsValue({featuredImage: data.post.featuredImage})
-        form.setFieldsValue({postTitle: data.post.postTitle})
-        form.setFieldsValue({postKeyword: data.post.postKeyword})
-        form.setFieldsValue({postExcerpt: data.post.postExcerpt})
-        form.setFieldsValue({postContent: data.post.postContent})
-        form.setFieldsValue({sourceName: data.post.sourceName})
-        form.setFieldsValue({sourceUrl: data.post.sourceUrl})
+        form.setFieldsValue({ id: data.post.id })
+        form.setFieldsValue({ categoryId: data.post.categoryId })
+        form.setFieldsValue({ postAuthor: data.post.postAuthor })
+        form.setFieldsValue({ postDate: moment(data.post.postDate) })
+        form.setFieldsValue({ postStatus: data.post.postStatus })
+        form.setFieldsValue({ postViews: data.post.postViews })
+        form.setFieldsValue({ commentStatus: data.post.commentStatus })
+        form.setFieldsValue({ postPassword: data.post.postPassword })
+        form.setFieldsValue({ postModified: data.post.postModified })
+        form.setFieldsValue({ postModifiedUser: data.post.postModifiedUser })
+        form.setFieldsValue({ postParent: data.post.postParent })
+        form.setFieldsValue({ versionNumber: data.post.versionNumber })
+        form.setFieldsValue({ thumbsUp: data.post.thumbsUp })
+        form.setFieldsValue({ thumbsDown: data.post.thumbsDown })
+        form.setFieldsValue({ avgViews: data.post.avgViews })
+        form.setFieldsValue({ avgComment: data.post.avgComment })
+        form.setFieldsValue({ pageRank: data.post.pageRank })
+        form.setFieldsValue({ secretLevel: data.post.secretLevel })
+        form.setFieldsValue({ isOriginal: data.post.isOriginal })
+        form.setFieldsValue({ featuredImage: data.post.featuredImage })
+        form.setFieldsValue({ postTitle: data.post.postTitle })
+        form.setFieldsValue({ postKeyword: data.post.postKeyword })
+        form.setFieldsValue({ postExcerpt: data.post.postExcerpt })
+        form.setFieldsValue({ postContent: data.post.postContent })
+        form.setFieldsValue({ sourceName: data.post.sourceName })
+        form.setFieldsValue({ sourceUrl: data.post.sourceUrl })
         if (!featuredImage) {
             setFeaturedImage(data.post.featuredImage)
         }
     }
 
     const submit = () => {
-        form.setFieldsValue({postContent: editorRef.current.getContent()})
-        form.setFieldsValue({featuredImage: featuredImage})
+        form.setFieldsValue({ postContent: editorRef.current.getContent() })
+        form.setFieldsValue({ featuredImage: featuredImage })
         return true
     }
 
@@ -317,7 +317,7 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                 <title>内容编辑 - CMS 内容管理系统 (Content Management System)</title>
             </Head>
 
-            <div style={{backgroundColor: '#fff'}}>
+            <div style={{ backgroundColor: '#fff' }}>
                 <DashPageHeader
                     title="内容编辑"
                     routes={routes}
@@ -325,7 +325,7 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                 />
             </div>
 
-            <div style={{padding: '23px'}}>
+            <div style={{ padding: '23px' }}>
                 {
                     data.post.id < -1 ? (
                         <Result
@@ -363,11 +363,11 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                         <Collapse accordion>
                                             <Panel header="历史版本" key="1">
                                                 <Table dataSource={data.postArchivalList} pagination={false}>
-                                                    <Column title="内容标题" dataIndex="postTitle" key="postTitle"/>
-                                                    <Column title="版本号" dataIndex="versionNumber" key="versionNumber"/>
-                                                    <Column title="修改时间" dataIndex="postModified" key="postModified"/>
+                                                    <Column title="内容标题" dataIndex="postTitle" key="postTitle" />
+                                                    <Column title="版本号" dataIndex="versionNumber" key="versionNumber" />
+                                                    <Column title="修改时间" dataIndex="postModified" key="postModified" />
                                                     <Column title="修改人" dataIndex="modifiedUsername"
-                                                            key="modifiedUsername"/>
+                                                        key="modifiedUsername" />
                                                     <Column
                                                         title="操作"
                                                         key="action"
@@ -385,7 +385,7 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                     </div>
                                 ) : ''
                             }
-                            <div style={{backgroundColor: '#fff', padding: '24px 24px 0', marginBottom: '16px'}}>
+                            <div style={{ backgroundColor: '#fff', padding: '24px 24px 0', marginBottom: '16px' }}>
                                 <Form
                                     form={form}
                                     onFinish={submitForm}
@@ -393,16 +393,16 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                 >
                                     <Row>
                                         <Col span={24}>
-                                            <Form.Item name="id" style={{display: 'none'}}>
-                                                <Input value={data.post.id}/>
+                                            <Form.Item name="id" style={{ display: 'none' }}>
+                                                <Input value={data.post.id} />
                                             </Form.Item>
                                             <Form.Item label="内容标题" name="postTitle">
-                                                <Input value={data.post.postTitle}/>
+                                                <Input value={data.post.postTitle} />
                                             </Form.Item>
                                         </Col>
                                         <Col span={24}>
-                                            <Form.Item name="featuredImage" style={{display: 'none'}}>
-                                                <Input/>
+                                            <Form.Item name="featuredImage" style={{ display: 'none' }}>
+                                                <Input />
                                             </Form.Item>
                                             <Form.Item label="特色图像" name="featuredImageUpload">
                                                 <Space>
@@ -416,20 +416,20 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                                         <Button>点击上传</Button>
                                                     </Upload>
                                                     <Button type="primary"
-                                                            disabled={featuredImage == undefined}
-                                                            onClick={() => setFeaturedImageVisible(true)}>
+                                                        disabled={featuredImage == undefined}
+                                                        onClick={() => setFeaturedImageVisible(true)}>
                                                         预览特色图像
                                                     </Button>
                                                     <Image
                                                         width={200}
-                                                        style={{display: 'none'}}
+                                                        style={{ display: 'none' }}
                                                         src={featuredImage}
                                                         alt="预览特色图像"
                                                         preview={{
                                                             visible: featuredImageVisible,
                                                             src: featuredImage,
                                                             onVisibleChange: value => {
-                                                                setFeaturedImageVisible(value);
+                                                                setFeaturedImageVisible(value)
                                                             },
                                                         }}
                                                     />
@@ -450,7 +450,7 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                         <Col xs={24} sm={24} md={24} lg={14} xl={16} xxl={18}>
                                             <Form.Item label="关键词组" name="postKeyword">
                                                 <Input.Group compact>
-                                                    <Select mode="tags" style={{width: 'calc(100% - 129px)'}}>
+                                                    <Select mode="tags" style={{ width: 'calc(100% - 129px)' }}>
                                                     </Select>
                                                     <Button>从正文自动提取</Button>
                                                 </Input.Group>
@@ -480,7 +480,7 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                         <Col xs={24} sm={1} md={1} lg={24} xl={1} xxl={1}> </Col>
                                         <Col xs={24} sm={24} md={24} lg={9} xl={8} xxl={12}>
                                             <Form.Item label="密码保护" name="postPassword">
-                                                <Input/>
+                                                <Input />
                                             </Form.Item>
                                         </Col>
                                     </Row>
@@ -488,15 +488,15 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                         <Col xs={24} sm={24} md={24} lg={9} xl={7} xxl={5}>
                                             <Form.Item label="发布时间" name="postDate">
                                                 <DatePicker
-                                                    style={{width: '100%'}}
+                                                    style={{ width: '100%' }}
                                                     showTime
-                                                    format="yyyy-MM-DD HH:mm:ss"/>
+                                                    format="yyyy-MM-DD HH:mm:ss" />
                                             </Form.Item>
                                         </Col>
                                         <Col xs={24} sm={1} md={1} lg={1} xl={1} xxl={1}> </Col>
                                         <Col xs={24} sm={24} md={24} lg={14} xl={16} xxl={18}>
                                             <Form.Item label="内容摘要" name="postExcerpt">
-                                                <TextArea rows={2}/>
+                                                <TextArea rows={2} />
                                             </Form.Item>
                                         </Col>
                                     </Row>
@@ -512,20 +512,20 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                         <Col xs={24} sm={1} md={1} lg={1} xl={1} xxl={1}> </Col>
                                         <Col xs={24} sm={24} md={24} lg={14} xl={7} xxl={5}>
                                             <Form.Item label="原文作者" name="sourceName">
-                                                <Input/>
+                                                <Input />
                                             </Form.Item>
                                         </Col>
                                         <Col xs={24} sm={1} md={1} lg={24} xl={1} xxl={1}> </Col>
                                         <Col xs={24} sm={24} md={24} lg={9} xl={8} xxl={12}>
                                             <Form.Item label="原文链接" name="sourceUrl">
-                                                <Input/>
+                                                <Input />
                                             </Form.Item>
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col span={24}>
-                                            <Form.Item name="postContent" style={{display: 'none'}}>
-                                                <Input/>
+                                            <Form.Item name="postContent" style={{ display: 'none' }}>
+                                                <Input />
                                             </Form.Item>
                                             <Editor
                                                 apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_TOKEN}
@@ -568,7 +568,7 @@ const DashboardCmsPostEdit = ({data}: InferGetServerSidePropsType<typeof getServ
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col span={24} style={{padding: '24px 0', textAlign: 'right'}}>
+                                        <Col span={24} style={{ padding: '24px 0', textAlign: 'right' }}>
                                             <Button type="primary" onClick={submit} htmlType="submit">保存</Button>
                                         </Col>
                                     </Row>

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {Divider} from 'antd'
 import UserInfo = API.UserInfo
@@ -6,7 +6,7 @@ import UserInfo = API.UserInfo
 const SectionWrapper = ({children, ...props}: any) => {
     const userInfo: UserInfo = props.userInfo
     const router = useRouter()
-    let path = router.asPath;
+    let path = router.asPath
     if (path.startsWith('/auth/signIn')) {
         path = ''
     } else {

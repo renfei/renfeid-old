@@ -1,4 +1,4 @@
-import Script from 'next/script';
+import Script from 'next/script'
 
 const GoogleAdsense = (props: any) => {
     return (
@@ -12,7 +12,7 @@ const GoogleAdsense = (props: any) => {
             <Script
                 id={props.slot}
             >
-                {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+                {`(adsbygoogle = window.adsbygoogle || []).push({})`}
             </Script>
         </>
     )

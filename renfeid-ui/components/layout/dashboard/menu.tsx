@@ -1,14 +1,14 @@
-import React from 'react';
+import React from 'react'
 import {useRouter} from 'next/router'
-import {Layout, Menu} from 'antd';
-import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons';
-import type {MenuProps} from 'antd';
+import {Layout, Menu} from 'antd'
+import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons'
+import type {MenuProps} from 'antd'
 
 const {Sider} = Layout
 
 const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
     (icon, index) => {
-        const key = String(index + 1);
+        const key = String(index + 1)
 
         return {
             key: `sub${key}`,
@@ -16,15 +16,15 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
             label: `subnav ${key}`,
 
             children: new Array(4).fill(null).map((_, j) => {
-                const subKey = index * 4 + j + 1;
+                const subKey = index * 4 + j + 1
                 return {
                     key: subKey,
                     label: `option${subKey}`,
-                };
+                }
             }),
-        };
+        }
     },
-);
+)
 
 const menu = [
     {
@@ -38,6 +38,10 @@ const menu = [
             {
                 key: '/dashboard/cms/posts',
                 label: '内容列表',
+            },
+            {
+                key: '/dashboard/cms/category',
+                label: '内容分类',
             }
         ]
     },

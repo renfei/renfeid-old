@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import {CloseCircleOutlined} from '@ant-design/icons';
-import {Button, Result, Typography} from 'antd';
-import Layout from "../components/layout";
-import styles from "../styles/Home.module.css";
+import {CloseCircleOutlined} from '@ant-design/icons'
+import {Button, Result, Typography} from 'antd'
+import Layout from "../components/layout"
+import styles from "../styles/Home.module.css"
 
-const {Paragraph, Text} = Typography;
+const {Paragraph, Text} = Typography
 
 const ErrorPage = ({err}: any) => {
     // @ts-ignore

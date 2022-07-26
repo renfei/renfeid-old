@@ -2,9 +2,9 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import * as Fetch from '../../../../utils/request'
 import {server} from '../../../../config'
-import UserInfo = API.UserInfo;
-import APIResult = API.APIResult;
-import {convertToHeaders} from "../../../../utils/request";
+import UserInfo = API.UserInfo
+import APIResult = API.APIResult
+import {convertToHeaders} from "../../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<UserInfo>>) => {
     if (req.cookies['accessToken']) {

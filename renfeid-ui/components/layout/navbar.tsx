@@ -1,8 +1,8 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import {Affix} from 'antd';
-import TopBarWrapper from "./top-bar-wrapper";
-import {SearchOutlined, UnorderedListOutlined} from '@ant-design/icons';
+import Link from 'next/link'
+import Image from 'next/image'
+import {Affix} from 'antd'
+import TopBarWrapper from "./top-bar-wrapper"
+import {SearchOutlined, UnorderedListOutlined} from '@ant-design/icons'
 
 const Navbar = () => {
     return (

@@ -1,5 +1,5 @@
-import SecretKey = API.SecretKey;
-import SignInAo = API.SignInAo;
+import SecretKey = API.SecretKey
+import SignInAo = API.SignInAo
 
 export const requestServerSecretKey = async () => {
     let url = `/api/auth/secretKey`
@@ -10,9 +10,9 @@ export const requestServerSecretKey = async () => {
             'Authorization': '',
         }
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }
 
@@ -26,9 +26,9 @@ export const settingClientSecretKey = async (clientSecretKey: SecretKey) => {
             'Authorization': '',
         }
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }
 
@@ -42,9 +42,9 @@ export const signIn = async (signInAo: SignInAo) => {
             'Authorization': '',
         }
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }
 
@@ -57,9 +57,9 @@ export const signOut = async () => {
             'Authorization': '',
         }
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }
 
@@ -72,8 +72,8 @@ export const requestCurrentUserInfo = async () => {
             'Authorization': '',
         }
     }).then((res: any) => {
-        return res.json();
+        return res.json()
     }).catch((error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     })
 }

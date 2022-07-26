@@ -17,18 +17,18 @@ import {
 import type {ColumnsType, TablePaginationConfig} from 'antd/lib/table'
 import DashboardLayout from "../../../components/layout/dashboard"
 import DashPageHeader from "../../../components/layout/dashboard/DashPageHeader"
-import * as api from "../../../services/api/dashboard/api";
-import {convertToHeaders} from "../../../utils/request";
-import AntdSelectOption = API.AntdSelectOption;
-import APIResult = API.APIResult;
-import ListData = API.ListData;
-import PostCategory = API.PostCategory;
-import {getPostStatusList, switchPostStatus} from "../../../utils/posts";
-import Params = API.TableListParams;
-import {queryPostList} from "../../../services/api/dashboard/api";
-import DashPost = API.DashPost;
+import * as api from "../../../services/api/dashboard/api"
+import {convertToHeaders} from "../../../utils/request"
+import AntdSelectOption = API.AntdSelectOption
+import APIResult = API.APIResult
+import ListData = API.ListData
+import PostCategory = API.PostCategory
+import {getPostStatusList, switchPostStatus} from "../../../utils/posts"
+import Params = API.TableListParams
+import {queryPostList} from "../../../services/api/dashboard/api"
+import DashPost = API.DashPost
 
-const {Title} = Typography;
+const {Title} = Typography
 
 const columns: ColumnsType<DashPost> = [
     {
@@ -91,13 +91,13 @@ const columns: ColumnsType<DashPost> = [
             )
         },
     },
-];
+]
 
 const getRandomuserParams = (params: Params) => ({
     results: params.pagination?.pageSize,
     page: params.pagination?.current,
     ...params,
-});
+})
 
 const routes = [
     {
@@ -126,8 +126,8 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     }
 
     let postCatOptions: AntdSelectOption[] = []
-    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(accessToken, convertToHeaders(context.req.headers),
-        undefined, undefined, undefined, "1", "2147483647")
+    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryListUseInner(accessToken, convertToHeaders(context.req.headers),
+        undefined, undefined, undefined, 1, 2147483647)
     if (resultPostCategory.code == 401) {
         return {
             redirect: {
@@ -200,7 +200,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
     }
 
     useEffect(() => {
-        fetchData({pagination});
+        fetchData({pagination})
     })
 
     const fetchData = async (params: QueryCriteria) => {
@@ -210,13 +210,13 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
     }
 
     const queryData = async (params: QueryCriteria) => {
-        setLoading(true);
+        setLoading(true)
         let listData: APIResult<ListData<DashPost>> = await queryPostList(
             params.categoryId, params.title, params.postStatus, params.startDate,
             params.endDate, params.pagination.current, params.pagination.pageSize
         )
-        setPostList(listData.data?.data);
-        setLoading(false);
+        setPostList(listData.data?.data)
+        setLoading(false)
         setPagination({
             ...params.pagination,
             total: listData.data?.total,
@@ -230,7 +230,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
         const [form] = Form.useForm()
 
         const getFields = () => {
-            const children = [];
+            const children = []
             children.push(
                 <Col span={6} key="categoryId">
                     <Form.Item
@@ -262,7 +262,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                         </Select>
                     </Form.Item>
                 </Col>,
-            );
+            )
             if (expand) {
                 children.push(
                     <Col span={6}></Col>,
@@ -290,8 +290,8 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                     <Col span={6}></Col>,
                 )
             }
-            return children;
-        };
+            return children
+        }
 
         const advancedSearch = async (values: any) => {
             let params: QueryCriteria = {
@@ -303,7 +303,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                 title: values.title
             }
             await queryData(params)
-        };
+        }
 
         return (
             <Form
@@ -318,7 +318,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                             <Button
                                 style={{margin: '0 8px'}}
                                 onClick={() => {
-                                    form.resetFields();
+                                    form.resetFields()
                                 }}
                                 icon={<ReloadOutlined/>}
                             >
@@ -331,7 +331,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                                 type="text"
                                 style={{fontSize: 12}}
                                 onClick={() => {
-                                    setExpand(!expand);
+                                    setExpand(!expand)
                                 }}
                                 icon={expand ? <UpOutlined/> : <DownOutlined/>}
                             >
@@ -341,7 +341,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                     </Col>
                 </Row>
             </Form>
-        );
+        )
     }
 
     const handleTableChange = (
@@ -354,8 +354,8 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
             sortOrder: sorter.order as string,
             pagination: newPagination,
             ...filters,
-        });
-    };
+        })
+    }
 
     return (
         <>

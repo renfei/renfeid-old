@@ -2,7 +2,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {server} from '../../../../config'
 import * as Fetch from '../../../../utils/request'
-import {convertToHeaders} from "../../../../utils/request";
+import {convertToHeaders} from "../../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = req.cookies['accessToken']

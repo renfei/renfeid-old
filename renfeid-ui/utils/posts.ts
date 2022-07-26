@@ -1,4 +1,4 @@
-import AntdSelectOption = API.AntdSelectOption;
+import AntdSelectOption = API.AntdSelectOption
 
 export const switchPostStatus = (postStatus: string) => {
     switch (postStatus) {

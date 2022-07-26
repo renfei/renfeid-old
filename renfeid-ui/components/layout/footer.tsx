@@ -1,8 +1,8 @@
-import {Layout, Divider, Space, Col, Row, Button, Typography, Card, Comment, List, Tooltip} from 'antd';
-import React from 'react';
+import {Layout, Divider, Space, Col, Row, Button, Typography, Card, Comment, List, Tooltip} from 'antd'
+import React from 'react'
 
-const {Title} = Typography;
-const {Footer} = Layout;
+const {Title} = Typography
+const {Footer} = Layout
 const footMenuList = [
     {
         title: '社会化互动',
