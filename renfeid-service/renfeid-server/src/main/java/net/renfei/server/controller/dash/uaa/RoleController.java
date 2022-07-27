@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
@@ -26,8 +27,6 @@ import net.renfei.server.controller.AbstractController;
 import net.renfei.uaa.api.RoleService;
 import net.renfei.uaa.api.entity.RoleDetail;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 角色管理接口
@@ -52,9 +51,9 @@ public class RoleController extends AbstractController {
                     @Parameter(name = "rows", description = "每页数据量")
             })
     @OperationLog(module = SystemTypeEnum.SYS_ROLE, desc = "查询角色列表")
-    public APIResult<List<RoleDetail>> queryRoleList(@RequestParam(value = "roleName", required = false) String roleName,
-                                                     @RequestParam(value = "pages", required = false) Integer pages,
-                                                     @RequestParam(value = "rows", required = false) Integer rows) {
+    public APIResult<ListData<RoleDetail>> queryRoleList(@RequestParam(value = "roleName", required = false) String roleName,
+                                                         @RequestParam(value = "pages", required = false) Integer pages,
+                                                         @RequestParam(value = "rows", required = false) Integer rows) {
         return roleService.queryRoleList(false, roleName, pages == null ? 1 : pages, rows == null ? 10 : rows);
     }
 

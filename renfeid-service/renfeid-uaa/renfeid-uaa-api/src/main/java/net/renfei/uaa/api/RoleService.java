@@ -16,6 +16,7 @@
 package net.renfei.uaa.api;
 
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.common.api.entity.ListData;
 import net.renfei.uaa.api.entity.Authority;
 import net.renfei.uaa.api.entity.AuthorityTypeEnum;
 import net.renfei.uaa.api.entity.RoleDetail;
@@ -35,7 +36,7 @@ public interface RoleService {
      * @param haveBuiltInRoles 是否包含内置角色
      * @return 角色列表
      */
-    APIResult<List<RoleDetail>> queryRoleList(boolean haveBuiltInRoles, String roleName, int pages, int rows);
+    APIResult<ListData<RoleDetail>> queryRoleList(boolean haveBuiltInRoles, String roleName, int pages, int rows);
 
     /**
      * 根据资源ID获取所需的角色列表

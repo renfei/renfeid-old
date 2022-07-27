@@ -19,7 +19,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
+import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.exception.BusinessException;
+import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.entity.LogLevelEnum;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
@@ -51,6 +53,7 @@ import java.util.List;
  */
 @Service
 public class RoleServiceImpl implements RoleService {
+    private final SystemConfig systemConfig;
     private final UaaRoleMapper uaaRoleMapper;
     private final SystemService systemService;
     private final SystemLogService systemLogService;
@@ -59,13 +62,15 @@ public class RoleServiceImpl implements RoleService {
     private final UaaUserRoleMapper uaaUserRoleMapper;
     private final UaaAuthorityMapper uaaAuthorityMapper;
 
-    public RoleServiceImpl(UaaRoleMapper uaaRoleMapper,
+    public RoleServiceImpl(SystemConfig systemConfig,
+                           UaaRoleMapper uaaRoleMapper,
                            SystemService systemService,
                            SystemLogService systemLogService,
                            SnowflakeService snowflakeService,
                            UaaUserMapper uaaUserMapper,
                            UaaUserRoleMapper uaaUserRoleMapper,
                            UaaAuthorityMapper uaaAuthorityMapper) {
+        this.systemConfig = systemConfig;
         this.uaaRoleMapper = uaaRoleMapper;
         this.systemService = systemService;
         this.systemLogService = systemLogService;
@@ -76,7 +81,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public APIResult<List<RoleDetail>> queryRoleList(boolean haveBuiltInRoles, String roleName, int pages, int rows) {
+    public APIResult<ListData<RoleDetail>> queryRoleList(boolean haveBuiltInRoles, String roleName, int pages, int rows) {
         UaaRoleExample example = new UaaRoleExample();
         UaaRoleExample.Criteria criteria = example.createCriteria();
         if (!haveBuiltInRoles) {
@@ -92,7 +97,15 @@ public class RoleServiceImpl implements RoleService {
             ) {
                 roleDetails.add(convert(role));
             }
-            return new APIResult<>(roleDetails);
+            ListData<RoleDetail> listData = new ListData<>();
+            listData.setPageNum(page.getPageNum());
+            listData.setPageSize(page.getPageSize());
+            listData.setStartRow(page.getStartRow());
+            listData.setEndRow(page.getEndRow());
+            listData.setTotal(page.getTotal());
+            listData.setPages(page.getPages());
+            listData.setData(roleDetails);
+            return new APIResult<>(listData);
         }
     }
 
@@ -138,7 +151,7 @@ public class RoleServiceImpl implements RoleService {
             ) {
                 RoleDetail roleDetail = convert(role);
                 // 添加角色拥有的权限
-                roleDetail.setAuthorityList(this.queryAuthorityListByRole(roleDetail.getId()).getData());
+                roleDetail.setAuthorityList(this.queryAuthorityListByRole(Long.parseLong(roleDetail.getId())).getData());
                 roleDetails.add(roleDetail);
             }
             return new APIResult<>(roleDetails);
@@ -200,7 +213,7 @@ public class RoleServiceImpl implements RoleService {
         for (RoleDetail roleDetail : roleDetailList
         ) {
             UaaUserRole uaaUserRole = new UaaUserRole();
-            uaaUserRole.setRoleId(roleDetail.getId());
+            uaaUserRole.setRoleId(Long.parseLong(roleDetail.getId()));
             uaaUserRole.setAccountId(userId);
             uaaUserRole.setAddTime(new Date());
             uaaUserRoleMapper.insertSelective(uaaUserRole);
@@ -253,7 +266,7 @@ public class RoleServiceImpl implements RoleService {
         UaaUserRole uaaUserRole = new UaaUserRole();
         uaaUserRole.setRoleId(uaaRole.getId());
         uaaUserRole.setAddTime(new Date());
-        uaaUserRole.setAccountId(currentUserDetail.getId());
+        uaaUserRole.setAccountId(Long.parseLong(currentUserDetail.getId()));
         uaaUserRoleMapper.insertSelective(uaaUserRole);
         return new APIResult<>(convert(uaaRole));
     }
@@ -282,12 +295,13 @@ public class RoleServiceImpl implements RoleService {
         UserDetail currentUserDetail = systemService.currentUserDetail();
         for (RoleDetail currentRoleDetail : currentUserDetail.getRoleDetailList()
         ) {
-            if (currentRoleDetail.getId() == roleId) {
+            if (Long.parseLong(currentRoleDetail.getId()) == roleId) {
                 haveRole = true;
                 break;
             }
         }
-        if (!haveRole) {
+        if (!systemConfig.getSuperTubeUserName().equals(currentUserDetail.getUsername()) && !haveRole) {
+            // 不是超管也不拥有这个角色
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                     "尝试编辑未拥有的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
             );
@@ -348,12 +362,13 @@ public class RoleServiceImpl implements RoleService {
         UserDetail currentUserDetail = systemService.currentUserDetail();
         for (RoleDetail roleDetail : currentUserDetail.getRoleDetailList()
         ) {
-            if (roleDetail.getId() == roleId) {
+            if (Long.parseLong(roleDetail.getId()) == roleId) {
                 haveRole = true;
                 break;
             }
         }
-        if (!haveRole) {
+        if (!systemConfig.getSuperTubeUserName().equals(currentUserDetail.getUsername()) && !haveRole) {
+            // 不是超管也不拥有这个角色
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                     "尝试删除未拥有的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
             );
@@ -373,29 +388,31 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private void updateAuthority(long roleId, List<Authority> authorityList, HttpServletRequest request) {
-        UserDetail currentUserDetail = systemService.currentUserDetail();
-        for (Authority authority : authorityList
-        ) {
-            if (authority.getAuthorityType() == null) {
-                throw new BusinessException("角色的权限列表中AuthorityType不能为空");
-            }
-            if (authority.getTargetId() == null) {
-                throw new BusinessException("角色的权限列表中TargetId不能为空");
-            }
-            for (RoleDetail currentRoleDetail : currentUserDetail.getRoleDetailList()
+        if (authorityList != null) {
+            UserDetail currentUserDetail = systemService.currentUserDetail();
+            for (Authority authority : authorityList
             ) {
-                if (!currentRoleDetail.getAuthorityList().contains(authority)) {
-                    systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                            String.format("尝试给角色分配自己未拥有的资源，被拒绝。资源类型[%s]ID[%s]。",
-                                    authority.getAuthorityType(),
-                                    authority.getTargetId()),
-                            currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-                    );
-                    throw new BusinessException(
-                            String.format("您未拥有资源类型[%s]ID[%s]的权限，无法分配给其他用户，请求被拒绝",
-                                    authority.getAuthorityType(),
-                                    authority.getTargetId())
-                    );
+                if (authority.getAuthorityType() == null) {
+                    throw new BusinessException("角色的权限列表中AuthorityType不能为空");
+                }
+                if (authority.getTargetId() == null) {
+                    throw new BusinessException("角色的权限列表中TargetId不能为空");
+                }
+                for (RoleDetail currentRoleDetail : currentUserDetail.getRoleDetailList()
+                ) {
+                    if (!currentRoleDetail.getAuthorityList().contains(authority)) {
+                        systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                                String.format("尝试给角色分配自己未拥有的资源，被拒绝。资源类型[%s]ID[%s]。",
+                                        authority.getAuthorityType(),
+                                        authority.getTargetId()),
+                                currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
+                        );
+                        throw new BusinessException(
+                                String.format("您未拥有资源类型[%s]ID[%s]的权限，无法分配给其他用户，请求被拒绝",
+                                        authority.getAuthorityType(),
+                                        authority.getTargetId())
+                        );
+                    }
                 }
             }
         }
@@ -403,14 +420,16 @@ public class RoleServiceImpl implements RoleService {
         UaaAuthorityExample example = new UaaAuthorityExample();
         example.createCriteria().andRoleIdEqualTo(roleId);
         uaaAuthorityMapper.deleteByExample(example);
-        for (Authority authority : authorityList
-        ) {
-            UaaAuthority uaaAuthority = new UaaAuthority();
-            uaaAuthority.setAuthorityType(authority.getAuthorityType().toString());
-            uaaAuthority.setRoleId(roleId);
-            uaaAuthority.setTargetId(authority.getTargetId());
-            uaaAuthority.setAddTime(new Date());
-            uaaAuthorityMapper.insertSelective(uaaAuthority);
+        if (authorityList != null) {
+            for (Authority authority : authorityList
+            ) {
+                UaaAuthority uaaAuthority = new UaaAuthority();
+                uaaAuthority.setAuthorityType(authority.getAuthorityType().toString());
+                uaaAuthority.setRoleId(roleId);
+                uaaAuthority.setTargetId(authority.getTargetId());
+                uaaAuthority.setAddTime(new Date());
+                uaaAuthorityMapper.insertSelective(uaaAuthority);
+            }
         }
     }
 
@@ -419,7 +438,7 @@ public class RoleServiceImpl implements RoleService {
             return null;
         }
         RoleDetail roleDetail = new RoleDetail();
-        roleDetail.setId(role.getId());
+        roleDetail.setId(role.getId() + "");
         roleDetail.setRoleName(role.getRoleName());
         roleDetail.setRoleDescribe(role.getRoleDescribe());
         roleDetail.setAddTime(role.getAddTime());
@@ -434,7 +453,7 @@ public class RoleServiceImpl implements RoleService {
             return null;
         }
         UaaRole role = new UaaRole();
-        role.setId(roleDetail.getId());
+        role.setId(roleDetail.getId() == null ? null : Long.parseLong(roleDetail.getId()));
         role.setRoleName(roleDetail.getRoleName());
         role.setRoleDescribe(roleDetail.getRoleDescribe());
         role.setAddTime(roleDetail.getAddTime());

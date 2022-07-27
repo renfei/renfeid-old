@@ -32,7 +32,7 @@ import java.util.List;
 public class RoleDetail implements ConfigAttribute, GrantedAuthority, Serializable {
     private static final long serialVersionUID = -5194970536302876575L;
     @Schema(description = "角色ID")
-    private Long id;
+    private String id;
     @Schema(description = "角色名称")
     private String roleName;
     @Schema(description = "角色描述")
@@ -59,11 +59,11 @@ public class RoleDetail implements ConfigAttribute, GrantedAuthority, Serializab
         return roleName;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
