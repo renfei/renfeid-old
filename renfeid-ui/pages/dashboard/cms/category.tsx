@@ -84,6 +84,7 @@ const helpModal = () => {
 
 const DashboardCmsCategory = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [postCategoryList, setPostCategoryList] = useState<PostCategory[]>()
+    const [inited, setInited] = useState<boolean>(false)
     const [visibleModel, setVisibleModel] = useState(false)
     const [modelLoading, setModelLoading] = useState(false)
     const [modelForm] = Form.useForm()
@@ -102,8 +103,9 @@ const DashboardCmsCategory = ({ data }: InferGetServerSidePropsType<typeof getSe
     })
 
     const fetchData = async (params: QueryCriteria) => {
-        if (!postCategoryList) {
+        if (!inited) {
             await queryData(params)
+            setInited(true)
         }
     }
 
@@ -153,10 +155,12 @@ const DashboardCmsCategory = ({ data }: InferGetServerSidePropsType<typeof getSe
                             type="primary"
                             icon={<EditOutlined />}
                             onClick={() => {
-                                modelForm.setFieldsValue({ id: record.id })
-                                modelForm.setFieldsValue({ enName: record.enName })
-                                modelForm.setFieldsValue({ zhName: record.zhName })
-                                modelForm.setFieldsValue({ secretLevel: record.secretLevel })
+                                modelForm.setFieldsValue({
+                                    id: record.id,
+                                    enName: record.enName,
+                                    zhName: record.zhName,
+                                    secretLevel: record.secretLevel
+                                })
                                 setVisibleModel(true)
                             }}
                         >编辑</Button>
@@ -221,7 +225,6 @@ const DashboardCmsCategory = ({ data }: InferGetServerSidePropsType<typeof getSe
         }
 
         const advancedSearch = async (values: any) => {
-            console.info(values)
             let params: QueryCriteria = {
                 enName: values.enName,
                 zhName: values.zhName,
@@ -356,10 +359,12 @@ const DashboardCmsCategory = ({ data }: InferGetServerSidePropsType<typeof getSe
                                     type="primary"
                                     icon={<PlusOutlined />}
                                     onClick={() => {
-                                        modelForm.setFieldsValue({ id: undefined })
-                                        modelForm.setFieldsValue({ enName: undefined })
-                                        modelForm.setFieldsValue({ zhName: undefined })
-                                        modelForm.setFieldsValue({ secretLevel: undefined })
+                                        modelForm.setFieldsValue({
+                                            id: undefined,
+                                            enName: undefined,
+                                            zhName: undefined,
+                                            secretLevel: undefined
+                                        })
                                         setVisibleModel(true)
                                     }}
                                 >
@@ -370,6 +375,7 @@ const DashboardCmsCategory = ({ data }: InferGetServerSidePropsType<typeof getSe
                     </Row>
                     <Table
                         columns={columns}
+                        scroll={{ x: true }}
                         rowKey={record => record.id}
                         dataSource={postCategoryList}
                         pagination={pagination}

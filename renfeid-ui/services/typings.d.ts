@@ -9,6 +9,11 @@ declare namespace API {
         privateKey: string,
     }
 
+    interface SecretValue {
+        secretKey: SecretKey,
+        value: string,
+    }
+
     // 加密后对象
     interface EncryptionVo {
         uuid: string,
@@ -159,5 +164,56 @@ declare namespace API {
         total?: number
         sortField?: string
         sortOrder?: string
+    }
+
+    interface RoleDetail {
+        id: string,
+        roleName: string,
+        roleDescribe: string,
+        addTime: string,
+        updateTime: string,
+        builtInRole: boolean,
+        extendJson?: string,
+    }
+
+    interface UserDetail {
+        id: string,
+        uuid: string,
+        username: string,
+        email: string,
+        emailVerified: boolean,
+        phone?: string,
+        phoneVerified: boolean,
+        registrationDate: string,
+        password: string,
+        totp?: string,
+        registrationIp: string,
+        trialErrorTimes?: number,
+        lockTime: string,
+        secretLevel: string,
+        builtInUser: boolean,
+        passwordExpirationTime?: string,
+        locked: boolean,
+        enabled: boolean,
+        lastName?: string,
+        firstName?: string,
+        keyUuid: string,
+        roleDetailList?: RoleDetail[]
+    }
+
+    interface ResetPasswordAo {
+        password: string,
+        tOtp: string,
+        keyUuid: string,
+        verCode: string,
+    }
+
+    interface RoleDetail {
+        id: string,
+        roleName: string,
+        roleDescribe?: string,
+        addTime: string,
+        updateTime?: string,
+        extendJson?: string,
     }
 }

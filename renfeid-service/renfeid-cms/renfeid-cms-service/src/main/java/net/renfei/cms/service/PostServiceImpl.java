@@ -252,7 +252,7 @@ public class PostServiceImpl implements PostService {
         }
         post.setPostViews(0L);
         post.setPostModified(new Date());
-        post.setPostModifiedUser(currentUserDetail.getId());
+        post.setPostModifiedUser(Long.parseLong(currentUserDetail.getId()));
         post.setModifiedUsername(currentUserDetail.getUsername());
         post.setPostParent(0L);
         post.setVersionNumber(1);
@@ -303,7 +303,7 @@ public class PostServiceImpl implements PostService {
         oldPost.setCommentStatus(post.getCommentStatus());
         oldPost.setPostPassword(post.getPostPassword());
         oldPost.setPostModified(new Date());
-        oldPost.setPostModifiedUser(currentUserDetail.getId());
+        oldPost.setPostModifiedUser(Long.parseLong(currentUserDetail.getId()));
         oldPost.setVersionNumber(oldPost.getVersionNumber() + 1);
         cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(oldPost));
         oldPost.setPostParent(Long.parseLong(oldPost.getId()));
@@ -329,7 +329,7 @@ public class PostServiceImpl implements PostService {
         }
         oldPost.setPostStatus(PostStatusEnum.OFFLINE);
         oldPost.setPostModified(new Date());
-        oldPost.setPostModifiedUser(currentUserDetail.getId());
+        oldPost.setPostModifiedUser(Long.parseLong(currentUserDetail.getId()));
         oldPost.setVersionNumber(oldPost.getVersionNumber() + 1);
         cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(oldPost));
         oldPost.setPostParent(Long.parseLong(oldPost.getId()));
@@ -353,7 +353,7 @@ public class PostServiceImpl implements PostService {
         }
         oldPost.setPostStatus(PostStatusEnum.DELETED);
         oldPost.setPostModified(new Date());
-        oldPost.setPostModifiedUser(currentUserDetail.getId());
+        oldPost.setPostModifiedUser(Long.parseLong(currentUserDetail.getId()));
         oldPost.setVersionNumber(oldPost.getVersionNumber() + 1);
         cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(oldPost));
         oldPost.setPostParent(Long.parseLong(oldPost.getId()));

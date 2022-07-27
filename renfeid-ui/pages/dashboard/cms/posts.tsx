@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import nookies from 'nookies'
 import moment from 'moment'
-import React, {useEffect, useState} from 'react'
-import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
-import {Col, Row, Button, Typography, Table, Space, Form, Input, Select, DatePicker, Modal, message} from 'antd'
+import React, { useEffect, useState } from 'react'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { Col, Row, Button, Typography, Table, Space, Form, Input, Select, DatePicker, Modal, message } from 'antd'
 import {
     DownOutlined,
     UpOutlined,
@@ -14,21 +14,21 @@ import {
     DeleteOutlined,
     QuestionCircleOutlined
 } from '@ant-design/icons'
-import type {ColumnsType, TablePaginationConfig} from 'antd/lib/table'
+import type { ColumnsType, TablePaginationConfig } from 'antd/lib/table'
 import DashboardLayout from "../../../components/layout/dashboard"
 import DashPageHeader from "../../../components/layout/dashboard/DashPageHeader"
 import * as api from "../../../services/api/dashboard/api"
-import {convertToHeaders} from "../../../utils/request"
+import { convertToHeaders } from "../../../utils/request"
 import AntdSelectOption = API.AntdSelectOption
 import APIResult = API.APIResult
 import ListData = API.ListData
 import PostCategory = API.PostCategory
-import {getPostStatusList, switchPostStatus} from "../../../utils/posts"
+import { getPostStatusList, switchPostStatus } from "../../../utils/posts"
 import Params = API.TableListParams
-import {queryPostList} from "../../../services/api/dashboard/api"
+import { queryPostList } from "../../../services/api/dashboard/api"
 import DashPost = API.DashPost
 
-const {Title} = Typography
+const { Title } = Typography
 
 const columns: ColumnsType<DashPost> = [
     {
@@ -72,10 +72,10 @@ const columns: ColumnsType<DashPost> = [
         render: (_: any, record: DashPost) => {
             return (
                 <Space>
-                    <Button type="primary" icon={<EditOutlined/>} href={`/dashboard/cms/posts/${record.id}`}>编辑</Button>
+                    <Button type="primary" icon={<EditOutlined />} href={`/dashboard/cms/posts/${record.id}`}>编辑</Button>
                     <Button
                         danger
-                        icon={<DeleteOutlined/>}
+                        icon={<DeleteOutlined />}
                         disabled={record.postStatus != 'PUBLISH'}
                         onClick={() => {
                             api.offlinePost(record.id).then(res => {
@@ -159,7 +159,7 @@ const helpModal = () => {
     Modal.info({
         title: '帮助说明',
         width: 520,
-        icon: (<QuestionCircleOutlined/>),
+        icon: (<QuestionCircleOutlined />),
         content: (
             <div>
                 <p>此处为CMS内容管理系统。</p>
@@ -186,8 +186,9 @@ const helpModal = () => {
     })
 }
 
-const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const DashboardCmsPosts = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [postList, setPostList] = useState<DashPost[]>()
+    const [inited, setInited] = useState<boolean>(false)
     const [loading, setLoading] = useState(false)
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
@@ -200,12 +201,13 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
     }
 
     useEffect(() => {
-        fetchData({pagination})
+        fetchData({ pagination })
     })
 
     const fetchData = async (params: QueryCriteria) => {
-        if (!postList) {
+        if (!inited) {
             await queryData(params)
+            setInited(true)
         }
     }
 
@@ -248,7 +250,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                         name="title"
                         label="内容标题"
                     >
-                        <Input/>
+                        <Input />
                     </Form.Item>
                 </Col>,
                 <Col span={6} key="postStatus">
@@ -272,21 +274,21 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                             label="起始时间"
                         >
                             <DatePicker
-                                style={{width: '100%'}}
+                                style={{ width: '100%' }}
                                 showTime
-                                format="yyyy-MM-DD HH:mm:ss"/>
+                                format="yyyy-MM-DD HH:mm:ss" />
                         </Form.Item>
                     </Col>, <Col span={6} key="endDate">
-                        <Form.Item
-                            name="endDate"
-                            label="结束时间"
-                        >
-                            <DatePicker
-                                style={{width: '100%'}}
-                                showTime
-                                format="yyyy-MM-DD HH:mm:ss"/>
-                        </Form.Item>
-                    </Col>,
+                    <Form.Item
+                        name="endDate"
+                        label="结束时间"
+                    >
+                        <DatePicker
+                            style={{ width: '100%' }}
+                            showTime
+                            format="yyyy-MM-DD HH:mm:ss" />
+                    </Form.Item>
+                </Col>,
                     <Col span={6}></Col>,
                 )
             }
@@ -313,27 +315,27 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                 onFinish={advancedSearch}
             >
                 <Row gutter={24}>{getFields()}
-                    <Col span={6} style={{textAlign: 'right'}}>
+                    <Col span={6} style={{ textAlign: 'right' }}>
                         <Space>
                             <Button
-                                style={{margin: '0 8px'}}
+                                style={{ margin: '0 8px' }}
                                 onClick={() => {
                                     form.resetFields()
                                 }}
-                                icon={<ReloadOutlined/>}
+                                icon={<ReloadOutlined />}
                             >
                                 重置
                             </Button>
-                            <Button type="primary" htmlType="submit" icon={<SearchOutlined/>}>
+                            <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
                                 查询
                             </Button>
                             <Button
                                 type="text"
-                                style={{fontSize: 12}}
+                                style={{ fontSize: 12 }}
                                 onClick={() => {
                                     setExpand(!expand)
                                 }}
-                                icon={expand ? <UpOutlined/> : <DownOutlined/>}
+                                icon={expand ? <UpOutlined /> : <DownOutlined />}
                             >
                                 {expand ? '收起' : '展开'}
                             </Button>
@@ -363,7 +365,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                 <title>内容列表 - CMS 内容管理系统 (Content Management System)</title>
             </Head>
 
-            <div style={{backgroundColor: '#fff'}}>
+            <div style={{ backgroundColor: '#fff' }}>
                 <DashPageHeader
                     title="内容列表"
                     routes={routes}
@@ -371,26 +373,26 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                 />
             </div>
 
-            <div style={{padding: '23px'}}>
-                <div style={{backgroundColor: '#fff', padding: '24px 24px 0', marginBottom: '16px'}}>
-                    <AdvancedSearchForm postCatOptions={data.postCatOptions}/>
+            <div style={{ padding: '23px' }}>
+                <div style={{ backgroundColor: '#fff', padding: '24px 24px 0', marginBottom: '16px' }}>
+                    <AdvancedSearchForm postCatOptions={data.postCatOptions} />
                 </div>
-                <div style={{backgroundColor: '#fff', padding: '24px', marginBottom: '16px'}}>
+                <div style={{ backgroundColor: '#fff', padding: '24px', marginBottom: '16px' }}>
                     <Row>
                         <Col span={12}>
                             <Title level={5}>内容管理列表</Title>
                         </Col>
-                        <Col span={12} style={{textAlign: 'right', paddingBottom: '10px'}}>
+                        <Col span={12} style={{ textAlign: 'right', paddingBottom: '10px' }}>
                             <Space>
                                 <Button
                                     onClick={helpModal}
-                                    icon={<QuestionCircleOutlined/>}>
+                                    icon={<QuestionCircleOutlined />}>
                                     帮助说明
                                 </Button>
                                 <Button
                                     href="/dashboard/cms/posts/new"
                                     type="primary"
-                                    icon={<PlusOutlined/>}>
+                                    icon={<PlusOutlined />}>
                                     新建
                                 </Button>
                             </Space>
@@ -398,6 +400,7 @@ const DashboardCmsPosts = ({data}: InferGetServerSidePropsType<typeof getServerS
                     </Row>
                     <Table
                         columns={columns}
+                        scroll={{ x: true }}
                         rowKey={record => record.id}
                         dataSource={postList}
                         pagination={pagination}

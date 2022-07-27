@@ -126,7 +126,7 @@ public class CommentServiceImpl implements CommentService {
         }
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (currentUserDetail != null) {
-            comment.setAuthorId(currentUserDetail.getId());
+            comment.setAuthorId(Long.parseLong(currentUserDetail.getId()));
             comment.setAuthor(currentUserDetail.getUsername());
             comment.setAuthorEmail(currentUserDetail.getEmail());
         }

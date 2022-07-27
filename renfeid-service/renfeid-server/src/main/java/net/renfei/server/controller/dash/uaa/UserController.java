@@ -80,10 +80,9 @@ public class UserController extends AbstractController {
                   @RequestParam(value = "secretLevel", required = false) SecretLevelEnum secretLevel,
                   @RequestParam(value = "locked", required = false) Boolean locked,
                   @RequestParam(value = "enabled", required = false) Boolean enabled,
-                  @RequestParam(value = "pages", required = false) Integer pages,
-                  @RequestParam(value = "rows", required = false) Integer rows) {
-        return userService.queryUserList(username, email, phone, ip, secretLevel,
-                locked, enabled, pages == null ? 1 : pages, rows == null ? 10 : rows);
+                  @RequestParam(value = "pages", required = false, defaultValue = "1") Integer pages,
+                  @RequestParam(value = "rows", required = false, defaultValue = "10") Integer rows) {
+        return userService.queryUserList(username, email, phone, ip, secretLevel, locked, enabled, pages, rows);
     }
 
     @PostMapping("user")

@@ -359,6 +359,8 @@ public class UserServiceImpl implements UserService {
             ) {
                 UserDetail userDetail = new UserDetail();
                 BeanUtils.copyProperties(uaaUser, userDetail);
+                userDetail.setId(uaaUser.getId() + "");
+                userDetail.setSecretLevel(SecretLevelEnum.valueOf(uaaUser.getSecretLevel()));
                 this.fillRoleDetailList(userDetail);
                 userDetails.add(userDetail);
             }
@@ -369,7 +371,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public APIResult<UserDetail> createUser(UserDetail userDetail, HttpServletRequest request) {
-        userDetail.setId(snowflakeService.getId("").getId());
+        userDetail.setId(snowflakeService.getId("").getId() + "");
         userDetail.setUuid(UUID.randomUUID().toString().replace("-", "").toUpperCase());
         // 检查用户名
         this.checkDuplicateUsername(userDetail.getUsername());
@@ -420,7 +422,7 @@ public class UserServiceImpl implements UserService {
                     "尝试修改内置用户资料，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
             throw new BusinessException("内置用户，禁止编辑，请求被拒绝");
         }
-        if (userId != currentUserDetail.getId()
+        if (userId != Long.parseLong(currentUserDetail.getId())
                 && SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), oldUserDetail.getSecretLevel())) {
             // 如果不是修改自己的，那么需要判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
@@ -441,7 +443,8 @@ public class UserServiceImpl implements UserService {
         }
         uaaUser.setLastName(userDetail.getLastName());
         uaaUser.setFirstName(userDetail.getFirstName());
-        return null;
+        uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
+        return new APIResult<>(userDetail);
     }
 
     @Override
@@ -470,7 +473,7 @@ public class UserServiceImpl implements UserService {
                     "尝试给内置用户定密，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
             throw new BusinessException("内置用户，禁止编辑，请求被拒绝");
         }
-        if (userId != currentUserDetail.getId()
+        if (userId != Long.parseLong(currentUserDetail.getId())
                 && SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), oldUserDetail.getSecretLevel())) {
             // 如果不是修改自己的，那么需要判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
@@ -538,7 +541,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         UserDetail userDetail = new UserDetail();
-        userDetail.setId(uaaUser.getId());
+        userDetail.setId(uaaUser.getId() + "");
         userDetail.setUuid(uaaUser.getUuid());
         userDetail.setUsername(uaaUser.getUsername());
         userDetail.setEmail(uaaUser.getEmail());
@@ -609,7 +612,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         UaaUser uaaUser = new UaaUser();
-        uaaUser.setId(userDetail.getId());
+        uaaUser.setId(Long.parseLong(userDetail.getId()));
         uaaUser.setUuid(userDetail.getUuid());
         uaaUser.setUsername(userDetail.getUsername());
         uaaUser.setEmail(userDetail.getEmail());
@@ -638,8 +641,9 @@ public class UserServiceImpl implements UserService {
      * @param userDetail
      */
     private void fillRoleDetailList(UserDetail userDetail) {
+        APIResult<List<RoleDetail>> roleListByUser = roleService.queryRoleListByUser(Long.parseLong(userDetail.getId()), 1, Integer.MAX_VALUE);
         userDetail.setRoleDetailList(
-                roleService.queryRoleListByUser(userDetail.getId(), 1, Integer.MAX_VALUE).getData()
+                roleListByUser.getData()
         );
     }
 }

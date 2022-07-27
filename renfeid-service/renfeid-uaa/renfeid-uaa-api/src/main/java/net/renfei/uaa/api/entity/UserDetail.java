@@ -34,7 +34,7 @@ import java.util.List;
 public class UserDetail implements UserDetails, Serializable {
     private static final long serialVersionUID = -5194970536302876575L;
     @Schema(description = "用户ID")
-    private Long id;
+    private String id;
     @Schema(description = "UUID编码")
     private String uuid;
     @Schema(description = "用户名")
@@ -124,11 +124,11 @@ public class UserDetail implements UserDetails, Serializable {
         return enabled;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
