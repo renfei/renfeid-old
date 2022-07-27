@@ -1,14 +1,19 @@
 // 服务端请求封装，增加 Authorization 请求头
 import http from 'http'
 
-const request = (url: string, config: any) => {
-    return fetch(url, config)
-        .then((res: any) => {
-            return res.json()
-        })
-        .catch((error: any) => {
-            return Promise.reject(error)
-        })
+const request = async (url: string, config: any, isServer?: boolean) => {
+    let requesrUrl;
+    if (isServer) {
+        requesrUrl = `${process.env.RENFEID_SERVICE_API}${url}`
+    } else {
+        requesrUrl = `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}${url}`
+    }
+    try {
+        const res = await fetch(requesrUrl, config)
+        return res.json()
+    } catch (error) {
+        return await Promise.reject(error)
+    }
 }
 
 const addAuthorizationHeader = (headers: Headers, token?: string) => {
@@ -23,17 +28,17 @@ const addAuthorizationHeader = (headers: Headers, token?: string) => {
 }
 
 // GET请求
-export const get = (url: string, headers: Headers, token?: string) => {
+export const get = (url: string, headers: Headers, token?: string, isServer?: boolean) => {
     let header: Headers = addAuthorizationHeader(headers, token)
     const config = {
         method: 'GET',
         headers: header,
     }
-    return request(url, config)
+    return request(url, config, isServer)
 }
 
 // POST请求
-export const post = (url: string, data: any, headers: Headers, token?: string) => {
+export const post = (url: string, data: any, headers: Headers, token?: string, isServer?: boolean) => {
     let header: Headers = addAuthorizationHeader(headers, token)
     const config = {
         method: 'POST',
@@ -43,11 +48,11 @@ export const post = (url: string, data: any, headers: Headers, token?: string) =
     if (data) {
         config.body = JSON.stringify(data)
     }
-    return request(url, config)
+    return request(url, config, isServer)
 }
 
 // PUT请求
-export const put = (url: string, data: any, headers: Headers, token?: string) => {
+export const put = (url: string, data: any, headers: Headers, token?: string, isServer?: boolean) => {
     let header: Headers = addAuthorizationHeader(headers, token)
     const config = {
         method: 'PUT',
@@ -57,28 +62,28 @@ export const put = (url: string, data: any, headers: Headers, token?: string) =>
     if (data) {
         config.body = JSON.stringify(data)
     }
-    return request(url, config)
+    return request(url, config, isServer)
 }
 
 // DELETE请求
-export const delet = (url: string, headers: Headers, token?: string) => {
+export const delet = (url: string, headers: Headers, token?: string, isServer?: boolean) => {
     let header: Headers = addAuthorizationHeader(headers, token)
     const config = {
         method: 'DELETE',
         headers: header,
     }
-    return request(url, config)
+    return request(url, config, isServer)
 }
 
 // POST提交Form表单，例如上传文件
-export const postForm = (url: string, data: FormData, headers: Headers, token: string) => {
+export const postForm = (url: string, data: FormData, headers: Headers, token: string, isServer?: boolean) => {
     let header: Headers = addAuthorizationHeader(headers, token)
     const config = {
         method: 'POST',
         headers: header,
         body: data,
     }
-    return request(url, config)
+    return request(url, config, isServer)
 }
 
 export const convertToHeaders = (incomingHttpHeaders: http.IncomingHttpHeaders): Headers => {

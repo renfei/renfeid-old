@@ -1,7 +1,7 @@
 import * as Fetch from '../../utils/request'
 
 export const getPosts = async (headers: Headers, categoryId?: number, page?: number, rows?: number, token?: string) => {
-    let url = `${process.env.RENFEID_SERVICE_API}/-/api/cms/posts?`
+    let url = `/-/api/cms/posts?`
     if (categoryId) {
         url += 'categoryId=' + categoryId + '&'
     }
@@ -11,13 +11,13 @@ export const getPosts = async (headers: Headers, categoryId?: number, page?: num
     if (rows) {
         url += 'rows=' + rows + '&'
     }
-    return Fetch.get(url, headers, token)
+    return Fetch.get(url, headers, token, true)
 }
 
 export const getPostsById = async (id: number, headers: Headers, password?: string, token?: string) => {
-    let url = `${process.env.RENFEID_SERVICE_API}/-/api/cms/posts/${id}`
+    let url = `/-/api/cms/posts/${id}`
     if (password) {
         url += '?password=' + password
     }
-    return Fetch.get(url, headers, token)
+    return Fetch.get(url, headers, token, true)
 }

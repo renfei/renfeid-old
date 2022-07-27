@@ -70,22 +70,22 @@ export const updatePost = async (post: DashPost): Promise<APIResult<any>> => {
 }
 
 export const queryPostById = async (token: string, headers: Headers, id: string) => {
-    const url = `${process.env.RENFEID_SERVICE_API}/_/api/cms/posts/` + id
-    return Fetch.get(url, headers, token)
+    const url = `/_/api/cms/posts/` + id
+    return Fetch.get(url, headers, token, true)
 }
 
 export const queryPostArchivalListById = async (token: string, headers: Headers, id: string) => {
-    const url = `${process.env.RENFEID_SERVICE_API}/_/api/cms/posts/archival/` + id
-    return Fetch.get(url, headers, token)
+    const url = `/_/api/cms/posts/archival/` + id
+    return Fetch.get(url, headers, token, true)
 }
 
 export const queryPostArchivalById = async (token: string, headers: Headers, id: string, archivalId: string) => {
-    const url = `${process.env.RENFEID_SERVICE_API}/_/api/cms/posts/archival/` + id + `/` + archivalId
-    return Fetch.get(url, headers, token)
+    const url = `/_/api/cms/posts/archival/${id}/${archivalId}`
+    return Fetch.get(url, headers, token, true)
 }
 
 export const offlinePost = async (id: string) => {
-    const url = `/api/dash/cms/posts/` + id + `/offline`
+    const url = `/api/dash/cms/posts/${id}/offline`
     return await fetch(url, {
         method: 'PUT',
     }).then((res: any) => {
@@ -97,7 +97,7 @@ export const offlinePost = async (id: string) => {
 
 export const queryPostCategoryListUseInner = async (token: string, headers: Headers, enName?: string, zhName?: string,
     secretLevel?: string, pages?: number, rows?: number) => {
-    let url = `${process.env.RENFEID_SERVICE_API}/_/api/cms/posts/category?`
+    let url = `/_/api/cms/posts/category?`
     if (enName) {
         url += 'enName=' + enName + '&'
     }
@@ -113,7 +113,7 @@ export const queryPostCategoryListUseInner = async (token: string, headers: Head
     if (rows) {
         url += 'rows=' + rows + '&'
     }
-    return Fetch.get(url, headers, token)
+    return Fetch.get(url, headers, token, true)
 }
 
 export const queryPostCategoryList = async (token: string, headers: Headers, enName?: string, zhName?: string,
