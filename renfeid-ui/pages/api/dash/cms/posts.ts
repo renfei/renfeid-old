@@ -1,13 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
-import {server} from '../../../../config'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as Fetch from '../../../../utils/request'
-import {convertToHeaders} from "../../../../utils/request"
+import { convertToHeaders } from "../../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = req.cookies['accessToken']
     if (token) {
-        let url = `${server}/_/api/cms/posts?`
+        let url = `/_/api/cms/posts?`
         if (req.method === 'GET') {
             if (req.query.categoryId) {
                 url += 'categoryId=' + req.query.categoryId + '&'
@@ -34,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 res.status(200).json(result)
             })
         } else if (req.method === 'POST') {
-            await Fetch.post(url, req.body, convertToHeaders(req.headers), token).then(result => {
+            await Fetch.post(url, req.body, convertToHeaders(req.headers), token, true).then(result => {
                 res.status(200).json(result)
             })
         } else {

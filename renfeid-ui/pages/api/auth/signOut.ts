@@ -1,16 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as Fetch from '../../../utils/request'
-import {setCookie} from '../../../utils/cookies'
-import {server} from '../../../config'
+import { setCookie } from '../../../utils/cookies'
 import APIResult = API.APIResult
-import {convertToHeaders} from "../../../utils/request"
+import { convertToHeaders } from "../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<any>>) => {
     try {
         if (req.method === 'DELETE') {
-            let url = `${server}/api/auth/signOut`
-            await Fetch.delet(url, convertToHeaders(req.headers), req.cookies['accessToken']).then(result => {
+            let url = `/api/auth/signOut`
+            await Fetch.delet(url, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
                 if (result.code == 200) {
                     setCookie(res, 'accessToken', '', {
                         domain: 'renfei.net',

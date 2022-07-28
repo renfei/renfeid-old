@@ -1,21 +1,20 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as Fetch from '../../../utils/request'
-import {server} from '../../../config'
 import SecretKey = API.SecretKey
 import APIResult = API.APIResult
-import {convertToHeaders} from "../../../utils/request"
+import { convertToHeaders } from "../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<SecretKey>>) => {
     try {
         if (req.method === 'GET') {
-            let url = `${server}/api/auth/secretKey`
-            await Fetch.get(url, convertToHeaders(req.headers), req.cookies['accessToken']).then(result => {
+            let url = `/api/auth/secretKey`
+            await Fetch.get(url, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
                 res.status(200).json(result)
             })
         } else if (req.method === 'POST') {
-            let url = `${server}/api/auth/secretKey`
-            await Fetch.post(url, req.body, convertToHeaders(req.headers), req.cookies['accessToken']).then(result => {
+            let url = `/api/auth/secretKey`
+            await Fetch.post(url, req.body, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
                 res.status(200).json(result)
             })
         } else {

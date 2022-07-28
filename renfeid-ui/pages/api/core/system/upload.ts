@@ -1,13 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
-import {server} from '../../../../config'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as Fetch from "../../../../utils/request"
 import APIResult = API.APIResult
 import UploadObjectVo = API.UploadObjectVo
-import {convertToHeaders} from "../../../../utils/request"
+import { convertToHeaders } from "../../../../utils/request"
 import fs from 'fs'
 import FormData from 'form-data'
-import formidable, {File} from 'formidable'
+import formidable, { File } from 'formidable'
 
 export const config = {
     api: {
@@ -20,7 +19,7 @@ type ProcessedFiles = Array<[string, File]>
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = req.cookies['accessToken']
     if (token) {
-        let url = `${server}/_/api/core/system/upload`
+        let url = `/_/api/core/system/upload`
         /* Get files using formidable */
         const files = await new Promise<ProcessedFiles | undefined>((resolve, reject) => {
             const form = new formidable.IncomingForm()
@@ -51,14 +50,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             for (const file of files) {
                 const tempPath = file[1].filepath
                 const newPath = `${process.env.RENFEID_UPLOAD_DIR}` + file[1].originalFilename
-                await fs.rename(tempPath, newPath,(err)=>{
-                   if(err){
-                       console.error(err)
-                   }
+                await fs.rename(tempPath, newPath, (err) => {
+                    if (err) {
+                        console.error(err)
+                    }
                 })
                 formData.append(file[0], fs.createReadStream(newPath))
             }
-            await Fetch.postForm(url, formData, convertToHeaders(formData.getHeaders()), token).then(result => {
+            await Fetch.postForm(url, formData, convertToHeaders(formData.getHeaders()), token, true).then(result => {
                 const apiresult: APIResult<UploadObjectVo> = result
                 if (apiresult.code == 200 && apiresult.data) {
                     res.status(200).json(apiresult.data)

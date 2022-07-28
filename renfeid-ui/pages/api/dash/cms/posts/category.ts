@@ -1,13 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
-import {server} from '../../../../../config'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as Fetch from "../../../../../utils/request"
-import {convertToHeaders} from "../../../../../utils/request"
+import { convertToHeaders } from "../../../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = req.cookies['accessToken']
     if (token) {
-        let url = `${server}/_/api/cms/posts/category?`
+        let url = `/_/api/cms/posts/category?`
         if (req.query.enName) {
             url += 'enName=' + req.query.enName + '&'
         }
@@ -24,11 +23,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             url += 'rows=' + req.query.rows + '&'
         }
         if (req.method === 'GET') {
-            await Fetch.get(url, convertToHeaders(req.headers), token).then(result => {
+            await Fetch.get(url, convertToHeaders(req.headers), token, true).then(result => {
                 res.status(200).json(result)
             })
         } else if (req.method === 'POST') {
-            await Fetch.post(url, req.body, convertToHeaders(req.headers), token).then(result => {
+            await Fetch.post(url, req.body, convertToHeaders(req.headers), token, true).then(result => {
                 res.status(200).json(result)
             })
         } else {

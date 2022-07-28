@@ -1,17 +1,16 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as Fetch from '../../../../utils/request'
-import {server} from '../../../../config'
 import UserInfo = API.UserInfo
 import APIResult = API.APIResult
-import {convertToHeaders} from "../../../../utils/request"
+import { convertToHeaders } from "../../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<UserInfo>>) => {
     if (req.cookies['accessToken']) {
         try {
             if (req.method === 'GET') {
-                let url = `${server}/api/auth/current/user`
-                await Fetch.get(url, convertToHeaders(req.headers), req.cookies['accessToken']).then(result => {
+                let url = `/api/auth/current/user`
+                await Fetch.get(url, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
                     res.status(200).json(result)
                 })
             } else {
