@@ -157,7 +157,7 @@ public class RoleServiceImpl implements RoleService {
             return new APIResult<>(new ArrayList<>());
         }
         List<Long> roleIds = new ArrayList<>();
-        uaaUserRoles.forEach(uaaUserRole -> roleIds.add(uaaUserRole.getId()));
+        uaaUserRoles.forEach(uaaUserRole -> roleIds.add(uaaUserRole.getRoleId()));
         UaaRoleExample example = new UaaRoleExample();
         example.createCriteria().andIdIn(roleIds);
         try (Page<UaaRole> page = PageHelper.startPage(pages, rows)) {
@@ -192,34 +192,6 @@ public class RoleServiceImpl implements RoleService {
             return APIResult.builder()
                     .code(StateCodeEnum.Failure)
                     .message("该用户为内置用户，禁止编辑，请求被拒绝")
-                    .build();
-        }
-        // 检查是否拥有授权的角色
-        boolean noHaveRole = false;
-        RoleDetail noHaveRoleDetail = null;
-        List<RoleDetail> currentUserRoleList = currentUserDetail.getRoleDetailList();
-        for (RoleDetail roleDetail : roleDetailList
-        ) {
-            if (noHaveRole) {
-                break;
-            }
-            for (RoleDetail currentUserRole : currentUserRoleList
-            ) {
-                if (roleDetail.getId().equals(currentUserRole.getId())) {
-                    noHaveRole = true;
-                    break;
-                }
-            }
-            noHaveRoleDetail = roleDetail;
-        }
-        if (noHaveRole) {
-            systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    String.format("尝试给用户授权未拥有的角色[%s]，被拒绝。", noHaveRoleDetail.getRoleName()),
-                    currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-            );
-            return APIResult.builder()
-                    .code(StateCodeEnum.Failure)
-                    .message(String.format("您未拥有给用户授权的角色[%s]权限，请求被拒绝", noHaveRoleDetail.getRoleName()))
                     .build();
         }
         // 先删除，再插入

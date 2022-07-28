@@ -1,6 +1,7 @@
 import Head from 'next/head'
-import moment from 'moment'
+import nookies from 'nookies'
 import React, { useEffect, useState } from 'react'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Col, Row, Button, Typography, Table, Space, Form, Input, Select, Modal, Tag, message } from 'antd'
 import {
     DownOutlined,
@@ -23,7 +24,10 @@ import APIResult = API.APIResult
 import ListData = API.ListData
 import UserDetail = API.UserDetail
 import SecretValue = API.SecretValue
+import RoleDetail = API.RoleDetail
 import ResetPasswordAo = API.ResetPasswordAo
+import AntdSelectOption = API.AntdSelectOption
+import { convertToHeaders } from '../../../utils/request'
 import { switchSecretLevelText } from '../../../utils/security'
 import { encrypt } from '../../../utils/encryption'
 
@@ -43,12 +47,6 @@ type QueryCriteria = {
     secretLevel?: string, locked?: boolean, enabled?: boolean, pagination: TablePaginationConfig
 }
 
-const getRandomuserParams = (params: Params) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params,
-})
-
 const routes = [
     {
         path: '/dashboard',
@@ -64,9 +62,54 @@ const routes = [
     },
 ]
 
-const DashboardUaaPerm = () => {
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
+    const accessToken = nookies.get(context)['accessToken']
+    if (!accessToken) {
+        return {
+            redirect: {
+                destination: '/auth/signIn?redirect=' + context.req.url,
+                permanent: false,
+            },
+        }
+    }
+
+    let roleDetailOptions: AntdSelectOption[] = []
+    let roleDetailList: RoleDetail[] = []
+    const resultRoleDetail: APIResult<ListData<RoleDetail>> = await api.queryRoleListInner(accessToken,
+        convertToHeaders(context.req.headers), undefined, 1, 2147483647)
+    if (resultRoleDetail.code == 401) {
+        return {
+            redirect: {
+                destination: '/auth/signIn?redirect=' + context.req.url,
+                permanent: false,
+            },
+        }
+    }
+    if (resultRoleDetail.code == 200 && resultRoleDetail.data) {
+        roleDetailList = resultRoleDetail.data.data
+        for (let i = 0; i < resultRoleDetail.data.data.length; i++) {
+            let option: AntdSelectOption = {
+                label: resultRoleDetail.data.data[i].roleName,
+                value: resultRoleDetail.data.data[i].id,
+            }
+            roleDetailOptions.push(option)
+        }
+    }
+    return {
+        props: {
+            data: {
+                roleDetailOptions: roleDetailOptions,
+                roleDetailList: roleDetailList
+            }
+        }
+    }
+}
+
+const DashboardUaaPerm = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [inited, setInited] = useState<boolean>(false)
     const [userList, setUserList] = useState<UserDetail[]>()
+    const [roleDetailOptions, setRoleDetailOptions] = useState<AntdSelectOption[]>(data.roleDetailOptions)
+    const [roleDetaiList, setRoleDetailList] = useState<RoleDetail[]>(data.roleDetailList)
     const [loading, setLoading] = useState(false)
     const [visibleSecretLevelModel, setVisibleSecretLevelModel] = useState(false)
     const [secretLevelModelLoading, setSecretLevelModelLoading] = useState(false)
@@ -74,6 +117,9 @@ const DashboardUaaPerm = () => {
     const [visibleResetPasswordModel, setVisibleResetPasswordModel] = useState(false)
     const [resetPasswordModelLoading, setResetPasswordModelLoading] = useState(false)
     const [modelResetPasswordForm] = Form.useForm()
+    const [visibleRoleModel, setVisibleRoleModel] = useState(false)
+    const [roleModelLoading, setRoleModelLoading] = useState(false)
+    const [roleForm] = Form.useForm()
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
         pageSize: 10,
@@ -352,7 +398,22 @@ const DashboardUaaPerm = () => {
             render: (_: any, record: UserDetail) => {
                 return (
                     <Space>
-                        <Button type="primary" icon={<ContactsOutlined />}>角色</Button>
+                        <Button
+                            type="primary"
+                            icon={<ContactsOutlined />}
+                            onClick={() => {
+                                if (record.roleDetailList) {
+                                    let ids: string[] = []
+                                    record.roleDetailList.forEach(element => {
+                                        ids.push(element.id)
+                                    })
+                                    roleForm.setFieldsValue({
+                                        id: record.id,
+                                        roleList: ids
+                                    })
+                                }
+                                setVisibleRoleModel(true)
+                            }}>角色</Button>
                         <Button
                             type="primary"
                             icon={<SafetyOutlined />}
@@ -478,6 +539,47 @@ const DashboardUaaPerm = () => {
         setResetPasswordModelLoading(false)
     }
 
+    const handleRoleModelOk = async () => {
+        setRoleModelLoading(true)
+        let ids: string[] = roleForm.getFieldValue('roleList')
+        console.info('ids')
+        console.info(ids)
+        console.info('roleDetaiList')
+        console.info(roleDetaiList)
+        if (!ids) {
+            ids = []
+        }
+        let roleDetais: RoleDetail[] = []
+        if (roleDetaiList) {
+            ids.forEach(element => {
+                for (let i = 0; i < roleDetaiList.length; i++) {
+                    if (roleDetaiList[i].id == element) {
+                        console.info('匹配到了')
+                        roleDetais.push(roleDetaiList[i])
+                    }
+                }
+            })
+        }
+        console.info('roleDetais')
+        console.info(roleDetais)
+        let apiresult: APIResult<any> = await api.authorizationRoleByUser(roleForm.getFieldValue('id'), roleDetais)
+        if (apiresult.code != 200) {
+            message.error(apiresult.message)
+            setRoleModelLoading(false)
+            return
+        } else {
+            setRoleModelLoading(false)
+            setVisibleRoleModel(false)
+        }
+        setRoleModelLoading(false)
+        queryData({ pagination })
+    }
+
+    const handleRoleModelCancel = () => {
+        setVisibleRoleModel(false)
+        setRoleModelLoading(false)
+    }
+
     return (
         <>
             <Head>
@@ -560,6 +662,27 @@ const DashboardUaaPerm = () => {
                     </Form.Item>
                     <Form.Item name="password">
                         <Input />
+                    </Form.Item>
+                </Form>
+            </Modal>
+            <Modal
+                title="角色权限"
+                visible={visibleRoleModel}
+                confirmLoading={roleModelLoading}
+                onOk={handleRoleModelOk}
+                onCancel={handleRoleModelCancel}
+            >
+                <Form
+                    form={roleForm}
+                >
+                    <Form.Item name="id" label="ID" style={{ display: 'none' }}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="roleList">
+                        <Select
+                            mode="multiple"
+                            options={roleDetailOptions}
+                        />
                     </Form.Item>
                 </Form>
             </Modal>

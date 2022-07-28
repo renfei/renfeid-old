@@ -105,10 +105,27 @@ export const enableUser = async (id: string, enable: boolean) => {
 
 // 重置用户密码
 export const resetPassword = async (id: string, resetPasswordAo: ResetPasswordAo) => {
-    let url = `/api/dash/uaa/user/${id}/reset-password/`
+    let url = `/api/dash/uaa/user/${id}/reset-password`
     return await fetch(url, {
         method: 'PUT',
         body: JSON.stringify(resetPasswordAo),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+// 编辑用户角色
+export const authorizationRoleByUser = async (id: string, RoleDetails: RoleDetail[]) => {
+    let url = `/api/dash/uaa/user/${id}/role`
+    return await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(RoleDetails),
         headers: {
             'content-type': 'application/json',
             'Authorization': '',
@@ -139,6 +156,21 @@ export const queryRoleList = async (roleName?: string, page?: number, rows?: num
     }).catch((error: any) => {
         return Promise.reject(error)
     })
+}
+
+// 查询角色
+export const queryRoleListInner = async (token: string, headers: Headers, roleName?: string, page?: number, rows?: number) => {
+    let url = `/_/api/uaa/role?`
+    if (roleName) {
+        url += 'roleName=' + roleName + '&'
+    }
+    if (page) {
+        url += 'page=' + page + '&'
+    }
+    if (rows) {
+        url += 'rows=' + rows + '&'
+    }
+    return Fetch.get(url, headers, token, true)
 }
 
 // 创建角色
@@ -280,6 +312,18 @@ export const deleteMenu = async (id: string) => {
     let url = `/api/dash/uaa/menu/${id}`
     return await fetch(url, {
         method: 'DELETE'
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+// 查询系统API接口列表
+export const queryMenuTree = async () => {
+    let url = `/api/dash/uaa/menu/tree`
+    return await fetch(url, {
+        method: 'GET',
     }).then((res: any) => {
         return res.json()
     }).catch((error: any) => {
