@@ -21,7 +21,7 @@ export const rsaDecryptByPrivateKey = (ciphertext: string, privateKey: string): 
 
 // 生成RSA秘钥对
 export const generateRsaKey = (): SecretKey => {
-    const crypt = new NodeRSA({ b: 512 })
+    const crypt = new NodeRSA({ b: 2048 })
     return {
         uuid: '',
         publicKey: crypt.exportKey("pkcs8-public-pem"),

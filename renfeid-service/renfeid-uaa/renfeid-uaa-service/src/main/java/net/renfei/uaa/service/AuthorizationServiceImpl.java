@@ -97,7 +97,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
     @Override
     public APIResult<SecretKey> requestServerSecretKey() {
-        Map<Integer, String> map = RSAUtils.genKeyPair(2048);
+        Map<Integer, String> map = RSAUtils.genKeyPair(4096);
         if (ObjectUtils.isEmpty(map)) {
             logger.error("生成服务器公钥失败。");
             throw new RuntimeException("生成服务器公钥失败。");
