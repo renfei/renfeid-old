@@ -79,7 +79,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
                 if (requestMethod.equals(method) && antPathMatcher.match(url, requestUrl)) {
                     // 匹配命中了，将访问此资源需要的角色添加到 List<ConfigAttribute>
                     List<RoleDetail> roleDTOList =
-                            roleService.queryRoleListByResource(AuthorityTypeEnum.API, sysApi.getId()).getData();
+                            roleService.queryRoleListByResource(AuthorityTypeEnum.API, Long.parseLong(sysApi.getId())).getData();
                     if (roleDTOList != null) {
                         configAttributes.addAll(roleDTOList);
                     }

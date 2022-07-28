@@ -128,7 +128,7 @@ public class MenuServiceImpl implements MenuService {
         ) {
             UaaMenuExample example = new UaaMenuExample();
             example.setOrderByClause("menu_order");
-            UaaMenuExample.Criteria criteria = example.createCriteria().andPidEqualTo(menuTree.getId());
+            UaaMenuExample.Criteria criteria = example.createCriteria().andPidEqualTo(Long.parseLong(menuTree.getId()));
             if (menuIds != null && !menuIds.isEmpty()) {
                 criteria.andIdIn(menuIds).andEnableEqualTo(true);
             }
@@ -147,8 +147,8 @@ public class MenuServiceImpl implements MenuService {
 
     private MenuTree convert(UaaMenuWithBLOBs uaaMenu) {
         MenuTree menuTree = new MenuTree();
-        menuTree.setId(uaaMenu.getId());
-        menuTree.setPid(uaaMenu.getPid());
+        menuTree.setId(uaaMenu.getId() + "");
+        menuTree.setPid(uaaMenu.getPid() == null ? null : (uaaMenu.getPid() + ""));
         menuTree.setMenuName(uaaMenu.getMenuName());
         menuTree.setMenuIcon(uaaMenu.getMenuIcon());
         menuTree.setMenuTarget(uaaMenu.getMenuTarget());
@@ -167,8 +167,8 @@ public class MenuServiceImpl implements MenuService {
 
     private UaaMenuWithBLOBs convert(MenuTree menuTree) {
         UaaMenuWithBLOBs uaaMenu = new UaaMenuWithBLOBs();
-        uaaMenu.setId(menuTree.getId());
-        uaaMenu.setPid(menuTree.getPid());
+        uaaMenu.setId(menuTree.getId() == null ? null : Long.parseLong(menuTree.getId()));
+        uaaMenu.setPid(menuTree.getPid() == null ? null : Long.parseLong(menuTree.getPid()));
         uaaMenu.setMenuName(menuTree.getMenuName());
         uaaMenu.setMenuIcon(menuTree.getMenuIcon());
         uaaMenu.setMenuTarget(menuTree.getMenuTarget());

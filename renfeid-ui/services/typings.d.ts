@@ -208,6 +208,11 @@ declare namespace API {
         verCode: string,
     }
 
+    interface Authority {
+        authorityType: string,
+        targetId: string
+    }
+
     interface RoleDetail {
         id: string,
         roleName: string,
@@ -215,5 +220,33 @@ declare namespace API {
         addTime: string,
         updateTime?: string,
         extendJson?: string,
+        authorityList?: Authority[]
+    }
+
+    interface SystemApi {
+        id: string,
+        urlPath: string,
+        methodName: string,
+        summary: string,
+        description: string,
+    }
+
+    interface MenuTree {
+        id: string,
+        pid?: string,
+        menuName: string,
+        menuHref: string,
+        menuIcon?: string,
+        menuTarget?: string,
+        menuClass?: string,
+        menuTitle?: string,
+        menuOnclick?: string,
+        menuOrder?: string,
+        enable?: string,
+        addTime?: string,
+        updateTime?: string,
+        menuCss?: string,
+        extendJson?: string,
+        child?: MenuTree[],
     }
 }

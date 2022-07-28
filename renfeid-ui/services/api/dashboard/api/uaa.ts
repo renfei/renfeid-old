@@ -3,6 +3,7 @@ import APIResult = API.APIResult
 import UserDetail = API.UserDetail
 import RoleDetail = API.RoleDetail
 import ResetPasswordAo = API.ResetPasswordAo
+import MenuTree = API.MenuTree
 
 // 查询用户
 export const queryUserList = async (username?: string, email?: string, phone?: string, ip?: string,
@@ -179,6 +180,106 @@ export const deleteRole = async (id: string) => {
     let url = `/api/dash/uaa/role/${id}`
     return await fetch(url, {
         method: 'DELETE',
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+// 查询系统API接口列表
+export const querySystemApiInner = async (token: string, headers: Headers, apiurl?: string, pages?: string, rows?: string,) => {
+    let url = `/_/api/uaa/system/api?`
+    if (apiurl) {
+        url += 'url=' + apiurl + '&'
+    }
+    if (pages) {
+        url += 'pages=' + pages + '&'
+    }
+    if (rows) {
+        url += 'rows=' + rows + '&'
+    }
+    return Fetch.get(url, headers, token, true)
+}
+
+// 查询系统API接口列表
+export const querySystemApi = async (apiurl?: string, pages?: string, rows?: string,) => {
+    let url = `/api/uaa/system/api?`
+    if (apiurl) {
+        url += 'url=' + apiurl + '&'
+    }
+    if (pages) {
+        url += 'pages=' + pages + '&'
+    }
+    if (rows) {
+        url += 'rows=' + rows + '&'
+    }
+    return await fetch(url, {
+        method: 'GET',
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+// 查询系统API接口列表
+export const queryAllMenuTreeInner = async (token: string, headers: Headers) => {
+    let url = `/_/api/uaa/menu/tree/all`
+    return Fetch.get(url, headers, token, true)
+}
+
+// 查询系统API接口列表
+export const queryAllMenuTree = async () => {
+    let url = `/api/dash/uaa/menu/tree/all`
+    return await fetch(url, {
+        method: 'GET',
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+// 创建菜单
+export const createMenu = async (menu: MenuTree) => {
+    let url = `/api/dash/uaa/menu`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(menu),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+// 修改菜单
+export const updateMenu = async (menu: MenuTree) => {
+    let url = `/api/dash/uaa/menu/${menu.id}`
+    return await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(menu),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+// 删除菜单
+export const deleteMenu = async (id: string) => {
+    let url = `/api/dash/uaa/menu/${id}`
+    return await fetch(url, {
+        method: 'DELETE'
     }).then((res: any) => {
         return res.json()
     }).catch((error: any) => {

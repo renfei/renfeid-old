@@ -28,7 +28,7 @@ import java.io.Serializable;
 public class SystemApi implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
     @Schema(description = "ID")
-    private Long id;
+    private String id;
     @Schema(description = "API地址")
     private String urlPath;
     @Schema(description = "请求方法")
@@ -38,11 +38,11 @@ public class SystemApi implements Serializable {
     @Schema(description = "详细描述")
     private String description;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

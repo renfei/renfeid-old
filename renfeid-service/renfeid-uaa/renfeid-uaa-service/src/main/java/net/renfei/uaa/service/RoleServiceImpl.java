@@ -95,7 +95,23 @@ public class RoleServiceImpl implements RoleService {
             List<RoleDetail> roleDetails = new ArrayList<>();
             for (UaaRole role : page.getResult()
             ) {
-                roleDetails.add(convert(role));
+                RoleDetail roleDetail = convert(role);
+                // 填充权限列表
+                UaaAuthorityExample uaaAuthorityExample = new UaaAuthorityExample();
+                uaaAuthorityExample.createCriteria()
+                        .andRoleIdEqualTo(role.getId());
+                List<UaaAuthority> uaaAuthorities = uaaAuthorityMapper.selectByExample(uaaAuthorityExample);
+                if (!uaaAuthorities.isEmpty()) {
+                    List<Authority> authorityList = new ArrayList<>();
+                    uaaAuthorities.forEach(uaaAuthority -> {
+                        Authority authority = new Authority();
+                        authority.setAuthorityType(AuthorityTypeEnum.valueOf(uaaAuthority.getAuthorityType()));
+                        authority.setTargetId(uaaAuthority.getTargetId());
+                        authorityList.add(authority);
+                    });
+                    roleDetail.setAuthorityList(authorityList);
+                }
+                roleDetails.add(roleDetail);
             }
             ListData<RoleDetail> listData = new ListData<>();
             listData.setPageNum(page.getPageNum());

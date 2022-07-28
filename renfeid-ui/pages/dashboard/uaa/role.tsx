@@ -1,7 +1,8 @@
 import Head from 'next/head'
-import moment from 'moment'
+import nookies from 'nookies'
 import React, { useEffect, useState } from 'react'
-import { Col, Row, Button, Typography, Table, Space, Form, Input, Modal, Tag, message } from 'antd'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { Col, Row, Button, Typography, Table, Space, Form, Input, Modal, Select, message, Tree } from 'antd'
 import {
     DeleteOutlined,
     PlusOutlined,
@@ -18,9 +19,12 @@ import * as api from "../../../services/api/dashboard/api"
 import APIResult = API.APIResult
 import ListData = API.ListData
 import RoleDetail = API.RoleDetail
-import SecretValue = API.SecretValue
-import { switchSecretLevelText } from '../../../utils/security'
-import { encrypt } from '../../../utils/encryption'
+import AntdSelectOption = API.AntdSelectOption
+import SystemApi = API.SystemApi
+import Authority = API.Authority
+import { convertToHeaders } from '../../../utils/request'
+
+import type { DataNode, TreeProps } from 'antd/es/tree'
 
 const { Title } = Typography
 const { TextArea } = Input
@@ -58,7 +62,96 @@ const routes = [
     },
 ]
 
-const DashboardUaaRole = () => {
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
+    const accessToken = nookies.get(context)['accessToken']
+    if (!accessToken) {
+        return {
+            redirect: {
+                destination: '/auth/signIn?redirect=' + context.req.url,
+                permanent: false,
+            },
+        }
+    }
+    let apiList: AntdSelectOption[] = []
+    const resultSystemApi: APIResult<ListData<SystemApi>> = await api.querySystemApiInner(accessToken, convertToHeaders(context.req.headers), undefined, '1', '2147483647')
+    if (resultSystemApi.code == 401) {
+        return {
+            redirect: {
+                destination: '/auth/signIn?redirect=' + context.req.url,
+                permanent: false,
+            },
+        }
+    }
+    if (resultSystemApi.code == 200 && resultSystemApi.data) {
+        for (let i = 0; i < resultSystemApi.data.data.length; i++) {
+            let option: AntdSelectOption = {
+                label: resultSystemApi.data.data[i].summary,
+                value: resultSystemApi.data.data[i].id,
+            }
+            apiList.push(option)
+        }
+    }
+    const menuTreeData: DataNode[] = [
+        {
+            title: 'parent 1',
+            key: '0-0',
+            children: [
+                {
+                    title: 'parent 1-0',
+                    key: '0-0-0',
+                    children: [
+                        { title: 'leaf', key: '0-0-0-0' },
+                        {
+                            title: 'adsfasdf',
+                            key: '0-0-0-1',
+                        },
+                        { title: 'leaf', key: '0-0-0-2' },
+                    ],
+                },
+                {
+                    title: 'parent 1-1',
+                    key: '0-0-1',
+                    children: [{ title: 'leaf', key: '0-0-1-0' }],
+                },
+                {
+                    title: 'parent 1-2',
+                    key: '0-0-2',
+                    children: [
+                        { title: 'leaf', key: '0-0-2-0', },
+                        {
+                            title: 'leaf',
+                            key: '0-0-2-1',
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            title: 'parent 2',
+            key: '0-1',
+            children: [
+                {
+                    title: 'parent 2-0',
+                    key: '0-1-0',
+                    children: [
+                        { title: 'leaf', key: '0-1-0-0', },
+                        { title: 'leaf', key: '0-1-0-1', },
+                    ],
+                },
+            ],
+        },
+    ]
+    return {
+        props: {
+            data: {
+                apiList: apiList,
+                menuTreeData: menuTreeData
+            }
+        }
+    }
+}
+
+const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [inited, setInited] = useState<boolean>(false)
     const [roleList, setRoleList] = useState<RoleDetail[]>()
     const [loading, setLoading] = useState(false)
@@ -220,11 +313,20 @@ const DashboardUaaRole = () => {
                             type="primary"
                             icon={<EditOutlined />}
                             onClick={() => {
+                                let systemApis: string[] = []
+                                if (record.authorityList) {
+                                    record.authorityList.forEach(element => {
+                                        if (element.authorityType == 'API') {
+                                            systemApis.push(element.targetId)
+                                        }
+                                    })
+                                }
                                 modelForm.setFieldsValue({
                                     id: record.id,
                                     roleName: record.roleName,
                                     roleDescribe: record.roleDescribe,
                                     extendJson: record.extendJson,
+                                    systemApi: systemApis,
                                 })
                                 setVisibleModel(true)
                             }}
@@ -257,13 +359,25 @@ const DashboardUaaRole = () => {
             setModelLoading(false)
             return
         }
+        let authorityList: Authority[] = []
+        if (modelForm.getFieldValue('systemApi')) {
+            let systemApi: string[] = modelForm.getFieldValue('systemApi')
+            systemApi.forEach(element => {
+                let authority: Authority = {
+                    authorityType: 'API',
+                    targetId: element
+                }
+                authorityList.push(authority)
+            })
+        }
         const roleDetail: RoleDetail = {
             id: modelForm.getFieldValue('id'),
             roleName: modelForm.getFieldValue('roleName'),
             roleDescribe: modelForm.getFieldValue('roleDescribe'),
             extendJson: modelForm.getFieldValue('extendJson'),
             addTime: '',
-            builtInRole: false
+            builtInRole: false,
+            authorityList: authorityList
         }
         if (!modelForm.getFieldValue('id')) {
             // 新增
@@ -289,6 +403,14 @@ const DashboardUaaRole = () => {
     const handleCancel = () => {
         setVisibleModel(false)
         setModelLoading(false)
+    }
+
+    const onMenuTreeSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
+        console.log('selected', selectedKeys, info);
+    }
+
+    const onMenuTreeCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
+        console.log('onCheck', checkedKeys, info);
     }
 
     return (
@@ -330,6 +452,7 @@ const DashboardUaaRole = () => {
                                             roleName: '',
                                             roleDescribe: '',
                                             extendJson: '',
+                                            systemApi: []
                                         })
                                         setVisibleModel(true)
                                     }}
@@ -361,7 +484,7 @@ const DashboardUaaRole = () => {
                     form={modelForm}
                 >
                     <Form.Item name="id" label="ID" style={{ display: 'none' }}>
-                        <Input />
+                        <Input />《
                     </Form.Item>
                     <Form.Item name="roleName" label="角色名称">
                         <Input />
@@ -371,6 +494,21 @@ const DashboardUaaRole = () => {
                     </Form.Item>
                     <Form.Item name="extendJson" label="扩展信息">
                         <TextArea rows={4} />
+                    </Form.Item>
+                    <Form.Item name="systemApi" label="接口权限">
+                        <Select
+                            mode="multiple"
+                            allowClear
+                            options={data.apiList}
+                        />
+                    </Form.Item>
+                    <Form.Item name="menuTree" label="菜单权限">
+                        <Tree
+                            checkable
+                            onSelect={onMenuTreeSelect}
+                            onCheck={onMenuTreeCheck}
+                            treeData={data.menuTreeData}
+                        />
                     </Form.Item>
                 </Form>
             </Modal>

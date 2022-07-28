@@ -30,9 +30,9 @@ import java.util.List;
 public class MenuTree implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
     @Schema(description = "菜单ID")
-    private Long id;
+    private String id;
     @Schema(description = "菜单父级ID")
-    private Long pid;
+    private String pid;
     @Schema(description = "菜单名称")
     private String menuName;
     @Schema(description = "菜单图标")
@@ -62,19 +62,19 @@ public class MenuTree implements Serializable {
     @Schema(description = "子级菜单")
     private List<MenuTree> child;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getPid() {
+    public String getPid() {
         return pid;
     }
 
-    public void setPid(Long pid) {
+    public void setPid(String pid) {
         this.pid = pid;
     }
 

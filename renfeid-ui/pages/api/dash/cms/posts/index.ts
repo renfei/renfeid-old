@@ -1,33 +1,27 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import * as Fetch from '../../../../utils/request'
-import { convertToHeaders } from "../../../../utils/request"
+import * as Fetch from '../../../../../utils/request'
+import { convertToHeaders } from "../../../../../utils/request"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const token = req.cookies['accessToken']
     if (token) {
-        let url = `/_/api/uaa/user?`
+        let url = `/_/api/cms/posts?`
         if (req.method === 'GET') {
-            if (req.query.username) {
-                url += 'username=' + req.query.username + '&'
+            if (req.query.categoryId) {
+                url += 'categoryId=' + req.query.categoryId + '&'
             }
-            if (req.query.email) {
-                url += 'email=' + req.query.email + '&'
+            if (req.query.title) {
+                url += 'title=' + req.query.title + '&'
             }
-            if (req.query.phone) {
-                url += 'phone=' + req.query.phone + '&'
+            if (req.query.postStatus) {
+                url += 'postStatus=' + req.query.postStatus + '&'
             }
-            if (req.query.ip) {
-                url += 'ip=' + req.query.ip + '&'
+            if (req.query.startDate) {
+                url += 'startDate=' + req.query.startDate + '&'
             }
-            if (req.query.secretLevel) {
-                url += 'secretLevel=' + req.query.secretLevel + '&'
-            }
-            if (req.query.locked) {
-                url += 'locked=' + req.query.locked + '&'
-            }
-            if (req.query.enabled) {
-                url += 'enabled=' + req.query.enabled + '&'
+            if (req.query.endDate) {
+                url += 'endDate=' + req.query.endDate + '&'
             }
             if (req.query.pages) {
                 url += 'pages=' + req.query.pages + '&'
