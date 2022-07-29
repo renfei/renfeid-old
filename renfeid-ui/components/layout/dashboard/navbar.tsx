@@ -1,13 +1,13 @@
 import Link from 'next/link'
-import {useRouter} from 'next/router'
-import React, {useState, useEffect} from 'react'
-import {Layout, Menu, Space, Dropdown, Button, Badge} from 'antd'
-import {LogoutOutlined, SettingOutlined, BellOutlined, UserOutlined} from '@ant-design/icons'
+import { useRouter } from 'next/router'
+import React, { useState, useEffect } from 'react'
+import { Layout, Menu, Space, Dropdown, Button, Badge } from 'antd'
+import { LogoutOutlined, SettingOutlined, BellOutlined, UserOutlined } from '@ant-design/icons'
 import styles from '../../../styles/dashboard/Dashboard.module.css'
 import DashboardLogo from './DashboardLogo'
 import * as api from '../../../services/api'
 
-const {Header} = Layout
+const { Header } = Layout
 
 const getMessage = () => {
     console.info('定时执行获取消息')
@@ -40,7 +40,7 @@ const DashboardNavbar = () => {
                 {
                     label: (
                         <>
-                            <SettingOutlined/>
+                            <SettingOutlined />
                             <a href="">
                                 个人设置
                             </a>
@@ -54,7 +54,7 @@ const DashboardNavbar = () => {
                 {
                     label: (
                         <>
-                            <LogoutOutlined/>
+                            <LogoutOutlined />
                             <Link href={"/auth/signOut"}>
                                 <a>
                                     退出登录
@@ -74,7 +74,7 @@ const DashboardNavbar = () => {
                 {
                     label: (
                         <
-                        >
+                            >
                             <a href="">
                                 未读消息
                             </a>
@@ -99,8 +99,8 @@ const DashboardNavbar = () => {
     return (
         <>
             <Header className={"header " + styles.dashboard_header}>
-                <DashboardLogo/>
-                <div style={{flex: '1 1 0%'}}></div>
+                <DashboardLogo />
+                <div style={{ flex: '1 1 0%' }}></div>
                 <Space size={'large'}>
                     <Dropdown overlay={noticeMenu}>
                         <Badge
@@ -110,16 +110,16 @@ const DashboardNavbar = () => {
                         >
                             <Button
                                 type="text"
-                                style={{color: '#ffffff'}}
-                                icon={<BellOutlined/>}
+                                style={{ color: '#ffffff' }}
+                                icon={<BellOutlined />}
                             ></Button>
                         </Badge>
                     </Dropdown>
                     <Dropdown overlay={userMenu}>
                         <Button
                             type="text"
-                            icon={<UserOutlined/>}
-                            style={{color: '#ffffff'}}
+                            icon={<UserOutlined />}
+                            style={{ color: '#ffffff' }}
                             onClick={e => e.preventDefault()}>
                             {userName}
                         </Button>

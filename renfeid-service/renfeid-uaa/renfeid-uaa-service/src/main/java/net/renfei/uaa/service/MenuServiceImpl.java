@@ -17,6 +17,8 @@ package net.renfei.uaa.service;
 
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
+import net.renfei.common.core.config.SystemConfig;
+import net.renfei.common.core.service.SystemService;
 import net.renfei.uaa.api.MenuService;
 import net.renfei.uaa.api.entity.AuthorityTypeEnum;
 import net.renfei.uaa.api.entity.MenuTree;
@@ -39,12 +41,22 @@ import java.util.List;
 @Service
 public class MenuServiceImpl implements MenuService {
     private final UaaMenuMapper uaaMenuMapper;
+    private final SystemService systemService;
+    private final UaaUtilService uaaUtilService;
 
-    public MenuServiceImpl(UaaMenuMapper uaaMenuMapper) {
+    public MenuServiceImpl(UaaMenuMapper uaaMenuMapper, SystemService systemService, UaaUtilService uaaUtilService) {
         this.uaaMenuMapper = uaaMenuMapper;
+        this.systemService = systemService;
+        this.uaaUtilService = uaaUtilService;
     }
 
     public APIResult<List<MenuTree>> queryAllMenuTree() {
+        UserDetail currentUserDetail = systemService.currentUserDetail();
+        if (!uaaUtilService.isSuperTubeUser(currentUserDetail) &&
+                !uaaUtilService.isSecuritySuperUser(currentUserDetail)) {
+            // 不是超管也不是安全管理员，只能查询自己拥有的菜单
+            return queryMenuTreeByUser(currentUserDetail);
+        }
         UaaMenuExample example = new UaaMenuExample();
         example.setOrderByClause("menu_order");
         example.createCriteria()
@@ -73,10 +85,16 @@ public class MenuServiceImpl implements MenuService {
         }
         UaaMenuExample example = new UaaMenuExample();
         example.setOrderByClause("menu_order");
-        example.createCriteria()
-                .andIdIn(menuIds)
-                .andEnableEqualTo(true)
-                .andPidIsNull();
+        UserDetail currentUserDetail = systemService.currentUserDetail();
+        if (uaaUtilService.isSuperTubeUser(currentUserDetail) || uaaUtilService.isSecuritySuperUser(currentUserDetail)) {
+            // 超管也或安全管理员，给全部菜单
+            return queryAllMenuTree();
+        } else {
+            example.createCriteria()
+                    .andIdIn(menuIds)
+                    .andEnableEqualTo(true)
+                    .andPidIsNull();
+        }
         List<UaaMenuWithBLOBs> uaaMenuList = uaaMenuMapper.selectByExampleWithBLOBs(example);
         List<MenuTree> menuTreeList = new ArrayList<>();
         for (UaaMenuWithBLOBs uaaMenu : uaaMenuList

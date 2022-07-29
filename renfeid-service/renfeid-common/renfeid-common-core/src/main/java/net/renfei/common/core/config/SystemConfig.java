@@ -54,6 +54,8 @@ public class SystemConfig {
     private String staticDomainName;
     private String superTubeUserName;
     private Boolean enableSuperTubeUser;
+    private String securitySuperRoleName;
+    private String auditSuperRoleName;
     private Boolean enableCache;
     private Boolean enablePostAuditing;
     private Boolean allowCORS;

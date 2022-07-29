@@ -22,6 +22,7 @@ import RoleDetail = API.RoleDetail
 import AntdSelectOption = API.AntdSelectOption
 import SystemApi = API.SystemApi
 import Authority = API.Authority
+import MenuTree = API.MenuTree
 import { convertToHeaders } from '../../../utils/request'
 
 import type { DataNode, TreeProps } from 'antd/es/tree'
@@ -91,61 +92,24 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
             apiList.push(option)
         }
     }
-    const menuTreeData: DataNode[] = [
-        {
-            title: 'parent 1',
-            key: '0-0',
-            children: [
-                {
-                    title: 'parent 1-0',
-                    key: '0-0-0',
-                    children: [
-                        { title: 'leaf', key: '0-0-0-0' },
-                        {
-                            title: 'adsfasdf',
-                            key: '0-0-0-1',
-                        },
-                        { title: 'leaf', key: '0-0-0-2' },
-                    ],
-                },
-                {
-                    title: 'parent 1-1',
-                    key: '0-0-1',
-                    children: [{ title: 'leaf', key: '0-0-1-0' }],
-                },
-                {
-                    title: 'parent 1-2',
-                    key: '0-0-2',
-                    children: [
-                        { title: 'leaf', key: '0-0-2-0', },
-                        {
-                            title: 'leaf',
-                            key: '0-0-2-1',
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            title: 'parent 2',
-            key: '0-1',
-            children: [
-                {
-                    title: 'parent 2-0',
-                    key: '0-1-0',
-                    children: [
-                        { title: 'leaf', key: '0-1-0-0', },
-                        { title: 'leaf', key: '0-1-0-1', },
-                    ],
-                },
-            ],
-        },
-    ]
+    let menuTreeList: MenuTree[] = []
+    const resultMenuTree: APIResult<MenuTree[]> = await api.queryMenuTreeInner(accessToken, convertToHeaders(context.req.headers))
+    if (resultMenuTree.code == 401) {
+        return {
+            redirect: {
+                destination: '/auth/signIn?redirect=' + context.req.url,
+                permanent: false,
+            },
+        }
+    }
+    if (resultMenuTree.code == 200 && resultMenuTree.data) {
+        menuTreeList = resultMenuTree.data
+    }
     return {
         props: {
             data: {
                 apiList: apiList,
-                menuTreeData: menuTreeData
+                menuTreeList: menuTreeList
             }
         }
     }
@@ -154,6 +118,9 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
 const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [inited, setInited] = useState<boolean>(false)
     const [roleList, setRoleList] = useState<RoleDetail[]>()
+    const [apiList, setApiList] = useState<AntdSelectOption[]>(data.apiList)
+    const [menuDataNode, setTreeDataNode] = useState<DataNode[]>(convertToDataNode(data.menuTreeList))
+    const [treeCheckedKeys, setTreeCheckedKeys] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
     const [visibleModel, setVisibleModel] = useState(false)
     const [modelLoading, setModelLoading] = useState(false)
@@ -277,6 +244,9 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                         <li>将资源权限赋予给角色</li>
                         <li>将角色赋予给用户</li>
                         <li>一个用户可以拥有多个角色</li>
+                        <li>角色创建人默认拥有创建的角色</li>
+                        <li>超级管理员、安全保密员可以修改任意角色</li>
+                        <li>其他用户只能修改拥有的角色，尝试修改未拥有的角色将被拒绝</li>
                     </ol>
                 </div>
             ),
@@ -314,10 +284,14 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                             icon={<EditOutlined />}
                             onClick={() => {
                                 let systemApis: string[] = []
+                                let menus: string[] = []
                                 if (record.authorityList) {
                                     record.authorityList.forEach(element => {
                                         if (element.authorityType == 'API') {
-                                            systemApis.push(element.targetId)
+                                            systemApis.push(element.targetId.toString())
+                                        }
+                                        if (element.authorityType == 'MENU') {
+                                            menus.push(element.targetId.toString())
                                         }
                                     })
                                 }
@@ -328,6 +302,7 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                                     extendJson: record.extendJson,
                                     systemApi: systemApis,
                                 })
+                                setTreeCheckedKeys(menus)
                                 setVisibleModel(true)
                             }}
                         >编辑</Button>
@@ -370,6 +345,15 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                 authorityList.push(authority)
             })
         }
+        if (treeCheckedKeys) {
+            treeCheckedKeys.forEach(element => {
+                let authority: Authority = {
+                    authorityType: 'MENU',
+                    targetId: element
+                }
+                authorityList.push(authority)
+            })
+        }
         const roleDetail: RoleDetail = {
             id: modelForm.getFieldValue('id'),
             roleName: modelForm.getFieldValue('roleName'),
@@ -405,12 +389,12 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
         setModelLoading(false)
     }
 
-    const onMenuTreeSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
-        console.log('selected', selectedKeys, info);
-    }
-
     const onMenuTreeCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
-        console.log('onCheck', checkedKeys, info);
+        let checkeds: string[] = []
+        for (let i = 0; i < info.checkedNodes.length; i++) {
+            checkeds.push(info.checkedNodes[i].key.toString())
+        }
+        setTreeCheckedKeys(checkeds)
     }
 
     return (
@@ -454,6 +438,7 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                                             extendJson: '',
                                             systemApi: []
                                         })
+                                        setTreeCheckedKeys([])
                                         setVisibleModel(true)
                                     }}
                                 >
@@ -498,16 +483,17 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                     <Form.Item name="systemApi" label="接口权限">
                         <Select
                             mode="multiple"
-                            allowClear
-                            options={data.apiList}
+                            options={apiList}
                         />
                     </Form.Item>
                     <Form.Item name="menuTree" label="菜单权限">
                         <Tree
                             checkable
-                            onSelect={onMenuTreeSelect}
+                            checkStrictly
+                            defaultExpandAll
+                            checkedKeys={treeCheckedKeys}
                             onCheck={onMenuTreeCheck}
-                            treeData={data.menuTreeData}
+                            treeData={menuDataNode}
                         />
                     </Form.Item>
                 </Form>
@@ -522,6 +508,27 @@ DashboardUaaRole.getLayout = (page: any) => {
             {page}
         </DashboardLayout>
     )
+}
+
+// 递归转换树
+const convertToDataNode = (menuTreeList: MenuTree[]): DataNode[] => {
+    if (menuTreeList) {
+        let dataNodeList: DataNode[] = []
+        menuTreeList.forEach(element => {
+            let childrenList: DataNode[] | undefined = undefined
+            if (element.child) {
+                childrenList = convertToDataNode(element.child)
+            }
+            let dataNode: DataNode = {
+                key: element.id,
+                title: element.menuName,
+                children: childrenList
+            }
+            dataNodeList.push(dataNode)
+        })
+        return dataNodeList
+    }
+    return []
 }
 
 export default DashboardUaaRole

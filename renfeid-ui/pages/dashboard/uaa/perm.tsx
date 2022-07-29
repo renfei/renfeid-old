@@ -327,6 +327,11 @@ const DashboardUaaPerm = ({ data }: InferGetServerSidePropsType<typeof getServer
                         <li>启用/禁用：用户账户的启用和禁用（禁用以后禁止登录系统，已经登录的账号将被注销登录状态）</li>
                         <li>锁定/解锁：用户因密码错误或敏感操作被自动锁定，可立即解锁（锁定以后禁止登录系统，但已经登录的不受影响可继续使用账户）</li>
                     </ul>
+                    <p>注意事项：</p>
+                    <ul>
+                        <li>超级管理员、安全保密员可以分配任意角色给用户</li>
+                        <li>普通用户只能分配当前登录用户拥有的角色给其他用户，未拥有的角色分配会被拒绝</li>
+                    </ul>
                 </div>
             ),
             onOk() {
@@ -405,7 +410,7 @@ const DashboardUaaPerm = ({ data }: InferGetServerSidePropsType<typeof getServer
                                 if (record.roleDetailList) {
                                     let ids: string[] = []
                                     record.roleDetailList.forEach(element => {
-                                        ids.push(element.id)
+                                        ids.push(element.id.toString())
                                     })
                                     roleForm.setFieldsValue({
                                         id: record.id,

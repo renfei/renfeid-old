@@ -320,6 +320,12 @@ export const deleteMenu = async (id: string) => {
 }
 
 // 查询系统API接口列表
+export const queryMenuTreeInner = async (token: string, headers: Headers) => {
+    let url = `/_/api/uaa/menu/tree`
+    return Fetch.get(url, headers, token, true)
+}
+
+// 查询系统API接口列表
 export const queryMenuTree = async () => {
     let url = `/api/dash/uaa/menu/tree`
     return await fetch(url, {

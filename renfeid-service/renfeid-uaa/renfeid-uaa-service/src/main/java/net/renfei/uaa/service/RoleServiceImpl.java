@@ -53,26 +53,26 @@ import java.util.List;
  */
 @Service
 public class RoleServiceImpl implements RoleService {
-    private final SystemConfig systemConfig;
     private final UaaRoleMapper uaaRoleMapper;
     private final SystemService systemService;
+    private final UaaUtilService uaaUtilService;
     private final SystemLogService systemLogService;
     private final SnowflakeService snowflakeService;
     private final UaaUserMapper uaaUserMapper;
     private final UaaUserRoleMapper uaaUserRoleMapper;
     private final UaaAuthorityMapper uaaAuthorityMapper;
 
-    public RoleServiceImpl(SystemConfig systemConfig,
-                           UaaRoleMapper uaaRoleMapper,
+    public RoleServiceImpl(UaaRoleMapper uaaRoleMapper,
                            SystemService systemService,
+                           UaaUtilService uaaUtilService,
                            SystemLogService systemLogService,
                            SnowflakeService snowflakeService,
                            UaaUserMapper uaaUserMapper,
                            UaaUserRoleMapper uaaUserRoleMapper,
                            UaaAuthorityMapper uaaAuthorityMapper) {
-        this.systemConfig = systemConfig;
         this.uaaRoleMapper = uaaRoleMapper;
         this.systemService = systemService;
+        this.uaaUtilService = uaaUtilService;
         this.systemLogService = systemLogService;
         this.snowflakeService = snowflakeService;
         this.uaaUserMapper = uaaUserMapper;
@@ -194,6 +194,37 @@ public class RoleServiceImpl implements RoleService {
                     .message("该用户为内置用户，禁止编辑，请求被拒绝")
                     .build();
         }
+        if (!uaaUtilService.isSuperTubeUser(currentUserDetail) && !
+                uaaUtilService.isSecuritySuperUser(currentUserDetail)){
+            // 不是超管也不是安全保密员，检查是否拥有授权的角色
+            boolean noHaveRole = false;
+            RoleDetail noHaveRoleDetail = null;
+            List<RoleDetail> currentUserRoleList = currentUserDetail.getRoleDetailList();
+            for (RoleDetail roleDetail : roleDetailList
+            ) {
+                if (noHaveRole) {
+                    break;
+                }
+                for (RoleDetail currentUserRole : currentUserRoleList
+                ) {
+                    if (roleDetail.getId().equals(currentUserRole.getId())) {
+                        noHaveRole = true;
+                        break;
+                    }
+                }
+                noHaveRoleDetail = roleDetail;
+            }
+            if (noHaveRole) {
+                systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                        String.format("尝试给用户授权未拥有的角色[%s]，被拒绝。", noHaveRoleDetail.getRoleName()),
+                        currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
+                );
+                return APIResult.builder()
+                        .code(StateCodeEnum.Failure)
+                        .message(String.format("您未拥有给用户授权的角色[%s]权限，请求被拒绝", noHaveRoleDetail.getRoleName()))
+                        .build();
+            }
+        }
         // 先删除，再插入
         UaaUserRoleExample example = new UaaUserRoleExample();
         example.createCriteria().andAccountIdEqualTo(userId);
@@ -288,8 +319,9 @@ public class RoleServiceImpl implements RoleService {
                 break;
             }
         }
-        if (!systemConfig.getSuperTubeUserName().equals(currentUserDetail.getUsername()) && !haveRole) {
-            // 不是超管也不拥有这个角色
+        if (!uaaUtilService.isSuperTubeUser(currentUserDetail) &&
+                !uaaUtilService.isSecuritySuperUser(currentUserDetail) && !haveRole) {
+            // 不是超级管理员，也不是安全保密管理员，也不拥有这个角色
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                     "尝试编辑未拥有的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
             );
@@ -355,8 +387,9 @@ public class RoleServiceImpl implements RoleService {
                 break;
             }
         }
-        if (!systemConfig.getSuperTubeUserName().equals(currentUserDetail.getUsername()) && !haveRole) {
-            // 不是超管也不拥有这个角色
+        if (!uaaUtilService.isSuperTubeUser(currentUserDetail) &&
+                !uaaUtilService.isSecuritySuperUser(currentUserDetail) && !haveRole) {
+            // 不是超级管理员，也不是安全保密管理员，也不拥有这个角色
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                     "尝试删除未拥有的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
             );
@@ -386,20 +419,24 @@ public class RoleServiceImpl implements RoleService {
                 if (authority.getTargetId() == null) {
                     throw new BusinessException("角色的权限列表中TargetId不能为空");
                 }
-                for (RoleDetail currentRoleDetail : currentUserDetail.getRoleDetailList()
-                ) {
-                    if (!currentRoleDetail.getAuthorityList().contains(authority)) {
-                        systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                                String.format("尝试给角色分配自己未拥有的资源，被拒绝。资源类型[%s]ID[%s]。",
-                                        authority.getAuthorityType(),
-                                        authority.getTargetId()),
-                                currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-                        );
-                        throw new BusinessException(
-                                String.format("您未拥有资源类型[%s]ID[%s]的权限，无法分配给其他用户，请求被拒绝",
-                                        authority.getAuthorityType(),
-                                        authority.getTargetId())
-                        );
+                if (!uaaUtilService.isSuperTubeUser(currentUserDetail) &&
+                        !uaaUtilService.isSecuritySuperUser(currentUserDetail)) {
+                    // 不是超级管理员，也不是安全保密管理员，只能分配自己拥有的角色
+                    for (RoleDetail currentRoleDetail : currentUserDetail.getRoleDetailList()
+                    ) {
+                        if (!currentRoleDetail.getAuthorityList().contains(authority)) {
+                            systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
+                                    String.format("尝试给角色分配自己未拥有的资源，被拒绝。资源类型[%s]ID[%s]。",
+                                            authority.getAuthorityType(),
+                                            authority.getTargetId()),
+                                    currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
+                            );
+                            throw new BusinessException(
+                                    String.format("您未拥有资源类型[%s]ID[%s]的权限，无法分配给其他用户，请求被拒绝",
+                                            authority.getAuthorityType(),
+                                            authority.getTargetId())
+                            );
+                        }
                     }
                 }
             }
