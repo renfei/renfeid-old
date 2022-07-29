@@ -244,16 +244,16 @@ public class EnvironmentInfo implements Serializable {
         private final Date startTime;
         @Getter
         @Schema(description = "JVM虚拟机运行时间（毫秒）")
-        private final long runtime;
+        private final String runtime;
         @Getter
         @Schema(description = "已加载类总数量")
-        private final long totalLoadedClassCount;
+        private final String totalLoadedClassCount;
         @Getter
         @Schema(description = "当前加载类数量")
-        private final long loadedClassCount;
+        private final String loadedClassCount;
         @Getter
         @Schema(description = "已卸载类总数量")
-        private final long unloadedClassCount;
+        private final String unloadedClassCount;
         @Getter
         @Schema(description = "JVM启动参数")
         private final List<String> inputArguments;
@@ -271,7 +271,7 @@ public class EnvironmentInfo implements Serializable {
             private final int peakThreadCount;
             @Getter
             @Schema(description = "JVM启动以来创建和启动的线程总数")
-            private final long totalStartedThreadCount;
+            private final String totalStartedThreadCount;
             @Getter
             @Schema(description = "守护线程数")
             private final int daemonThreadCount;
@@ -282,7 +282,7 @@ public class EnvironmentInfo implements Serializable {
             Thread() {
                 threadCount = THREAD_MX_BEAN.getThreadCount();
                 peakThreadCount = THREAD_MX_BEAN.getPeakThreadCount();
-                totalStartedThreadCount = THREAD_MX_BEAN.getTotalStartedThreadCount();
+                totalStartedThreadCount = THREAD_MX_BEAN.getTotalStartedThreadCount() + "";
                 daemonThreadCount = THREAD_MX_BEAN.getDaemonThreadCount();
                 //查找死锁线程id
                 long[] deadlockedIds = THREAD_MX_BEAN.findDeadlockedThreads();
@@ -307,10 +307,10 @@ public class EnvironmentInfo implements Serializable {
             maxMemory = (MEMORY_USAGE.getMax() / BYTE_TO_MB) + " MB";
             freeMemory = ((MEMORY_USAGE.getCommitted() - MEMORY_USAGE.getUsed()) / BYTE_TO_MB) + " MB";
             startTime = new Date(RUNTIME_MX_BEAN.getStartTime());
-            runtime = RUNTIME_MX_BEAN.getUptime();
-            totalLoadedClassCount = CLASS_LOAD.getTotalLoadedClassCount();
-            loadedClassCount = CLASS_LOAD.getLoadedClassCount();
-            unloadedClassCount = CLASS_LOAD.getUnloadedClassCount();
+            runtime = RUNTIME_MX_BEAN.getUptime() + "";
+            totalLoadedClassCount = CLASS_LOAD.getTotalLoadedClassCount() + "";
+            loadedClassCount = CLASS_LOAD.getLoadedClassCount() + "";
+            unloadedClassCount = CLASS_LOAD.getUnloadedClassCount() + "";
             inputArguments = RUNTIME_MX_BEAN.getInputArguments();
             thread = new Thread();
         }
