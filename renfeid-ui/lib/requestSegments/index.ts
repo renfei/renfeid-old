@@ -6,7 +6,11 @@ export const requestSegments = (req: NextApiRequest): string[] => {
   const route = req.query.route
   const segments = (typeof route === 'string') ? [route] : route
 
-  return segments
-    .map(segment => removeFileExtension(segment))
-    .filter(segment => !isParameter(segment))
+  if (segments) {
+    return segments
+      .map(segment => removeFileExtension(segment))
+      .filter(segment => !isParameter(segment))
+  } else {
+    return []
+  }
 }
