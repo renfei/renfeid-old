@@ -1,21 +1,21 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import {Affix} from 'antd'
+import { Affix } from 'antd'
 import TopBarWrapper from "./top-bar-wrapper"
-import {SearchOutlined, UnorderedListOutlined} from '@ant-design/icons'
+import { SearchOutlined, UnorderedListOutlined } from '@ant-design/icons'
 
-const Navbar = () => {
+const Navbar = ({ children, ...props }: any) => {
     return (
         <>
             <TopBarWrapper>
-                TopBarWrapper
+                {children}
             </TopBarWrapper>
             <Affix offsetTop={0}>
                 <nav className={"renfeid-nav"}>
                     <div className={"renfeid-content"}>
                         <ul className={"nav-menu-mobile"}>
                             <li>
-                                <UnorderedListOutlined/>
+                                <UnorderedListOutlined />
                             </li>
                             <li>
                                 <Link href={"/"}>
@@ -30,7 +30,7 @@ const Navbar = () => {
                                     </a>
                                 </Link>
                             </li>
-                            <li><SearchOutlined/></li>
+                            <li><SearchOutlined /></li>
                         </ul>
                         <ul className={"nav-menu"}>
                             <li>
@@ -86,7 +86,7 @@ const Navbar = () => {
                             </li>
                             <li>
                                 <Link href={"javascript:void(0)"}>
-                                    <SearchOutlined/>
+                                    <SearchOutlined />
                                 </Link>
                             </li>
                         </ul>

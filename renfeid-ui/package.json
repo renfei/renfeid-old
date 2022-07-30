@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:preview": "NEXT_PUBLIC_RENFEID_ACTIVE=preview next dev",
     "build": "next build",
+    "build:preview": "NEXT_PUBLIC_RENFEID_ACTIVE=preview next build",
     "start": "next start",
     "lint": "next lint"
   },

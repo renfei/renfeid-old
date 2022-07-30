@@ -3,14 +3,10 @@ import http from 'http'
 
 const request = async (url: string, config: any, isServer?: boolean) => {
     let requesrUrl;
-    if (process.env.RENFEID_ACTIVE == `mock`) {
-        requesrUrl = `/api/mock${url}`
+    if (isServer) {
+        requesrUrl = `${process.env.RENFEID_SERVICE_API}${url}`
     } else {
-        if (isServer) {
-            requesrUrl = `${process.env.RENFEID_SERVICE_API}${url}`
-        } else {
-            requesrUrl = `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}${url}`
-        }
+        requesrUrl = `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}${url}`
     }
     try {
         const res = await fetch(requesrUrl, config)
