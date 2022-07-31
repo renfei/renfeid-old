@@ -5,11 +5,12 @@ import nookies from 'nookies'
 import Layout from '../components/layout'
 import { Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space } from 'antd'
 import moment from 'moment'
-import { ArrowRightOutlined } from '@ant-design/icons'
+import { QRCodeCanvas } from 'qrcode.react'
+import { ArrowRightOutlined, WechatOutlined, GithubOutlined } from '@ant-design/icons'
 import styles from '../styles/Home.module.css'
 import GoogleAdsense from '../components/GoogleAdsense'
 
-const { Title, Paragraph } = Typography
+const { Title, Paragraph, Text } = Typography
 const { Meta } = Card
 
 // 文章 1到2
@@ -331,6 +332,30 @@ const Home = () => {
                                 client={"ca-pub-885975646380"}
                                 slot={"641095"}
                             />
+                            <Row>
+                                <Col lg={12} xs={24}>
+                                    <div className={'renfeid-card'}>
+                                        <Title level={5}><WechatOutlined style={{ paddingRight: '10px' }} />微信订阅号</Title>
+                                        <Text type="secondary" style={{ fontSize: '12px' }}>扫码关注「任霏博客」微信订阅号</Text>
+                                        <div style={{ textAlign: 'center', marginTop: '0.5em' }}>
+                                            <QRCodeCanvas
+                                                value="http://weixin.qq.com/r/OkSQiJLEx8_4rdbr9xEo"
+                                            />
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col lg={12} xs={24}>
+                                    <div className={'renfeid-card'}>
+                                        <Title level={5}><GithubOutlined style={{ paddingRight: '10px' }} />开源与反馈</Title>
+                                        <Text type="secondary" style={{ fontSize: '12px' }}>基于开源回归开源</Text>
+                                        <ul style={{ paddingLeft: '15px' }}>
+                                            <li>开源仓库：<Link href="https://github.com/renfei/renfeid"><a target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/renfeid</a></Link></li>
+                                            <li>反馈讨论：<Link href="https://github.com/renfei/feedback/discussions"><a target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/feedback/discussions</a></Link></li>
+                                            <li>更多内容：参见《<Link href="/page/about"><a target={'_blank'} rel={'nofollow noopener'}>关于页面</a></Link>》</li>
+                                        </ul>
+                                    </div>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 </section>
