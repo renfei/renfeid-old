@@ -126,16 +126,3 @@ system:
   cloudflare:
     accountId: dd
     token: dd
-
-aj:
-  captcha:
-    type: default
-    cache-number: 60
-    timing-clear: 600
-    water-mark: 任霏博客
-    # 校验滑动拼图允许误差偏移量(默认5像素).
-    slip-offset: 5
-    # aes加密坐标开启或者禁用(true|false).
-    aes-status: true
-    # 滑块干扰项(0/1/2)
-    interference-options: 1
