@@ -1,8 +1,8 @@
-import {Layout, Divider, Space, Col, Row, Button, Typography, Card, Comment, List, Tooltip} from 'antd'
+import { Layout, Divider, Space, Col, Row, Button, Typography, Card, Comment, List, Tooltip } from 'antd'
 import React from 'react'
 
-const {Title} = Typography
-const {Footer} = Layout
+const { Title } = Typography
+const { Footer } = Layout
 const footMenuList = [
     {
         title: '社会化互动',
@@ -112,6 +112,18 @@ const footMenuList = [
                 newWindow: false,
                 nofollow: false,
             },
+            {
+                title: '开发预览版',
+                link: 'https://preview.renfei.net',
+                newWindow: true,
+                nofollow: false,
+            },
+            {
+                title: '后台管理',
+                link: '/dashboard',
+                newWindow: true,
+                nofollow: false,
+            },
         ]
     },
 ]
@@ -158,7 +170,7 @@ const footLinks = [
 const MyFooter = (props: any) => {
     return (
         <>
-            <Footer style={{padding: '60px 0 40px 0'}}>
+            <Footer style={{ padding: '60px 0 40px 0' }}>
                 <div className={"renfeid-content"}>
                     <Row>
                         {
@@ -189,7 +201,7 @@ const MyFooter = (props: any) => {
                             ) : ''
                         }
                     </Row>
-                    <div style={{textAlign: 'right', fontSize: '11px', color: '#6c757d!important'}}>
+                    <div style={{ textAlign: 'right', fontSize: '11px', color: '#6c757d!important' }}>
                         <Space>
                             {
                                 footLinks.length > 0 ? (
@@ -208,12 +220,12 @@ const MyFooter = (props: any) => {
                             }
                         </Space>
                     </div>
-                    <Divider style={{margin: '7px 0'}}/>
-                    <div style={{fontSize: '11px', color: '#6c757d!important'}}>
-                        <div style={{float: 'left'}}>
+                    <Divider style={{ margin: '7px 0' }} />
+                    <div style={{ fontSize: '11px', color: '#6c757d!important' }}>
+                        <div style={{ float: 'left' }}>
                             Copyright © {new Date().getFullYear()} RENFEI.NET All rights reserved.
                         </div>
-                        <div style={{float: 'right'}}>
+                        <div style={{ float: 'right' }}>
                         </div>
                     </div>
                 </div>

@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import nookies from 'nookies'
-import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
+import React, { useState, useEffect } from 'react'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Layout from "../../components/layout"
-import PostVo = API.PostVo
-import APIResult = API.APIResult
-import {Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space} from 'antd'
+import { Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space } from 'antd'
 import {
     WechatFilled,
     QqOutlined,
@@ -20,9 +19,13 @@ import * as api from '../../services/api'
 import styles from "../../styles/CMS.module.css"
 import GoogleAdsense from "../../components/GoogleAdsense"
 import Comments from '../../components/Comments'
+import hljs from 'highlight.js'
+import PostVo = API.PostVo
+import APIResult = API.APIResult
 import CommentTree = API.CommentTree
+import 'highlight.js/styles/intellij-light.css'
 
-const {Title, Text} = Typography
+const { Title, Text } = Typography
 
 const postRelevant5 = [
     {
@@ -138,52 +141,61 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     }
 }
 
-const PostPage = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+
+    useEffect(() => {
+        hljs.initHighlighting();
+        let hljsElements = document.getElementsByClassName('hljs')
+        for (let i = 0; i < hljsElements.length; i++) {
+            hljsElements[i].innerHTML = "<ol><li>" + hljsElements[i].innerHTML.replace(/\n/g, "\n</li><li>") + "\n</li></ol>";
+        }
+    }, [])
+
     return (
         <>
             <Head>
-                <title>{data.data.postTitle}</title>
-                <meta name="keyword" content={data.data.postKeyword}/>
-                <meta name="description" content={data.data.postExcerpt}/>
-                <link rel="icon" href="/favicon.ico"/>
+                <title>{`${data.data.postTitle} - 博客文章 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
+                <meta name="keyword" content={data.data.postKeyword} />
+                <meta name="description" content={data.data.postExcerpt} />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main style={{backgroundColor: '#ffffff'}}>
+            <main style={{ backgroundColor: '#ffffff' }}>
                 <section className={"renfeid-content"}>
                     <div className={styles.container}>
                         <Text type="secondary">{data.data.postDate}</Text>
                         <Title level={1} className={styles.title}>{data.data.postTitle}</Title>
                         <Space size={4}>
-                            <Button type="text" shape="circle" icon={<WechatFilled/>}/>
-                            <Button type="text" shape="circle" icon={<QqOutlined/>}/>
-                            <Button type="text" shape="circle" icon={<FacebookFilled/>}/>
-                            <Button type="text" shape="circle" icon={<TwitterCircleFilled/>}/>
-                            <Button type="text" shape="circle" icon={<WeiboCircleFilled/>}/>
-                            <Button type="text" shape="circle" icon={<LinkedinFilled/>}/>
-                            <Button type="text" shape="circle" icon={<LinkOutlined/>}/>
-                            <Button type="text" shape="circle" icon={<EyeFilled/>}>
+                            <Button type="text" shape="circle" icon={<WechatFilled />} />
+                            <Button type="text" shape="circle" icon={<QqOutlined />} />
+                            <Button type="text" shape="circle" icon={<FacebookFilled />} />
+                            <Button type="text" shape="circle" icon={<TwitterCircleFilled />} />
+                            <Button type="text" shape="circle" icon={<WeiboCircleFilled />} />
+                            <Button type="text" shape="circle" icon={<LinkedinFilled />} />
+                            <Button type="text" shape="circle" icon={<LinkOutlined />} />
+                            <Button type="text" shape="circle" icon={<EyeFilled />}>
                                 {data.data.postViews}
                             </Button>
                         </Space>
-                        <Divider/>
+                        <Divider />
                         <Row>
                             <Col xs={24} sm={24} md={16} lg={17}>
                                 <div
                                     className={styles.posts_content}
-                                    dangerouslySetInnerHTML={{__html: data.data.postContent}}></div>
+                                    dangerouslySetInnerHTML={{ __html: data.data.postContent }}></div>
                                 <Space size={4}>
-                                    <Button type="text" shape="circle" icon={<WechatFilled/>}/>
-                                    <Button type="text" shape="circle" icon={<QqOutlined/>}/>
-                                    <Button type="text" shape="circle" icon={<FacebookFilled/>}/>
-                                    <Button type="text" shape="circle" icon={<TwitterCircleFilled/>}/>
-                                    <Button type="text" shape="circle" icon={<WeiboCircleFilled/>}/>
-                                    <Button type="text" shape="circle" icon={<LinkedinFilled/>}/>
-                                    <Button type="text" shape="circle" icon={<LinkOutlined/>}/>
-                                    <Button type="text" shape="circle" icon={<EyeFilled/>}>
+                                    <Button type="text" shape="circle" icon={<WechatFilled />} />
+                                    <Button type="text" shape="circle" icon={<QqOutlined />} />
+                                    <Button type="text" shape="circle" icon={<FacebookFilled />} />
+                                    <Button type="text" shape="circle" icon={<TwitterCircleFilled />} />
+                                    <Button type="text" shape="circle" icon={<WeiboCircleFilled />} />
+                                    <Button type="text" shape="circle" icon={<LinkedinFilled />} />
+                                    <Button type="text" shape="circle" icon={<LinkOutlined />} />
+                                    <Button type="text" shape="circle" icon={<EyeFilled />}>
                                         {data.data.postViews}
                                     </Button>
                                 </Space>
-                                <Divider/>
+                                <Divider />
                                 <div className={styles.posts_content_copyright}>
                                     {
                                         data.data.original ? (
@@ -222,43 +234,43 @@ const PostPage = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>
                                     slot={"641095"}
                                 />
                                 <div className={"renfeid_card " + styles.posts_relevant}>
-                                    <Title level={4} style={{marginBottom: '0'}}>相关推荐</Title>
+                                    <Title level={4} style={{ marginBottom: '0' }}>相关推荐</Title>
                                     <Text type="secondary">猜你还喜欢这些内容，不妨试试阅读一下</Text>
-                                    <Row style={{paddingTop: '10px'}}>
-                                        <Col xs={24} sm={24} md={12} lg={12} style={{padding: '0 5px'}}>
+                                    <Row style={{ paddingTop: '10px' }}>
+                                        <Col xs={24} sm={24} md={12} lg={12} style={{ padding: '0 5px' }}>
                                             {
                                                 postRelevant5.length > 0 ? (
                                                     postRelevant5.map(post => (
                                                         <Link key={"relevant_" + post.id}
-                                                              href={'/posts/' + post.id}>
+                                                            href={'/posts/' + post.id}>
                                                             <a key={"a_" + post.id}>
                                                                 <Title key={"title_" + post.id} level={5}
-                                                                       style={{marginBottom: '0'}}
-                                                                       ellipsis>
+                                                                    style={{ marginBottom: '0' }}
+                                                                    ellipsis>
                                                                     {post.title}
                                                                 </Title>
                                                                 <Divider key={"divider_" + post.id}
-                                                                         style={{margin: '5px 0'}}/>
+                                                                    style={{ margin: '5px 0' }} />
                                                             </a>
                                                         </Link>
                                                     ))
                                                 ) : ''
                                             }
                                         </Col>
-                                        <Col xs={24} sm={24} md={12} lg={12} style={{padding: '0 5px'}}>
+                                        <Col xs={24} sm={24} md={12} lg={12} style={{ padding: '0 5px' }}>
                                             {
                                                 postRelevant10.length > 0 ? (
                                                     postRelevant10.map(post => (
                                                         <Link key={"relevant_" + post.id}
-                                                              href={'/posts/' + post.id}>
+                                                            href={'/posts/' + post.id}>
                                                             <a key={"a_" + post.id}>
                                                                 <Title key={"title_" + post.id} level={5}
-                                                                       style={{marginBottom: '0'}}
-                                                                       ellipsis>
+                                                                    style={{ marginBottom: '0' }}
+                                                                    ellipsis>
                                                                     {post.title}
                                                                 </Title>
                                                                 <Divider key={"divider_" + post.id}
-                                                                         style={{margin: '5px 0'}}/>
+                                                                    style={{ margin: '5px 0' }} />
                                                             </a>
                                                         </Link>
                                                     ))
@@ -267,7 +279,7 @@ const PostPage = ({data}: InferGetServerSidePropsType<typeof getServerSideProps>
                                         </Col>
                                     </Row>
                                 </div>
-                                <Comments data={CommentList}/>
+                                <Comments data={CommentList} />
                             </Col>
                             <Col xs={24} sm={24} md={8} lg={7}>123</Col>
                         </Row>

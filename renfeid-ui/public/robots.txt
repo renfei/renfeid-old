@@ -1,0 +1,10 @@
+#
+# robots.txt for RENFEI.NET
+#
+
+User-agent: *
+
+Disallow: /_/
+Disallow: /dashboard/
+
+Sitemap: https://www.renfei.net/sitemap.xml

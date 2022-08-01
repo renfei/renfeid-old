@@ -3,93 +3,21 @@ import Image from 'next/image'
 import Link from 'next/link'
 import nookies from 'nookies'
 import Layout from '../components/layout'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space } from 'antd'
 import moment from 'moment'
 import { QRCodeCanvas } from 'qrcode.react'
 import { ArrowRightOutlined, WechatOutlined, GithubOutlined } from '@ant-design/icons'
 import styles from '../styles/Home.module.css'
 import GoogleAdsense from '../components/GoogleAdsense'
+import PostVo = API.PostVo
+import APIResult = API.APIResult
+import ListData = API.ListData
+import * as api from '../services/api'
+import { convertToHeaders } from '../utils/request'
 
 const { Title, Paragraph, Text } = Typography
 const { Meta } = Card
-
-// 文章 1到2
-const postsDataTop2 = [
-    {
-        id: 123,
-        postTitle: '关于我在极狐GitLab造机器人这件事儿我觉得很酷',
-        postExcerpt: '我在参与极狐GitLab创作营 JIHULAB 101活动的时候，发现极狐GitLab官方启用了一个机器人，会在issue哪里进行服务，我就突发奇想，很多地方都有自动回复的客服机器人，那在极狐GitLab能不能造个机器人玩？',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/2af9436a41c945e58b98d5ac09835179.webp',
-    },
-    {
-        id: 124,
-        postTitle: '如何参与极狐GitLab开源项目成为贡献者',
-        postExcerpt: '嗨，小伙伴，你是否也希望参与到极狐GitLab开源项目的建设，成为贡献者？但作为新手似乎无从下手？其实，每个人都可以参与到极狐GitLab开源项目中成为贡献者，无论你是否是技术人员。',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/9b69f9f788e74d30a845a3f85f0a2797.webp',
-    },
-]
-
-// 文章 3到5
-const postsData3To5 = [
-    {
-        id: 125,
-        postTitle: '关于 Cloudflare R2 Storage 的使用体验测评和我的观点',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg',
-    },
-    {
-        id: 126,
-        postTitle: '西部数据（WD40NMZW） 4TB Elements（2060-800041-003）移动硬盘拆解记录',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg',
-    },
-    {
-        id: 127,
-        postTitle: '获取公网IP服务「ip.renfei.net」升级，支持根据请求头 Accept 响应不同格式数据',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/108b72905f1a4cf59b9bf3431c78e480.jpg',
-    },
-]
-
-// 文章 6到11
-const postsData6To11 = [
-    {
-        id: 128,
-        postTitle: '关于 Cloudflare R2 Storage 的使用体验测评和我的观点',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg',
-    },
-    {
-        id: 129,
-        postTitle: '西部数据（WD40NMZW） 4TB Elements（2060-800041-003）移动硬盘拆解记录',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg',
-    },
-    {
-        id: 130,
-        postTitle: '获取公网IP服务「ip.renfei.net」升级，支持根据请求头 Accept 响应不同格式数据',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/108b72905f1a4cf59b9bf3431c78e480.jpg',
-    },
-    {
-        id: 131,
-        postTitle: '西部数据（WD40NMZW） 4TB Elements（2060-800041-003）移动硬盘拆解记录',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/45723ed1db3b4a7196db995340a1a9ec.jpg',
-    },
-    {
-        id: 132,
-        postTitle: '关于 Cloudflare R2 Storage 的使用体验测评和我的观点',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/35ac66d2e9214facbbcc02643692fffb.jpg',
-    },
-    {
-        id: 133,
-        postTitle: '获取公网IP服务「ip.renfei.net」升级，支持根据请求头 Accept 响应不同格式数据',
-        postExcerpt: '',
-        featuredImage: 'https://cdn.renfei.net/upload/2022/108b72905f1a4cf59b9bf3431c78e480.jpg',
-    },
-]
 
 // 微博数据
 const weiboData = [
@@ -132,11 +60,48 @@ const friendlyLinks = [
     },
 ]
 
-const Home = () => {
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
+    const accessToken = nookies.get(context)['accessToken']
+    const result: APIResult<ListData<PostVo>> = await api.getPosts(convertToHeaders(context.req.headers), undefined, 1, 11, accessToken)
+
+    let postsDataTop2: PostVo[] = []
+    let postsData3To5: PostVo[] = []
+    let postsData6To11: PostVo[] = []
+    if (result.data?.data) {
+        const posts: PostVo[] = result.data?.data
+        if (posts && posts.length > 0) {
+            for (let i = 0; i < 2 && i < posts.length; i++) {
+                postsDataTop2.push(posts[i])
+            }
+        }
+        if (posts && posts.length > 3) {
+            for (let i = 2; i < 5 && i < posts.length; i++) {
+                postsData3To5.push(posts[i])
+            }
+        }
+        if (posts && posts.length > 6) {
+            for (let i = 5; i < 11 && i < posts.length; i++) {
+                postsData6To11.push(posts[i])
+            }
+        }
+    }
+
+    return {
+        props: {
+            data: {
+                postsDataTop2: postsDataTop2,
+                postsData3To5: postsData3To5,
+                postsData6To11: postsData6To11,
+            }
+        }
+    }
+}
+
+const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     return (
         <div className={styles.container}>
             <Head>
-                <title>首页 - {process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}</title>
+                <title>{`首页 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
                 <meta name="description" content={`${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}是任霏的个人网站与博客，一个程序员自己写的网站，不仅仅是文章内容，还包括网站程序的代码。 对新鲜事物都十分感兴趣，利用这个站点向大家分享自己的所见所得，同时这个站点也是我的实验室。`} />
                 <meta name="keywords" content="任霏,博客,任霏博客,RenFei,NeilRen,技术,blog" />
                 <meta name="author" content="任霏,i@renfei.net" />
@@ -145,7 +110,7 @@ const Home = () => {
             </Head>
 
             {
-                postsDataTop2.length > 0 ? (
+                data.postsDataTop2.length > 0 ? (
                     <div className={styles.banner_wrapper}>
                         <div className={styles.banner}>
                             <Row>
@@ -154,21 +119,21 @@ const Home = () => {
                                         <Image
                                             className={styles.banner_img}
                                             layout='fill'
-                                            src={postsDataTop2[0].featuredImage}
-                                            alt={postsDataTop2[0].postTitle} />
+                                            src={data.postsDataTop2[0].featuredImage}
+                                            alt={data.postsDataTop2[0].postTitle} />
                                     </div>
                                 </Col>
                                 <Col span={9} className={styles.banner_col}>
                                     <div className={styles.banner_content_wrapper}>
-                                        <Link href={`/posts/${postsDataTop2[0].id}`} style={{ display: 'block' }}>
+                                        <Link href={`/posts/${data.postsDataTop2[0].id}`} style={{ display: 'block' }}>
                                             <a>
                                                 <Title
                                                     level={2}
                                                     className={styles.banner_content_h2}>
-                                                    {postsDataTop2[0].postTitle}
+                                                    {data.postsDataTop2[0].postTitle}
                                                 </Title>
                                                 <p className={styles.banner_content_p}>
-                                                    {postsDataTop2[0].postExcerpt}
+                                                    {data.postsDataTop2[0].postExcerpt}
                                                 </p>
                                                 <span
                                                     className={styles.banner_content_icon}><ArrowRightOutlined /></span>
@@ -188,8 +153,8 @@ const Home = () => {
                         <Row>
                             <Col span={12} className={styles.posts_top5_left}>
                                 {
-                                    postsDataTop2.length > 1 ? (
-                                        <Link href={`/posts/${postsDataTop2[1].id}`} style={{ display: 'block' }}>
+                                    data.postsDataTop2.length > 1 ? (
+                                        <Link href={`/posts/${data.postsDataTop2[1].id}`} style={{ display: 'block' }}>
                                             <a>
                                                 <Card
                                                     bordered={false}
@@ -198,8 +163,8 @@ const Home = () => {
                                                             style={{ borderRadius: '16px 16px 16px 16px' }}
                                                             width={1280}
                                                             height={640}
-                                                            alt={postsDataTop2[1].postTitle}
-                                                            src={postsDataTop2[1].featuredImage} />
+                                                            alt={data.postsDataTop2[1].postTitle}
+                                                            src={data.postsDataTop2[1].featuredImage} />
                                                     }
                                                 >
                                                     <Paragraph
@@ -208,10 +173,10 @@ const Home = () => {
                                                             expandable: false,
                                                         }}
                                                         className={styles.banner_content_h3}>
-                                                        {postsDataTop2[1].postTitle}
+                                                        {data.postsDataTop2[1].postTitle}
                                                     </Paragraph>
                                                     <Meta
-                                                        title={postsDataTop2[1].postExcerpt} />
+                                                        title={data.postsDataTop2[1].postExcerpt} />
                                                 </Card>
                                             </a>
                                         </Link>
@@ -221,8 +186,8 @@ const Home = () => {
                             <Col span={12} className={styles.posts_top5_right}>
                                 <Row>
                                     {
-                                        postsData3To5.length > 0 ? (
-                                            postsData3To5.map(post => (
+                                        data.postsData3To5.length > 0 ? (
+                                            data.postsData3To5.map((post: PostVo) => (
                                                 <Col key={post.id} span={24}>
                                                     <Link href={`/posts/${post.id}`}>
                                                         <a>
@@ -262,11 +227,11 @@ const Home = () => {
                     <Divider>更多内容</Divider>
                     <Row>
                         {
-                            postsData6To11.length > 0 ? (
-                                postsData6To11.map(post => (
+                            data.postsData6To11.length > 0 ? (
+                                data.postsData6To11.map((post: PostVo) => (
                                     <Col key={post.id} md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
                                         <div className={styles.posts_more}>
-                                            <Link href={"/"}>
+                                            <Link href={`/posts/${post.id}`}>
                                                 <a>
                                                     <Row>
                                                         <Col span={15}>
@@ -351,7 +316,8 @@ const Home = () => {
                                         <ul style={{ paddingLeft: '15px' }}>
                                             <li>开源仓库：<Link href="https://github.com/renfei/renfeid"><a target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/renfeid</a></Link></li>
                                             <li>反馈讨论：<Link href="https://github.com/renfei/feedback/discussions"><a target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/feedback/discussions</a></Link></li>
-                                            <li>更多内容：参见《<Link href="/page/about"><a target={'_blank'} rel={'nofollow noopener'}>关于页面</a></Link>》</li>
+                                            <li>开发预览：<Link href="https://preview.renfei.net/"><a target={'_blank'} rel={'nofollow noopener'}>preview.renfei.net</a></Link></li>
+                                            <li>更多内容：参见《<Link href="/page/about"><a target={'_blank'}>关于页面</a></Link>》</li>
                                         </ul>
                                     </div>
                                 </Col>

@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:preview": "NEXT_PUBLIC_RENFEID_ACTIVE=preview next dev",
+    "dev:preview": "env-cmd -f .env.preview next dev",
     "build": "next build",
-    "build:preview": "NEXT_PUBLIC_RENFEID_ACTIVE=preview next build",
+    "build:preview": "env-cmd -f .env.preview next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -16,8 +16,10 @@
     "antd": "^4.22.1",
     "cookie": "^0.5.0",
     "crypto-js": "^4.1.1",
+    "env-cmd": "^10.1.0",
     "form-data": "^4.0.0",
     "formidable": "^2.0.1",
+    "highlight.js": "^11.6.0",
     "next": "12.2.3",
     "node-rsa": "^1.1.1",
     "nookies": "^2.5.2",

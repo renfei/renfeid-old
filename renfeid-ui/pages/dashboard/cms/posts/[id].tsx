@@ -544,25 +544,17 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
                                                     images_upload_url: '/api/core/system/upload',
                                                     fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
                                                     plugins: [
-                                                        'preview', 'importcss',
-                                                        'searchreplace', 'autolink', 'autosave', 'save', 'directionality',
-                                                        'visualblocks', 'visualchars', 'fullscreen', 'image',
-                                                        'link', 'media', 'template', 'code', 'codesample', 'table',
-                                                        'charmap', 'pagebreak', 'nonbreaking', 'anchor',
-                                                        'insertdatetime', 'advlist', 'lists', 'wordcount',
-                                                        'help', 'charmap', 'quickbars', 'emoticons', 'autoresize'
+                                                        'preview', 'importcss', 'searchreplace', 'autolink', 'autosave',
+                                                        'save', 'directionality', 'code', 'visualblocks', 'visualchars',
+                                                        'fullscreen', 'image', 'link', 'media', 'template', 'codesample',
+                                                        'table', 'charmap', 'pagebreak', 'nonbreaking', 'anchor', 'insertdatetime',
+                                                        'advlist', 'lists', 'wordcount', 'help', 'charmap', 'quickbars', 'emoticons'
                                                     ],
                                                     toolbar: 'undo redo | bold italic underline strikethrough | '
-                                                        + 'fontfamily fontsize blocks | alignleft aligncenter '
-                                                        + 'alignright alignjustify | outdent indent |  numlist '
-                                                        + 'bullist | forecolor backcolor removeformat | pagebreak'
-                                                        + ' | charmap emoticons | '
-                                                        + 'image media link anchor codesample | ltr rtl | '
-                                                        + 'insertdatetime nonbreaking searchreplace | '
-                                                        + 'table tabledelete | tableprops tablerowprops tablecellprops | '
-                                                        + 'tableinsertrowbefore tableinsertrowafter tabledeleterow | '
-                                                        + 'tableinsertcolbefore tableinsertcolafter tabledeletecol | '
-                                                        + 'visualblocks visualchars wordcount | fullscreen  preview save print code',
+                                                        + 'fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | '
+                                                        + 'outdent indent |  numlist bullist | forecolor backcolor removeformat | '
+                                                        + 'pagebreak | charmap emoticons | fullscreen  preview save print | '
+                                                        + 'insertfile image media template link anchor codesample | ltr rtl',
                                                 }}
                                             />
                                         </Col>

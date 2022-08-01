@@ -1,7 +1,30 @@
 import Head from 'next/head'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import DashboardLayout from "../../components/layout/dashboard"
+import CheckSignInStatus from '../../utils/CheckSignInStatus'
+import UserInfo = API.UserInfo
 
-const Dashboard = () => {
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
+    const userInfo: UserInfo | undefined = await CheckSignInStatus(context)
+    if (userInfo) {
+        return {
+            props: {
+                data: {
+                    userInfo: userInfo
+                }
+            }
+        }
+    } else {
+        return {
+            redirect: {
+                destination: '/auth/signIn?redirect=' + context.req.url,
+                permanent: false,
+            },
+        }
+    }
+}
+
+const Dashboard = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     return (
         <>
             <div>

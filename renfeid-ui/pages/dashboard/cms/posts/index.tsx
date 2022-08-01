@@ -15,18 +15,20 @@ import {
     QuestionCircleOutlined
 } from '@ant-design/icons'
 import type { ColumnsType, TablePaginationConfig } from 'antd/lib/table'
-import DashboardLayout from "../../../components/layout/dashboard"
-import DashPageHeader from "../../../components/layout/dashboard/DashPageHeader"
-import * as api from "../../../services/api/dashboard/api"
-import { convertToHeaders } from "../../../utils/request"
+import DashboardLayout from "../../../../components/layout/dashboard"
+import DashPageHeader from "../../../../components/layout/dashboard/DashPageHeader"
+import * as api from "../../../../services/api/dashboard/api"
+import { convertToHeaders } from "../../../../utils/request"
 import AntdSelectOption = API.AntdSelectOption
 import APIResult = API.APIResult
 import ListData = API.ListData
 import PostCategory = API.PostCategory
-import { getPostStatusList, switchPostStatus } from "../../../utils/posts"
+import { getPostStatusList, switchPostStatus } from "../../../../utils/posts"
 import Params = API.TableListParams
-import { queryPostList } from "../../../services/api/dashboard/api"
+import { queryPostList } from "../../../../services/api/dashboard/api"
 import DashPost = API.DashPost
+import UserInfo = API.UserInfo
+import CheckSignInStatus from '../../../../utils/CheckSignInStatus'
 
 const { Title } = Typography
 
@@ -115,8 +117,8 @@ const routes = [
 ]
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
-    const accessToken = nookies.get(context)['accessToken']
-    if (!accessToken) {
+    const userInfo: UserInfo | undefined = await CheckSignInStatus(context)
+    if (!userInfo) {
         return {
             redirect: {
                 destination: '/auth/signIn?redirect=' + context.req.url,
@@ -124,7 +126,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
             },
         }
     }
-
+    const accessToken = nookies.get(context)['accessToken']
     let postCatOptions: AntdSelectOption[] = []
     const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryListUseInner(accessToken, convertToHeaders(context.req.headers),
         undefined, undefined, undefined, 1, 2147483647)
@@ -149,7 +151,8 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     return {
         props: {
             data: {
-                postCatOptions: postCatOptions
+                userInfo: userInfo,
+                postCatOptions: postCatOptions,
             }
         }
     }
