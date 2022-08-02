@@ -30,9 +30,11 @@ import DashPost = API.DashPost
 import AntdSelectOption = API.AntdSelectOption
 import PostCategory = API.PostCategory
 import ListData = API.ListData
+import Tag = API.Tag
 import { queryPostArchivalListById, updatePost } from "../../../../services/api/dashboard/api"
 import { convertToHeaders } from "../../../../utils/request"
 import { switchPostStatus } from "../../../../utils/posts"
+import { OptionProps } from 'antd/lib/select'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -99,6 +101,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         modifiedUsername: '',
     }
     let postArchivalList: DashPost[] = []
+    let postTagList: string[] = []
     if (context.params.id && !isNaN(parseInt(context.params.id.toString()))) {
         const result: APIResult<DashPost> = await api.queryPostById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString())
         if (result.code == 401) {
@@ -111,6 +114,11 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         }
         if (result.code == 200 && result.data) {
             post = result.data
+            if (post.tags) {
+                for (let i = 0; i < post.tags?.length; i++) {
+                    postTagList.push(post.tags[i].id)
+                }
+            }
             const postArchivalListResult: APIResult<DashPost[]> = await api.queryPostArchivalListById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString())
             if (postArchivalListResult.code == 200 && postArchivalListResult.data) {
                 postArchivalList = postArchivalListResult.data
@@ -141,12 +149,25 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
             postCatOptions.push(option)
         }
     }
+    let postAllTagOptions: AntdSelectOption[] = []
+    const queryAllTagResult: APIResult<Tag[]> = await api.queryAllTag(accessToken, convertToHeaders(context.req.headers))
+    if (queryAllTagResult.code == 200 && queryAllTagResult.data) {
+        for (let i = 0; i < queryAllTagResult.data.length; i++) {
+            let option: AntdSelectOption = {
+                label: queryAllTagResult.data[i].zhName,
+                value: queryAllTagResult.data[i].id.toString(),
+            }
+            postAllTagOptions.push(option)
+        }
+    }
     return {
         props: {
             data: {
                 post: post,
+                postTagList: postTagList,
                 postCatOptions: postCatOptions,
-                postArchivalList: postArchivalList
+                postArchivalList: postArchivalList,
+                postAllTagOptions: postAllTagOptions
             }
         }
     }
@@ -199,71 +220,13 @@ const checkPostContent = (values: any) => {
     return true
 }
 
-const submitForm = (values: any) => {
-    if (!checkPostContent(values)) {
-        return false
-    }
-    let dashPost: DashPost = {
-        id: values.id,
-        categoryId: values.categoryId,
-        postAuthor: '0',
-        postDate: values.postDate.format('yyyy-MM-DD HH:mm:ss'),
-        postStatus: 'PUBLISH',
-        postViews: 0,
-        commentStatus: values.commentStatus,
-        postPassword: values.postPassword,
-        postModified: '',
-        postModifiedUser: '0',
-        postParent: 0,
-        versionNumber: 1,
-        thumbsUp: 0,
-        thumbsDown: 0,
-        avgViews: 0,
-        avgComment: 0,
-        pageRank: 0,
-        secretLevel: values.secretLevel,
-        isOriginal: values.isOriginal,
-        featuredImage: values.featuredImage,
-        postTitle: values.postTitle,
-        postKeyword: '',
-        postExcerpt: values.postExcerpt,
-        postContent: values.postContent,
-        sourceName: values.sourceName,
-        sourceUrl: values.sourceUrl,
-        authorUsername: '',
-        modifiedUsername: '',
-    }
-    if (dashPost.id == '-1') {
-        // 创建文章
-        api.createPost(dashPost).then(res => {
-            if (res.code == 200) {
-                if (typeof window !== 'undefined') {
-                    window.location.replace('/dashboard/cms/posts')
-                }
-            } else {
-                message.error(res.message)
-            }
-        })
-    } else if (parseInt(dashPost.id) > 0) {
-        // 编辑文章
-        api.updatePost(dashPost).then(res => {
-            if (res.code == 200) {
-                if (typeof window !== 'undefined') {
-                    window.location.replace('/dashboard/cms/posts')
-                }
-            } else {
-                message.error(res.message)
-            }
-        })
-    } else {
-        message.error('意外的文章状态，请联系软件厂商')
-        return false
-    }
-}
-
 const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [form] = Form.useForm()
     const editorRef = useRef<any>(null)
+    const [postTagList, setPostTagList] = useState<string[]>(data.postTagList)
+    const [postAllTagOptions, setPostAllTagOptions] = useState<AntdSelectOption[]>(data.postAllTagOptions)
+    const [postKeywordSelect, setPostKeywordSelect] = useState<string[]>([])
+    const [postKeywordSelectOptions, setPostKeywordSelectOptions] = useState<OptionProps[]>([])
     const [featuredImageVisible, setFeaturedImageVisible] = useState<boolean>(false)
     const [featuredImage, setFeaturedImage] = useState<string>()
 
@@ -303,6 +266,87 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
         form.setFieldsValue({ postContent: editorRef.current.getContent() })
         form.setFieldsValue({ featuredImage: featuredImage })
         return true
+    }
+
+    const submitForm = (values: any) => {
+        if (!checkPostContent(values)) {
+            return false
+        }
+        let dashPost: DashPost = {
+            id: values.id,
+            categoryId: values.categoryId,
+            postAuthor: '0',
+            postDate: values.postDate.format('yyyy-MM-DD HH:mm:ss'),
+            postStatus: 'PUBLISH',
+            postViews: 0,
+            commentStatus: values.commentStatus,
+            postPassword: values.postPassword,
+            postModified: '',
+            postModifiedUser: '0',
+            postParent: 0,
+            versionNumber: 1,
+            thumbsUp: 0,
+            thumbsDown: 0,
+            avgViews: 0,
+            avgComment: 0,
+            pageRank: 0,
+            secretLevel: values.secretLevel,
+            isOriginal: values.isOriginal,
+            featuredImage: values.featuredImage,
+            postTitle: values.postTitle,
+            postKeyword: '',
+            postExcerpt: values.postExcerpt,
+            postContent: values.postContent,
+            sourceName: values.sourceName,
+            sourceUrl: values.sourceUrl,
+            authorUsername: '',
+            modifiedUsername: '',
+        }
+        if (postKeywordSelectOptions) {
+            let tags: Tag[] = []
+            for (let i = 0; i < postKeywordSelectOptions.length; i++) {
+                if (postKeywordSelectOptions[i].value) {
+                    tags.push({
+                        id: postKeywordSelectOptions[i].value,
+                        zhName: postKeywordSelectOptions[i].label,
+                        enName: postKeywordSelectOptions[i].label,
+                    })
+                } else {
+                    tags.push({
+                        id: '-1',
+                        enName: postKeywordSelect[i],
+                        zhName: postKeywordSelect[i],
+                    })
+                }
+            }
+            dashPost.tags = tags
+        }
+        if (dashPost.id == '-1' || dashPost.id == undefined) {
+            // 创建文章
+            api.createPost(dashPost).then(res => {
+                if (res.code == 200) {
+                    if (typeof window !== 'undefined') {
+                        window.location.replace('/dashboard/cms/posts')
+                    }
+                } else {
+                    message.error(res.message)
+                }
+            })
+        } else if (parseInt(dashPost.id) > 0) {
+            // 编辑文章
+            api.updatePost(dashPost).then(res => {
+                if (res.code == 200) {
+                    if (typeof window !== 'undefined') {
+                        window.location.replace('/dashboard/cms/posts')
+                    }
+                } else {
+                    message.error(res.message)
+                }
+            })
+        } else {
+            message.error(`意外的文章状态${dashPost.id}，请联系软件厂商`)
+            return false
+        }
     }
 
     const uploadOnChange = (change: any) => {
@@ -450,9 +494,18 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
                                         <Col xs={24} sm={24} md={24} lg={14} xl={16} xxl={18}>
                                             <Form.Item label="关键词组" name="postKeyword">
                                                 <Input.Group compact>
-                                                    <Select mode="tags" style={{ width: 'calc(100% - 129px)' }}>
+                                                    <Select
+                                                        mode="tags"
+                                                        defaultValue={postTagList}
+                                                        options={postAllTagOptions}
+                                                        style={{ width: 'calc(100% - 129px)' }}
+                                                        onChange={(value: string[], option: any) => {
+                                                            setPostKeywordSelect(value)
+                                                            setPostKeywordSelectOptions(option)
+                                                        }}
+                                                    >
                                                     </Select>
-                                                    <Button>从正文自动提取</Button>
+                                                    <Button disabled>从正文自动提取</Button>
                                                 </Input.Group>
                                             </Form.Item>
                                         </Col>

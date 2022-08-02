@@ -18,8 +18,10 @@ package net.renfei.cms.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import net.renfei.cms.api.PostService;
+import net.renfei.cms.api.PostTagService;
 import net.renfei.cms.api.constant.enums.PostStatusEnum;
 import net.renfei.cms.api.entity.Post;
+import net.renfei.cms.api.entity.Tag;
 import net.renfei.cms.repositories.CmsCategoryMapper;
 import net.renfei.cms.repositories.CmsPostsArchivalMapper;
 import net.renfei.cms.repositories.CmsPostsMapper;
@@ -57,6 +59,7 @@ public class PostServiceImpl implements PostService {
     private final SystemConfig systemConfig;
     private final SystemService systemService;
     private final CmsPostsMapper cmsPostsMapper;
+    private final PostTagService postTagService;
     private final SnowflakeService snowflakeService;
     private final CmsCategoryMapper cmsCategoryMapper;
     private final CmsPostsArchivalMapper cmsPostsArchivalMapper;
@@ -65,6 +68,7 @@ public class PostServiceImpl implements PostService {
                            SystemConfig systemConfig,
                            SystemService systemService,
                            CmsPostsMapper cmsPostsMapper,
+                           PostTagService postTagService,
                            SnowflakeService snowflakeService,
                            CmsCategoryMapper cmsCategoryMapper,
                            CmsPostsArchivalMapper cmsPostsArchivalMapper) {
@@ -72,6 +76,7 @@ public class PostServiceImpl implements PostService {
         this.systemConfig = systemConfig;
         this.systemService = systemService;
         this.cmsPostsMapper = cmsPostsMapper;
+        this.postTagService = postTagService;
         this.snowflakeService = snowflakeService;
         this.cmsCategoryMapper = cmsCategoryMapper;
         this.cmsPostsArchivalMapper = cmsPostsArchivalMapper;
@@ -260,6 +265,17 @@ public class PostServiceImpl implements PostService {
         post.setThumbsDown(0L);
         post.setId(snowflakeService.getId("").getId() + "");
         cmsPostsMapper.insertSelective(convert(post));
+        // 插入标签关系表
+        if (post.getTags() != null && !post.getTags().isEmpty()) {
+            for (Tag tag : post.getTags()
+            ) {
+                if ("-1".equals(tag.getId())) {
+                    tag.setId(null);
+                    tag = postTagService.createTag(tag);
+                }
+                postTagService.addPostTagByPostId(Long.parseLong(post.getId()), Long.parseLong(tag.getId()));
+            }
+        }
         // 插入一份归档记录
         cmsPostsArchivalMapper.insertSelective(convertArchival(post));
         return new APIResult<>(post);
@@ -306,6 +322,18 @@ public class PostServiceImpl implements PostService {
         oldPost.setPostModifiedUser(Long.parseLong(currentUserDetail.getId()));
         oldPost.setVersionNumber(oldPost.getVersionNumber() + 1);
         cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(oldPost));
+        postTagService.cleanPostTagByPostId(Long.parseLong(oldPost.getId()));
+        // 插入标签关系表
+        if (post.getTags() != null && !post.getTags().isEmpty()) {
+            for (Tag tag : post.getTags()
+            ) {
+                if ("-1".equals(tag.getId())) {
+                    tag.setId(null);
+                    tag = postTagService.createTag(tag);
+                }
+                postTagService.addPostTagByPostId(Long.parseLong(oldPost.getId()), Long.parseLong(tag.getId()));
+            }
+        }
         oldPost.setPostParent(Long.parseLong(oldPost.getId()));
         oldPost.setId(snowflakeService.getId("").getId() + "");
         cmsPostsArchivalMapper.insertSelective(convertArchival(oldPost));
@@ -426,6 +454,7 @@ public class PostServiceImpl implements PostService {
         post.setSourceUrl(cmsPosts.getSourceUrl());
         post.setAuthorUsername(cmsPosts.getPostAuthorUsername());
         post.setModifiedUsername(cmsPosts.getPostModifiedUsername());
+        post.setTags(postTagService.queryTagListByPostId(cmsPosts.getId()));
         return post;
     }
 

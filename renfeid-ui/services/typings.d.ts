@@ -78,6 +78,7 @@ declare namespace API {
         sourceName: string,
         sourceUrl: string,
         original: true,
+        tags?: Tag[],
     }
 
     // 后台内容管理对象
@@ -110,6 +111,7 @@ declare namespace API {
         sourceUrl: string,
         authorUsername: string,
         modifiedUsername: string,
+        tags?: Tag[],
     }
 
     interface PostCategory {
@@ -248,5 +250,11 @@ declare namespace API {
         menuCss?: string,
         extendJson?: string,
         child?: MenuTree[],
+    }
+
+    interface Tag {
+        id: string,
+        enName: string,
+        zhName: string,
     }
 }

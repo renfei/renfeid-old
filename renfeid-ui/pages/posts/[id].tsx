@@ -24,6 +24,7 @@ import PostVo = API.PostVo
 import APIResult = API.APIResult
 import CommentTree = API.CommentTree
 import 'highlight.js/styles/intellij-light.css'
+import { convertToHeaders } from '../../utils/request'
 
 const { Title, Text } = Typography
 
@@ -128,7 +129,7 @@ const CommentList: CommentTree[] = [
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
     const postPassword = context.req.query?.postPassword
-    let data: APIResult<PostVo> = await api.getPostsById(context.query.id, context.req.headers, postPassword, accessToken)
+    let data: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers), postPassword, accessToken)
     if (data.code == 404) {
         return {
             notFound: true,

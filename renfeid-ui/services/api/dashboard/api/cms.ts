@@ -183,3 +183,8 @@ export const deletePostCategory = async (id: string): Promise<APIResult<any>> =>
         return Promise.reject(error)
     })
 }
+
+export const queryAllTag = async (token: string, headers: Headers) => {
+    const url = `/-/api/cms/tag`
+    return Fetch.get(url, headers, token, true)
+}

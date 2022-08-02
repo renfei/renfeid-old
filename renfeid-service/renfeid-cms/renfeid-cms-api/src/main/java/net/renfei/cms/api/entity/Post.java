@@ -21,6 +21,7 @@ import net.renfei.common.api.constant.enums.SecretLevelEnum;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 文章内容对象
@@ -86,6 +87,8 @@ public class Post implements Serializable {
     private String authorUsername;
     @Schema(description = "修改者用户名")
     private String modifiedUsername;
+
+    private List<Tag> tags;
 
     public String getId() {
         return id;
@@ -309,5 +312,13 @@ public class Post implements Serializable {
 
     public void setModifiedUsername(String modifiedUsername) {
         this.modifiedUsername = modifiedUsername;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }
