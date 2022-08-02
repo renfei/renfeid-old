@@ -1,9 +1,9 @@
 import 'antd/dist/antd.css'
 import '../styles/globals.css'
-import React, {ReactNode, useEffect, useState} from 'react'
-import {NextPage} from "next"
+import React, { ReactNode, useEffect, useState } from 'react'
+import { NextPage } from "next"
 import Head from 'next/head'
-import type {AppProps} from 'next/app'
+import type { AppProps } from 'next/app'
 
 type Page<P = {}> = NextPage<P> & {
     getLayout?: (page: ReactNode) => ReactNode
@@ -13,7 +13,28 @@ type Props = AppProps & {
     Component: Page
 }
 
-const App = ({Component, pageProps}: Props) => {
+const getAnalyticsTag = () => {
+    return {
+        __html: `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments)}
+        gtag('js', new Date());
+        gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+          page_path: window.location.pathname,
+        });
+
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?${process.env.NEXT_PUBLIC_BAIDU_TONGJI}";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        `,
+    }
+}
+
+const App = ({ Component, pageProps }: Props) => {
     const getLayout = Component.getLayout ?? ((page: ReactNode) => page)
     const [consoleLog, setConsoleLog] = useState<number>(0)
     useEffect(() => {
@@ -32,6 +53,7 @@ const App = ({Component, pageProps}: Props) => {
                     name="viewport"
                     content="width=device-width, initial-scale=1, shrink-to-fit=no"
                 />
+                <script dangerouslySetInnerHTML={getAnalyticsTag()} />
             </Head>
             <Component {...pageProps} />
         </>

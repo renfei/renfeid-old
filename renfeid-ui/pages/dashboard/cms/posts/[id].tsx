@@ -269,6 +269,10 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
     }
 
     const submitForm = (values: any) => {
+        if (process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview') {
+            message.error("预览模式，仅支持查看，不支持编辑。")
+            return false
+        }
         if (!checkPostContent(values)) {
             return false
         }

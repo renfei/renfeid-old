@@ -166,6 +166,10 @@ a {
     border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.ant-comment-nested {
+    margin-left: 10px;
+}
+
 @media only screen and (max-width: 833px) {
     .nav-menu-mobile {
         display: flex;

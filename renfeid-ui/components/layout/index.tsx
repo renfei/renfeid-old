@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import Navbar from './navbar'
 import SectionWrapper from "./section-wrapper"
 import Footer from './footer'
-import Script from 'next/script'
 import UserInfo = API.UserInfo
 
 const { Content } = Layout
@@ -22,9 +21,9 @@ const getGreetings = () => {
     } else if (h < 12) {
         return '诶嘿嘿，是时候午休咯！'
     } else if (h < 18) {
-        return '进入傍晚了，不想去散散步吗？'
+        return '下午好，又是奋斗的一天。'
     } else if (h < 19) {
-        return '我大概在吃晚饭了，你呢？'
+        return '进入傍晚了，不想去散散步吗？'
     } else if (h < 21) {
         return '又到晚上黄金上网时间了，你还等什么？'
     } else if (h < 23) {
@@ -69,27 +68,6 @@ const MyLayout = ({ children }: any) => {
                 <Footer />
             </Layout>
             <BackTop />
-            <Script id="google-analytics" strategy="lazyOnload">
-                {`
-                    window.dataLayer = window.dataLayer || []
-                    function gtag(){dataLayer.push(arguments)}
-                    gtag('js', new Date())
-                    gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
-                      page_path: window.location.pathname,
-                    })
-                `}
-            </Script>
-            <Script id="baidu-tongji" strategy="lazyOnload">
-                {`
-                    var _hmt = _hmt || []
-                    (function() {
-                      var hm = document.createElement("script")
-                      hm.src = "https://hm.baidu.com/hm.js?${process.env.NEXT_PUBLIC_BAIDU_TONGJI}"
-                      var s = document.getElementsByTagName("script")[0] 
-                      s.parentNode.insertBefore(hm, s)
-                    })()
-                `}
-            </Script>
         </>
     )
 }

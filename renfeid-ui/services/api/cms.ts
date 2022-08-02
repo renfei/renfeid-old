@@ -27,7 +27,7 @@ export const getPosts = async (headers: Headers, categoryId?: string, page?: num
     if (process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview') {
         // 预览模式
         let postVos: PostVo[] = []
-        for (let i = 0; i < (rows || 10); i++) {
+        for (let i = 1; i < (rows || 11); i++) {
             postVos.push({
                 id: i.toString(),
                 categoryId: '1',
