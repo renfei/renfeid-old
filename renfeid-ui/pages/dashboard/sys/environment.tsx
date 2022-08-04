@@ -70,7 +70,7 @@ const DashboardSysEnvironment = ({ data }: InferGetServerSidePropsType<typeof ge
 
   useEffect(() => {
     setBrowserName(getBrowser())
-  })
+  }, [browserName])
 
   const getBrowser = () => {
     let userAgent = window.navigator.userAgent;
