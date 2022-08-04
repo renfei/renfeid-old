@@ -20,37 +20,35 @@ const CommentGroup = ({ data }: { data: CommentTree[] }) => {
             {
                 data.length > 0 ? (
                     data.map(comment => (
-                        <>
-                            <Comment
-                                className={"renfeid-comment"}
-                                key={`comment-${comment.id}`}
-                                actions={[
-                                    <span key={`comment-nested-datetime-${comment.id}`}>{comment.addtime}</span>,
-                                    <span key={`comment-nested-author-address-${comment.id}`}>{comment.authorAddress}</span>,
-                                    <a key={`comment-nested-reply-to-${comment.id}`} href="#CommentEditor">回复</a>
-                                ]}
-                                author={(
-                                    <Link key={`comment-author-url-${comment.id}`}
-                                        href={comment.authorUrl ? comment.authorUrl : 'javascript:void(0)'}>
-                                        <a id={`cmt-${comment.id}`} target="_blank" key={`comment-author-url-a-${comment.id}`}>{comment.author}</a>
-                                    </Link>
-                                )}
-                                content={comment.content}
-                                datetime={
-                                    comment.isOwner ? (
-                                        <span style={{ color: '#ffb032' }}>
-                                            <CheckCircleFilled /><span style={{ padding: '0 0 0 5px' }}>站点官方</span>
-                                        </span>
-                                    ) : ''
-                                }
-                            >
-                                {
-                                    comment.children && comment.children.length > 0 ? (
-                                        <CommentGroup key={`comment-children-${comment.id}`} data={comment.children} />
-                                    ) : ''
-                                }
-                            </Comment>
-                        </>
+                        <Comment
+                            className={"renfeid-comment"}
+                            key={`comment-${comment.id}`}
+                            actions={[
+                                <span key={`comment-nested-datetime-${comment.id}`}>{comment.addtime}</span>,
+                                <span key={`comment-nested-author-address-${comment.id}`}>{comment.authorAddress}</span>,
+                                <a key={`comment-nested-reply-to-${comment.id}`} href="#CommentEditor">回复</a>
+                            ]}
+                            author={(
+                                <Link key={`comment-author-url-${comment.id}`}
+                                    href={comment.authorUrl ? comment.authorUrl : 'javascript:void(0)'}>
+                                    <a id={`cmt-${comment.id}`} target="_blank" key={`comment-author-url-a-${comment.id}`}>{comment.author}</a>
+                                </Link>
+                            )}
+                            content={comment.content}
+                            datetime={
+                                comment.isOwner ? (
+                                    <span style={{ color: '#ffb032' }}>
+                                        <CheckCircleFilled /><span style={{ padding: '0 0 0 5px' }}>站点官方</span>
+                                    </span>
+                                ) : ''
+                            }
+                        >
+                            {
+                                comment.children && comment.children.length > 0 ? (
+                                    <CommentGroup key={`comment-children-${comment.id}`} data={comment.children} />
+                                ) : ''
+                            }
+                        </Comment>
                     ))
                 ) : ''
             }

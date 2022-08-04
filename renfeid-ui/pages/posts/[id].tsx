@@ -25,6 +25,7 @@ import APIResult = API.APIResult
 import CommentTree = API.CommentTree
 import 'highlight.js/styles/intellij-light.css'
 import { convertToHeaders } from '../../utils/request'
+import PostSidebar from '../../components/PostSidebar'
 
 const { Title, Text } = Typography
 
@@ -231,7 +232,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                     }
                                 </div>
                                 <GoogleAdsense
-                                    client={"ca-pub-885975646380"}
+                                    client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
                                     slot={"641095"}
                                 />
                                 <div className={"renfeid_card " + styles.posts_relevant}>
@@ -282,7 +283,9 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                 </div>
                                 <Comments data={CommentList} />
                             </Col>
-                            <Col xs={24} sm={24} md={8} lg={7}>123</Col>
+                            <Col xs={24} sm={24} md={8} lg={7}>
+                                <PostSidebar />
+                            </Col>
                         </Row>
                     </div>
                 </section>

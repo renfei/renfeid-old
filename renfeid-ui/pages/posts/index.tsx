@@ -3,18 +3,46 @@ import Link from 'next/link'
 import nookies from 'nookies'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { Row, Col, List, Space } from 'antd'
+import { LikeOutlined, MessageOutlined, EyeFilled } from '@ant-design/icons'
 import Layout from "../../components/layout"
+import PostSidebar from '../../components/PostSidebar'
+import * as api from '../../services/api'
+import { convertToHeaders } from '../../utils/request'
+import PostVo = API.PostVo
+import APIResult = API.APIResult
+import ListData = API.ListData
+
+const datas = Array.from({ length: 23 }).map((_, i) => ({
+    href: '/',
+    title: `ant design part ${i}`,
+    description:
+        '2022-08-03 22:27:30',
+    content:
+        'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+}))
+
+const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
+    <Space>
+        {React.createElement(icon)}
+        {text}
+    </Space>
+)
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
+    const result: APIResult<ListData<PostVo>> = await api.getPosts(convertToHeaders(context.req.headers), undefined, 1, 10, accessToken)
     return {
         props: {
-            data: {}
+            data: {
+                listData: result.data
+            }
         }
     }
 }
 
 const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    let listData: ListData<PostVo> | undefined = data.listData
     return (
         <>
             <Head>
@@ -27,7 +55,52 @@ const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
 
             <main style={{ backgroundColor: '#ffffff' }}>
                 <section className={"renfeid-content"}>
-                    x
+                    <Row style={{ padding: '20px 0' }}>
+                        <Col xs={24} sm={24} md={16} lg={17}>
+                            {
+                                listData ? (
+                                    <List
+                                        itemLayout="vertical"
+                                        size="large"
+                                        pagination={{
+                                            onChange: page => {
+                                                console.log(page);
+                                            },
+                                            pageSize: 10,
+                                            total: listData.total
+                                        }}
+                                        dataSource={listData.data}
+                                        renderItem={item => (
+                                            <List.Item
+                                                key={item.id}
+                                                actions={[
+                                                    <IconText icon={EyeFilled} text={item.postViews.toString()} key="list-vertical-star-o" />,
+                                                    <IconText icon={LikeOutlined} text="0" key="list-vertical-like-o" />,
+                                                    <IconText icon={MessageOutlined} text="0" key="list-vertical-message" />,
+                                                ]}
+                                                extra={
+                                                    <img
+                                                        width={272}
+                                                        alt="logo"
+                                                        src={item.featuredImage}
+                                                    />
+                                                }
+                                            >
+                                                <List.Item.Meta
+                                                    title={<a href={`/posts/${item.id}`}>{item.postTitle}</a>}
+                                                    description={item.postDate}
+                                                />
+                                                {item.postExcerpt}
+                                            </List.Item>
+                                        )}
+                                    />
+                                ) : ''
+                            }
+                        </Col>
+                        <Col xs={24} sm={24} md={8} lg={7}>
+                            <PostSidebar />
+                        </Col>
+                    </Row>
                 </section>
             </main>
         </>

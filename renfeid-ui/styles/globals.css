@@ -166,6 +166,12 @@ a {
     border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.ant-card-renfeid {
+    margin: 10px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
 .ant-comment-nested {
     margin-left: 10px;
 }

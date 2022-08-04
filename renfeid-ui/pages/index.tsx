@@ -294,7 +294,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                         <Col sm={12} xs={24} style={{ padding: '0 0 0 20px' }}>
                             <Divider>更多内容</Divider>
                             <GoogleAdsense
-                                client={"ca-pub-885975646380"}
+                                client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
                                 slot={"641095"}
                             />
                             <Row>
