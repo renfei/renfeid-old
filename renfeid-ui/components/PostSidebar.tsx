@@ -37,7 +37,7 @@ const PostSidebar = ({ props }: any) => {
             </Link>
           </div>
         </div>
-        <Card type="inner" title="内容分类" extra={<a href="/posts">全部内容</a>} className={'ant-card-renfeid'}>
+        <Card type="inner" title="内容分类" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
           <List
             dataSource={data}
             renderItem={item => (
@@ -53,7 +53,7 @@ const PostSidebar = ({ props }: any) => {
           client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
           slot={"641095"}
         />
-        <Card type="inner" title="内容标签" extra={<a href="/posts">全部内容</a>} className={'ant-card-renfeid'}>
+        <Card type="inner" title="内容标签" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
           <Tag>
             <a href="https://github.com/ant-design/ant-design/issues/1862">Link</a>
           </Tag>
@@ -86,7 +86,7 @@ const PostSidebar = ({ props }: any) => {
             )}
           />
         </Card>
-        <Card type="inner" title="热文排行" extra={<a href="/posts">全部内容</a>} className={'ant-card-renfeid'}>
+        <Card type="inner" title="热文排行" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
           <List
             dataSource={data}
             renderItem={item => (
