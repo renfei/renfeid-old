@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Image from 'next/image'
 import nookies from 'nookies'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
@@ -79,10 +80,11 @@ const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
                                                     <IconText icon={MessageOutlined} text="0" key="list-vertical-message" />,
                                                 ]}
                                                 extra={
-                                                    <img
+                                                    <Image
                                                         width={272}
-                                                        alt="logo"
+                                                        height={1}
                                                         src={item.featuredImage}
+                                                        alt="logo"
                                                     />
                                                 }
                                             >
