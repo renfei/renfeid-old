@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             let url = `/_/api/core/system/upload`
             /* Get files using formidable */
             const files = await new Promise<ProcessedFiles | undefined>((resolve, reject) => {
-                const form = new formidable.IncomingForm()
+                const form = formidable({})
                 const files: ProcessedFiles = []
                 form.on('file', function (field, file) {
                     files.push([field, file])
