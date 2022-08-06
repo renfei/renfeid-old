@@ -61,6 +61,8 @@ system:
   superTubeUserName: renfei
   # 是否启用超管，涉密系统不允许出现超管账号
   enableSuperTubeUser: true
+  # 系统管理员 角色名（需要与数据库中一致）
+  systemSuperRoleName: 系统管理员
   # 安全保密管理员 角色名（需要与数据库中一致）
   securitySuperRoleName: 安全保密管理员
   # 安全审计管理员 角色名（需要与数据库中一致）

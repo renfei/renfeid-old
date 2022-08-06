@@ -1,10 +1,10 @@
 import React from 'react'
-import {useRouter} from 'next/router'
-import {Layout, Menu} from 'antd'
-import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons'
-import type {MenuProps} from 'antd'
+import { useRouter } from 'next/router'
+import { Layout, Menu } from 'antd'
+import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons'
+import type { MenuProps } from 'antd'
 
-const {Sider} = Layout
+const { Sider } = Layout
 
 const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
     (icon, index) => {
@@ -74,6 +74,10 @@ const menu = [
             {
                 key: '/dashboard/sys/environment',
                 label: '系统运行环境',
+            },
+            {
+                key: '/dashboard/sys/log',
+                label: '系统审计日志',
             }
         ]
     },
@@ -83,12 +87,12 @@ const DashboardMenu = () => {
     const router = useRouter()
     return (
         <>
-            <Sider width={200} style={{background: '#ffffff'}}>
+            <Sider width={200} style={{ background: '#ffffff' }}>
                 <Menu
                     mode="inline"
-                    style={{height: '100%', borderRight: 0}}
+                    style={{ height: '100%', borderRight: 0 }}
                     items={menu}
-                    onClick={({item, key, keyPath, domEvent}: any) => {
+                    onClick={({ item, key, keyPath, domEvent }: any) => {
                         router.push(key)
                     }}
                 />

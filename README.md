@@ -4,6 +4,11 @@
 
 这是 [任霏的个人博客与网站](https://www.renfei.net) 的代码库，能进到这个代码库说明你很有品位嘛。
 
+预览版本见如下链接，代码仓库提交后将自动部署到预览版网站：
+
+* 前台：[https://preview.renfei.net](https://preview.renfei.net)
+* 后台：[https://preview.renfei.net/dashboard](https://preview.renfei.net/dashboard)
+
 我的网站结构为前后端分离，所以会产生前后端两个子项目：
 
 | 后端                                                                             | 前端                                                                                       |

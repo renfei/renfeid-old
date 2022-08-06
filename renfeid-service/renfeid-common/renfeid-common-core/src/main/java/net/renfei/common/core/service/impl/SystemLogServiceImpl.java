@@ -15,19 +15,26 @@
  */
 package net.renfei.common.core.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.entity.LogLevelEnum;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemLogEntity;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.repositories.CoreLogsMapper;
+import net.renfei.common.core.repositories.entity.CoreLogsExample;
 import net.renfei.common.core.repositories.entity.CoreLogsWithBLOBs;
 import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.utils.IpUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 系统审计日志服务
@@ -40,6 +47,68 @@ public class SystemLogServiceImpl implements SystemLogService {
 
     public SystemLogServiceImpl(CoreLogsMapper coreLogsMapper) {
         this.coreLogsMapper = coreLogsMapper;
+    }
+
+    @Override
+    public ListData<SystemLogEntity> querySystemLog(Date startDate, Date endDate, LogLevelEnum logLevel,
+                                                    SystemTypeEnum systemType, OperationTypeEnum operationType,
+                                                    String reqUri, String username, String reqIp,
+                                                    List<String> excludeUsername, List<String> inUsername,
+                                                    int pages, int rows) {
+        CoreLogsExample example = new CoreLogsExample();
+        example.setOrderByClause("id DESC");
+        CoreLogsExample.Criteria criteria = example.createCriteria();
+        if (startDate != null) {
+            criteria.andLogTimeGreaterThanOrEqualTo(startDate);
+        }
+        if (endDate != null) {
+            criteria.andLogTimeLessThanOrEqualTo(endDate);
+        }
+        if (logLevel != null) {
+            criteria.andLogLevelEqualTo(logLevel.toString());
+        }
+        if (systemType != null) {
+            criteria.andLogModuleEqualTo(systemType.toString());
+        }
+        if (operationType != null) {
+            criteria.andLogTypeEqualTo(operationType.toString());
+        }
+        if (!ObjectUtils.isEmpty(reqUri)) {
+            criteria.andRequUriLike("%" + reqUri + "%");
+        }
+        if (!ObjectUtils.isEmpty(username)) {
+            criteria.andUserNameLike("%" + username + "%");
+        }
+        if (!ObjectUtils.isEmpty(reqIp)) {
+            criteria.andRequIpLike("%" + reqIp + "%");
+        }
+        if (!ObjectUtils.isEmpty(excludeUsername)) {
+            criteria.andUserNameNotIn(excludeUsername);
+        }
+        if (inUsername != null && !inUsername.isEmpty()) {
+            criteria.andUserNameIn(inUsername);
+        } else if (excludeUsername != null && !excludeUsername.isEmpty()) {
+            criteria.andUserNameNotIn(excludeUsername);
+        }
+        ListData<SystemLogEntity> systemLogListData = new ListData<>();
+        try (Page<CoreLogsWithBLOBs> page = PageHelper.startPage(pages, rows)) {
+            coreLogsMapper.selectByExampleWithBLOBs(example);
+            List<SystemLogEntity> systemLogEntities = new ArrayList<>();
+            systemLogListData.setPageNum(page.getPageNum());
+            systemLogListData.setPageSize(page.getPageSize());
+            systemLogListData.setStartRow(page.getStartRow());
+            systemLogListData.setEndRow(page.getEndRow());
+            systemLogListData.setTotal(page.getTotal());
+            systemLogListData.setPages(page.getPages());
+            for (CoreLogsWithBLOBs coreLog : page.getResult()
+            ) {
+                SystemLogEntity systemLogEntity = new SystemLogEntity();
+                BeanUtils.copyProperties(coreLog, systemLogEntity);
+                systemLogEntities.add(systemLogEntity);
+            }
+            systemLogListData.setData(systemLogEntities);
+        }
+        return systemLogListData;
     }
 
     @Override

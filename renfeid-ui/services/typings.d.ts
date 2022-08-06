@@ -257,4 +257,22 @@ declare namespace API {
         enName: string,
         zhName: string,
     }
+
+    interface SystemLogEntity {
+        id: number,
+        logTime: string,
+        logLevel: string,
+        logModule: string,
+        logType: string,
+        requMethod?: string,
+        requUri?: string,
+        requReferrer?: string,
+        userUuid?: string,
+        userName?: string,
+        requIp?: string,
+        logDesc?: string,
+        requParam?: string,
+        respParam?: string,
+        requAgent?: string,
+    }
 }

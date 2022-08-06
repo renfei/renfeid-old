@@ -55,6 +55,8 @@ public interface RoleService {
      */
     APIResult<List<RoleDetail>> queryRoleListByUser(long userId, int pages, int rows);
 
+    List<Long> queryUserIdListByRole(long roleId);
+
     /**
      * 给用户授予角色
      *

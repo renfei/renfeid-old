@@ -154,4 +154,6 @@ public interface UserService {
      * @return
      */
     APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request);
+
+    List<UserDetail> queryUserListByRoleName(String roleName);
 }

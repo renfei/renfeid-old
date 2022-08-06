@@ -175,6 +175,19 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<Long> queryUserIdListByRole(long roleId) {
+        UaaUserRoleExample userRoleExample = new UaaUserRoleExample();
+        userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+        List<UaaUserRole> uaaUserRoles = uaaUserRoleMapper.selectByExample(userRoleExample);
+        if (uaaUserRoles.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Long> ids = new ArrayList<>();
+        uaaUserRoles.forEach(uaaUserRole -> ids.add(uaaUserRole.getAccountId()));
+        return ids;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request) {
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
@@ -195,7 +208,7 @@ public class RoleServiceImpl implements RoleService {
                     .build();
         }
         if (!uaaUtilService.isSuperTubeUser(currentUserDetail) && !
-                uaaUtilService.isSecuritySuperUser(currentUserDetail)){
+                uaaUtilService.isSecuritySuperUser(currentUserDetail)) {
             // 不是超管也不是安全保密员，检查是否拥有授权的角色
             boolean noHaveRole = false;
             RoleDetail noHaveRoleDetail = null;

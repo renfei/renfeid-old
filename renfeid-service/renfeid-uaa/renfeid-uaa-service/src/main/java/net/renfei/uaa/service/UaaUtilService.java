@@ -42,6 +42,22 @@ public class UaaUtilService {
     }
 
     /**
+     * 是否是系统管理员
+     *
+     * @param userDetail
+     * @return
+     */
+    public boolean isSystemSuperUser(UserDetail userDetail) {
+        for (RoleDetail roleDetail : userDetail.getRoleDetailList()
+        ) {
+            if (systemConfig.getSystemSuperRoleName().equals(roleDetail.getRoleName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 是否是安全保密管理员
      *
      * @param userDetail

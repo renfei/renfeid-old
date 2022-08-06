@@ -536,6 +536,28 @@ public class UserServiceImpl implements UserService {
         return roleService.authorizationRoleByUser(userId, roleDetailList, request);
     }
 
+    @Override
+    public List<UserDetail> queryUserListByRoleName(String roleName) {
+        APIResult<ListData<RoleDetail>> listDataAPIResult = roleService.queryRoleList(true, roleName, 1, 1);
+        if (listDataAPIResult.getData() != null
+                && listDataAPIResult.getData().getTotal() > 0
+                && !listDataAPIResult.getData().getData().isEmpty()) {
+            RoleDetail roleDetail = listDataAPIResult.getData().getData().get(0);
+            List<Long> userIds = roleService.queryUserIdListByRole(Long.parseLong(roleDetail.getId()));
+            if (!userIds.isEmpty()) {
+                UaaUserExample example = new UaaUserExample();
+                example.createCriteria().andIdIn(userIds);
+                List<UaaUser> uaaUsers = uaaUserMapper.selectByExample(example);
+                List<UserDetail> userDetails = new ArrayList<>();
+                for (UaaUser uaaUser : uaaUsers) {
+                    userDetails.add(convert(uaaUser));
+                }
+                return userDetails;
+            }
+        }
+        return new ArrayList<>();
+    }
+
     private UserDetail convert(UaaUser uaaUser) {
         if (uaaUser == null) {
             return null;

@@ -15,12 +15,15 @@
  */
 package net.renfei.common.core.service;
 
+import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.entity.LogLevelEnum;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemLogEntity;
 import net.renfei.common.core.entity.SystemTypeEnum;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 系统审计日志服务
@@ -28,6 +31,11 @@ import javax.servlet.http.HttpServletRequest;
  * @author renfei
  */
 public interface SystemLogService {
+    ListData<SystemLogEntity> querySystemLog(Date startDate, Date endDate, LogLevelEnum logLevel,
+                                             SystemTypeEnum systemType, OperationTypeEnum operationType,
+                                             String reqUri, String username, String reqIp,List<String> excludeUsername,
+                                             List<String> inUsername, int pages, int rows);
+
     void save(SystemLogEntity systemLogEntity);
 
     void save(LogLevelEnum logLevel, SystemTypeEnum systemType, OperationTypeEnum operationType,
