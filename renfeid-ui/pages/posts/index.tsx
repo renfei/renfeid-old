@@ -8,6 +8,7 @@ import { Row, Col, List, Space } from 'antd'
 import { LikeOutlined, MessageOutlined, EyeFilled } from '@ant-design/icons'
 import Layout from "../../components/layout"
 import PostSidebar from '../../components/PostSidebar'
+import PostsList from '../../components/PostList'
 import * as api from '../../services/api'
 import { convertToHeaders } from '../../utils/request'
 import PostVo = API.PostVo
@@ -60,42 +61,7 @@ const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
                         <Col xs={24} sm={24} md={16} lg={17}>
                             {
                                 listData ? (
-                                    <List
-                                        itemLayout="vertical"
-                                        size="large"
-                                        pagination={{
-                                            onChange: page => {
-                                                console.log(page);
-                                            },
-                                            pageSize: 10,
-                                            total: listData.total
-                                        }}
-                                        dataSource={listData.data}
-                                        renderItem={item => (
-                                            <List.Item
-                                                key={item.id}
-                                                actions={[
-                                                    <IconText icon={EyeFilled} text={item.postViews.toString()} key="list-vertical-star-o" />,
-                                                    <IconText icon={LikeOutlined} text="0" key="list-vertical-like-o" />,
-                                                    <IconText icon={MessageOutlined} text="0" key="list-vertical-message" />,
-                                                ]}
-                                                extra={
-                                                    <Image
-                                                        width={272}
-                                                        height={1}
-                                                        src={item.featuredImage}
-                                                        alt="logo"
-                                                    />
-                                                }
-                                            >
-                                                <List.Item.Meta
-                                                    title={<a href={`/posts/${item.id}`}>{item.postTitle}</a>}
-                                                    description={item.postDate}
-                                                />
-                                                {item.postExcerpt}
-                                            </List.Item>
-                                        )}
-                                    />
+                                    <PostsList posts={listData} />
                                 ) : ''
                             }
                         </Col>
