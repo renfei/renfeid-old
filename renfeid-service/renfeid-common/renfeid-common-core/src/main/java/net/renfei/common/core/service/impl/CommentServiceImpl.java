@@ -126,7 +126,7 @@ public class CommentServiceImpl implements CommentService {
         }
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (currentUserDetail != null) {
-            comment.setAuthorId(Long.parseLong(currentUserDetail.getId()));
+            comment.setAuthorId(currentUserDetail.getId());
             comment.setAuthor(currentUserDetail.getUsername());
             comment.setAuthorEmail(currentUserDetail.getEmail());
         }
@@ -139,7 +139,7 @@ public class CommentServiceImpl implements CommentService {
         if (!StringUtils.isEmail(comment.getAuthorEmail())) {
             throw new BusinessException("电子邮箱格式不正确");
         }
-        comment.setId(snowflakeService.getId("").getId());
+        comment.setId(snowflakeService.getId("").getId() + "");
         comment.setIsOwner(isOwner);
         comment.setAddtime(new Date());
         // 审核通过后恢复
@@ -155,7 +155,7 @@ public class CommentServiceImpl implements CommentService {
         coreCommentsMapper.insert(coreComments);
         if (systemConfig.getEnableAudit() && !isOwner) {
             // 异步调用审核和通知机制
-            auditService.auditComment(comment.getId());
+            auditService.auditComment(Long.parseLong(comment.getId()));
         } else {
             auditService.sendNotify(coreComments, null);
         }
@@ -196,9 +196,9 @@ public class CommentServiceImpl implements CommentService {
             throw new BusinessException("回复的目标评论数据不存在");
         }
         Comment comment = new Comment();
-        comment.setObjectId(coreComment.getObjectId());
+        comment.setObjectId(coreComment.getObjectId() + "");
         comment.setSysType(SystemTypeEnum.valueOf(coreComment.getSysType()));
-        comment.setParentId(commentId);
+        comment.setParentId(commentId + "");
         comment.setAuthorUrl(systemConfig.getSiteDomainName());
         comment.setContent(content);
         return this.submitComment(comment, true, request);
@@ -217,13 +217,13 @@ public class CommentServiceImpl implements CommentService {
 
     private CoreCommentsWithBLOBs convert(Comment comment) {
         CoreCommentsWithBLOBs coreComments = new CoreCommentsWithBLOBs();
-        coreComments.setId(comment.getId());
+        coreComments.setId(comment.getId() == null ? null : Long.parseLong(comment.getId()));
         coreComments.setSysType(comment.getSysType().toString());
-        coreComments.setObjectId(comment.getObjectId());
-        coreComments.setAuthorId(comment.getAuthorId());
+        coreComments.setObjectId(comment.getObjectId() == null ? null : Long.parseLong(comment.getObjectId()));
+        coreComments.setAuthorId(comment.getAuthorId() == null ? null : Long.parseLong(comment.getAuthorId()));
         coreComments.setAddtime(comment.getAddtime());
         coreComments.setIsDelete(comment.getIsDelete());
-        coreComments.setParentId(comment.getParentId());
+        coreComments.setParentId(comment.getParentId() == null ? null : Long.parseLong(comment.getParentId()));
         coreComments.setIsOwner(comment.getIsOwner());
         coreComments.setAuthor(comment.getAuthor());
         coreComments.setAuthorEmail(comment.getAuthorEmail());
@@ -236,13 +236,13 @@ public class CommentServiceImpl implements CommentService {
 
     private Comment convert(CoreCommentsWithBLOBs coreComments) {
         Comment comment = new Comment();
-        comment.setId(coreComments.getId());
+        comment.setId(coreComments.getId() + "");
         comment.setSysType(SystemTypeEnum.valueOf(coreComments.getSysType()));
-        comment.setObjectId(coreComments.getObjectId());
-        comment.setAuthorId(coreComments.getAuthorId());
+        comment.setObjectId(coreComments.getObjectId() == null ? null : coreComments.getObjectId() + "");
+        comment.setAuthorId(coreComments.getAuthorId() == null ? null : coreComments.getAuthorId() + "");
         comment.setAddtime(coreComments.getAddtime());
         comment.setIsDelete(coreComments.getIsDelete());
-        comment.setParentId(coreComments.getParentId());
+        comment.setParentId(coreComments.getParentId() == null ? null : coreComments.getParentId() + "");
         comment.setIsOwner(coreComments.getIsOwner());
         comment.setAuthor(coreComments.getAuthor());
         comment.setAuthorEmail(coreComments.getAuthorEmail());

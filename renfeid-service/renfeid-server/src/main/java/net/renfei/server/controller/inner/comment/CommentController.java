@@ -55,13 +55,13 @@ public class CommentController extends AbstractController {
                              @RequestBody CommentAo commentAo) {
         Comment comment = convert(commentAo);
         comment.setSysType(systemTypeEnum);
-        comment.setObjectId(id);
+        comment.setObjectId(id + "");
         return commentService.submitComment(comment, false, request);
     }
 
     private Comment convert(CommentAo commentAo) {
         Comment comment = new Comment();
-        comment.setParentId(commentAo.getParentId());
+        comment.setParentId(commentAo.getParentId() == null ? null : commentAo.getParentId() + "");
         comment.setAuthor(commentAo.getAuthor());
         comment.setAuthorEmail(commentAo.getAuthorEmail());
         comment.setAuthorUrl(commentAo.getAuthorUrl());

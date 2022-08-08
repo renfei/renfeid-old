@@ -1,9 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import * as Fetch from "../../../../utils/request"
+import * as Fetch from "../../../../../utils/request"
 import APIResult = API.APIResult
 import UploadObjectVo = API.UploadObjectVo
-import { convertToHeaders } from "../../../../utils/request"
+import { convertToHeaders } from "../../../../../utils/request"
 import fs from 'fs'
 import FormData from 'form-data'
 import formidable, { File } from 'formidable'

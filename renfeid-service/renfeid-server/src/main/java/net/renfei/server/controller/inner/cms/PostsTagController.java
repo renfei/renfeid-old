@@ -16,7 +16,6 @@
 package net.renfei.server.controller.inner.cms;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.cms.api.PostTagService;
 import net.renfei.common.api.constant.APIResult;

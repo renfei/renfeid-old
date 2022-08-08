@@ -35,6 +35,20 @@ declare namespace API {
         ucScript?: string,
     }
 
+    interface SignUpAo {
+        userName: string,
+        password: string,
+        email: string,
+        keyUuid: string,
+        plainPassword: string,
+        plainPassword2: string,
+    }
+
+    interface SignUpActivationAo {
+        emailOrPhone: string,
+        code: string,
+    }
+
     interface APIResult<T> {
         code: number,
         message: string,
@@ -274,5 +288,26 @@ declare namespace API {
         requParam?: string,
         respParam?: string,
         requAgent?: string,
+    }
+
+    interface Comment {
+        id: string,
+        sysType: string,
+        objectId: string,
+        authorId: string,
+        addtime: string,
+        isDelete: boolean,
+        parentId?: string,
+        isOwner: boolean,
+        author: string,
+        authorEmail: string,
+        authorUrl?: string,
+        authorIp: string,
+        authorAddress: string,
+        content: string,
+    }
+
+    interface ReplyCommentAo {
+        content: string
     }
 }

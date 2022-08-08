@@ -28,13 +28,13 @@ import java.util.Date;
 @Data
 public class Comment implements Serializable {
     private static final long serialVersionUID = -314420603322403668L;
-    private Long id;
+    private String id;
     private SystemTypeEnum sysType;
-    private Long objectId;
-    private Long authorId;
+    private String objectId;
+    private String authorId;
     private Date addtime;
     private Boolean isDelete;
-    private Long parentId;
+    private String parentId;
     private Boolean isOwner;
     private String author;
     private String authorEmail;

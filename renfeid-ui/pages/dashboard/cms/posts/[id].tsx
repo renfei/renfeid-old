@@ -455,7 +455,7 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
                                             <Form.Item label="特色图像" name="featuredImageUpload">
                                                 <Space>
                                                     <Upload
-                                                        action="/api/core/system/upload"
+                                                        action="/api/dash/core/system/upload"
                                                         accept="image/*"
                                                         listType="picture"
                                                         maxCount={1}
@@ -598,7 +598,7 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
                                                     file_picker_types: 'image',
                                                     toolbar_mode: 'wrap',
                                                     automatic_uploads: true,
-                                                    images_upload_url: '/api/core/system/upload',
+                                                    images_upload_url: '/api/dash/core/system/upload',
                                                     fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
                                                     plugins: [
                                                         'preview', 'importcss', 'searchreplace', 'autolink', 'autosave',

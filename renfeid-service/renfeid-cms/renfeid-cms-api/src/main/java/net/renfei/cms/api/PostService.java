@@ -55,6 +55,28 @@ public interface PostService {
                                             Date startDate, Date endDate, int pages, int rows);
 
     /**
+     * 根据标签查询已发布的文章列表
+     *
+     * @param tagId    标签ID
+     * @param pages    页码
+     * @param rows     每页行数
+     * @param useCache 使用缓存（只缓存非密内容）
+     * @return
+     */
+    APIResult<ListData<Post>> queryPostListByTag(long tagId, int pages, int rows, boolean useCache);
+
+    /**
+     * 根据标签查询已发布的文章列表
+     *
+     * @param tagId      标签ID
+     * @param postStatus 文章状态
+     * @param pages      页码
+     * @param rows       每页行数
+     * @return
+     */
+    APIResult<ListData<Post>> queryPostListByTag(long tagId, PostStatusEnum postStatus, int pages, int rows);
+
+    /**
      * 根据ID获取文章详情
      *
      * @param postId   文章ID

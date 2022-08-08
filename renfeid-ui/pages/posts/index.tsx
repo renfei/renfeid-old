@@ -1,11 +1,8 @@
 import Head from 'next/head'
-import Link from 'next/link'
-import Image from 'next/image'
 import nookies from 'nookies'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { Row, Col, List, Space } from 'antd'
-import { LikeOutlined, MessageOutlined, EyeFilled } from '@ant-design/icons'
+import { Row, Col, Space } from 'antd'
 import Layout from "../../components/layout"
 import PostSidebar from '../../components/PostSidebar'
 import PostsList from '../../components/PostList'
@@ -14,6 +11,8 @@ import { convertToHeaders } from '../../utils/request'
 import PostVo = API.PostVo
 import APIResult = API.APIResult
 import ListData = API.ListData
+import PostCategory = API.PostCategory
+import Tag = API.Tag
 
 const datas = Array.from({ length: 23 }).map((_, i) => ({
     href: '/',
@@ -33,10 +32,18 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
-    const result: APIResult<ListData<PostVo>> = await api.getPosts(convertToHeaders(context.req.headers), undefined, 1, 10, accessToken)
+    let page = 1
+    if (context.query.page) {
+        page = context.query.page
+    }
+    const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 9007199254740991, accessToken)
+    const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
+    const result: APIResult<ListData<PostVo>> = await api.getPosts(convertToHeaders(context.req.headers), undefined, page, 10, accessToken)
     return {
         props: {
             data: {
+                allPostCategory: allPostCategory.data?.data,
+                allPostTag: allPostTag.data,
                 listData: result.data
             }
         }
@@ -66,7 +73,11 @@ const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
                             }
                         </Col>
                         <Col xs={24} sm={24} md={8} lg={7}>
-                            <PostSidebar />
+                            <PostSidebar
+                                category={data.allPostCategory}
+                                tags={data.allPostTag}
+                                adsense={[]}
+                            />
                         </Col>
                     </Row>
                 </section>

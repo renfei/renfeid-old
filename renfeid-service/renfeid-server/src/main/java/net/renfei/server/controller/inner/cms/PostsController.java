@@ -19,12 +19,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.cms.api.PostService;
+import net.renfei.cms.api.PostTagService;
 import net.renfei.cms.api.entity.Post;
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -37,9 +40,12 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "文章内容接口", description = "文章内容接口")
 public class PostsController extends AbstractController {
     private final PostService postService;
+    private final PostTagService postTagService;
 
-    public PostsController(PostService postService) {
+    public PostsController(PostService postService,
+                           PostTagService postTagService) {
         this.postService = postService;
+        this.postTagService = postTagService;
     }
 
     @GetMapping("posts")
@@ -51,9 +57,36 @@ public class PostsController extends AbstractController {
             })
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询已发布的文章列表")
     public APIResult<ListData<Post>> queryPostList(@RequestParam(value = "categoryId", required = false) Long categoryId,
-                                                   @RequestParam(value = "pages", required = false) Integer pages,
-                                                   @RequestParam(value = "rows", required = false) Integer rows) {
-        return postService.queryPostList(categoryId, pages == null ? 1 : pages, rows == null ? 10 : rows, true);
+                                                   @RequestParam(value = "pages", required = false, defaultValue = "1") int pages,
+                                                   @RequestParam(value = "rows", required = false, defaultValue = "10") int rows) {
+        return postService.queryPostList(categoryId, pages, rows, true);
+    }
+
+    @GetMapping("posts/tag/{tagEnName}")
+    @Operation(summary = "根据标签查询已发布的文章列表", tags = {"文章内容接口"},
+            parameters = {
+                    @Parameter(name = "tagEnName", description = "内容标签分类"),
+                    @Parameter(name = "pages", description = "页码"),
+                    @Parameter(name = "rows", description = "每页数据量")
+            })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询已发布的文章列表")
+    public APIResult<ListData<Post>> queryPostListByTag(@PathVariable("tagEnName") String tagEnName,
+                                                        @RequestParam(value = "pages", required = false, defaultValue = "1") int pages,
+                                                        @RequestParam(value = "rows", required = false, defaultValue = "10") int rows) {
+        if (ObjectUtils.isEmpty(tagEnName)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.NotFound)
+                    .message("标签不存在")
+                    .build();
+        }
+        net.renfei.cms.api.entity.Tag tag = postTagService.queryTagByEnName(tagEnName);
+        if (tag == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.NotFound)
+                    .message("标签不存在")
+                    .build();
+        }
+        return postService.queryPostList(Long.parseLong(tag.getId()), pages, rows, true);
     }
 
     @GetMapping("posts/{id}")

@@ -23,6 +23,7 @@ import net.renfei.cms.repositories.entity.CmsPostsTag;
 import net.renfei.cms.repositories.entity.CmsPostsTagExample;
 import net.renfei.cms.repositories.entity.CmsTag;
 import net.renfei.cms.repositories.entity.CmsTagExample;
+import net.renfei.common.api.utils.ListUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -58,6 +59,34 @@ public class PostTagServiceImpl implements PostTagService {
             tags.add(tag);
         }
         return tags;
+    }
+
+    @Override
+    public Tag queryTagByEnName(String enName) {
+        CmsTagExample example = new CmsTagExample();
+        example.createCriteria().andEnNameEqualTo(enName);
+        CmsTag cmsTag = ListUtils.getOne(cmsTagMapper.selectByExample(example));
+        if (cmsTag == null) {
+            return null;
+        }
+        Tag tag = new Tag();
+        tag.setId(cmsTag.getId() + "");
+        tag.setEnName(cmsTag.getEnName());
+        tag.setZhName(cmsTag.getZhName());
+        return tag;
+    }
+
+    @Override
+    public List<Long> queryAllPostIdByTag(long tagId) {
+        CmsPostsTagExample example = new CmsPostsTagExample();
+        example.createCriteria().andTagIdEqualTo(tagId);
+        List<CmsPostsTag> cmsPostsTags = cmsPostsTagMapper.selectByExample(example);
+        if (cmsPostsTags.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Long> ids = new ArrayList<>();
+        cmsPostsTags.forEach(cmsPostsTag -> ids.add(cmsPostsTag.getPostId()));
+        return ids;
     }
 
     @Override

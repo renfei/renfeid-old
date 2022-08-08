@@ -3,6 +3,8 @@ import { QRCodeCanvas } from 'qrcode.react'
 import { Row, Col, Typography, Card, List, Tag } from 'antd'
 import { WechatOutlined, BugOutlined } from '@ant-design/icons'
 import GoogleAdsense from './GoogleAdsense'
+import PostCategory = API.PostCategory
+import PostTag = API.Tag
 
 const data = [
   'Racing car sprays burn',
@@ -12,7 +14,7 @@ const data = [
   'Los Angel',
 ]
 
-const PostSidebar = ({ props }: any) => {
+const PostSidebar = (props: { category?: PostCategory[], tags?: PostTag[], adsense?: string[] }) => {
   return (
     <Row style={{ padding: '10px 0 20px 10px' }}>
       <Col span={24}>
@@ -39,41 +41,45 @@ const PostSidebar = ({ props }: any) => {
         </div>
         <Card type="inner" title="内容分类" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
           <List
-            dataSource={data}
+            dataSource={props.category}
             renderItem={item => (
               <List.Item>
-                <Link href={`/posts/${item}`}>
-                  <a>{item}</a>
+                <Link href={`/posts/cat/${item.enName}`}>
+                  <a>{item.zhName}</a>
                 </Link>
               </List.Item>
             )}
           />
         </Card>
-        <GoogleAdsense
-          client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
-          slot={"641095"}
-        />
+        {
+          props.adsense && props.adsense.length > 0 ? (
+            <GoogleAdsense
+              client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
+              slot={props.adsense[0]}
+            />
+          ) : ''
+        }
         <Card type="inner" title="内容标签" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
-          <Tag>
-            <a href="https://github.com/ant-design/ant-design/issues/1862">Link</a>
-          </Tag>
-          <Tag>
-            <a href="https://github.com/ant-design/ant-design/issues/1862">Link</a>
-          </Tag>
-          <Tag>
-            <a href="https://github.com/ant-design/ant-design/issues/1862">Link</a>
-          </Tag>
-          <Tag>
-            <a href="https://github.com/ant-design/ant-design/issues/1862">Link</a>
-          </Tag>
-          <Tag>
-            <a href="https://github.com/ant-design/ant-design/issues/1862">Link</a>
-          </Tag>
+          {
+            props.tags ? (
+              props.tags.map(tag => (
+                <Tag key={tag.id}>
+                  <Link href={`/posts/tag/${tag.enName}`}>
+                    <a>{tag.zhName}</a>
+                  </Link>
+                </Tag>
+              ))
+            ) : ''
+          }
         </Card>
-        <GoogleAdsense
-          client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
-          slot={"641096"}
-        />
+        {
+          props.adsense && props.adsense.length > 1 ? (
+            <GoogleAdsense
+              client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
+              slot={props.adsense[1]}
+            />
+          ) : ''
+        }
         <Card type="inner" title="最新留言" className={'ant-card-renfeid'}>
           <List
             dataSource={data}

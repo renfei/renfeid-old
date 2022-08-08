@@ -72,6 +72,10 @@ const menu = [
         label: '系统设置',
         children: [
             {
+                key: '/dashboard/sys/comment',
+                label: '评论管理',
+            },
+            {
                 key: '/dashboard/sys/environment',
                 label: '系统运行环境',
             },

@@ -74,10 +74,10 @@ const gotoRedirect = (redirect: string | string[] | undefined) => {
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const userInfo: UserInfo | undefined = await CheckSignInStatus(context)
     if (userInfo) {
-        if (context.req.query.redirect) {
+        if (context.query.redirect) {
             return {
                 redirect: {
-                    destination: context.req.query.redirect,
+                    destination: context.query.redirect,
                     permanent: false,
                 },
             }
@@ -163,6 +163,7 @@ const SignInPage = (req: NextApiRequest, res: NextApiResponse) => {
                                         >
                                             <Input
                                                 placeholder="账号"
+                                                autoComplete='username'
                                                 prefix={<UserOutlined />}
                                             />
                                         </Form.Item>
@@ -173,6 +174,7 @@ const SignInPage = (req: NextApiRequest, res: NextApiResponse) => {
                                         >
                                             <Input.Password
                                                 placeholder="密码"
+                                                autoComplete='password'
                                                 prefix={<LockOutlined />}
                                             />
                                         </Form.Item>
@@ -185,6 +187,7 @@ const SignInPage = (req: NextApiRequest, res: NextApiResponse) => {
                                                 >
                                                     <Input
                                                         placeholder="MFA"
+                                                        autoComplete='one-time-code'
                                                         showCount maxLength={6}
                                                         prefix={<KeyOutlined />}
                                                     />

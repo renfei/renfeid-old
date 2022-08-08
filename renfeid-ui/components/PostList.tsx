@@ -39,6 +39,7 @@ const PostList = (props: { posts: ListData<PostVo> }) => {
                 width={272}
                 height={136}
                 style={{ borderRadius: '12px' }}
+                layout={"intrinsic"}
                 src={item.featuredImage}
                 alt={item.postTitle}
               />

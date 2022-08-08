@@ -1,4 +1,5 @@
 import * as Fetch from '../../../../utils/request'
+import ReplyCommentAo = API.ReplyCommentAo
 
 export const uploadFile = async (token: string, headers: Headers, file: any) => {
     const url = `/_/api/core/system/upload`
@@ -21,7 +22,7 @@ export const getEnvironmentInfo = async (token: string, headers: Headers) => {
 export const querySystemLog = async (startDate?: string, endDate?: string,
     logLevel?: string, systemType?: string, operationType?: string, reqUri?: string,
     username?: string, reqIp?: string, page?: number, rows?: number) => {
-    let url = `/api/core/system/log?`
+    let url = `/api/dash/core/system/log?`
     if (startDate) {
         url += 'startDate=' + startDate + '&'
     }
@@ -54,6 +55,53 @@ export const querySystemLog = async (startDate?: string, endDate?: string,
     }
     return await fetch(url, {
         method: 'GET',
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const queryCommentList = async (haveDelete?: boolean, page?: number, rows?: number) => {
+    let url = `/api/dash/core/comment?`
+    if (haveDelete) {
+        url += 'haveDelete=' + haveDelete + '&'
+    }
+    if (page) {
+        url += 'pages=' + page + '&'
+    }
+    if (rows) {
+        url += 'rows=' + rows + '&'
+    }
+    return await fetch(url, {
+        method: 'GET',
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const replyComment = async (id: string, replyComment: ReplyCommentAo) => {
+    let url = `/api/dash/core/comment/${id}/reply`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(replyComment),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const deleteComment = async (id: string) => {
+    let url = `/api/dash/core/comment/${id}`
+    return await fetch(url, {
+        method: 'DELETE'
     }).then((res: any) => {
         return res.json()
     }).catch((error: any) => {

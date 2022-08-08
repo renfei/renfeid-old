@@ -153,6 +153,71 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public APIResult<ListData<Post>> queryPostListByTag(long tagId, int pages, int rows, boolean useCache) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        SecretLevelEnum userSecretLevel =
+                userDetail == null ? SecretLevelEnum.UNCLASSIFIED : userDetail.getSecretLevel();
+        ListData<Post> postListData = null;
+        if (systemConfig.getEnableCache() && useCache && SecretLevelEnum.UNCLASSIFIED.equals(userSecretLevel)) {
+            // 启用缓存，并且是非密用户
+            String redisKey = REDIS_KEY + "tag:" + tagId + ":";
+            redisKey += "page_" + pages + "_" + rows;
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof ListData) {
+                    postListData = (ListData<Post>) object;
+                }
+            }
+            if (postListData == null) {
+                postListData = this.queryPostListByTag(tagId, PostStatusEnum.PUBLISH, pages, rows).getData();
+                redisService.set(redisKey, postListData);
+            }
+            return new APIResult<>(postListData);
+        } else {
+            return this.queryPostListByTag(tagId, PostStatusEnum.PUBLISH, pages, rows);
+        }
+    }
+
+    @Override
+    public APIResult<ListData<Post>> queryPostListByTag(long tagId, PostStatusEnum postStatus, int pages, int rows) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        SecretLevelEnum userSecretLevel =
+                userDetail == null ? SecretLevelEnum.UNCLASSIFIED : userDetail.getSecretLevel();
+        List<Long> postIds = postTagService.queryAllPostIdByTag(tagId);
+        if (postIds.isEmpty()) {
+            postIds = new ArrayList<Long>() {{
+                this.add(-1L);
+            }};
+        }
+        CmsPostsExample example = new CmsPostsExample();
+        example.setOrderByClause("post_date DESC");
+        CmsPostsExample.Criteria criteria = example.createCriteria();
+        criteria.andSecretLevelLessThanOrEqualTo(userSecretLevel.getLevel());
+        criteria.andPostDateLessThanOrEqualTo(new Date());
+        if (postStatus != null) {
+            criteria.andPostStatusEqualTo(postStatus.toString());
+        }
+        criteria.andIdIn(postIds);
+        ListData<Post> postListData = new ListData<>();
+        try (Page<CmsPostsWithBLOBs> page = PageHelper.startPage(pages, rows)) {
+            cmsPostsMapper.selectByExampleWithBLOBs(example);
+            postListData.setPageNum(page.getPageNum());
+            postListData.setPageSize(page.getPageSize());
+            postListData.setStartRow(page.getStartRow());
+            postListData.setEndRow(page.getEndRow());
+            postListData.setTotal(page.getTotal());
+            postListData.setPages(page.getPages());
+            List<Post> postList = new ArrayList<>();
+            for (CmsPostsWithBLOBs cmsPosts : page.getResult()
+            ) {
+                postList.add(convert(cmsPosts));
+            }
+            postListData.setData(postList);
+        }
+        return new APIResult<>(postListData);
+    }
+
+    @Override
     public APIResult<Post> queryPostById(long postId, String password, boolean isAdmin, boolean useCache) {
         UserDetail userDetail = systemService.currentUserDetail();
         SecretLevelEnum userSecretLevel =

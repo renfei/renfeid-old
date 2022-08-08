@@ -4,7 +4,7 @@ import nookies from 'nookies'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Layout from "../../components/layout"
-import { Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space } from 'antd'
+import { Col, Row, Button, Typography, Divider, Space } from 'antd'
 import {
     WechatFilled,
     QqOutlined,
@@ -23,6 +23,9 @@ import hljs from 'highlight.js'
 import PostVo = API.PostVo
 import APIResult = API.APIResult
 import CommentTree = API.CommentTree
+import ListData = API.ListData
+import PostCategory = API.PostCategory
+import Tag = API.Tag
 import 'highlight.js/styles/intellij-light.css'
 import { convertToHeaders } from '../../utils/request'
 import PostSidebar from '../../components/PostSidebar'
@@ -129,16 +132,22 @@ const CommentList: CommentTree[] = [
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
-    const postPassword = context.req.query?.postPassword
-    let data: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers), postPassword, accessToken)
-    if (data.code == 404) {
+    const postPassword = context.query.postPassword
+    const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 9007199254740991, accessToken)
+    const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
+    let postResult: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers), postPassword, accessToken)
+    if (postResult.code == 404) {
         return {
             notFound: true,
         }
     }
     return {
         props: {
-            data,
+            data: {
+                post: postResult.data,
+                allPostCategory: allPostCategory.data?.data,
+                allPostTag: allPostTag.data,
+            }
         }
     }
 }
@@ -156,17 +165,16 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
     return (
         <>
             <Head>
-                <title>{`${data.data.postTitle} - 博客文章 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
-                <meta name="keyword" content={data.data.postKeyword} />
-                <meta name="description" content={data.data.postExcerpt} />
-                <link rel="icon" href="/favicon.ico" />
+                <title>{`${data.post.postTitle} - 博客文章 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
+                <meta name="keyword" content={data.post.postKeyword} />
+                <meta name="description" content={data.post.postExcerpt} />
             </Head>
 
             <main style={{ backgroundColor: '#ffffff' }}>
                 <section className={"renfeid-content"}>
                     <div className={styles.container}>
-                        <Text type="secondary">{data.data.postDate}</Text>
-                        <Title level={1} className={styles.title}>{data.data.postTitle}</Title>
+                        <Text type="secondary">{data.post.postDate}</Text>
+                        <Title level={1} className={styles.title}>{data.post.postTitle}</Title>
                         <Space size={4}>
                             <Button type="text" shape="circle" icon={<WechatFilled />} />
                             <Button type="text" shape="circle" icon={<QqOutlined />} />
@@ -176,7 +184,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                             <Button type="text" shape="circle" icon={<LinkedinFilled />} />
                             <Button type="text" shape="circle" icon={<LinkOutlined />} />
                             <Button type="text" shape="circle" icon={<EyeFilled />}>
-                                {data.data.postViews}
+                                {data.post.postViews}
                             </Button>
                         </Space>
                         <Divider />
@@ -184,7 +192,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                             <Col xs={24} sm={24} md={16} lg={17}>
                                 <div
                                     className={styles.posts_content}
-                                    dangerouslySetInnerHTML={{ __html: data.data.postContent }}></div>
+                                    dangerouslySetInnerHTML={{ __html: data.post.postContent }}></div>
                                 <Space size={4}>
                                     <Button type="text" shape="circle" icon={<WechatFilled />} />
                                     <Button type="text" shape="circle" icon={<QqOutlined />} />
@@ -194,13 +202,13 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                     <Button type="text" shape="circle" icon={<LinkedinFilled />} />
                                     <Button type="text" shape="circle" icon={<LinkOutlined />} />
                                     <Button type="text" shape="circle" icon={<EyeFilled />}>
-                                        {data.data.postViews}
+                                        {data.post.postViews}
                                     </Button>
                                 </Space>
                                 <Divider />
                                 <div className={styles.posts_content_copyright}>
                                     {
-                                        data.data.original ? (
+                                        data.post.original ? (
                                             <>
                                                 <p>商业用途请联系作者获得授权。</p>
                                                 <p>版权声明：本文为博主「任霏」原创文章，遵循 <a
@@ -208,9 +216,9 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                                     target="_blank" rel="noreferrer noopener nofollow">CC BY-NC-SA
                                                     4.0</a> 版权协议，转载请附上原文出处链接及本声明。</p>
                                                 <p>原文链接：<Link
-                                                    href={'https://www.renfei.net/posts/' + data.data.id}>
+                                                    href={'https://www.renfei.net/posts/' + data.post.id}>
                                                     <a>
-                                                        https://www.renfei.net/posts/{data.data.id}
+                                                        https://www.renfei.net/posts/{data.post.id}
                                                     </a>
                                                 </Link>
                                                 </p>
@@ -218,12 +226,12 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                         ) : (
                                             <>
                                                 <p>商业用途请联系作者获得授权。</p>
-                                                <p>版权声明：本文转载自「{data.data.sourceName}」，版权归原所有者。</p>
+                                                <p>版权声明：本文转载自「{data.post.sourceName}」，版权归原所有者。</p>
                                                 <p>原文链接：<Link
-                                                    href={data.data.sourceUrl}
+                                                    href={data.post.sourceUrl}
                                                 >
                                                     <a target="_blank" rel="noreferrer noopener nofollow">
-                                                        {data.data.sourceUrl}
+                                                        {data.post.sourceUrl}
                                                     </a>
                                                 </Link>
                                                 </p>
@@ -284,7 +292,11 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                 <Comments data={CommentList} />
                             </Col>
                             <Col xs={24} sm={24} md={8} lg={7}>
-                                <PostSidebar />
+                                <PostSidebar
+                                    category={data.allPostCategory}
+                                    tags={data.allPostTag}
+                                    adsense={[]}
+                                />
                             </Col>
                         </Row>
                     </div>

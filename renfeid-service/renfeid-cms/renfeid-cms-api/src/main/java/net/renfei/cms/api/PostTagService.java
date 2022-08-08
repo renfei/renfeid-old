@@ -33,6 +33,21 @@ public interface PostTagService {
     List<Tag> queryAllTag();
 
     /**
+     * 根据英文名查询标签
+     *
+     * @param enName
+     * @return
+     */
+    Tag queryTagByEnName(String enName);
+
+    /**
+     * 根据标签ID获取全部内容ID
+     *
+     * @return
+     */
+    List<Long> queryAllPostIdByTag(long tagId);
+
+    /**
      * 查询内容关联的标签列表
      *
      * @param postId

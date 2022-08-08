@@ -1,5 +1,7 @@
 import SecretKey = API.SecretKey
 import SignInAo = API.SignInAo
+import SignUpAo = API.SignUpAo
+import SignUpActivationAo = API.SignUpActivationAo
 
 export const requestServerSecretKey = async () => {
     let url = `/api/auth/secretKey`
@@ -37,6 +39,38 @@ export const signIn = async (signInAo: SignInAo) => {
     return await fetch(url, {
         method: 'POST',
         body: JSON.stringify(signInAo),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const signUp = async (signUpAo: SignUpAo) => {
+    let url = `/api/auth/signUp`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(signUpAo),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const signUpActivation = async (signUpActivationAo: SignUpActivationAo) => {
+    let url = `/api/auth/signUp/activation`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(signUpActivationAo),
         headers: {
             'content-type': 'application/json',
             'Authorization': '',
