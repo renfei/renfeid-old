@@ -25,6 +25,7 @@ import net.renfei.common.api.utils.StringUtils;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.api.constant.enums.SystemSettingEnum;
 import net.renfei.common.core.entity.Comment;
+import net.renfei.common.core.entity.CommentTree;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.repositories.CoreCommentsMapper;
 import net.renfei.common.core.repositories.entity.CoreCommentsExample;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static net.renfei.common.core.config.RedisConfig.REDIS_KEY_DATABASE;
 import static net.renfei.common.core.config.SystemConfig.*;
 
 /**
@@ -52,6 +54,8 @@ import static net.renfei.common.core.config.SystemConfig.*;
 @Service
 public class CommentServiceImpl implements CommentService {
     private final static Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
+    private final static String REDIS_KEY = REDIS_KEY_DATABASE + ":comment:";
+    private final RedisService redisService;
     private final AuditService auditService;
     private final SystemConfig systemConfig;
     private final SystemService systemService;
@@ -59,12 +63,14 @@ public class CommentServiceImpl implements CommentService {
     private final IP2LocationService ip2LocationService;
     private final CoreCommentsMapper coreCommentsMapper;
 
-    public CommentServiceImpl(AuditService auditService,
+    public CommentServiceImpl(RedisService redisService,
+                              AuditService auditService,
                               SystemConfig systemConfig,
                               SystemService systemService,
                               SnowflakeService snowflakeService,
                               IP2LocationService ip2LocationService,
                               CoreCommentsMapper coreCommentsMapper) {
+        this.redisService = redisService;
         this.auditService = auditService;
         this.systemConfig = systemConfig;
         this.systemService = systemService;
@@ -82,7 +88,7 @@ public class CommentServiceImpl implements CommentService {
             throw new BusinessException("当前评论系统未开启，评论请求被拒绝");
         }
         // TODO 检查被评论的对象是否允许评论
-        if (comment.getObjectId() == null) {
+        if (ObjectUtils.isEmpty(comment.getObjectId())) {
             return APIResult.builder()
                     .code(StateCodeEnum.Failure)
                     .message("objectId 不能为空")
@@ -153,11 +159,20 @@ public class CommentServiceImpl implements CommentService {
         }
         CoreCommentsWithBLOBs coreComments = convert(comment);
         coreCommentsMapper.insert(coreComments);
+        String redisKey = REDIS_KEY + coreComments.getSysType() + ":" + coreComments.getObjectId();
         if (systemConfig.getEnableAudit() && !isOwner) {
-            // 异步调用审核和通知机制
-            auditService.auditComment(Long.parseLong(comment.getId()));
+
+            if (systemConfig.getEnableCache()) {
+                // 异步调用审核和通知机制
+                auditService.auditComment(Long.parseLong(comment.getId()), redisService, redisKey);
+            } else {
+                auditService.auditComment(Long.parseLong(comment.getId()), redisService, null);
+            }
         } else {
             auditService.sendNotify(coreComments, null);
+            if (systemConfig.getEnableCache()) {
+                redisService.del(redisKey);
+            }
         }
         return APIResult.success();
     }
@@ -212,18 +227,64 @@ public class CommentServiceImpl implements CommentService {
         }
         coreComment.setIsDelete(true);
         coreCommentsMapper.updateByPrimaryKeySelective(coreComment);
+        if (systemConfig.getEnableCache()) {
+            String redisKey = REDIS_KEY + coreComment.getSysType() + ":" + coreComment.getObjectId();
+            redisService.del(redisKey);
+        }
         return APIResult.success();
+    }
+
+    @Override
+    public List<CommentTree> queryCommentTree(SystemTypeEnum sysType, long objectId, CommentTree reply) {
+        List<CommentTree> commentTreeList = new ArrayList<>();
+        String redisKey = REDIS_KEY + sysType.toString() + ":" + objectId;
+        if (reply != null) {
+            redisKey += ":" + reply.getId();
+        }
+        if (systemConfig.getEnableCache()) {
+            // 启用了缓存
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof List) {
+                    commentTreeList = (List<CommentTree>) object;
+                }
+            }
+        }
+        if (commentTreeList == null || commentTreeList.isEmpty()) {
+            CoreCommentsExample example = new CoreCommentsExample();
+            example.setOrderByClause("addtime DESC");
+            CoreCommentsExample.Criteria criteria = example.createCriteria();
+            criteria.andIsDeleteEqualTo(false)
+                    .andSysTypeEqualTo(sysType.name())
+                    .andObjectIdEqualTo(objectId);
+            if (reply == null) {
+                criteria.andParentIdIsNull();
+            } else {
+                criteria.andParentIdEqualTo(Long.parseLong(reply.getId()));
+            }
+            List<CoreCommentsWithBLOBs> coreComments = coreCommentsMapper.selectByExampleWithBLOBs(example);
+            if (!ObjectUtils.isEmpty(coreComments)) {
+                for (CoreCommentsWithBLOBs coreComment : coreComments
+                ) {
+                    CommentTree commentTree = convertTree(coreComment);
+                    commentTree.setChildren(queryCommentTree(sysType, objectId, commentTree));
+                    commentTreeList.add(commentTree);
+                }
+                redisService.set(redisKey, commentTreeList);
+            }
+        }
+        return commentTreeList;
     }
 
     private CoreCommentsWithBLOBs convert(Comment comment) {
         CoreCommentsWithBLOBs coreComments = new CoreCommentsWithBLOBs();
-        coreComments.setId(comment.getId() == null ? null : Long.parseLong(comment.getId()));
+        coreComments.setId(ObjectUtils.isEmpty(comment.getId()) ? null : Long.parseLong(comment.getId()));
         coreComments.setSysType(comment.getSysType().toString());
-        coreComments.setObjectId(comment.getObjectId() == null ? null : Long.parseLong(comment.getObjectId()));
-        coreComments.setAuthorId(comment.getAuthorId() == null ? null : Long.parseLong(comment.getAuthorId()));
+        coreComments.setObjectId(ObjectUtils.isEmpty(comment.getObjectId()) ? null : Long.parseLong(comment.getObjectId()));
+        coreComments.setAuthorId(ObjectUtils.isEmpty(comment.getAuthorId()) ? null : Long.parseLong(comment.getAuthorId()));
         coreComments.setAddtime(comment.getAddtime());
         coreComments.setIsDelete(comment.getIsDelete());
-        coreComments.setParentId(comment.getParentId() == null ? null : Long.parseLong(comment.getParentId()));
+        coreComments.setParentId(ObjectUtils.isEmpty(comment.getParentId()) ? null : Long.parseLong(comment.getParentId()));
         coreComments.setIsOwner(comment.getIsOwner());
         coreComments.setAuthor(comment.getAuthor());
         coreComments.setAuthorEmail(comment.getAuthorEmail());
@@ -251,5 +312,17 @@ public class CommentServiceImpl implements CommentService {
         comment.setAuthorAddress(coreComments.getAuthorAddress());
         comment.setContent(coreComments.getContent());
         return comment;
+    }
+
+    private CommentTree convertTree(CoreCommentsWithBLOBs coreComments) {
+        CommentTree commentTree = new CommentTree();
+        commentTree.setId(coreComments.getId() + "");
+        commentTree.setAddtime(coreComments.getAddtime());
+        commentTree.setIsOwner(coreComments.getIsOwner());
+        commentTree.setAuthor(coreComments.getAuthor());
+        commentTree.setAuthorUrl(coreComments.getAuthorUrl());
+        commentTree.setAuthorAddress(coreComments.getAuthorAddress());
+        commentTree.setContent(coreComments.getContent());
+        return commentTree;
     }
 }

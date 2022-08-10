@@ -28,6 +28,7 @@ import net.renfei.uaa.repositories.UaaMenuMapper;
 import net.renfei.uaa.repositories.entity.UaaMenuExample;
 import net.renfei.uaa.repositories.entity.UaaMenuWithBLOBs;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -185,8 +186,8 @@ public class MenuServiceImpl implements MenuService {
 
     private UaaMenuWithBLOBs convert(MenuTree menuTree) {
         UaaMenuWithBLOBs uaaMenu = new UaaMenuWithBLOBs();
-        uaaMenu.setId(menuTree.getId() == null ? null : Long.parseLong(menuTree.getId()));
-        uaaMenu.setPid(menuTree.getPid() == null ? null : Long.parseLong(menuTree.getPid()));
+        uaaMenu.setId(ObjectUtils.isEmpty(menuTree.getId()) ? null : Long.parseLong(menuTree.getId()));
+        uaaMenu.setPid(ObjectUtils.isEmpty(menuTree.getPid()) ? null : Long.parseLong(menuTree.getPid()));
         uaaMenu.setMenuName(menuTree.getMenuName());
         uaaMenu.setMenuIcon(menuTree.getMenuIcon());
         uaaMenu.setMenuTarget(menuTree.getMenuTarget());

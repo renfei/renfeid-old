@@ -18,8 +18,11 @@ package net.renfei.common.core.service;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.entity.Comment;
+import net.renfei.common.core.entity.CommentTree;
+import net.renfei.common.core.entity.SystemTypeEnum;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 评论服务
@@ -64,4 +67,14 @@ public interface CommentService {
      * @return
      */
     APIResult deleteComment(long commentId);
+
+    /**
+     * 查询评论树
+     *
+     * @param sysType  系统模块
+     * @param objectId 评论对象ID
+     * @param reply    被评论的父对象
+     * @return
+     */
+    List<CommentTree> queryCommentTree(SystemTypeEnum sysType, long objectId, CommentTree reply);
 }

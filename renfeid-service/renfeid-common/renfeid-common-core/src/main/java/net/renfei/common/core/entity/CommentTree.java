@@ -29,7 +29,7 @@ import java.util.List;
 @Data
 public class CommentTree implements Serializable {
     private static final long serialVersionUID = -314420603322403668L;
-    private Long id;
+    private String id;
     private Date addtime;
     private Boolean isOwner;
     private String author;

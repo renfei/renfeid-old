@@ -21,12 +21,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.Comment;
+import net.renfei.common.core.entity.CommentTree;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.service.CommentService;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.server.entity.CommentAo;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 评论接口
@@ -41,6 +45,18 @@ public class CommentController extends AbstractController {
 
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
+    }
+
+    @GetMapping("{systemTypeEnum}/{id}")
+    @Operation(summary = "查询评论树接口", tags = {"评论接口"},
+            parameters = {
+                    @Parameter(name = "systemTypeEnum", description = "系统类型"),
+                    @Parameter(name = "id", description = "评论目标的ID")
+            })
+    @OperationLog(module = SystemTypeEnum.COMMENT, desc = "查询评论树接口", operation = OperationTypeEnum.RETRIEVE)
+    APIResult<List<CommentTree>> queryCommentTree(@PathVariable("systemTypeEnum") SystemTypeEnum sysType,
+                                                  @PathVariable("id") long objectId) {
+        return new APIResult<>(commentService.queryCommentTree(sysType, objectId, null));
     }
 
     @PostMapping("{systemTypeEnum}/{id}")
@@ -61,7 +77,7 @@ public class CommentController extends AbstractController {
 
     private Comment convert(CommentAo commentAo) {
         Comment comment = new Comment();
-        comment.setParentId(commentAo.getParentId() == null ? null : commentAo.getParentId() + "");
+        comment.setParentId(ObjectUtils.isEmpty(commentAo.getParentId()) ? null : commentAo.getParentId() + "");
         comment.setAuthor(commentAo.getAuthor());
         comment.setAuthorEmail(commentAo.getAuthorEmail());
         comment.setAuthorUrl(commentAo.getAuthorUrl());

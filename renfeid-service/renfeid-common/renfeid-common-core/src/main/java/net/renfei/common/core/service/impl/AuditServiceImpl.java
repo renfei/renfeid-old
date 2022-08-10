@@ -22,11 +22,13 @@ import net.renfei.common.core.repositories.CoreCommentsMapper;
 import net.renfei.common.core.repositories.entity.CoreCommentsWithBLOBs;
 import net.renfei.common.core.service.AuditService;
 import net.renfei.common.core.service.EmailService;
+import net.renfei.common.core.service.RedisService;
 import net.renfei.common.core.service.aliyun.AliyunService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,13 +57,16 @@ public class AuditServiceImpl implements AuditService {
 
     @Async
     @Override
-    public void auditComment(long commentId) {
+    public void auditComment(long commentId, RedisService redisService, String redisKey) {
         CoreCommentsWithBLOBs comment = coreCommentsMapper.selectByPrimaryKey(commentId);
         // 检查评论内容，包括昵称和内容
         if (aliyunService.textScan(comment.getContent())
                 && (comment.getAuthor() != null && aliyunService.textScan(comment.getAuthor()))) {
             comment.setIsDelete(false);
             coreCommentsMapper.updateByPrimaryKeyWithBLOBs(comment);
+            if (!ObjectUtils.isEmpty(redisKey)) {
+                redisService.del(redisKey);
+            }
             sendNotify(comment, null);
         } else {
             // 发送通知

@@ -28,7 +28,7 @@ import java.io.Serializable;
 public class CommentAo implements Serializable {
     private static final long serialVersionUID = -314420603322403668L;
     @Schema(description = "评论给评论的ID")
-    private Long parentId;
+    private String parentId;
     @Schema(description = "作者昵称")
     private String author;
     @Schema(description = "作者邮箱")
@@ -38,11 +38,11 @@ public class CommentAo implements Serializable {
     @Schema(description = "评论内容")
     private String content;
 
-    public Long getParentId() {
+    public String getParentId() {
         return parentId;
     }
 
-    public void setParentId(Long parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
     }
 

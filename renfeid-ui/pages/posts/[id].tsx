@@ -26,9 +26,11 @@ import CommentTree = API.CommentTree
 import ListData = API.ListData
 import PostCategory = API.PostCategory
 import Tag = API.Tag
+import UserInfo = API.UserInfo
 import 'highlight.js/styles/intellij-light.css'
 import { convertToHeaders } from '../../utils/request'
 import PostSidebar from '../../components/PostSidebar'
+import CheckSignInStatus from '../../utils/CheckSignInStatus'
 
 const { Title, Text } = Typography
 
@@ -78,64 +80,14 @@ const postRelevant10 = [
     },
 ]
 
-const CommentList: CommentTree[] = [
-    {
-        id: '1',
-        addtime: '2022-07-08 15:32:32',
-        isOwner: false,
-        author: '用户1',
-        authorUrl: 'https://www.renfei.net',
-        authorAddress: 'Beijing, Beijing, China',
-        content: '评论演示数据',
-        children: [
-            {
-                id: '3',
-                addtime: '2022-07-08 15:32:32',
-                isOwner: true,
-                author: '用户3',
-                authorUrl: 'https://www.renfei.net',
-                authorAddress: 'Beijing, Beijing, China',
-                content: '评论演示数据',
-                children: [
-                    {
-                        id: '4',
-                        addtime: '2022-07-08 15:32:32',
-                        isOwner: false,
-                        author: '用户4',
-                        authorUrl: 'https://www.renfei.net',
-                        authorAddress: 'Beijing, Beijing, China',
-                        content: '评论演示数据',
-                    },
-                ]
-            },
-            {
-                id: '5',
-                addtime: '2022-07-08 15:32:32',
-                isOwner: false,
-                author: '用户5',
-                authorUrl: 'https://www.renfei.net',
-                authorAddress: 'Beijing, Beijing, China',
-                content: '评论演示数据',
-            },
-        ]
-    },
-    {
-        id: '2',
-        addtime: '2022-07-08 15:32:32',
-        isOwner: false,
-        author: '用户6',
-        authorUrl: 'https://www.renfei.net',
-        authorAddress: 'Beijing, Beijing, China',
-        content: '评论演示数据',
-    }
-]
-
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
+    const userInfo: UserInfo | undefined = await CheckSignInStatus(context)
     const postPassword = context.query.postPassword
     const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 9007199254740991, accessToken)
     const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
     let postResult: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers), postPassword, accessToken)
+    let commentTreeResult: APIResult<CommentTree[]> = await api.queryCommentTree(convertToHeaders(context.req.headers), 'POSTS', context.query.id, accessToken)
     if (postResult.code == 404) {
         return {
             notFound: true,
@@ -144,9 +96,11 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     return {
         props: {
             data: {
+                userInfo: userInfo,
                 post: postResult.data,
                 allPostCategory: allPostCategory.data?.data,
                 allPostTag: allPostTag.data,
+                commentTreeResult: commentTreeResult.data,
             }
         }
     }
@@ -289,7 +243,11 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                         </Col>
                                     </Row>
                                 </div>
-                                <Comments data={CommentList} />
+                                <Comments
+                                    systemTypeEnum='POSTS'
+                                    objectId={data.post.id}
+                                    data={data.commentTreeResult}
+                                    userInfo={data.userInfo} />
                             </Col>
                             <Col xs={24} sm={24} md={8} lg={7}>
                                 <PostSidebar

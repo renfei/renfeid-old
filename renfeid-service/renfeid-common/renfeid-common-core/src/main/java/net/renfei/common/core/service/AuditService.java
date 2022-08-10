@@ -30,7 +30,7 @@ public interface AuditService {
      *
      * @param commentId 评论ID
      */
-    void auditComment(long commentId);
+    void auditComment(long commentId, RedisService redisService, String redisKey);
 
     /**
      * 发送通知

@@ -153,6 +153,35 @@ declare namespace API {
         children?: CommentTree[]
     }
 
+    interface Comment {
+        id: string,
+        sysType: string,
+        objectId: string,
+        authorId: string,
+        addtime: string,
+        isDelete: boolean,
+        parentId?: string,
+        isOwner: boolean,
+        author: string,
+        authorEmail: string,
+        authorUrl?: string,
+        authorIp: string,
+        authorAddress: string,
+        content: string,
+    }
+
+    interface ReplyCommentAo {
+        content: string
+    }
+
+    interface CommentAo {
+        parentId?: string,
+        author: string,
+        authorEmail: string,
+        authorUrl?: string,
+        content: string,
+    }
+
     // 用户登录信息
     interface UserInfo {
         email?: string
@@ -288,26 +317,5 @@ declare namespace API {
         requParam?: string,
         respParam?: string,
         requAgent?: string,
-    }
-
-    interface Comment {
-        id: string,
-        sysType: string,
-        objectId: string,
-        authorId: string,
-        addtime: string,
-        isDelete: boolean,
-        parentId?: string,
-        isOwner: boolean,
-        author: string,
-        authorEmail: string,
-        authorUrl?: string,
-        authorIp: string,
-        authorAddress: string,
-        content: string,
-    }
-
-    interface ReplyCommentAo {
-        content: string
     }
 }
