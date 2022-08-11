@@ -40,6 +40,7 @@ import net.renfei.common.core.service.SystemService;
 import net.renfei.uaa.api.entity.UserDetail;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,7 +84,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public APIResult<ListData<Post>> queryPostList(Long categoryId, int pages, int rows, boolean useCache) {
+    public APIResult<ListData<Post>> queryPostList(List<Long> ids, Long categoryId, int pages, int rows, boolean useCache, String order) {
         UserDetail userDetail = systemService.currentUserDetail();
         SecretLevelEnum userSecretLevel =
                 userDetail == null ? SecretLevelEnum.UNCLASSIFIED : userDetail.getSecretLevel();
@@ -91,6 +92,11 @@ public class PostServiceImpl implements PostService {
         if (systemConfig.getEnableCache() && useCache && SecretLevelEnum.UNCLASSIFIED.equals(userSecretLevel)) {
             // 启用缓存，并且是非密用户
             String redisKey = REDIS_KEY + (categoryId == null ? "all:" : "category:" + categoryId + ":");
+            if (!ObjectUtils.isEmpty(ids)) {
+                List<String> idss = new ArrayList<>();
+                ids.forEach(item -> idss.add(item + ""));
+                redisKey += "ids:" + String.join("_", idss) + ":";
+            }
             redisKey += "page_" + pages + "_" + rows;
             if (redisService.hasKey(redisKey)) {
                 Object object = redisService.get(redisKey);
@@ -99,38 +105,45 @@ public class PostServiceImpl implements PostService {
                 }
             }
             if (postListData == null) {
-                postListData = this.queryPostList(categoryId, null, PostStatusEnum.PUBLISH, null, new Date(), pages, rows).getData();
+                postListData = this.queryPostList(ids, categoryId, null, PostStatusEnum.PUBLISH, null, new Date(), pages, rows, order).getData();
                 redisService.set(redisKey, postListData);
             }
             return new APIResult<>(postListData);
         } else {
-            return this.queryPostList(categoryId, null, PostStatusEnum.PUBLISH, null, new Date(), pages, rows);
+            return this.queryPostList(ids, categoryId, null, PostStatusEnum.PUBLISH, null, new Date(), pages, rows, order);
         }
     }
 
     @Override
-    public APIResult<ListData<Post>> queryPostList(Long categoryId, String title, PostStatusEnum postStatus,
-                                                   Date startDate, Date endDate, int pages, int rows) {
+    public APIResult<ListData<Post>> queryPostList(List<Long> ids, Long categoryId, String title, PostStatusEnum postStatus,
+                                                   Date startDate, Date endDate, int pages, int rows, String order) {
         UserDetail userDetail = systemService.currentUserDetail();
         SecretLevelEnum userSecretLevel =
                 userDetail == null ? SecretLevelEnum.UNCLASSIFIED : userDetail.getSecretLevel();
         CmsPostsExample example = new CmsPostsExample();
-        example.setOrderByClause("post_date DESC");
+        if (ObjectUtils.isEmpty(order)) {
+            example.setOrderByClause("post_date DESC");
+        } else {
+            example.setOrderByClause(order);
+        }
         CmsPostsExample.Criteria criteria = example.createCriteria();
         criteria.andSecretLevelLessThanOrEqualTo(userSecretLevel.getLevel());
-        if (startDate != null) {
+        if (!ObjectUtils.isEmpty(ids)) {
+            criteria.andIdIn(ids);
+        }
+        if (!ObjectUtils.isEmpty(startDate)) {
             criteria.andPostDateGreaterThanOrEqualTo(startDate);
         }
-        if (endDate != null) {
+        if (!ObjectUtils.isEmpty(endDate)) {
             criteria.andPostDateLessThanOrEqualTo(endDate);
         }
-        if (postStatus != null) {
+        if (!ObjectUtils.isEmpty(postStatus)) {
             criteria.andPostStatusEqualTo(postStatus.toString());
         }
-        if (categoryId != null) {
+        if (!ObjectUtils.isEmpty(categoryId)) {
             criteria.andCategoryIdEqualTo(categoryId);
         }
-        if (title != null) {
+        if (!ObjectUtils.isEmpty(title)) {
             criteria.andPostTitleLike("%" + title + "%");
         }
         ListData<Post> postListData = new ListData<>();
@@ -194,7 +207,7 @@ public class PostServiceImpl implements PostService {
         CmsPostsExample.Criteria criteria = example.createCriteria();
         criteria.andSecretLevelLessThanOrEqualTo(userSecretLevel.getLevel());
         criteria.andPostDateLessThanOrEqualTo(new Date());
-        if (postStatus != null) {
+        if (!ObjectUtils.isEmpty(postStatus)) {
             criteria.andPostStatusEqualTo(postStatus.toString());
         }
         criteria.andIdIn(postIds);

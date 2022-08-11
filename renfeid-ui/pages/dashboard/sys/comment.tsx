@@ -20,33 +20,9 @@ import { queryCommentList } from "../../../services/api/dashboard/api"
 import Comment = API.Comment
 import UserInfo = API.UserInfo
 import CheckSignInStatus from '../../../utils/CheckSignInStatus'
+import { getSysTypeUrl } from '../../../utils/SystemType'
 
 const { Title } = Typography
-
-const getObjectUrl = (comment: Comment) => {
-  let url = ''
-  switch (comment.sysType) {
-    case 'POSTS':
-      url += '/posts/'
-      break
-    case 'ALBUM':
-      url += '/photo/'
-      break
-    case 'WEIBO':
-      url += '/weibo/'
-      break
-    case 'KITBOX':
-      url += '/kitbox/'
-      break
-    case 'PAGE':
-      url += '/page/'
-      break
-    default:
-      url += comment.sysType
-      break
-  }
-  return url += comment.objectId
-}
 
 const routes = [
   {
@@ -111,7 +87,7 @@ const detailModal = (record: Comment, form: any) => {
       <>
         <Descriptions title="评论详情" bordered>
           <Descriptions.Item label="系统模块">{record.sysType}</Descriptions.Item>
-          <Descriptions.Item label="评论对象"><Link href={getObjectUrl(record)}><a target={'_blank'}>{getObjectUrl(record)}</a></Link></Descriptions.Item>
+          <Descriptions.Item label="评论对象"><Link href={getSysTypeUrl(record.sysType) + record.objectId}><a target={'_blank'}>{getSysTypeUrl(record.sysType) + record.objectId}</a></Link></Descriptions.Item>
           <Descriptions.Item label="评论时间">{record.addtime}</Descriptions.Item>
           <Descriptions.Item label="是否删除">{record.isDelete ? '是' : '否'}</Descriptions.Item>
           <Descriptions.Item label="官方回复">{record.isOwner ? '是' : '否'}</Descriptions.Item>
@@ -210,7 +186,7 @@ const DashboardCommentPosts = ({ data }: InferGetServerSidePropsType<typeof getS
       width: 10,
       dataIndex: 'objectId',
       render: (_: any, record: Comment) => {
-        return (<Link href={getObjectUrl(record)}><a target={'_blank'}>{getObjectUrl(record)}</a></Link>)
+        return (<Link href={getSysTypeUrl(record.sysType) + record.objectId}><a target={'_blank'}>{getSysTypeUrl(record.sysType) + record.objectId}</a></Link>)
       },
     },
     {

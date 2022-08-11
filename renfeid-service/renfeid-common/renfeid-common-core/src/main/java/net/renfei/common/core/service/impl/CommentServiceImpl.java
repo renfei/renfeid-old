@@ -250,7 +250,7 @@ public class CommentServiceImpl implements CommentService {
                 }
             }
         }
-        if (commentTreeList == null || commentTreeList.isEmpty()) {
+        if (commentTreeList.isEmpty()) {
             CoreCommentsExample example = new CoreCommentsExample();
             example.setOrderByClause("addtime DESC");
             CoreCommentsExample.Criteria criteria = example.createCriteria();
@@ -274,6 +274,40 @@ public class CommentServiceImpl implements CommentService {
             }
         }
         return commentTreeList;
+    }
+
+    @Override
+    public List<Comment> queryLastComment(SystemTypeEnum sysType, int quantity) {
+        List<Comment> commentList = new ArrayList<>();
+        String redisKey = REDIS_KEY + sysType.toString() + ":last:" + quantity;
+        if (systemConfig.getEnableCache()) {
+            // 启用了缓存
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof List) {
+                    commentList = (List<Comment>) object;
+                }
+            }
+        }
+        if (commentList.isEmpty()) {
+            CoreCommentsExample example = new CoreCommentsExample();
+            example.setOrderByClause("addtime DESC");
+            CoreCommentsExample.Criteria criteria = example.createCriteria();
+            criteria.andIsDeleteEqualTo(false)
+                    .andSysTypeEqualTo(sysType.name());
+            try (Page<CoreCommentsWithBLOBs> page = PageHelper.startPage(1, quantity)) {
+                coreCommentsMapper.selectByExampleWithBLOBs(example);
+                if (!page.getResult().isEmpty()) {
+                    for (CoreCommentsWithBLOBs coreComment : page.getResult()
+                    ) {
+                        Comment comment = convert(coreComment);
+                        commentList.add(comment);
+                    }
+                    redisService.set(redisKey, commentList);
+                }
+            }
+        }
+        return commentList;
     }
 
     private CoreCommentsWithBLOBs convert(Comment comment) {

@@ -54,9 +54,20 @@ public class CommentController extends AbstractController {
                     @Parameter(name = "id", description = "评论目标的ID")
             })
     @OperationLog(module = SystemTypeEnum.COMMENT, desc = "查询评论树接口", operation = OperationTypeEnum.RETRIEVE)
-    APIResult<List<CommentTree>> queryCommentTree(@PathVariable("systemTypeEnum") SystemTypeEnum sysType,
-                                                  @PathVariable("id") long objectId) {
+    public APIResult<List<CommentTree>> queryCommentTree(@PathVariable("systemTypeEnum") SystemTypeEnum sysType,
+                                                         @PathVariable("id") long objectId) {
         return new APIResult<>(commentService.queryCommentTree(sysType, objectId, null));
+    }
+
+    @GetMapping("{systemTypeEnum}/last")
+    @Operation(summary = "查询最近评论接口", tags = {"评论接口"},
+            parameters = {
+                    @Parameter(name = "systemTypeEnum", description = "系统类型"),
+                    @Parameter(name = "quantity", description = "需要查询的数量")
+            })
+    public APIResult<List<Comment>> queryLastComment(@PathVariable("systemTypeEnum") SystemTypeEnum sysType,
+                                                     @RequestParam(value = "quantity", required = false, defaultValue = "10") int quantity) {
+        return new APIResult<>(commentService.queryLastComment(sysType, quantity));
     }
 
     @PostMapping("{systemTypeEnum}/{id}")

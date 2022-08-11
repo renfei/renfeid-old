@@ -32,27 +32,31 @@ public interface PostService {
     /**
      * 查询已发布的文章列表
      *
+     * @param ids        内容ID列表
      * @param categoryId 分类ID
      * @param pages      页码
      * @param rows       每页行数
      * @param useCache   使用缓存（只缓存非密内容）
+     * @param order      排序
      * @return
      */
-    APIResult<ListData<Post>> queryPostList(Long categoryId, int pages, int rows, boolean useCache);
+    APIResult<ListData<Post>> queryPostList(List<Long> ids, Long categoryId, int pages, int rows, boolean useCache, String order);
 
     /**
      * 查询文章列表
      *
+     * @param ids        内容ID列表
      * @param categoryId 分类ID
      * @param postStatus 文章状态
      * @param startDate  开始时间
      * @param endDate    结束时间
      * @param pages      页码
      * @param rows       每页行数
+     * @param order      排序
      * @return
      */
-    APIResult<ListData<Post>> queryPostList(Long categoryId, String title, PostStatusEnum postStatus,
-                                            Date startDate, Date endDate, int pages, int rows);
+    APIResult<ListData<Post>> queryPostList(List<Long> ids, Long categoryId, String title, PostStatusEnum postStatus,
+                                            Date startDate, Date endDate, int pages, int rows, String order);
 
     /**
      * 根据标签查询已发布的文章列表
@@ -138,5 +142,11 @@ public interface PostService {
      */
     APIResult deletePost(long postId);
 
+    /**
+     * 添加浏览量
+     *
+     * @param postId
+     * @return
+     */
     APIResult addViews(long postId);
 }

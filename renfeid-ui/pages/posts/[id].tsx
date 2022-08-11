@@ -34,51 +34,6 @@ import CheckSignInStatus from '../../utils/CheckSignInStatus'
 
 const { Title, Text } = Typography
 
-const postRelevant5 = [
-    {
-        id: 1,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-    {
-        id: 2,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-    {
-        id: 3,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-    {
-        id: 4,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-    {
-        id: 5,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-]
-
-const postRelevant10 = [
-    {
-        id: 6,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-    {
-        id: 7,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-    {
-        id: 8,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-    {
-        id: 9,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-    {
-        id: 10,
-        title: '标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题'
-    },
-]
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
@@ -86,8 +41,21 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const postPassword = context.query.postPassword
     const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 9007199254740991, accessToken)
     const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
-    let postResult: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers), postPassword, accessToken)
-    let commentTreeResult: APIResult<CommentTree[]> = await api.queryCommentTree(convertToHeaders(context.req.headers), 'POSTS', context.query.id, accessToken)
+    const postResult: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers), postPassword, accessToken)
+    const hotPosts: APIResult<ListData<PostVo>> = await api.getHotPosts(convertToHeaders(context.req.headers), 10, accessToken)
+    const commentTreeResult: APIResult<CommentTree[]> = await api.queryCommentTree(convertToHeaders(context.req.headers), 'POSTS', context.query.id, accessToken)
+    const lastCommentResult: APIResult<Comment[]> = await api.queryLastComment(convertToHeaders(context.req.headers), 'POSTS', '10', accessToken)
+    const relatedPosts: APIResult<ListData<PostVo>> = await api.queryRelatedPostList(convertToHeaders(context.req.headers), context.query.id, 10, accessToken)
+    let postRelevant5: PostVo[] = [], postRelevant10: PostVo[] = []
+    if (relatedPosts.data?.data) {
+        for (let i = 0; i < relatedPosts.data.data.length; i++) {
+            if (i % 2 == 0) {
+                postRelevant5.push(relatedPosts.data.data[i]);
+            } else {
+                postRelevant10.push(relatedPosts.data.data[i]);
+            }
+        }
+    }
     if (postResult.code == 404) {
         return {
             notFound: true,
@@ -97,10 +65,14 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         props: {
             data: {
                 userInfo: userInfo,
+                hotPosts: hotPosts.data?.data,
                 post: postResult.data,
                 allPostCategory: allPostCategory.data?.data,
                 allPostTag: allPostTag.data,
                 commentTreeResult: commentTreeResult.data,
+                lastCommentResult: lastCommentResult.data,
+                postRelevant5: postRelevant5,
+                postRelevant10: postRelevant10,
             }
         }
     }
@@ -203,15 +175,15 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                     <Row style={{ paddingTop: '10px' }}>
                                         <Col xs={24} sm={24} md={12} lg={12} style={{ padding: '0 5px' }}>
                                             {
-                                                postRelevant5.length > 0 ? (
-                                                    postRelevant5.map(post => (
+                                                data.postRelevant5.length > 0 ? (
+                                                    data.postRelevant5.map((post: PostVo) => (
                                                         <Link key={"relevant_" + post.id}
                                                             href={'/posts/' + post.id}>
                                                             <a key={"a_" + post.id}>
                                                                 <Title key={"title_" + post.id} level={5}
                                                                     style={{ marginBottom: '0' }}
                                                                     ellipsis>
-                                                                    {post.title}
+                                                                    {post.postTitle}
                                                                 </Title>
                                                                 <Divider key={"divider_" + post.id}
                                                                     style={{ margin: '5px 0' }} />
@@ -223,15 +195,15 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                         </Col>
                                         <Col xs={24} sm={24} md={12} lg={12} style={{ padding: '0 5px' }}>
                                             {
-                                                postRelevant10.length > 0 ? (
-                                                    postRelevant10.map(post => (
+                                                data.postRelevant10.length > 0 ? (
+                                                    data.postRelevant10.map((post: PostVo) => (
                                                         <Link key={"relevant_" + post.id}
                                                             href={'/posts/' + post.id}>
                                                             <a key={"a_" + post.id}>
                                                                 <Title key={"title_" + post.id} level={5}
                                                                     style={{ marginBottom: '0' }}
                                                                     ellipsis>
-                                                                    {post.title}
+                                                                    {post.postTitle}
                                                                 </Title>
                                                                 <Divider key={"divider_" + post.id}
                                                                     style={{ margin: '5px 0' }} />
@@ -253,6 +225,8 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                 <PostSidebar
                                     category={data.allPostCategory}
                                     tags={data.allPostTag}
+                                    hotPost={data.hotPosts}
+                                    lastComment={data.lastCommentResult}
                                     adsense={[]}
                                 />
                             </Col>

@@ -77,4 +77,13 @@ public interface CommentService {
      * @return
      */
     List<CommentTree> queryCommentTree(SystemTypeEnum sysType, long objectId, CommentTree reply);
+
+    /**
+     * 查询最后的评论列表
+     *
+     * @param sysType  系统模块
+     * @param quantity 数量
+     * @return
+     */
+    List<Comment> queryLastComment(SystemTypeEnum sysType, int quantity);
 }

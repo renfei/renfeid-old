@@ -56,6 +56,14 @@ public interface PostTagService {
     List<Tag> queryTagListByPostId(long postId);
 
     /**
+     * 根据标签查询内容相关的内容ID
+     *
+     * @param tags
+     * @return
+     */
+    List<Long> queryRelatedPostIdByTag(List<Tag> tags);
+
+    /**
      * 创建标签，有则返回无则创建
      *
      * @param tag

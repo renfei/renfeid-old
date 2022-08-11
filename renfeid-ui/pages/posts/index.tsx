@@ -38,13 +38,17 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     }
     const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 9007199254740991, accessToken)
     const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
+    const hotPosts: APIResult<ListData<PostVo>> = await api.getHotPosts(convertToHeaders(context.req.headers), 10, accessToken)
     const result: APIResult<ListData<PostVo>> = await api.getPosts(convertToHeaders(context.req.headers), undefined, page, 10, accessToken)
+    const lastCommentResult: APIResult<Comment[]> = await api.queryLastComment(convertToHeaders(context.req.headers), 'POSTS', '10', accessToken)
     return {
         props: {
             data: {
                 allPostCategory: allPostCategory.data?.data,
                 allPostTag: allPostTag.data,
-                listData: result.data
+                listData: result.data,
+                hotPosts: hotPosts.data?.data,
+                lastCommentResult: lastCommentResult.data,
             }
         }
     }
@@ -76,6 +80,8 @@ const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
                             <PostSidebar
                                 category={data.allPostCategory}
                                 tags={data.allPostTag}
+                                hotPost={data.hotPosts}
+                                lastComment={data.lastCommentResult}
                                 adsense={[]}
                             />
                         </Col>

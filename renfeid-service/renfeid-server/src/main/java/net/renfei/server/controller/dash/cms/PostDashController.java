@@ -69,8 +69,8 @@ public class PostDashController extends AbstractController {
                                                    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endDate,
                                                    @RequestParam(value = "pages", required = false, defaultValue = "1") Integer pages,
                                                    @RequestParam(value = "rows", required = false, defaultValue = "10") Integer rows) {
-        return postService.queryPostList(categoryId, title, postStatus, startDate, endDate,
-                pages == null ? 1 : pages, rows == null ? 10 : rows);
+        return postService.queryPostList(null, categoryId, title, postStatus, startDate, endDate,
+                pages == null ? 1 : pages, rows == null ? 10 : rows, null);
     }
 
     @GetMapping("posts/{id}")

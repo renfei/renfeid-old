@@ -5,6 +5,9 @@ import { WechatOutlined, BugOutlined } from '@ant-design/icons'
 import GoogleAdsense from './GoogleAdsense'
 import PostCategory = API.PostCategory
 import PostTag = API.Tag
+import PostVo = API.PostVo
+import Comment = API.Comment
+import { getSysTypeUrl } from '../utils/SystemType'
 
 const data = [
   'Racing car sprays burn',
@@ -14,7 +17,9 @@ const data = [
   'Los Angel',
 ]
 
-const PostSidebar = (props: { category?: PostCategory[], tags?: PostTag[], adsense?: string[] }) => {
+const PostSidebar = (props: {
+  category?: PostCategory[], tags?: PostTag[], hotPost?: PostVo[], lastComment?: Comment[], adsense?: string[]
+}) => {
   return (
     <Row style={{ padding: '10px 0 20px 10px' }}>
       <Col span={24}>
@@ -45,7 +50,7 @@ const PostSidebar = (props: { category?: PostCategory[], tags?: PostTag[], adsen
             renderItem={item => (
               <List.Item>
                 <Link href={`/posts/cat/${item.enName}`}>
-                  <a>{item.zhName}</a>
+                  <a style={{ maxWidth: '100%' }}><Typography.Text ellipsis={true}>{item.zhName}</Typography.Text></a>
                 </Link>
               </List.Item>
             )}
@@ -82,11 +87,11 @@ const PostSidebar = (props: { category?: PostCategory[], tags?: PostTag[], adsen
         }
         <Card type="inner" title="最新留言" className={'ant-card-renfeid'}>
           <List
-            dataSource={data}
+            dataSource={props.lastComment}
             renderItem={item => (
               <List.Item>
-                <Link href={`/posts/${item}`}>
-                  <a>{item}</a>
+                <Link href={`${getSysTypeUrl(item.sysType)}${item.objectId}#cmt-${item.id}`}>
+                  <a style={{ maxWidth: '100%' }}><Typography.Text ellipsis={true}>{item.content}</Typography.Text></a>
                 </Link>
               </List.Item>
             )}
@@ -94,11 +99,11 @@ const PostSidebar = (props: { category?: PostCategory[], tags?: PostTag[], adsen
         </Card>
         <Card type="inner" title="热文排行" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
           <List
-            dataSource={data}
+            dataSource={props.hotPost}
             renderItem={item => (
               <List.Item>
-                <Link href={`/posts/${item}`}>
-                  <a>{item}</a>
+                <Link href={`/posts/${item.id}`}>
+                  <a style={{ maxWidth: '100%' }}><Typography.Text ellipsis={true}>{item.postTitle}</Typography.Text></a>
                 </Link>
               </List.Item>
             )}

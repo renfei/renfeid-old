@@ -87,6 +87,118 @@ export const getPosts = async (headers: Headers, categoryId?: string, page?: num
     }
 }
 
+export const getHotPosts = async (headers: Headers, quantity?: number, token?: string) => {
+    if (process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview') {
+        // 预览模式
+        let postVos: PostVo[] = []
+        for (let i = 1; i <= (quantity || 10); i++) {
+            postVos.push({
+                id: i.toString(),
+                categoryId: '1',
+                postAuthor: '1',
+                postDate: '2022-07-22 15:10:30',
+                postStatus: 'PUBLISH',
+                postViews: 1668,
+                commentStatus: 'OPENED',
+                thumbsUp: 0,
+                thumbsDown: 0,
+                avgViews: 0,
+                avgComment: 0,
+                pageRank: 0,
+                secretLevel: 'UNCLASSIFIED',
+                featuredImage: previewPostFeaturedImage,
+                postTitle: `【${i}】开发预览版 - Developer Preview`,
+                postKeyword: `postKeyword[${i}]`,
+                postExcerpt: previewPostExcerpt,
+                postContent: previewPostContent,
+                sourceName: '',
+                sourceUrl: '',
+                original: true
+            })
+        }
+        let listData: ListData<PostVo> = {
+            pageNum: quantity || 1,
+            pageSize: quantity || 10,
+            startRow: 0,
+            endRow: 0,
+            total: quantity || 10,
+            pages: 1,
+            data: postVos
+        }
+        let result: APIResult<ListData<PostVo>> = {
+            code: 200,
+            message: 'ok',
+            timestamp: new Date().valueOf(),
+            signature: '',
+            nonce: '',
+            data: listData
+        }
+        return result
+    } else {
+        let url = `/-/api/cms/posts/hot`
+        if (quantity) {
+            url += '?quantity=' + quantity + '&'
+        }
+        return Fetch.get(url, headers, token, true)
+    }
+}
+
+export const queryRelatedPostList = async (headers: Headers, id: string, quantity?: number, token?: string) => {
+    if (process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview') {
+        // 预览模式
+        let postVos: PostVo[] = []
+        for (let i = 1; i <= (quantity || 10); i++) {
+            postVos.push({
+                id: i.toString(),
+                categoryId: '1',
+                postAuthor: '1',
+                postDate: '2022-07-22 15:10:30',
+                postStatus: 'PUBLISH',
+                postViews: 1668,
+                commentStatus: 'OPENED',
+                thumbsUp: 0,
+                thumbsDown: 0,
+                avgViews: 0,
+                avgComment: 0,
+                pageRank: 0,
+                secretLevel: 'UNCLASSIFIED',
+                featuredImage: previewPostFeaturedImage,
+                postTitle: `【${i}】开发预览版 - Developer Preview`,
+                postKeyword: `postKeyword[${i}]`,
+                postExcerpt: previewPostExcerpt,
+                postContent: previewPostContent,
+                sourceName: '',
+                sourceUrl: '',
+                original: true
+            })
+        }
+        let listData: ListData<PostVo> = {
+            pageNum: quantity || 1,
+            pageSize: quantity || 10,
+            startRow: 0,
+            endRow: 0,
+            total: quantity || 10,
+            pages: 1,
+            data: postVos
+        }
+        let result: APIResult<ListData<PostVo>> = {
+            code: 200,
+            message: 'ok',
+            timestamp: new Date().valueOf(),
+            signature: '',
+            nonce: '',
+            data: listData
+        }
+        return result
+    } else {
+        let url = `/-/api/cms/posts/${id}/related`
+        if (quantity) {
+            url += '?quantity=' + quantity + '&'
+        }
+        return Fetch.get(url, headers, token, true)
+    }
+}
+
 export const getPostsByTag = async (headers: Headers, tagEnName: string, page?: number, rows?: number, token?: string) => {
     if (process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview') {
         // 预览模式

@@ -30,6 +30,8 @@ import net.renfei.server.controller.AbstractController;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * CMS 内部接口
  *
@@ -59,7 +61,37 @@ public class PostsController extends AbstractController {
     public APIResult<ListData<Post>> queryPostList(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                                    @RequestParam(value = "pages", required = false, defaultValue = "1") int pages,
                                                    @RequestParam(value = "rows", required = false, defaultValue = "10") int rows) {
-        return postService.queryPostList(categoryId, pages, rows, true);
+        return postService.queryPostList(null, categoryId, pages, rows, true, null);
+    }
+
+    @GetMapping("posts/hot")
+    @Operation(summary = "查询已发布的热点文章列表", tags = {"文章内容接口"},
+            parameters = {
+                    @Parameter(name = "quantity", description = "需要查询的数量")
+            })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询已发布的热点文章列表")
+    public APIResult<ListData<Post>> queryHotPostList(@RequestParam(value = "quantity", required = false, defaultValue = "10") int quantity) {
+        return postService.queryPostList(null, null, 1, quantity, true, "avg_views DESC,post_date DESC");
+    }
+
+    @GetMapping("posts/{id}/related")
+    @Operation(summary = "查询内容关联的文章列表", tags = {"文章内容接口"},
+            parameters = {
+                    @Parameter(name = "postId", description = "内容ID"),
+                    @Parameter(name = "quantity", description = "需要查询的数量")
+            })
+    @OperationLog(module = SystemTypeEnum.POSTS, desc = "查询内容关联的文章列表")
+    public APIResult<ListData<Post>> queryRelatedPostList(@PathVariable("id") long postId,
+                                                          @RequestParam(value = "quantity", required = false, defaultValue = "10") int quantity) {
+        APIResult<Post> postResult = postService.queryPostById(postId, null, false, true);
+        if (postResult.getData() != null) {
+            List<Long> longs = postTagService.queryRelatedPostIdByTag(postResult.getData().getTags());
+            return postService.queryPostList(longs, null, 1, quantity, true, "avg_views DESC,post_date DESC");
+        }
+        return APIResult.builder()
+                .code(StateCodeEnum.OK)
+                .message("OK")
+                .build();
     }
 
     @GetMapping("posts/tag/{tagEnName}")
@@ -86,7 +118,7 @@ public class PostsController extends AbstractController {
                     .message("标签不存在")
                     .build();
         }
-        return postService.queryPostList(Long.parseLong(tag.getId()), pages, rows, true);
+        return postService.queryPostList(null, Long.parseLong(tag.getId()), pages, rows, true, null);
     }
 
     @GetMapping("posts/{id}")

@@ -1,5 +1,6 @@
 import * as Fetch from '../../utils/request'
 import CommentAo = API.CommentAo
+import Comment = API.Comment
 
 export const queryCommentTree = async (headers: Headers, systemTypeEnum: string, id: string, token?: string) => {
   if (process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview') {
@@ -64,6 +65,44 @@ export const queryCommentTree = async (headers: Headers, systemTypeEnum: string,
     }
   } else {
     let url = `/-/api/comment/${systemTypeEnum}/${id}`
+    return Fetch.get(url, headers, token, true)
+  }
+}
+
+export const queryLastComment = async (headers: Headers, systemTypeEnum: string, quantity?: string, token?: string) => {
+  if (process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview') {
+    let comments: Comment[] = []
+    for (let i = 1; i <= 10; i++) {
+      comments.push({
+        id: i.toString(),
+        sysType: systemTypeEnum,
+        objectId: `${i}`,
+        authorId: `${i}`,
+        addtime: '2022-07-08 15:32:32',
+        isDelete: false,
+        isOwner: false,
+        author: 'preview',
+        authorEmail: 'preview@renfei.net',
+        authorUrl: '',
+        authorIp: '123.123.123.123',
+        authorAddress: '',
+        content: '评论演示数据',
+      })
+    }
+    // 预览模式
+    return {
+      code: 200,
+      message: 'OK',
+      timestamp: new Date().valueOf(),
+      signature: '',
+      nonce: '',
+      data: comments
+    }
+  } else {
+    let url = `/-/api/comment/${systemTypeEnum}/last`
+    if (quantity) {
+      url += "?quantity=" + quantity
+    }
     return Fetch.get(url, headers, token, true)
   }
 }
