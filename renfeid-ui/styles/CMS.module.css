@@ -36,6 +36,18 @@
     margin: 0;
 }
 
-.posts_relevant{
+.posts_relevant {}
 
+.wechatShare {
+    display: none;
+    position: absolute;
+    border: 1px #609700 solid;
+    padding: 10px 10px 5px 10px;
+    top: 30px;
+    background-color: #ffffff;
+    z-index: 999999;
+}
+
+.wechatShareBtn:hover .wechatShare {
+    display: block;
 }

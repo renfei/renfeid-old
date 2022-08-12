@@ -1,5 +1,5 @@
-import Head from 'next/head'
 import nookies from 'nookies'
+import { NextSeo } from 'next-seo'
 import { Row, Col, Typography, Divider } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
@@ -23,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
       notFound: true,
     }
   }
-  const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 9007199254740991, accessToken)
+  const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 2147483647, accessToken)
   const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
   let tag: Tag = {
     id: '',
@@ -69,15 +69,41 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
 
 const PostTagPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   let listData: ListData<PostVo> | undefined = data.listData
+  let openGraphImages: any[] = []
+  if (listData) {
+    for (let i = 0; i < listData.data.length; i++) {
+      openGraphImages.push({
+        url: `${listData.data[i].featuredImage}`,
+        width: 1280,
+        height: 640,
+        alt: `${listData.data[i].postTitle}`,
+        type: 'image/jpeg',
+      })
+    }
+  }
   return (
     <>
-      <Head>
-        <title>{`标签：${data.tag.zhName} - 博客文章标签分类 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
-        <meta name="keyword" content={`${data.tag.zhName},博客,blog,开发,技术,posts`} />
-        <meta name="description" content={`博客文章标签分类：${data.tag.zhName}。共同类型的文章在这里聚合等待您的查阅。`} />
-        <meta name="author" content="任霏,i@renfei.net" />
-        <meta name="copyright" content="CopyRight RENFEI.NET, All Rights Reserved." />
-      </Head>
+      <NextSeo
+        title={`标签：${data.tag.zhName} - 博客文章标签分类 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
+        description={`博客文章标签分类：${data.tag.zhName}。共同类型的文章在这里聚合等待您的查阅。`}
+        canonical={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts`}
+        openGraph={{
+          title: `标签：${data.tag.zhName} - 博客文章标签分类 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`,
+          description: `博客文章标签分类：${data.tag.zhName}。共同类型的文章在这里聚合等待您的查阅。`,
+          url: `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts`,
+          type: 'website',
+          images: openGraphImages,
+          site_name: `${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`,
+        }}
+        twitter={{
+          handle: '@renfeii',
+          site: '@renfeii',
+          cardType: 'summary_large_image',
+        }}
+        facebook={{
+          appId: `${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}`
+        }}
+      />
 
       <main style={{ backgroundColor: '#ffffff' }}>
         <section className={"renfeid-content"}>

@@ -1,20 +1,11 @@
-import Head from 'next/head'
 import Link from 'next/link'
+import moment from 'moment'
 import nookies from 'nookies'
+import { NextSeo, ArticleJsonLd } from 'next-seo'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Layout from "../../components/layout"
-import { Col, Row, Button, Typography, Divider, Space } from 'antd'
-import {
-    WechatFilled,
-    QqOutlined,
-    FacebookFilled,
-    TwitterCircleFilled,
-    WeiboCircleFilled,
-    LinkedinFilled,
-    LinkOutlined,
-    EyeFilled
-} from '@ant-design/icons'
+import { Col, Row, Typography, Divider } from 'antd'
 import * as api from '../../services/api'
 import styles from "../../styles/CMS.module.css"
 import GoogleAdsense from "../../components/GoogleAdsense"
@@ -31,15 +22,16 @@ import 'highlight.js/styles/intellij-light.css'
 import { convertToHeaders } from '../../utils/request'
 import PostSidebar from '../../components/PostSidebar'
 import CheckSignInStatus from '../../utils/CheckSignInStatus'
+import Share from '../../components/Share'
 
 const { Title, Text } = Typography
 
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
-    const userInfo: UserInfo | undefined = await CheckSignInStatus(context)
+    const userInfo: UserInfo | null = await CheckSignInStatus(context)
     const postPassword = context.query.postPassword
-    const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 9007199254740991, accessToken)
+    const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 2147483647, accessToken)
     const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
     const postResult: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers), postPassword, accessToken)
     const hotPosts: APIResult<ListData<PostVo>> = await api.getHotPosts(convertToHeaders(context.req.headers), 10, accessToken)
@@ -64,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     return {
         props: {
             data: {
-                userInfo: userInfo,
+                userInfo: userInfo ? userInfo : null,
                 hotPosts: hotPosts.data?.data,
                 post: postResult.data,
                 allPostCategory: allPostCategory.data?.data,
@@ -90,47 +82,84 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
 
     return (
         <>
-            <Head>
-                <title>{`${data.post.postTitle} - 博客文章 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
-                <meta name="keyword" content={data.post.postKeyword} />
-                <meta name="description" content={data.post.postExcerpt} />
-            </Head>
+            <NextSeo
+                title={`${data.post.postTitle} - 博客文章 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
+                description={data.post.postExcerpt}
+                canonical={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts/${data.post.id}`}
+                openGraph={{
+                    title: `${data.post.postTitle}`,
+                    description: `${data.post.postExcerpt}`,
+                    url: `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts/${data.post.id}`,
+                    type: 'article',
+                    article: {
+                        publishedTime: `${moment(data.post.postDate).format()}`,
+                        authors: [
+                            `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}`
+                        ],
+                    },
+                    images: [
+                        {
+                            url: `${data.post.featuredImage}`,
+                            width: 1280,
+                            height: 640,
+                            alt: `${data.post.postTitle}`,
+                            type: 'image/jpeg',
+                        }
+                    ],
+                    site_name: `${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`,
+                }}
+                twitter={{
+                    handle: '@renfeii',
+                    site: '@renfeii',
+                    cardType: 'summary_large_image',
+                }}
+                facebook={{
+                    appId: `${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}`
+                }}
+            />
+            <ArticleJsonLd
+                url={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts/${data.post.id}`}
+                title={data.post.postTitle}
+                images={[
+                    `${data.post.featuredImage}`
+                ]}
+                datePublished={moment(data.post.postDate).format()}
+                authorName={[
+                    {
+                        name: `${data.post.postAuthor}`,
+                        url: `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}`,
+                    },
+                ]}
+                publisherName={process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}
+                publisherLogo="https://cdn.renfei.net/Logo/RF.svg"
+                description={`${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
+            />
 
             <main style={{ backgroundColor: '#ffffff' }}>
                 <section className={"renfeid-content"}>
                     <div className={styles.container}>
                         <Text type="secondary">{data.post.postDate}</Text>
                         <Title level={1} className={styles.title}>{data.post.postTitle}</Title>
-                        <Space size={4}>
-                            <Button type="text" shape="circle" icon={<WechatFilled />} />
-                            <Button type="text" shape="circle" icon={<QqOutlined />} />
-                            <Button type="text" shape="circle" icon={<FacebookFilled />} />
-                            <Button type="text" shape="circle" icon={<TwitterCircleFilled />} />
-                            <Button type="text" shape="circle" icon={<WeiboCircleFilled />} />
-                            <Button type="text" shape="circle" icon={<LinkedinFilled />} />
-                            <Button type="text" shape="circle" icon={<LinkOutlined />} />
-                            <Button type="text" shape="circle" icon={<EyeFilled />}>
-                                {data.post.postViews}
-                            </Button>
-                        </Space>
+                        <Share
+                            url={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts/${data.post.id}`}
+                            title={data.post.postTitle}
+                            desc={data.post.postExcerpt}
+                            pics={data.post.featuredImage}
+                            views={data.post.postViews}
+                        />
                         <Divider />
                         <Row>
                             <Col xs={24} sm={24} md={16} lg={17}>
                                 <div
                                     className={styles.posts_content}
                                     dangerouslySetInnerHTML={{ __html: data.post.postContent }}></div>
-                                <Space size={4}>
-                                    <Button type="text" shape="circle" icon={<WechatFilled />} />
-                                    <Button type="text" shape="circle" icon={<QqOutlined />} />
-                                    <Button type="text" shape="circle" icon={<FacebookFilled />} />
-                                    <Button type="text" shape="circle" icon={<TwitterCircleFilled />} />
-                                    <Button type="text" shape="circle" icon={<WeiboCircleFilled />} />
-                                    <Button type="text" shape="circle" icon={<LinkedinFilled />} />
-                                    <Button type="text" shape="circle" icon={<LinkOutlined />} />
-                                    <Button type="text" shape="circle" icon={<EyeFilled />}>
-                                        {data.post.postViews}
-                                    </Button>
-                                </Space>
+                                <Share
+                                    url={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts/${data.post.id}`}
+                                    title={data.post.postTitle}
+                                    desc={data.post.postExcerpt}
+                                    pics={data.post.featuredImage}
+                                    views={data.post.postViews}
+                                />
                                 <Divider />
                                 <div className={styles.posts_content_copyright}>
                                     {

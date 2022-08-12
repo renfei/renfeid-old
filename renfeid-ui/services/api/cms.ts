@@ -340,7 +340,7 @@ export const queryPostCategoryList = async (headers: Headers, enName?: string, p
             url += 'enName=' + enName + '&'
         }
         if (page) {
-            url += 'page=' + page + '&'
+            url += 'pages=' + page + '&'
         }
         if (rows) {
             url += 'rows=' + rows + '&'

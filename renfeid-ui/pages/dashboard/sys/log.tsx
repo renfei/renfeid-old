@@ -157,7 +157,7 @@ const routes = [
 ]
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
-    const userInfo: UserInfo | undefined = await CheckSignInStatus(context)
+    const userInfo: UserInfo | null = await CheckSignInStatus(context)
     if (!userInfo) {
         return {
             redirect: {

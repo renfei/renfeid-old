@@ -1,8 +1,8 @@
 import 'antd/dist/antd.css'
 import '../styles/globals.css'
+import { LogoJsonLd, SiteLinksSearchBoxJsonLd, SocialProfileJsonLd } from 'next-seo'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { NextPage } from "next"
-import Head from 'next/head'
 import type { AppProps } from 'next/app'
 
 type Page<P = {}> = NextPage<P> & {
@@ -30,6 +30,11 @@ const getAnalyticsTag = () => {
           var s = document.getElementsByTagName("script")[0];
           s.parentNode.insertBefore(hm, s);
         })();
+
+        let noscriptWaring = document.getElementById('noscript-waring');
+        if (noscriptWaring) {
+            noscriptWaring.style.display = 'none';
+        }
         `,
     }
 }
@@ -48,14 +53,33 @@ const App = ({ Component, pageProps }: Props) => {
     }, [consoleLog])
     return getLayout(
         <>
-            <Head>
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1, shrink-to-fit=no"
-                />
-                <script dangerouslySetInnerHTML={getAnalyticsTag()} />
-            </Head>
+            <LogoJsonLd
+                keyOverride="site-logo"
+                logo="https://cdn.renfei.net/Logo/RF.svg"
+                url={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}`}
+            />
+            <SiteLinksSearchBoxJsonLd
+                keyOverride="site-search"
+                url={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}`}
+                potentialActions={[
+                    {
+                        target: `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/search?w=`,
+                        queryInput: 'search_term_string',
+                    },
+                ]}
+            />
+            <SocialProfileJsonLd
+                keyOverride="site-social"
+                type="Person"
+                name="任霏"
+                url={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}`}
+                sameAs={[
+                    'https://www.facebook.com/renfeii',
+                    'https://twitter.com/renfeii',
+                ]}
+            />
             <Component {...pageProps} />
+            <script dangerouslySetInnerHTML={getAnalyticsTag()} />
         </>
     )
 }

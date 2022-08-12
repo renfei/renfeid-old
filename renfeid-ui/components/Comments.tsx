@@ -46,7 +46,7 @@ const Comments = (props: { systemTypeEnum: string, objectId: string, data?: Comm
                                 author={(
                                     <Link key={`comment-author-url-${comment.id}`}
                                         href={comment.authorUrl ? comment.authorUrl : 'javascript:void(0)'}>
-                                        <a id={`cmt-${comment.id}`} target="_blank" key={`comment-author-url-a-${comment.id}`}>{comment.author}</a>
+                                        <a id={`cmt-${comment.id}`} target="_blank" rel="nofollow noopener" key={`comment-author-url-a-${comment.id}`}>{comment.author}</a>
                                     </Link>
                                 )}
                                 content={comment.content}
