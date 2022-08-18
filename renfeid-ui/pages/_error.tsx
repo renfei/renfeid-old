@@ -57,8 +57,8 @@ const ErrorPage = ({ err }: any) => {
                                                     向我们提交故障报告：
                                                     <Link href="https://github.com/renfei/feedback/discussions"><a target='_blank'
                                                         rel='nofollow noopener noreferrer'>https://github.com/renfei/feedback/discussions</a></Link>，
-                                                    或者邮件联系我们：<Link href="mailto:i@renfei.net" target={'_blank'}
-                                                        rel="nofollow noopener noreferrer"><a>i@renfei.net</a></Link>
+                                                    或者邮件联系我们：<Link href="mailto:i@renfei.net"><a target={'_blank'}
+                                                        rel="nofollow noopener noreferrer">i@renfei.net</a></Link>
                                                 </Paragraph>
                                             </>
                                         ) : (
