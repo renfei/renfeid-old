@@ -3,7 +3,7 @@ import moment from 'moment'
 import { NextSeo, ArticleJsonLd } from 'next-seo'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { Row, Col, Space } from 'antd'
+import { Row, Col, Space, Typography, Divider } from 'antd'
 import Layout from "../../components/layout"
 import PostSidebar from '../../components/PostSidebar'
 import PostsList from '../../components/PostList'
@@ -105,8 +105,13 @@ const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
             />
 
             <main style={{ backgroundColor: '#ffffff' }}>
-                <section className={"renfeid-content"}>
-                    <Row style={{ padding: '20px 0' }}>
+                <section className={"renfeid-content"} style={{ padding: '20px 0' }}>
+                    <div style={{ padding: '0 20px' }}>
+                        <Typography.Title level={3} style={{ marginBottom: '0' }}>任霏的博客</Typography.Title>
+                        <Typography.Text type={'secondary'}>任霏的个人博客栏目，专注分享科技、软件、开发等技术内容，记录分享个人的实践与成长。</Typography.Text>
+                    </div>
+                    <Divider style={{ margin: '10px 0' }} />
+                    <Row style={{ padding: '10px 0' }}>
                         <Col xs={24} sm={24} md={16} lg={17}>
                             {
                                 listData ? (
