@@ -113,7 +113,7 @@ const PostTagPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideP
             <Col xs={24} sm={24} md={16} lg={17}>
               {
                 listData ? (
-                  <PostsList posts={listData} />
+                  <PostsList posts={listData} path={`/posts/tag/${data.tag.enName}`} />
                 ) : ''
               }
             </Col>

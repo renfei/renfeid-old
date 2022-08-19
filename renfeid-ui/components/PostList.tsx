@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { Row, Col, List, Space } from 'antd'
 import { LikeOutlined, MessageOutlined, EyeFilled } from '@ant-design/icons'
@@ -12,7 +13,7 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   </Space>
 )
 
-const PostList = (props: { posts: ListData<PostVo> }) => {
+const PostList = (props: { posts: ListData<PostVo>, path: string }) => {
   if (props.posts) {
     return (
       <List
@@ -22,6 +23,8 @@ const PostList = (props: { posts: ListData<PostVo> }) => {
           onChange: page => {
             console.log(page);
           },
+          itemRender: (page, type, originalElement,) => { return (<Link href={`${props.path}?page=${page}`}>{originalElement}</Link>) },
+          showSizeChanger: false,
           pageSize: 10,
           total: props.posts.total
         }}

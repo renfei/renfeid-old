@@ -99,7 +99,7 @@ const PostCategoryPage = ({ data }: InferGetServerSidePropsType<typeof getServer
             <Col xs={24} sm={24} md={16} lg={17}>
               {
                 listData ? (
-                  <PostsList posts={listData} />
+                  <PostsList posts={listData} path={`/posts/cat/${data.category.enName}`} />
                 ) : ''
               }
             </Col>
