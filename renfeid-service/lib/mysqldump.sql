@@ -37,6 +37,7 @@ CREATE TABLE `cms_category` (
 
 LOCK TABLES `cms_category` WRITE;
 /*!40000 ALTER TABLE `cms_category` DISABLE KEYS */;
+INSERT INTO `cms_category` VALUES (1,'default','默认分类',0),(1551850495436390445,'test','测试分类',0);
 /*!40000 ALTER TABLE `cms_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -50,14 +51,16 @@ DROP TABLE IF EXISTS `cms_posts`;
 CREATE TABLE `cms_posts` (
   `id` bigint(20) unsigned NOT NULL,
   `category_id` bigint(20) unsigned NOT NULL COMMENT '分类ID',
+  `post_author_username` varchar(255) NOT NULL COMMENT '作者用户名',
   `post_author` bigint(20) unsigned NOT NULL COMMENT '作者ID',
   `post_date` datetime NOT NULL COMMENT '发布时间',
   `post_status` varchar(255) NOT NULL DEFAULT 'PUBLISH' COMMENT '状态：PUBLISH/REVISION/DELETED/OFFLINE/REVIEW',
   `post_views` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '浏览量',
   `comment_status` varchar(255) NOT NULL DEFAULT 'OPENED' COMMENT '评论状态：OPENED/CLOSED',
   `post_password` varchar(255) DEFAULT NULL COMMENT '密码保护',
-  `post_modified` datetime DEFAULT NULL COMMENT '修改时间',
-  `post_modified_user` bigint(20) unsigned DEFAULT NULL COMMENT '修改人',
+  `post_modified` datetime NOT NULL COMMENT '修改时间',
+  `post_modified_username` varchar(255) NOT NULL COMMENT '修改人用户名',
+  `post_modified_user` bigint(20) unsigned NOT NULL COMMENT '修改人',
   `post_parent` bigint(20) unsigned DEFAULT NULL COMMENT '父级ID（归档使用）',
   `version_number` int(10) unsigned NOT NULL DEFAULT 1 COMMENT '版本',
   `thumbs_up` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '点赞量',
@@ -84,6 +87,7 @@ CREATE TABLE `cms_posts` (
 
 LOCK TABLES `cms_posts` WRITE;
 /*!40000 ALTER TABLE `cms_posts` DISABLE KEYS */;
+INSERT INTO `cms_posts` VALUES (1550378678502817852,1,'renfei',1,'2022-07-22 15:10:30','PUBLISH',1,'OPENED',NULL,'2022-07-22 15:10:30','renfei',1,0,1,0,0,0,0,0,0,1,'https://cdn.renfei.net/upload/2022/6367480712d74b1a9cd6275335061761.png','测试','','测试','<p>测试测试测试测试</p>',NULL,NULL),(1550392946501615687,1,'renfei',1,'2022-07-22 16:08:27','PUBLISH',18,'OPENED',NULL,'2022-07-25 17:05:09','renfei',1,0,6,0,0,0,0,0,0,1,'https://cdn.renfei.net/upload/2022/0956a76c2a484c6daa9cd4b805fe123c.png','测试2','','测试2','<p>测试2测试2测试2测试2测试2测试2</p>','测试2','测试2'),(1550397187458859030,1551850495436390445,'renfei',1,'2022-07-22 16:08:27','PUBLISH',42,'OPENED',NULL,'2022-07-26 16:57:42','renfei',1,0,8,0,0,0,0,0,0,1,'https://cdn.renfei.net/upload/2022/8d7269255fc444d5a95736ca7a378cad.png','测试3','','测试2','<p>测试2测试2测试2测试2测试2测试2</p>','测试2','测试2'),(1554363560300118086,1,'renfei',1,'2022-08-02 15:07:06','PUBLISH',6,'OPENED',NULL,'2022-08-02 15:20:48','renfei',1,0,2,0,0,0,0,0,0,1,'https://cdn.renfei.net/upload/2022/858ba8877463409688b00a114d304d21.png','测试','','测试','<p>测试</p>','测试','测试');
 /*!40000 ALTER TABLE `cms_posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,14 +101,16 @@ DROP TABLE IF EXISTS `cms_posts_archival`;
 CREATE TABLE `cms_posts_archival` (
   `id` bigint(20) unsigned NOT NULL,
   `category_id` bigint(20) unsigned NOT NULL COMMENT '分类ID',
+  `post_author_username` varchar(255) NOT NULL COMMENT '作者用户名',
   `post_author` bigint(20) unsigned NOT NULL COMMENT '作者ID',
   `post_date` datetime NOT NULL COMMENT '发布时间',
   `post_status` varchar(255) NOT NULL DEFAULT 'PUBLISH' COMMENT '状态：PUBLISH/REVISION/DELETED/OFFLINE/REVIEW',
   `post_views` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '浏览量',
   `comment_status` varchar(255) NOT NULL DEFAULT 'OPENED' COMMENT '评论状态：OPENED/CLOSED',
   `post_password` varchar(255) DEFAULT NULL COMMENT '密码保护',
-  `post_modified` datetime DEFAULT NULL COMMENT '修改时间',
-  `post_modified_user` bigint(20) unsigned DEFAULT NULL COMMENT '修改人',
+  `post_modified` datetime NOT NULL COMMENT '修改时间',
+  `post_modified_username` varchar(255) NOT NULL COMMENT '修改人用户名',
+  `post_modified_user` bigint(20) unsigned NOT NULL COMMENT '修改人',
   `post_parent` bigint(20) unsigned DEFAULT NULL COMMENT '父级ID（归档使用）',
   `version_number` int(10) unsigned NOT NULL DEFAULT 1 COMMENT '版本',
   `thumbs_up` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '点赞量',
@@ -132,6 +138,56 @@ CREATE TABLE `cms_posts_archival` (
 LOCK TABLES `cms_posts_archival` WRITE;
 /*!40000 ALTER TABLE `cms_posts_archival` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cms_posts_archival` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cms_posts_tag`
+--
+
+DROP TABLE IF EXISTS `cms_posts_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cms_posts_tag` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `post_id` bigint(20) unsigned NOT NULL COMMENT '内容ID',
+  `tag_id` bigint(20) unsigned NOT NULL COMMENT '标签ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='内容与标签关系表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cms_posts_tag`
+--
+
+LOCK TABLES `cms_posts_tag` WRITE;
+/*!40000 ALTER TABLE `cms_posts_tag` DISABLE KEYS */;
+INSERT INTO `cms_posts_tag` VALUES (3,1554363560300118086,1);
+/*!40000 ALTER TABLE `cms_posts_tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cms_tag`
+--
+
+DROP TABLE IF EXISTS `cms_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cms_tag` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID，不采用分布式发号',
+  `en_name` varchar(255) NOT NULL COMMENT '用于访问的英文名',
+  `zh_name` varchar(255) NOT NULL COMMENT '用于显示的中文名',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='标签';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cms_tag`
+--
+
+LOCK TABLES `cms_tag` WRITE;
+/*!40000 ALTER TABLE `cms_tag` DISABLE KEYS */;
+INSERT INTO `cms_tag` VALUES (1,'domainname','域名'),(2,'发发发','发发发');
+/*!40000 ALTER TABLE `cms_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -193,7 +249,7 @@ CREATE TABLE `core_logs` (
   `resp_param` text DEFAULT NULL COMMENT '响应内容',
   `requ_agent` text DEFAULT NULL COMMENT '请求UA',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='日志审计表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='日志审计表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,7 +258,6 @@ CREATE TABLE `core_logs` (
 
 LOCK TABLES `core_logs` WRITE;
 /*!40000 ALTER TABLE `core_logs` DISABLE KEYS */;
-INSERT INTO `core_logs` VALUES (1,'2022-07-04 11:46:06','FATAL','SYSTEM','DELETE',NULL,NULL,NULL,NULL,NULL,NULL,'系统停车！！！ System shutdown!!!',NULL,NULL,NULL),(2,'2022-07-04 14:08:02','FATAL','SYSTEM','DELETE',NULL,NULL,NULL,NULL,NULL,NULL,'系统停车！！！ System shutdown!!!',NULL,NULL,NULL),(3,'2022-07-04 14:11:18','FATAL','SYSTEM','DELETE',NULL,NULL,NULL,NULL,NULL,NULL,'系统停车！！！ System shutdown!!!',NULL,NULL,NULL),(4,'2022-07-04 14:11:54','FATAL','SYSTEM','DELETE',NULL,NULL,NULL,NULL,NULL,NULL,'系统停车！！！ System shutdown!!!',NULL,NULL,NULL),(5,'2022-07-04 14:19:13','FATAL','SYSTEM','DELETE',NULL,NULL,NULL,NULL,NULL,NULL,'系统停车！！！ System shutdown!!!',NULL,NULL,NULL),(6,'2022-07-04 14:49:02','FATAL','SYSTEM','DELETE',NULL,NULL,NULL,NULL,NULL,NULL,'系统停车！！！ System shutdown!!!',NULL,NULL,NULL),(7,'2022-07-04 15:08:47','FATAL','SYSTEM','DELETE',NULL,NULL,NULL,NULL,NULL,NULL,'系统停车！！！ System shutdown!!!',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `core_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -218,7 +273,7 @@ CREATE TABLE `core_system_setting` (
   `setting_key` varchar(255) NOT NULL COMMENT '设置Key',
   `setting_value` varchar(1000) NOT NULL COMMENT '内容',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统设置表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='系统设置表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,6 +282,7 @@ CREATE TABLE `core_system_setting` (
 
 LOCK TABLES `core_system_setting` WRITE;
 /*!40000 ALTER TABLE `core_system_setting` DISABLE KEYS */;
+INSERT INTO `core_system_setting` VALUES (1,'GLOBAL_COMMENT_STATUS','OPENED');
 /*!40000 ALTER TABLE `core_system_setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -245,7 +301,7 @@ CREATE TABLE `uaa_authority` (
   `add_time` datetime NOT NULL COMMENT '添加时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色权限关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COMMENT='角色权限关系表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,6 +310,7 @@ CREATE TABLE `uaa_authority` (
 
 LOCK TABLES `uaa_authority` WRITE;
 /*!40000 ALTER TABLE `uaa_authority` DISABLE KEYS */;
+INSERT INTO `uaa_authority` VALUES (31,'API',1552836803759710216,1,'2022-07-29 12:00:16',NULL),(32,'MENU',1552836803759710216,3,'2022-07-29 12:00:16',NULL),(33,'MENU',1552836803759710216,2,'2022-07-29 12:00:16',NULL),(34,'API',1552219847201390592,1,'2022-07-29 12:01:55',NULL),(35,'MENU',1552219847201390592,1,'2022-07-29 12:01:55',NULL),(36,'MENU',1552219847201390592,2,'2022-07-29 12:01:55',NULL),(37,'MENU',1552219847201390592,3,'2022-07-29 12:01:55',NULL),(38,'MENU',1552219847201390592,4,'2022-07-29 12:01:55',NULL);
 /*!40000 ALTER TABLE `uaa_authority` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,7 +338,7 @@ CREATE TABLE `uaa_menu` (
   `menu_css` text DEFAULT NULL COMMENT '菜单CSS样式',
   `extend_json` text DEFAULT NULL COMMENT '扩展JSON',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -290,6 +347,7 @@ CREATE TABLE `uaa_menu` (
 
 LOCK TABLES `uaa_menu` WRITE;
 /*!40000 ALTER TABLE `uaa_menu` DISABLE KEYS */;
+INSERT INTO `uaa_menu` VALUES (1,NULL,'控制面板',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 16:21:33',NULL,'/dashboard',NULL,NULL),(2,NULL,'内容管理系统',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:01:05',NULL,'#',NULL,NULL),(3,2,'内容列表',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:01:26',NULL,'/dashboard/cms/posts',NULL,NULL),(4,2,'内容分类',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:07:31',NULL,'/dashboard/cms/category',NULL,NULL),(5,NULL,'用户账户与认证',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:09:22',NULL,'#',NULL,NULL),(6,5,'用户账号管理',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:09:47',NULL,'/dashboard/uaa/user',NULL,NULL),(7,5,'用户权限管理',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:10:07',NULL,'/dashboard/uaa/perm',NULL,NULL),(8,5,'角色管理',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:10:24',NULL,'/dashboard/uaa/role',NULL,NULL),(9,5,'菜单管理',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:10:43',NULL,'/dashboard/uaa/menu',NULL,NULL),(10,NULL,'系统设置',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:10:52',NULL,'#',NULL,NULL);
 /*!40000 ALTER TABLE `uaa_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -318,6 +376,7 @@ CREATE TABLE `uaa_role` (
 
 LOCK TABLES `uaa_role` WRITE;
 /*!40000 ALTER TABLE `uaa_role` DISABLE KEYS */;
+INSERT INTO `uaa_role` VALUES (1552219847201390592,'测试角色','测试角色的描述','2022-07-27 17:10:25','2022-07-29 12:01:55',0,''),(1552836803759710216,'你你你','','2022-07-29 10:01:58','2022-07-29 12:00:16',0,'');
 /*!40000 ALTER TABLE `uaa_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -362,7 +421,7 @@ CREATE TABLE `uaa_system_api` (
   `summary` varchar(255) NOT NULL COMMENT '概述',
   `description` varchar(255) DEFAULT NULL COMMENT '详细描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统接口列表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='系统接口列表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -371,6 +430,7 @@ CREATE TABLE `uaa_system_api` (
 
 LOCK TABLES `uaa_system_api` WRITE;
 /*!40000 ALTER TABLE `uaa_system_api` DISABLE KEYS */;
+INSERT INTO `uaa_system_api` VALUES (1,'/_/api/uaa/user/*','PUT','修改用户资料','此接口只能更新基础资料，修改密码、更改密级等有专门的接口'),(2,'/_/api/uaa/user/*/secret-level/*','PUT','给用户定密','给用户定密'),(3,'/_/api/uaa/user/*/role','PUT','编辑用户角色','编辑用户角色'),(4,'/_/api/uaa/user/*/reset-password','PUT','重置用户密码','重置用户密码');
 /*!40000 ALTER TABLE `uaa_system_api` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,6 +472,7 @@ CREATE TABLE `uaa_user` (
 
 LOCK TABLES `uaa_user` WRITE;
 /*!40000 ALTER TABLE `uaa_user` DISABLE KEYS */;
+INSERT INTO `uaa_user` VALUES (1,'7A159BF2BCB94B28BD185AC868169197','renfei','i@renfei.net',1,'',0,'2020-12-27 20:50:36','sha1:64000:18:0Htb/FaZQsur0KNR9iLq7oB5CHX4K8pF:/hF5/wG1yerCpJ/BuQAlUgIo',NULL,'2408:8207:c04:f908:2c8f:c185:cae0:924b',0,NULL,0,0,NULL,0,1,NULL,NULL),(1552175129360859183,'7BDBD4243C204755B5BD7C678E2E560F','zhangsan','zss@renfei.net',1,'13001000001',1,'2022-07-27 14:12:43','sha256:18:18:FZcaeKg73GExlCW9e2duARjig6S/JG9c:e/XAzqY4kFldnnKa/Ouw+VAn',NULL,'127.0.0.1',0,NULL,0,0,NULL,0,0,'张s','三三');
 /*!40000 ALTER TABLE `uaa_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -452,7 +513,7 @@ CREATE TABLE `uaa_user_role` (
   `add_time` datetime NOT NULL COMMENT '添加时间',
   `update_time` datetime DEFAULT NULL ON UPDATE current_timestamp() COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COMMENT='用户角色关系表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -461,6 +522,7 @@ CREATE TABLE `uaa_user_role` (
 
 LOCK TABLES `uaa_user_role` WRITE;
 /*!40000 ALTER TABLE `uaa_user_role` DISABLE KEYS */;
+INSERT INTO `uaa_user_role` VALUES (14,1552175129360859183,1552219847201390592,'2022-07-29 10:01:14',NULL),(16,1,1552836803759710216,'2022-07-29 10:01:58',NULL);
 /*!40000 ALTER TABLE `uaa_user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -473,4 +535,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-04 15:28:14
+-- Dump completed on 2022-08-22  8:53:49
