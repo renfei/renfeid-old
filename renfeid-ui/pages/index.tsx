@@ -297,9 +297,9 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                 client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
                                 slot={"641095"}
                             />
-                            <Row>
+                            <Row gutter={20}>
                                 <Col lg={12} xs={24}>
-                                    <div className={'renfeid-card'}>
+                                    <div className={'renfeid_card'}>
                                         <Title level={5}><WechatOutlined style={{ paddingRight: '10px' }} />微信订阅号</Title>
                                         <Text type="secondary" style={{ fontSize: '12px' }}>扫码关注「任霏博客」微信订阅号</Text>
                                         <div style={{ textAlign: 'center', marginTop: '0.5em' }}>
@@ -310,7 +310,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                     </div>
                                 </Col>
                                 <Col lg={12} xs={24}>
-                                    <div className={'renfeid-card'}>
+                                    <div className={'renfeid_card'}>
                                         <Title level={5}><GithubOutlined style={{ paddingRight: '10px' }} />开源与反馈</Title>
                                         <Text type="secondary" style={{ fontSize: '12px' }}>基于开源回归开源</Text>
                                         <ul style={{ paddingLeft: '15px' }}>

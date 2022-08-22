@@ -23,7 +23,7 @@ const PostSidebar = (props: {
   return (
     <Row>
       <Col span={24}>
-        <div className={'renfeid-card'}>
+        <div className={'renfeid_card'}>
           <Typography.Title level={5}><WechatOutlined style={{ paddingRight: '10px' }} />微信订阅号</Typography.Title>
           <Typography.Text type="secondary" style={{ fontSize: '12px' }}>扫码关注「任霏博客」微信订阅号</Typography.Text>
           <div style={{ textAlign: 'center', marginTop: '0.5em' }}>
@@ -32,7 +32,7 @@ const PostSidebar = (props: {
             />
           </div>
         </div>
-        <div className={'renfeid-card'}>
+        <div className={'renfeid_card'}>
           <Typography.Title level={5}><BugOutlined style={{ paddingRight: '10px' }} />反馈与讨论</Typography.Title>
           <Typography.Text type="secondary" style={{ fontSize: '12px' }}>感谢您的关注与反馈</Typography.Text>
           <div style={{ textAlign: 'center', marginTop: '0.5em' }}>

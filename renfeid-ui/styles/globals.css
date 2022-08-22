@@ -159,16 +159,9 @@ a {
     border-left: 5px solid #f5f5f5;
 }
 
-.renfeid-card {
-    margin: 10px 0;
-    padding: 20px;
-    border-radius: 16px;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-}
-
 .ant-card-renfeid {
     margin: 10px 0;
-    border-radius: 16px;
+    border-radius: 0.25rem;
     border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
