@@ -150,8 +150,8 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                 <section className={"renfeid-content"}>
                     <div className={styles.posts_top5}>
                         <Title level={3}>任霏博客</Title>
-                        <Row>
-                            <Col span={12} className={styles.posts_top5_left}>
+                        <Row gutter={20}>
+                            <Col span={12}>
                                 {
                                     data.postsDataTop2.length > 1 ? (
                                         <Link href={`/posts/${data.postsDataTop2[1].id}`} style={{ display: 'block' }}>
@@ -183,7 +183,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                     ) : ''
                                 }
                             </Col>
-                            <Col span={12} className={styles.posts_top5_right}>
+                            <Col span={12}>
                                 <Row>
                                     {
                                         data.postsData3To5.length > 0 ? (
@@ -225,7 +225,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                         </Row>
                     </div>
                     <Divider>更多内容</Divider>
-                    <Row>
+                    <Row gutter={20}>
                         {
                             data.postsData6To11.length > 0 ? (
                                 data.postsData6To11.map((post: PostVo) => (
@@ -271,8 +271,8 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                             </a>
                         </Link>
                     </div>
-                    <Row>
-                        <Col sm={12} xs={24} style={{ padding: '0 20px 0 0' }}>
+                    <Row gutter={40}>
+                        <Col sm={12} xs={24}>
                             <Divider>任霏微博</Divider>
                             <List
                                 className="comment-list"
@@ -291,7 +291,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                 )}
                             />
                         </Col>
-                        <Col sm={12} xs={24} style={{ padding: '0 0 0 20px' }}>
+                        <Col sm={12} xs={24}>
                             <Divider>更多内容</Divider>
                             <GoogleAdsense
                                 client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}

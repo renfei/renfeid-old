@@ -111,7 +111,7 @@ const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
                         <Typography.Text type={'secondary'}>任霏的个人博客栏目，专注分享科技、软件、开发等技术内容，记录分享个人的实践与成长。</Typography.Text>
                     </div>
                     <Divider style={{ margin: '10px 0' }} />
-                    <Row style={{ padding: '10px 0' }}>
+                    <Row style={{ padding: '10px 0' }} gutter={20}>
                         <Col xs={24} sm={24} md={16} lg={17}>
                             {
                                 listData ? (

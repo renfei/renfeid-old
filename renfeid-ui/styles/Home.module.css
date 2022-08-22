@@ -1,5 +1,4 @@
-.container {
-}
+.container {}
 
 .banner_wrapper {
     background-color: #ffffff;
@@ -11,9 +10,7 @@
     padding: 0 0 30px 0;
 }
 
-.banner_col {
-
-}
+.banner_col {}
 
 .banner_img_wrapper {
     height: 0;
@@ -47,29 +44,26 @@
 }
 
 .banner_content_h2 {
-    font-size: 26px!important;
+    font-size: 26px !important;
 }
 
 .banner_content_h3 {
-    font-size: 24px!important;
+    font-size: 24px !important;
 }
 
 .banner_content_h4 {
-    font-size: 18px!important;
+    font-size: 18px !important;
 }
 
 .banner_content_p {
-    font-size: 16px!important;
-    line-height: 28px!important;
+    font-size: 16px !important;
+    line-height: 28px !important;
 }
 
 .banner_content_icon {
     display: flex;
     justify-content: flex-end;
     margin: 28px 10px 0 0;
-}
-
-.posts_top5 {
 }
 
 .posts_top5_left {
@@ -86,7 +80,6 @@
 
 
 .posts_more_wrapper {
-    margin: 10px 0;
     padding: 5px 10px;
 }
 

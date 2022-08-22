@@ -21,7 +21,7 @@ const PostSidebar = (props: {
   category?: PostCategory[], tags?: PostTag[], hotPost?: PostVo[], lastComment?: Comment[], adsense?: string[]
 }) => {
   return (
-    <Row style={{ padding: '10px 0 20px 10px' }}>
+    <Row>
       <Col span={24}>
         <div className={'renfeid-card'}>
           <Typography.Title level={5}><WechatOutlined style={{ paddingRight: '10px' }} />微信订阅号</Typography.Title>

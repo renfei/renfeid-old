@@ -92,10 +92,12 @@ const PostCategoryPage = ({ data }: InferGetServerSidePropsType<typeof getServer
       />
 
       <main style={{ backgroundColor: '#ffffff' }}>
-        <section className={"renfeid-content"}>
-          <Row style={{ padding: '20px 0' }}>
-            <Typography.Title level={1} className={styles.title}>内容分类：{data.category.zhName}</Typography.Title>
-            <Divider />
+        <section className={"renfeid-content"} style={{ padding: '20px 0' }}>
+          <div style={{ padding: '0 20px' }}>
+            <Typography.Title level={3} style={{ marginBottom: '0' }} className={styles.title}>内容分类：{data.category.zhName}</Typography.Title>
+          </div>
+          <Divider style={{ margin: '10px 0' }} />
+          <Row style={{ padding: '10px 0' }} gutter={20}>
             <Col xs={24} sm={24} md={16} lg={17}>
               {
                 listData ? (
