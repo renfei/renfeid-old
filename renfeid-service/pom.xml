@@ -158,9 +158,9 @@
             </properties>
         </profile>
         <profile>
-            <id>production</id>
+            <id>prod</id>
             <properties>
-                <activatedProperties>production</activatedProperties>
+                <activatedProperties>prod</activatedProperties>
             </properties>
         </profile>
     </profiles>
