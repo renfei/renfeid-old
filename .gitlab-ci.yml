@@ -1,38 +1,26 @@
 stages:
-  - test
-  - build
-  - deploy
-
-test_job:
-  stage: test
-  script:
-    - echo 'TODO....'
-
-nuxt_build_job:
-  stage: build
-  script:
-    - echo 'TODO....'
-
-maven_build_job:
-  stage: build
-  script:
-    - echo 'TODO....'
+  - release
 
 nodejs_docker_job:
-  stage: deploy
+  stage: release
+  image: docker:latest
+  rules:
+    - if: '$CI_COMMIT_TAG'
+  services:
+    - docker:dind
   script:
-    - echo 'TODO....'
+    - docker build -t $CI_REGISTRY_IMAGE/ui:$CI_COMMIT_TAG renfeid-ui/.
+    - docker login --username=$CI_REGISTRY_USER --password=$CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
+    - docker push $CI_REGISTRY_IMAGE/ui:$CI_COMMIT_TAG
 
 java_docker_job:
-  stage: deploy
+  stage: release
+  image: docker:latest
+  rules:
+    - if: '$CI_COMMIT_TAG'
+  services:
+    - docker:dind
   script:
-    - echo 'TODO....'
-
-sast:
-  stage: test
-include:
-  - template: Security/SAST.gitlab-ci.yml
-  - template: Security/Dependency-Scanning.gitlab-ci.yml
-  - template: Security/Container-Scanning.gitlab-ci.yml
-  - template: Security/Secret-Detection.gitlab-ci.yml
-  - template: License-Scanning.gitlab-ci.yml
+    - docker build -t $CI_REGISTRY_IMAGE/service:$CI_COMMIT_TAG renfeid-service/.
+    - docker login --username=$CI_REGISTRY_USER --password=$CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
+    - docker push $CI_REGISTRY_IMAGE/service:$CI_COMMIT_TAG

@@ -1,49 +1,36 @@
-FROM ubuntu:20.04
+#
+# Build stage
+#
+FROM maven:3.8.6-openjdk-8 AS builder
+RUN mkdir /app
+COPY mybatis-generator ./app/mybatis-generator
+COPY renfeid-bpm ./app/renfeid-bpm
+COPY renfeid-cms ./app/renfeid-cms
+COPY renfeid-common ./app/renfeid-common
+COPY renfeid-proprietary ./app/renfeid-proprietary
+COPY renfeid-server ./app/renfeid-server
+COPY renfeid-uaa ./app/renfeid-uaa
+COPY pom.xml ./app/pom.xml
 
-RUN adduser --system --group --home /opt/renfeid renfei
+WORKDIR /app
 
-RUN set -ex; \
-	apt-get update; \
-	if ! which openjdk-8-jdk; then \
-		apt-get install -y --no-install-recommends openjdk-8-jdk; \
-	fi; \
-	if ! which dnsutils; then \
-    	apt-get install -y --no-install-recommends dnsutils; \
-    fi; \
-    if ! which ntp; then \
-            apt-get install -y --no-install-recommends ntp; \
-    fi; \
-    if ! which whois; then \
-        apt-get install -y --no-install-recommends whois; \
-    fi; \
-    if ! which curl; then \
-    	apt-get install -y --no-install-recommends curl; \
-    fi; \
-    if ! which tzdata; then \
-        apt-get install -y --no-install-recommends tzdata; \
-    fi; \
-    if ! which jq; then \
-        apt-get install -y --no-install-recommends jq; \
-    fi; \
-    rm -rf /var/lib/apt/lists/* \
-    && ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && dpkg-reconfigure -f noninteractive tzdata
+RUN mvn clean package -Dmaven.test.skip=true -P prod
 
-ENV TZ="Asia/Shanghai"
+#
+# Package stage
+#
+FROM openjdk:8-jdk-alpine AS runner
+WORKDIR /app
 
-ARG JAR_FILE=renfeid-server/target/renfeid.jar
-# git clone https://github.com/renfei/ip2location.git
-#ARG IP2LocationBinFile=src/main/resources/ip2location/*.BIN
+RUN addgroup -S renfeid && adduser -S renfeid -G renfeid
+USER renfeid:renfeid
 
-RUN mkdir /opt/renfeid/ip2location
+COPY --from=builder renfeid-service/renfeid-server/target ./app/target
 
-COPY --chown=renfei:renfei ${JAR_FILE} /opt/
-# IP2Location 数据过大，不再随 Docker 打包
-#COPY --chown=renfei:renfei ${IP2LocationBinFile} /opt/renfeid/ip2location/
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
 
-USER renfei
-
-WORKDIR /opt/renfeid
+EXPOSE 9595
 
 ENTRYPOINT [ "java", \
              "-Xms128M", \
@@ -51,9 +38,9 @@ ENTRYPOINT [ "java", \
              "-XX:+PrintGCDetails", \
              "-XX:GCLogFileSize=100M", \
              "-XX:+UseGCLogFileRotation", \
-             "-Xloggc:/opt/renfeid/log/gc.log", \
+             "-Xloggc:/app/log/gc.log", \
              "-XX:+HeapDumpOnOutOfMemoryError", \
-             "-XX:HeapDumpPath=/opt/renfeid/log/java_heapdump.hprof", \
+             "-XX:HeapDumpPath=/app/log/java_heapdump.hprof", \
              "-XX:+UseCompressedOops", \
              "-XX:+UseG1GC", \
              "-XX:+UseStringDeduplication", \
@@ -61,14 +48,5 @@ ENTRYPOINT [ "java", \
              "-Dfile.encoding=UTF-8", \
              "-Xverify:none", \
              "-jar", \
-             "/opt/renfeid.jar" \
+             "/app/app.jar" \
 ]
-
-HEALTHCHECK --start-period=30s --interval=30s --timeout=3s --retries=3 \
-            CMD curl --silent --fail --request GET http://localhost:9595/actuator/health \
-                | jq --exit-status '.status == "UP"' || exit 1
-#                | jq --exit-status -n 'inputs | if has("status") then .status=="UP" else false end' > /dev/null || exit 1
-
-VOLUME ["/opt/renfeid"]
-
-EXPOSE 9595

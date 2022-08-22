@@ -125,9 +125,9 @@
 
     <profiles>
         <profile>
-            <id>development</id>
+            <id>dev</id>
             <properties>
-                <activatedProperties>development</activatedProperties>
+                <activatedProperties>dev</activatedProperties>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

@@ -51,7 +51,7 @@ spring:
 
 # 自定义配置
 system:
-  active: development
+  active: dev
   version: "@project.version@"
   buildTime: "@buildtimestamp@"
   siteName: 任霏的博客
