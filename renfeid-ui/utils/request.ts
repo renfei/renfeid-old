@@ -289,8 +289,8 @@ export const convertToHeaders = (incomingHttpHeaders: http.IncomingHttpHeaders, 
     } else if (incomingHttpHeaders['AWS-APIGateway-sourceIp']) {
         headers.append('AWS-APIGateway-sourceIp', incomingHttpHeaders['AWS-APIGateway-sourceIp'].toString())
     } else if (remoteAddress) {
-        if (remoteAddress.startsWith(':ffff:')) {
-            remoteAddress = remoteAddress.replace(':ffff:', '')
+        if (remoteAddress.startsWith('::ffff:')) {
+            remoteAddress = remoteAddress.replace('::ffff:', '')
         }
         headers.append('x-forwarded-for', remoteAddress)
     }
