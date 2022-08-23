@@ -76,7 +76,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     let roleDetailOptions: AntdSelectOption[] = []
     let roleDetailList: RoleDetail[] = []
     const resultRoleDetail: APIResult<ListData<RoleDetail>> = await api.queryRoleListInner(accessToken,
-        convertToHeaders(context.req.headers), undefined, 1, 2147483647)
+        convertToHeaders(context.req.headers, context.req.socket.remoteAddress), undefined, 1, 2147483647)
     if (resultRoleDetail.code == 401) {
         return {
             redirect: {

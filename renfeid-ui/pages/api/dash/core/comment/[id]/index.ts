@@ -28,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (token) {
       let url = `/_/api/core/comment/${req.query.id}`
       if (req.method === 'DELETE') {
-        await Fetch.delet(url, convertToHeaders(req.headers), token, true).then(result => {
+        await Fetch.delet(url, convertToHeaders(req.headers, req.socket.remoteAddress), token, true).then(result => {
           res.status(200).json(result)
         })
       } else {

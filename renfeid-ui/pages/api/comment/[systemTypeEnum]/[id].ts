@@ -28,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<any>>
     let url = `/-/api/comment/${req.query.systemTypeEnum}/${req.query.id}`
     try {
       if (req.method === 'POST') {
-        await Fetch.post(url, req.body, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
+        await Fetch.post(url, req.body, convertToHeaders(req.headers, req.socket.remoteAddress), req.cookies['accessToken'], true).then(result => {
           res.status(200).json(result)
         })
       } else {

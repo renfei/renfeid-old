@@ -74,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         }
     }
     let apiList: AntdSelectOption[] = []
-    const resultSystemApi: APIResult<ListData<SystemApi>> = await api.querySystemApiInner(accessToken, convertToHeaders(context.req.headers), undefined, '1', '2147483647')
+    const resultSystemApi: APIResult<ListData<SystemApi>> = await api.querySystemApiInner(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress), undefined, '1', '2147483647')
     if (resultSystemApi.code == 401) {
         return {
             redirect: {
@@ -93,7 +93,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         }
     }
     let menuTreeList: MenuTree[] = []
-    const resultMenuTree: APIResult<MenuTree[]> = await api.queryMenuTreeInner(accessToken, convertToHeaders(context.req.headers))
+    const resultMenuTree: APIResult<MenuTree[]> = await api.queryMenuTreeInner(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress))
     if (resultMenuTree.code == 401) {
         return {
             redirect: {

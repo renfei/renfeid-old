@@ -62,7 +62,7 @@ const friendlyLinks = [
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
-    const result: APIResult<ListData<PostVo>> = await api.getPosts(convertToHeaders(context.req.headers), undefined, 1, 11, accessToken)
+    const result: APIResult<ListData<PostVo>> = await api.getPosts(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), undefined, 1, 11, accessToken)
 
     let postsDataTop2: PostVo[] = []
     let postsData3To5: PostVo[] = []

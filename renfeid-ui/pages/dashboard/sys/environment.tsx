@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
   }
 
   let environmentInfo: EnvironmentInfo | undefined = undefined
-  const resultEnvironmentInfo: APIResult<EnvironmentInfo> = await api.getEnvironmentInfo(accessToken, convertToHeaders(context.req.headers))
+  const resultEnvironmentInfo: APIResult<EnvironmentInfo> = await api.getEnvironmentInfo(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress))
   if (resultEnvironmentInfo.code == 401) {
     return {
       redirect: {

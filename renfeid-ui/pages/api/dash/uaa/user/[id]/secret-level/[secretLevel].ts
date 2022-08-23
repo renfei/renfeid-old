@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (token) {
       let url = `/_/api/uaa/user/${req.query.id}/secret-level/${req.query.secretLevel}`
       if (req.method === 'PUT') {
-        await Fetch.put(url, req.body, convertToHeaders(req.headers), token, true).then(result => {
+        await Fetch.put(url, req.body, convertToHeaders(req.headers, req.socket.remoteAddress), token, true).then(result => {
           res.status(200).json(result)
         })
       } else {

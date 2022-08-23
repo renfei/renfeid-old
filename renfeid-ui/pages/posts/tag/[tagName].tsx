@@ -23,8 +23,8 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
       notFound: true,
     }
   }
-  const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 2147483647, accessToken)
-  const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
+  const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), undefined, 1, 2147483647, accessToken)
+  const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), accessToken)
   let tag: Tag = {
     id: '',
     enName: '',
@@ -50,9 +50,9 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
   if (context.query.page) {
     page = context.query.page
   }
-  const postResult: APIResult<ListData<PostVo>> = await api.getPostsByTag(convertToHeaders(context.req.headers), tagName, page, 10, accessToken)
-  const hotPosts: APIResult<ListData<PostVo>> = await api.getHotPosts(convertToHeaders(context.req.headers), 10, accessToken)
-  const lastCommentResult: APIResult<Comment[]> = await api.queryLastComment(convertToHeaders(context.req.headers), 'POSTS', '10', accessToken)
+  const postResult: APIResult<ListData<PostVo>> = await api.getPostsByTag(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), tagName, page, 10, accessToken)
+  const hotPosts: APIResult<ListData<PostVo>> = await api.getHotPosts(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), 10, accessToken)
+  const lastCommentResult: APIResult<Comment[]> = await api.queryLastComment(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), 'POSTS', '10', accessToken)
   return {
     props: {
       data: {

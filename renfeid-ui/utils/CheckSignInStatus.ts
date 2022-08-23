@@ -26,7 +26,7 @@ const CheckSignInStatus = async (context: any): Promise<UserInfo | null> => {
     const accessToken = nookies.get(context)['accessToken']
     if (accessToken) {
       let url = `/api/auth/current/user`
-      const result: APIResult<UserInfo> = await Fetch.get(url, convertToHeaders(context.req.headers), accessToken, true)
+      const result: APIResult<UserInfo> = await Fetch.get(url, convertToHeaders(context.req.headers, context.req.socket.remoteAddress), accessToken, true)
       if (result.code == 401) {
         nookies.destroy(context, 'accessToken')
         return null

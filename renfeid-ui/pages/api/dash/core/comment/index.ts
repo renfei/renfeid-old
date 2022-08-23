@@ -69,7 +69,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (req.query.rows) {
           url += 'rows=' + req.query.rows + '&'
         }
-        await Fetch.get(url, convertToHeaders(req.headers), token, true).then(result => {
+        await Fetch.get(url, convertToHeaders(req.headers, req.socket.remoteAddress), token, true).then(result => {
           res.status(200).json(result)
         })
       } else {

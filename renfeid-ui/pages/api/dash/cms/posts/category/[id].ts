@@ -18,11 +18,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (token) {
             let url = `/_/api/cms/posts/category/${req.query.id}`
             if (req.method === 'PUT') {
-                await Fetch.put(url, req.body, convertToHeaders(req.headers), token, true).then(result => {
+                await Fetch.put(url, req.body, convertToHeaders(req.headers, req.socket.remoteAddress), token, true).then(result => {
                     res.status(200).json(result)
                 })
             } if (req.method === 'DELETE') {
-                await Fetch.delet(url, convertToHeaders(req.headers), token, true).then(result => {
+                await Fetch.delet(url, convertToHeaders(req.headers, req.socket.remoteAddress), token, true).then(result => {
                     res.status(200).json(result)
                 })
             } else {

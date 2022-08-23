@@ -34,7 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<UserI
             try {
                 if (req.method === 'GET') {
                     let url = `/api/auth/current/user`
-                    await Fetch.get(url, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
+                    await Fetch.get(url, convertToHeaders(req.headers, req.socket.remoteAddress), req.cookies['accessToken'], true).then(result => {
                         res.status(200).json(result)
                     })
                 } else {

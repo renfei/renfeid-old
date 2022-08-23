@@ -81,7 +81,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         }
     }
     let menuTreeList: MenuTree[] = []
-    const resultMenuTree: APIResult<MenuTree[]> = await api.queryAllMenuTreeInner(accessToken, convertToHeaders(context.req.headers))
+    const resultMenuTree: APIResult<MenuTree[]> = await api.queryAllMenuTreeInner(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress))
     if (resultMenuTree.code == 401) {
         return {
             redirect: {

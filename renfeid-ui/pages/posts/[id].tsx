@@ -31,13 +31,13 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
     const userInfo: UserInfo | null = await CheckSignInStatus(context)
     const postPassword = context.query.postPassword
-    const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers), undefined, 1, 2147483647, accessToken)
-    const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers), accessToken)
-    const postResult: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers), postPassword, accessToken)
-    const hotPosts: APIResult<ListData<PostVo>> = await api.getHotPosts(convertToHeaders(context.req.headers), 10, accessToken)
-    const commentTreeResult: APIResult<CommentTree[]> = await api.queryCommentTree(convertToHeaders(context.req.headers), 'POSTS', context.query.id, accessToken)
-    const lastCommentResult: APIResult<Comment[]> = await api.queryLastComment(convertToHeaders(context.req.headers), 'POSTS', '10', accessToken)
-    const relatedPosts: APIResult<ListData<PostVo>> = await api.queryRelatedPostList(convertToHeaders(context.req.headers), context.query.id, 10, accessToken)
+    const allPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), undefined, 1, 2147483647, accessToken)
+    const allPostTag: APIResult<Tag[]> = await api.queryAllPostTagList(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), accessToken)
+    const postResult: APIResult<PostVo> = await api.getPostsById(context.query.id, convertToHeaders(context.req.headers, context.req.socket.remoteAddress), postPassword, accessToken)
+    const hotPosts: APIResult<ListData<PostVo>> = await api.getHotPosts(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), 10, accessToken)
+    const commentTreeResult: APIResult<CommentTree[]> = await api.queryCommentTree(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), 'POSTS', context.query.id, accessToken)
+    const lastCommentResult: APIResult<Comment[]> = await api.queryLastComment(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), 'POSTS', '10', accessToken)
+    const relatedPosts: APIResult<ListData<PostVo>> = await api.queryRelatedPostList(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), context.query.id, 10, accessToken)
     let postRelevant5: PostVo[] = [], postRelevant10: PostVo[] = []
     if (relatedPosts.data?.data) {
         for (let i = 0; i < relatedPosts.data.data.length; i++) {

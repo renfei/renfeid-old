@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<any>>
   try {
     if (req.method === 'POST') {
       let url = `/api/auth/signUp/activation`
-      await Fetch.post(url, req.body, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
+      await Fetch.post(url, req.body, convertToHeaders(req.headers, req.socket.remoteAddress), req.cookies['accessToken'], true).then(result => {
         if (result.code == 200) {
           // TODO
         }

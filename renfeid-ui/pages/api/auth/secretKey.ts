@@ -9,12 +9,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<Secre
     try {
         if (req.method === 'GET') {
             let url = `/api/auth/secretKey`
-            await Fetch.get(url, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
+            await Fetch.get(url, convertToHeaders(req.headers, req.socket.remoteAddress), req.cookies['accessToken'], true).then(result => {
                 res.status(200).json(result)
             })
         } else if (req.method === 'POST') {
             let url = `/api/auth/secretKey`
-            await Fetch.post(url, req.body, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
+            await Fetch.post(url, req.body, convertToHeaders(req.headers, req.socket.remoteAddress), req.cookies['accessToken'], true).then(result => {
                 res.status(200).json(result)
             })
         } else {

@@ -128,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     }
     const accessToken = nookies.get(context)['accessToken']
     let postCatOptions: AntdSelectOption[] = []
-    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryListUseInner(accessToken, convertToHeaders(context.req.headers),
+    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryListUseInner(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress),
         undefined, undefined, undefined, 1, 2147483647)
     if (resultPostCategory.code == 401) {
         return {

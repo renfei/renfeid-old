@@ -86,7 +86,7 @@ export const postForm = (url: string, data: FormData, headers: Headers, token: s
     return request(url, config, isServer)
 }
 
-export const convertToHeaders = (incomingHttpHeaders: http.IncomingHttpHeaders): Headers => {
+export const convertToHeaders = (incomingHttpHeaders: http.IncomingHttpHeaders, remoteAddress?: string): Headers => {
     let headers: Headers = new Headers()
     if (incomingHttpHeaders['accept']) {
         headers.append('accept', incomingHttpHeaders['accept'])
@@ -273,28 +273,26 @@ export const convertToHeaders = (incomingHttpHeaders: http.IncomingHttpHeaders):
     }
     // IP
     if (incomingHttpHeaders['x-forwarded-for']) {
-        headers.append('x-forwarded-for', incomingHttpHeaders['x-forwarded-for'][0])
-    }
-    if (incomingHttpHeaders['Proxy-Client-IP']) {
-        headers.append('Proxy-Client-IP', incomingHttpHeaders['Proxy-Client-IP'][0])
-    }
-    if (incomingHttpHeaders['WL-Proxy-Client-IP']) {
-        headers.append('WL-Proxy-Client-IP', incomingHttpHeaders['WL-Proxy-Client-IP'][0])
-    }
-    if (incomingHttpHeaders['HTTP_CLIENT_IP']) {
-        headers.append('HTTP_CLIENT_IP', incomingHttpHeaders['HTTP_CLIENT_IP'][0])
-    }
-    if (incomingHttpHeaders['HTTP_X_FORWARDED_FOR']) {
-        headers.append('HTTP_X_FORWARDED_FOR', incomingHttpHeaders['HTTP_X_FORWARDED_FOR'][0])
-    }
-    if (incomingHttpHeaders['X-Real-IP']) {
-        headers.append('X-Real-IP', incomingHttpHeaders['X-Real-IP'][0])
-    }
-    if (incomingHttpHeaders['Cf-Connecting-IP']) {
-        headers.append('Cf-Connecting-IP', incomingHttpHeaders['Cf-Connecting-IP'][0])
-    }
-    if (incomingHttpHeaders['AWS-APIGateway-sourceIp']) {
-        headers.append('AWS-APIGateway-sourceIp', incomingHttpHeaders['AWS-APIGateway-sourceIp'][0])
+        headers.append('x-forwarded-for', incomingHttpHeaders['x-forwarded-for'].toString())
+    } else if (incomingHttpHeaders['Proxy-Client-IP']) {
+        headers.append('Proxy-Client-IP', incomingHttpHeaders['Proxy-Client-IP'].toString())
+    } else if (incomingHttpHeaders['WL-Proxy-Client-IP']) {
+        headers.append('WL-Proxy-Client-IP', incomingHttpHeaders['WL-Proxy-Client-IP'].toString())
+    } else if (incomingHttpHeaders['HTTP_CLIENT_IP']) {
+        headers.append('HTTP_CLIENT_IP', incomingHttpHeaders['HTTP_CLIENT_IP'].toString())
+    } else if (incomingHttpHeaders['HTTP_X_FORWARDED_FOR']) {
+        headers.append('HTTP_X_FORWARDED_FOR', incomingHttpHeaders['HTTP_X_FORWARDED_FOR'].toString())
+    } else if (incomingHttpHeaders['X-Real-IP']) {
+        headers.append('X-Real-IP', incomingHttpHeaders['X-Real-IP'].toString())
+    } else if (incomingHttpHeaders['Cf-Connecting-IP']) {
+        headers.append('Cf-Connecting-IP', incomingHttpHeaders['Cf-Connecting-IP'].toString())
+    } else if (incomingHttpHeaders['AWS-APIGateway-sourceIp']) {
+        headers.append('AWS-APIGateway-sourceIp', incomingHttpHeaders['AWS-APIGateway-sourceIp'].toString())
+    } else if (remoteAddress) {
+        if (remoteAddress.startsWith(':ffff:')) {
+            remoteAddress = remoteAddress.replace(':ffff:', '')
+        }
+        headers.append('x-forwarded-for', remoteAddress)
     }
     return headers
 }

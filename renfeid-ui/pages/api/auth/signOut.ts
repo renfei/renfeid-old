@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<any>>
     try {
         if (req.method === 'DELETE') {
             let url = `/api/auth/signOut`
-            await Fetch.delet(url, convertToHeaders(req.headers), req.cookies['accessToken'], true).then(result => {
+            await Fetch.delet(url, convertToHeaders(req.headers, req.socket.remoteAddress), req.cookies['accessToken'], true).then(result => {
                 if (result.code == 200) {
                     setCookie(res, 'accessToken', '', {
                         domain: 'renfei.net',

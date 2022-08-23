@@ -103,7 +103,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     let postArchivalList: DashPost[] = []
     let postTagList: string[] = []
     if (context.params.id && !isNaN(parseInt(context.params.id.toString()))) {
-        const result: APIResult<DashPost> = await api.queryPostById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString())
+        const result: APIResult<DashPost> = await api.queryPostById(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress), context.params.id.toString())
         if (result.code == 401) {
             return {
                 redirect: {
@@ -119,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
                     postTagList.push(post.tags[i].id)
                 }
             }
-            const postArchivalListResult: APIResult<DashPost[]> = await api.queryPostArchivalListById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString())
+            const postArchivalListResult: APIResult<DashPost[]> = await api.queryPostArchivalListById(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress), context.params.id.toString())
             if (postArchivalListResult.code == 200 && postArchivalListResult.data) {
                 postArchivalList = postArchivalListResult.data
             }
@@ -130,7 +130,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     }
 
     let postCatOptions: AntdSelectOption[] = []
-    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryListUseInner(accessToken, convertToHeaders(context.req.headers),
+    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryListUseInner(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress),
         undefined, undefined, undefined, 1, 2147483647)
     if (resultPostCategory.code == 401) {
         return {
@@ -150,7 +150,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         }
     }
     let postAllTagOptions: AntdSelectOption[] = []
-    const queryAllTagResult: APIResult<Tag[]> = await api.queryAllTag(accessToken, convertToHeaders(context.req.headers))
+    const queryAllTagResult: APIResult<Tag[]> = await api.queryAllTag(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress))
     if (queryAllTagResult.code == 200 && queryAllTagResult.data) {
         for (let i = 0; i < queryAllTagResult.data.length; i++) {
             let option: AntdSelectOption = {

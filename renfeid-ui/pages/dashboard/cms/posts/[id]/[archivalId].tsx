@@ -91,7 +91,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
         modifiedUsername: '',
     }
     if (context.params.id && !isNaN(parseInt(context.params.id.toString()))) {
-        const result: APIResult<DashPost> = await api.queryPostArchivalById(accessToken, convertToHeaders(context.req.headers), context.params.id.toString(), context.params.archivalId.toString())
+        const result: APIResult<DashPost> = await api.queryPostArchivalById(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress), context.params.id.toString(), context.params.archivalId.toString())
         if (result.code == 401) {
             return {
                 redirect: {
@@ -109,7 +109,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     }
 
     let postCatOptions: AntdSelectOption[] = []
-    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(accessToken, convertToHeaders(context.req.headers),
+    const resultPostCategory: APIResult<ListData<PostCategory>> = await api.queryPostCategoryList(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress),
         undefined, undefined, undefined, 1, 2147483647)
     if (resultPostCategory.code == 401) {
         return {
