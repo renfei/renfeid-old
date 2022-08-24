@@ -1,9 +1,10 @@
 import useSWR from 'swr'
 import { Layout, BackTop } from 'antd'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from './navbar'
 import SectionWrapper from "./section-wrapper"
 import Footer from './footer'
+import * as api from '../../services/api'
 import UserInfo = API.UserInfo
 
 const { Content } = Layout
@@ -32,27 +33,47 @@ const getGreetings = () => {
     return '欢迎。'
 }
 
+const getMessage = () => {
+    console.info('定时执行获取消息')
+}
+
 
 const MyLayout = ({ children }: any) => {
     const [greetings, setGreetings] = useState<string>(getGreetings())
+    const [userInfo, setUserInfo] = useState<UserInfo>()
+    const [intervalMessage, setIntervalMessage] = useState<boolean>(false)
     const [actuve, setActive] = useState<string | undefined>(process.env.NEXT_PUBLIC_RENFEID_ACTIVE)
     const [topBarWrapper, setTopBarWrapper] = useState<string>(
         process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview' ? ('当前是预览模式，仅支持查看，不支持其他操作。') : ('')
     )
-    const { data, error } = useSWR('/api/auth/current/user', (...args) => fetch(...args).then((res) => res.json()))
-    let userInfo: UserInfo = {
-        emailVerified: false,
-        id: '-1',
-        phoneVerified: false,
-        registrationDate: "",
-        registrationIp: "",
-        secretLevel: "",
-        username: "",
-        uuid: ""
-    }
-    if (data && data.code && data.code == 200 && data.data) {
-        userInfo = data.data
-    }
+
+    useEffect(() => {
+        if (!userInfo) {
+            api.requestCurrentUserInfo().then(res => {
+                if (res.code == 200) {
+                    setUserInfo(res.data)
+                } else {
+                    setUserInfo({
+                        emailVerified: false,
+                        id: '-1',
+                        phoneVerified: false,
+                        registrationDate: "",
+                        registrationIp: "",
+                        secretLevel: "",
+                        username: "",
+                        uuid: ""
+                    })
+                }
+            })
+        }
+        if (!intervalMessage) {
+            setInterval(() => {
+                getMessage()
+            }, 10000)
+            setIntervalMessage(true)
+        }
+    }, [userInfo, intervalMessage])
+
     return (
         <>
             <Layout>

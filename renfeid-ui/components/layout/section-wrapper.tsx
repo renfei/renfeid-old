@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import {useRouter} from 'next/router'
-import {Divider} from 'antd'
+import { useRouter } from 'next/router'
+import { Divider } from 'antd'
 import UserInfo = API.UserInfo
 
-const SectionWrapper = ({children, ...props}: any) => {
+const SectionWrapper = ({ children, ...props }: any) => {
     const userInfo: UserInfo = props.userInfo
     const router = useRouter()
     let path = router.asPath
@@ -19,12 +19,12 @@ const SectionWrapper = ({children, ...props}: any) => {
                 children && (
                     <div className={"section-wrapper"}>
                         <div className={"renfeid-content"}>
-                            <div style={{float: 'left'}}>
+                            <div style={{ float: 'left' }}>
                                 {children}
                             </div>
-                            <div style={{float: 'right'}}>
+                            <div style={{ float: 'right' }}>
                                 {
-                                    userInfo && parseInt(userInfo.id) > 0 ? (
+                                    userInfo && userInfo.username ? (
                                         <>
                                             <Link
                                                 href={'/account/manage'}
@@ -33,7 +33,7 @@ const SectionWrapper = ({children, ...props}: any) => {
                                                     {userInfo.username}
                                                 </a>
                                             </Link>
-                                            <Divider type={'vertical'}/>
+                                            <Divider type={'vertical'} />
                                             <Link
                                                 href={'/auth/signOut'}
                                             >
@@ -51,7 +51,7 @@ const SectionWrapper = ({children, ...props}: any) => {
                                                     登录
                                                 </a>
                                             </Link>
-                                            <Divider type={'vertical'}/>
+                                            <Divider type={'vertical'} />
                                             <Link
                                                 href={'/auth/signUp'}
                                             >
