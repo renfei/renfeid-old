@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Divider } from 'antd'
+import { Divider, Dropdown, Button, Menu } from 'antd'
+import { LogoutOutlined, SettingOutlined, BellOutlined, UserOutlined } from '@ant-design/icons'
 import UserInfo = API.UserInfo
 
 const SectionWrapper = ({ children, ...props }: any) => {
@@ -12,6 +13,40 @@ const SectionWrapper = ({ children, ...props }: any) => {
     } else {
         path = '?redirect=' + router.asPath
     }
+
+    const userMenu = (
+        <Menu
+            items={[
+                {
+                    label: (
+                        <>
+                            <SettingOutlined />
+                            <a href="/account/manage">
+                                个人设置
+                            </a>
+                        </>
+                    ),
+                    key: '0',
+                },
+                {
+                    type: 'divider',
+                },
+                {
+                    label: (
+                        <>
+                            <LogoutOutlined />
+                            <Link href={"/auth/signOut"}>
+                                <a>
+                                    退出登录
+                                </a>
+                            </Link>
+                        </>
+                    ),
+                    key: '100',
+                },
+            ]}
+        />
+    )
 
     return (
         <>
@@ -26,13 +61,14 @@ const SectionWrapper = ({ children, ...props }: any) => {
                                 {
                                     userInfo && userInfo.username ? (
                                         <>
-                                            <Link
-                                                href={'/account/manage'}
-                                            >
-                                                <a>
+                                            <Dropdown overlay={userMenu}>
+                                                <Button
+                                                    type="text"
+                                                    icon={<UserOutlined />}
+                                                    onClick={e => e.preventDefault()}>
                                                     {userInfo.username}
-                                                </a>
-                                            </Link>
+                                                </Button>
+                                            </Dropdown>
                                             <Divider type={'vertical'} />
                                             <Link
                                                 href={'/auth/signOut'}
