@@ -11,16 +11,17 @@ const CheckSignInStatus = async (context: any): Promise<UserInfo | null> => {
     return {
       email: 'preview@renfei.net',
       emailVerified: true,
-      firstName: 'fei',
+      firstName: '霏',
       id: '1',
-      lastName: 'ren',
+      lastName: '任',
       phone: '13001000000',
       phoneVerified: false,
-      registrationDate: '2012-1-1',
+      registrationDate: '2012-08-08 18:28:45',
       registrationIp: '123.123.123.123',
       secretLevel: '',
       username: 'preview',
-      uuid: ''
+      uuid: '7A159BF2BCB94B28BD185AC868169197',
+      u2fEnable: false
     }
   } else {
     const accessToken = nookies.get(context)['accessToken']

@@ -15,36 +15,47 @@
  */
 package net.renfei.uaa.api.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.io.Serializable;
 
 /**
- * 登录响应对象
- *
  * @author renfei
  */
-@Schema(title = "登录响应对象")
-public class SignInVo implements Serializable {
+public class TotpAo implements Serializable {
     private static final long serialVersionUID = -3316408227872898096L;
-    @Schema(description = "Token令牌")
-    private String accessToken;
-    @Schema(description = "UCenter的登录脚本")
-    private String ucScript;
+    private String pwd;
+    private String totp;
+    private String keyId;
+    private String secretKey;
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getPwd() {
+        return pwd;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 
-    public String getUcScript() {
-        return ucScript;
+    public String getTotp() {
+        return totp;
     }
 
-    public void setUcScript(String ucScript) {
-        this.ucScript = ucScript;
+    public void setTotp(String totp) {
+        this.totp = totp;
+    }
+
+    public String getKeyId() {
+        return keyId;
+    }
+
+    public void setKeyId(String keyId) {
+        this.keyId = keyId;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
     }
 }

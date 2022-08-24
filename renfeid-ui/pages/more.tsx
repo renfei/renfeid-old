@@ -14,7 +14,7 @@ const MorePage = () => {
   return (
     <>
       <Head>
-        <title>更多信息 - {process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}</title>
+        <title>{`更多信息 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
         <meta name="description" content={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`} />
       </Head>
 

@@ -17,17 +17,18 @@ package net.renfei.uaa.service;
 
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
+import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.entity.UserInfo;
+import net.renfei.common.api.entity.UserSignInLog;
 import net.renfei.common.api.exception.BusinessException;
 import net.renfei.common.api.utils.ListUtils;
 import net.renfei.common.api.utils.RSAUtils;
 import net.renfei.common.api.utils.StringUtils;
 import net.renfei.common.core.config.RedisConfig;
 import net.renfei.common.core.config.SystemConfig;
+import net.renfei.common.core.entity.SystemLogEntity;
+import net.renfei.common.core.service.*;
 import net.renfei.uaa.api.entity.UserDetail;
-import net.renfei.common.core.service.RedisService;
-import net.renfei.common.core.service.SystemService;
-import net.renfei.common.core.service.VerificationCodeService;
 import net.renfei.common.core.utils.AESUtils;
 import net.renfei.common.core.utils.IpUtils;
 import net.renfei.proprietary.discuz.service.DiscuzService;
@@ -38,6 +39,8 @@ import net.renfei.uaa.api.entity.*;
 import net.renfei.uaa.repositories.UaaSecretKeyMapper;
 import net.renfei.uaa.repositories.entity.UaaSecretKeyExample;
 import net.renfei.uaa.repositories.entity.UaaSecretKeyWithBLOBs;
+import net.renfei.uaa.utils.GoogleAuthenticator;
+import net.renfei.uaa.utils.PasswordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -46,9 +49,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static net.renfei.common.core.config.SystemConfig.MAX_USERNAME_LENGTH;
@@ -67,8 +68,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private final UserService userService;
     private final SystemConfig systemConfig;
     private final RedisService redisService;
+    private final EmailService emailService;
     private final SystemService systemService;
     private final DiscuzService discuzService;
+    private final SystemLogService systemLogService;
+    private final IP2LocationService ip2LocationService;
     private final UaaSecretKeyMapper uaaSecretKeyMapper;
     private final VerificationCodeService verificationCodeService;
 
@@ -76,16 +80,22 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                                     UserService userService,
                                     SystemConfig systemConfig,
                                     RedisService redisService,
+                                    EmailService emailService,
                                     SystemService systemService,
                                     DiscuzService discuzService,
+                                    SystemLogService systemLogService,
+                                    IP2LocationService ip2LocationService,
                                     UaaSecretKeyMapper uaaSecretKeyMapper,
                                     VerificationCodeService verificationCodeService) {
         this.jwtService = jwtService;
         this.userService = userService;
         this.systemConfig = systemConfig;
         this.redisService = redisService;
+        this.emailService = emailService;
         this.systemService = systemService;
         this.discuzService = discuzService;
+        this.systemLogService = systemLogService;
+        this.ip2LocationService = ip2LocationService;
         this.uaaSecretKeyMapper = uaaSecretKeyMapper;
         this.verificationCodeService = verificationCodeService;
     }
@@ -292,8 +302,145 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if (userDetail != null) {
             UserInfo userInfo = new UserInfo();
             BeanUtils.copyProperties(userDetail, userInfo);
+            userInfo.setU2fEnable(!ObjectUtils.isEmpty(userDetail.getTotp()));
             return userInfo;
         }
         return null;
+    }
+
+    @Override
+    public ListData<UserSignInLog> queryCurrentUserSignInLog(int pages, int rows) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail != null) {
+            ListData<SystemLogEntity> systemLogEntityListData = systemLogService.queryUserSignInLog(userDetail.getUsername(), pages, rows);
+            ListData<UserSignInLog> userSignInLogListData = new ListData<>();
+            userSignInLogListData.setPageNum(systemLogEntityListData.getPageNum());
+            userSignInLogListData.setPageSize(systemLogEntityListData.getPageSize());
+            userSignInLogListData.setStartRow(systemLogEntityListData.getStartRow());
+            userSignInLogListData.setEndRow(systemLogEntityListData.getEndRow());
+            userSignInLogListData.setTotal(systemLogEntityListData.getTotal());
+            userSignInLogListData.setPages(systemLogEntityListData.getPages());
+            if (systemLogEntityListData.getData() != null && !systemLogEntityListData.getData().isEmpty()) {
+                List<UserSignInLog> userSignInLogs = new ArrayList<>();
+                for (SystemLogEntity systemLogEntity : systemLogEntityListData.getData()
+                ) {
+                    UserSignInLog userSignInLog = new UserSignInLog();
+                    BeanUtils.copyProperties(systemLogEntity, userSignInLog);
+                    if (!ObjectUtils.isEmpty(systemLogEntity.getRequIp())) {
+                        try {
+                            userSignInLog.setAddress(ip2LocationService.ipQueryAddress(systemLogEntity.getRequIp()));
+                        } catch (Exception e) {
+                            logger.warn(e.getMessage(), e);
+                        }
+                    }
+                    userSignInLogs.add(userSignInLog);
+                }
+                userSignInLogListData.setData(userSignInLogs);
+            }
+            return userSignInLogListData;
+        }
+        return null;
+    }
+
+    @Override
+    public TotpVo generateU2FSecretKey() {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return null;
+        }
+        String secretKey = GoogleAuthenticator.generateSecretKey(systemConfig.getTotpSecret());
+        TotpVo totpVo = new TotpVo();
+        totpVo.setSecretKey(secretKey);
+        totpVo.setTotpString(GoogleAuthenticator.genTotpString("RENFEI.NET", userDetail.getUsername(), secretKey));
+        return totpVo;
+    }
+
+    @Override
+    public APIResult openU2f(TotpAo totpAo) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message(StateCodeEnum.Unauthorized.getDescribe())
+                    .build();
+        }
+        if (ObjectUtils.isEmpty(userDetail.getTotp())) {
+            totpAo.setPwd(this.decryptAesByKeyId(totpAo.getPwd(), totpAo.getKeyId()).getData());
+            totpAo.setSecretKey(this.decryptAesByKeyId(totpAo.getSecretKey(), totpAo.getKeyId()).getData());
+            if (userService.verifyPassword(userDetail, totpAo.getPwd())) {
+                if (GoogleAuthenticator.authcode(totpAo.getTotp(), totpAo.getSecretKey())) {
+                    userService.addTotp(userDetail, totpAo.getSecretKey());
+                    emailService.send(
+                            userDetail.getEmail(),
+                            userDetail.getUsername(),
+                            "操作通知：您开启了U2F两步认证",
+                            "您开启了U2F两步认证，您的账户安全性固若金汤。如果不是您本人操作，请立即联系我们，您的账户可能被盗用。"
+                    );
+                    return APIResult.success();
+                } else {
+                    return APIResult.builder()
+                            .code(StateCodeEnum.Failure)
+                            .message("您输入的两步认证码与二维码校验失败，请重试")
+                            .build();
+                }
+            } else {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Failure)
+                        .message("账户密码不正确")
+                        .build();
+            }
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("您的两步认证U2F已经是开启状态，无需再次开启")
+                    .build();
+        }
+    }
+
+    @Override
+    public APIResult closeU2f(TotpAo totpAo) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message(StateCodeEnum.Unauthorized.getDescribe())
+                    .build();
+        }
+        totpAo.setPwd(this.decryptAesByKeyId(totpAo.getPwd(), totpAo.getKeyId()).getData());
+        if (userService.verifyPassword(userDetail, totpAo.getPwd())) {
+            if (userService.verifyTotp(userDetail, totpAo.getTotp())) {
+                userService.removeTotp(userDetail);
+                return APIResult.success();
+            } else {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Failure)
+                        .message("两步认证码认证失败，请重试")
+                        .build();
+            }
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("账户密码不正确")
+                    .build();
+        }
+    }
+
+    @Override
+    public APIResult updatePassword(UpdatePasswordAo updatePassword) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message(StateCodeEnum.Unauthorized.getDescribe())
+                    .build();
+        }
+        try {
+            updatePassword.setOldPwd(this.decryptAesByKeyId(updatePassword.getOldPwd(), updatePassword.getKeyId()).getData());
+            updatePassword.setNewPwd(this.decryptAesByKeyId(updatePassword.getNewPwd(), updatePassword.getKeyId()).getData());
+            userService.updatePassword(userDetail, updatePassword.getOldPwd(), updatePassword.getNewPwd());
+            return APIResult.success();
+        } catch (BusinessException businessException) {
+            return APIResult.builder().code(StateCodeEnum.Failure).message(businessException.getMessage()).build();
+        }
     }
 }

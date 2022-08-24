@@ -33,11 +33,13 @@ import java.util.List;
 public interface SystemLogService {
     ListData<SystemLogEntity> querySystemLog(Date startDate, Date endDate, LogLevelEnum logLevel,
                                              SystemTypeEnum systemType, OperationTypeEnum operationType,
-                                             String reqUri, String username, String reqIp,List<String> excludeUsername,
+                                             String reqUri, String username, String reqIp, List<String> excludeUsername,
                                              List<String> inUsername, int pages, int rows);
 
     void save(SystemLogEntity systemLogEntity);
 
     void save(LogLevelEnum logLevel, SystemTypeEnum systemType, OperationTypeEnum operationType,
               String desc, String userUuid, String username, HttpServletRequest request);
+
+    ListData<SystemLogEntity> queryUserSignInLog(String userName, int pages, int rows);
 }

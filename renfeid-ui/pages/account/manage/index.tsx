@@ -1,13 +1,45 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import nookies from 'nookies'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Col, Row, Typography, Divider, Descriptions } from 'antd'
 import Layout from "../../../components/layout"
+import CheckSignInStatus from '../../../utils/CheckSignInStatus'
+import * as api from "../../../services/api"
+import APIResult = API.APIResult
+import ListData = API.ListData
+import UserInfo = API.UserInfo
+import UserSignInLog = API.UserSignInLog
+import { convertToHeaders } from '../../../utils/request'
 
-const AccountManagePage = () => {
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
+  const userInfo: UserInfo | null = await CheckSignInStatus(context)
+  if (!userInfo) {
+    nookies.destroy(context, 'accessToken')
+    return {
+      redirect: {
+        destination: '/auth/signIn?redirect=' + context.req.url,
+        permanent: false,
+      },
+    }
+  }
+  const accessToken = nookies.get(context)['accessToken']
+  const resultUserSignInLog: APIResult<ListData<UserSignInLog>> = await api.queryCurrentUserSignInLog(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), 1, 1, accessToken)
+  return {
+    props: {
+      data: {
+        userInfo: userInfo,
+        userSignInLog: resultUserSignInLog.data,
+      }
+    }
+  }
+}
+
+const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Head>
-        <title>管理您的账户 - {process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}</title>
+        <title>{`管理您的账户 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
         <meta name="description" content={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`} />
       </Head>
 
@@ -16,7 +48,7 @@ const AccountManagePage = () => {
           <section className={"renfeid-content"} style={{ color: '#ffffff', height: '180px' }}>
             <Row>
               <Col span={24} style={{ paddingTop: '40px' }}>
-                <Typography.Title level={1} style={{ color: '#ffffff' }}>username</Typography.Title>
+                <Typography.Title level={1} style={{ color: '#ffffff' }}>{data.userInfo.username}</Typography.Title>
                 <Typography.Title level={5} style={{ color: '#ffffff' }}>欢迎回来！您可以在这里管理您的账户</Typography.Title>
               </Col>
             </Row>
@@ -34,12 +66,12 @@ const AccountManagePage = () => {
                 contentStyle={{ display: 'block', fontSize: '14px' }}
               >
                 <Descriptions.Item label="ID" span={2}>
-                  7A159BF2BCB94B28BD185AC868169197
+                  {data.userInfo.uuid}
                 </Descriptions.Item>
-                <Descriptions.Item label="用户名">username</Descriptions.Item>
+                <Descriptions.Item label="用户名">{data.userInfo.username}</Descriptions.Item>
                 <Descriptions.Item label="电子邮箱">
                   <div>
-                    xxxx@renfei.net
+                    {data.userInfo.email}
                   </div>
                   <div>
                     <Link href="/account/manage/email">
@@ -47,10 +79,10 @@ const AccountManagePage = () => {
                     </Link>
                   </div>
                 </Descriptions.Item>
-                <Descriptions.Item label="注册时间">2022-08-12 17:05:42</Descriptions.Item>
+                <Descriptions.Item label="注册时间">{data.userInfo.registrationDate}</Descriptions.Item>
                 <Descriptions.Item label="手机号码">
                   <div>
-                    13001000000
+                    {data.userInfo.phone}
                   </div>
                   <div>
                     <Link href="/account/manage/phone">
@@ -60,7 +92,7 @@ const AccountManagePage = () => {
                 </Descriptions.Item>
                 <Descriptions.Item label="姓氏">
                   <div>
-                    xx
+                    {data.userInfo.lastName}
                   </div>
                   <div>
                     <Link href="/account/manage/name">
@@ -70,7 +102,7 @@ const AccountManagePage = () => {
                 </Descriptions.Item>
                 <Descriptions.Item label="名字">
                   <div>
-                    xxx
+                    {data.userInfo.firstName}
                   </div>
                   <div>
                     <Link href="/account/manage/name">
@@ -104,11 +136,30 @@ const AccountManagePage = () => {
                 </Descriptions.Item>
                 <Descriptions.Item label="两步认证(U2F)" span={2}>
                   <div>
-                    未开启
+                    {
+                      data.userInfo.u2fEnable ? '已开启' : '未开启'
+                    }
                   </div>
                   <div>
                     <Link href="/account/manage/u2f">
                       <a style={{ color: '#1890ff', fontSize: '12px' }}>更改两步认证...</a>
+                    </Link>
+                  </div>
+                </Descriptions.Item>
+                <Descriptions.Item label="最近登录记录" span={2}>
+                  <div>
+                    {
+                      data.userSignInLog?.data ? (
+                        <>
+                          {data.userSignInLog.data[0].logTime} 在 {data.userSignInLog.data[0].address ? data.userSignInLog.data[0].address : '未知地点'} 登录系统。
+                          登录地点 IP 地址：{data.userSignInLog.data[0].requIp}
+                        </>
+                      ) : '暂无记录'
+                    }
+                  </div>
+                  <div>
+                    <Link href="/account/manage/signInLog">
+                      <a style={{ color: '#1890ff', fontSize: '12px' }}>查看更多登录记录...</a>
                     </Link>
                   </div>
                 </Descriptions.Item>

@@ -16,7 +16,9 @@
 package net.renfei.uaa.api;
 
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.entity.UserInfo;
+import net.renfei.common.api.entity.UserSignInLog;
 import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.api.entity.*;
 
@@ -86,9 +88,49 @@ public interface AuthorizationService {
     void activation(SignUpActivationAo signUpActivation);
 
     /**
-     * 获取当前登陆用户的信息
+     * 获取当前登录用户的信息
      *
      * @return
      */
     UserInfo requestCurrentUserInfo();
+
+    /**
+     * 获取当前登录用户的登录日志记录
+     *
+     * @param pages
+     * @param rows
+     * @return
+     */
+    ListData<UserSignInLog> queryCurrentUserSignInLog(int pages, int rows);
+
+    /**
+     * 生成两步认证秘钥
+     *
+     * @return
+     */
+    TotpVo generateU2FSecretKey();
+
+    /**
+     * 开启两步认证 TOTP
+     *
+     * @param totpAo
+     * @return
+     */
+    APIResult openU2f(TotpAo totpAo);
+
+    /**
+     * 关闭两步认证 TOTP
+     *
+     * @param totpAo
+     * @return
+     */
+    APIResult closeU2f(TotpAo totpAo);
+
+    /**
+     * 修改用户自己的密码
+     *
+     * @param updatePassword 修改请求对象
+     * @return
+     */
+    APIResult updatePassword(UpdatePasswordAo updatePassword);
 }

@@ -7,7 +7,7 @@ const WeiboPage = () => {
   return (
     <>
       <Head>
-        <title>开发者工具箱 - {process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}</title>
+        <title>{`开发者工具箱 - ${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}</title>
         <meta name="description" content={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`} />
       </Head>
 

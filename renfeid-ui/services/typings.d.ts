@@ -195,7 +195,8 @@ declare namespace API {
         registrationIp: string
         secretLevel: string
         username: string
-        uuid: string
+        uuid: string,
+        u2fEnable: boolean
     }
 
     interface AntdSelectOption {
@@ -317,5 +318,32 @@ declare namespace API {
         requParam?: string,
         respParam?: string,
         requAgent?: string,
+    }
+
+    interface UserSignInLog {
+        logTime: string,
+        userUuid: string,
+        userName: string,
+        requIp: string,
+        requAgent: string,
+        address: string,
+    }
+
+    interface TotpAo {
+        pwd: string,
+        totp: string,
+        keyId: string,
+        secretKey?: string,
+    }
+
+    interface TotpVo {
+        secretKey: string,
+        totpString: string,
+    }
+
+    interface UpdatePasswordAo {
+        oldPwd: string,
+        newPwd: string,
+        keyId: string,
     }
 }

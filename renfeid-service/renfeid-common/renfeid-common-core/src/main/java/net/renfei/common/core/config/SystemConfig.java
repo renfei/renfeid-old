@@ -70,6 +70,7 @@ public class SystemConfig {
     private UCenter uCenter;
     private List<String> authIgnore;
     private String mainDict;
+    private String totpSecret;
     private AWS aws;
     private Aliyun aliyun;
     private Leaf leaf;

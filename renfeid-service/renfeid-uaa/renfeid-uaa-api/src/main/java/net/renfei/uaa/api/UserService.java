@@ -47,9 +47,9 @@ public interface UserService {
     APIResult<UserDetail> getUserDetailByToken(String token, String ip);
 
     /**
-     * 登陆
+     * 登录
      *
-     * @param signIn  登陆请求对象
+     * @param signIn  登录请求对象
      * @param request 请求对象
      * @return 用户详情对象
      */
@@ -118,7 +118,7 @@ public interface UserService {
     APIResult determineUserSecretLevel(long userId, SecretLevelEnum secretLevel, HttpServletRequest request);
 
     /**
-     * 禁用用户，登陆状态将被踢出
+     * 禁用用户，登录状态将被踢出
      *
      * @param userId  用户ID
      * @param enable  是否启用
@@ -128,7 +128,7 @@ public interface UserService {
     APIResult enableUser(long userId, boolean enable, HttpServletRequest request);
 
     /**
-     * 锁定与解锁用户，等级比禁用低，不会踢出登陆状态
+     * 锁定与解锁用户，等级比禁用低，不会踢出登录状态
      *
      * @param userId 用户ID
      * @param lock   是否锁定
@@ -156,4 +156,48 @@ public interface UserService {
     APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request);
 
     List<UserDetail> queryUserListByRoleName(String roleName);
+
+    /**
+     * 验证密码正确性
+     *
+     * @param userDetail 用户
+     * @param password   明文密码
+     * @return
+     */
+    boolean verifyPassword(UserDetail userDetail, String password);
+
+    /**
+     * 修改密码
+     *
+     * @param userDetail 用户
+     * @param oldPwd     明文旧密码
+     * @param newPwd     明文新密码
+     * @return
+     */
+    void updatePassword(UserDetail userDetail, String oldPwd, String newPwd);
+
+    /**
+     * 验证TOTP正确性
+     *
+     * @param userDetail 用户
+     * @param totp       totp
+     * @return
+     */
+    boolean verifyTotp(UserDetail userDetail, String totp);
+
+    /**
+     * 设置用户 Totp 秘钥
+     *
+     * @param userDetail 用户
+     * @param totp       秘钥
+     * @return
+     */
+    void addTotp(UserDetail userDetail, String totp);
+
+    /**
+     * 移除用户 TOTP 秘钥
+     *
+     * @param userDetail 用户
+     */
+    void removeTotp(UserDetail userDetail);
 }

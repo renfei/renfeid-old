@@ -53,6 +53,8 @@ public class UserInfo implements Serializable {
     private String lastName;
     @Schema(description = "名")
     private String firstName;
+    @Schema(description = "两步认证启用状态")
+    private Boolean u2fEnable;
 
     public Long getId() {
         return id;
@@ -148,5 +150,13 @@ public class UserInfo implements Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public Boolean getU2fEnable() {
+        return u2fEnable;
+    }
+
+    public void setU2fEnable(Boolean u2fEnable) {
+        this.u2fEnable = u2fEnable;
     }
 }

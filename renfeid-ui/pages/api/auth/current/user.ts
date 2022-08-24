@@ -26,7 +26,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<APIResult<UserI
                 registrationIp: '123.123.123.123',
                 secretLevel: '',
                 username: 'preview',
-                uuid: ''
+                uuid: '',
+                u2fEnable: false
             }
         })
     } else {

@@ -52,7 +52,7 @@ public interface SystemService extends ApplicationContextAware {
     void shutdownSystem(HttpServletRequest request);
 
     /**
-     * 获取当前登陆的用户详情
+     * 获取当前登录的用户详情
      *
      * @return
      */

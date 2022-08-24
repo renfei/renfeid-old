@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Divider, Dropdown, Button, Menu } from 'antd'
-import { LogoutOutlined, SettingOutlined, BellOutlined, UserOutlined } from '@ant-design/icons'
+import { LogoutOutlined, SettingOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
 import UserInfo = API.UserInfo
 
 const SectionWrapper = ({ children, ...props }: any) => {
@@ -26,7 +26,18 @@ const SectionWrapper = ({ children, ...props }: any) => {
                             </a>
                         </>
                     ),
-                    key: '0',
+                    key: 'manage',
+                },
+                {
+                    label: (
+                        <>
+                            <LockOutlined />
+                            <a href="/account/manage/password">
+                                修改密码
+                            </a>
+                        </>
+                    ),
+                    key: 'password',
                 },
                 {
                     type: 'divider',
@@ -42,7 +53,7 @@ const SectionWrapper = ({ children, ...props }: any) => {
                             </Link>
                         </>
                     ),
-                    key: '100',
+                    key: 'signOut',
                 },
             ]}
         />

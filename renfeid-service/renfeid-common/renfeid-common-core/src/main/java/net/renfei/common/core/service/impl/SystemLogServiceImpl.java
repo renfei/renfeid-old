@@ -142,4 +142,33 @@ public class SystemLogServiceImpl implements SystemLogService {
         }
         coreLogsMapper.insertSelective(logs);
     }
+
+    @Override
+    public ListData<SystemLogEntity> queryUserSignInLog(String userName, int pages, int rows) {
+        CoreLogsExample example = new CoreLogsExample();
+        example.setOrderByClause("id DESC");
+        example.createCriteria()
+                .andLogModuleEqualTo(SystemTypeEnum.AUTH.toString())
+                .andLogTypeEqualTo(OperationTypeEnum.SIGNIN.toString())
+                .andUserNameEqualTo(userName);
+        ListData<SystemLogEntity> systemLogListData = new ListData<>();
+        try (Page<CoreLogsWithBLOBs> page = PageHelper.startPage(pages, rows)) {
+            coreLogsMapper.selectByExampleWithBLOBs(example);
+            List<SystemLogEntity> systemLogEntities = new ArrayList<>();
+            systemLogListData.setPageNum(page.getPageNum());
+            systemLogListData.setPageSize(page.getPageSize());
+            systemLogListData.setStartRow(page.getStartRow());
+            systemLogListData.setEndRow(page.getEndRow());
+            systemLogListData.setTotal(page.getTotal());
+            systemLogListData.setPages(page.getPages());
+            for (CoreLogsWithBLOBs coreLog : page.getResult()
+            ) {
+                SystemLogEntity systemLogEntity = new SystemLogEntity();
+                BeanUtils.copyProperties(coreLog, systemLogEntity);
+                systemLogEntities.add(systemLogEntity);
+            }
+            systemLogListData.setData(systemLogEntities);
+        }
+        return systemLogListData;
+    }
 }

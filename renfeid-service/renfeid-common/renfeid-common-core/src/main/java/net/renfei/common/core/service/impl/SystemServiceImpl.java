@@ -127,7 +127,7 @@ public class SystemServiceImpl implements SystemService {
     }
 
     /**
-     * 获取当前登陆的用户详情
+     * 获取当前登录的用户详情
      *
      * @return
      */

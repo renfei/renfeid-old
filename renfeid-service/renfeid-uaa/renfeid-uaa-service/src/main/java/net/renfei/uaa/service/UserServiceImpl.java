@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService {
                 throw new BusinessException("当前账户由于长时间未修改密码，被限制使用，请联系安全保密管理员重置密码后再登录。");
             }
         }
-        if (!ObjectUtils.isEmpty(uaaUser.getTotp()) && ObjectUtils.isEmpty(uaaUser.getTotp())) {
+        if (!ObjectUtils.isEmpty(uaaUser.getTotp()) && ObjectUtils.isEmpty(signIn.gettOtp())) {
             throw new NeedU2FException("当前账户开启了两步认证(U2F)，需要提供两步认证码");
         }
         if (signIn.getUseVerCode()) {
@@ -558,6 +558,128 @@ public class UserServiceImpl implements UserService {
         return new ArrayList<>();
     }
 
+    @Override
+    public boolean verifyPassword(UserDetail userDetail, String password) {
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(userDetail.getUsername());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser == null) {
+            return false;
+        }
+        if (!uaaUser.getEnabled()) {
+            logger.warn("账号：{}，校验密码时，因账号未启用被拒绝。", userDetail.getUsername());
+            throw new BusinessException("当前账户未启用，请联系安全保密管理员对账号进行启用后再操作");
+        }
+        if (uaaUser.getLocked()) {
+            logger.warn("账号：{}，校验密码时，因账号锁定状态被拒绝。", userDetail.getUsername());
+            throw new BusinessException("当前账户被锁定，请联系安全保密管理员对账号进行解锁后再操作");
+        }
+        if (uaaUser.getLockTime() != null) {
+            // 判断锁定时间
+            if (new Date().before(uaaUser.getLockTime())) {
+                logger.warn("账号：{}，校验密码时，因账号锁定状态被拒绝。", userDetail.getUsername());
+                throw new BusinessException("当前账户被锁定，请联系安全保密管理员对账号进行解锁后再操作");
+            }
+        }
+        if (uaaUser.getPasswordExpirationTime() != null) {
+            // 判断密码有效期
+            if (new Date().before(uaaUser.getPasswordExpirationTime())) {
+                logger.warn("账号：{}，校验密码时，因账号过期被拒绝。", userDetail.getUsername());
+                throw new BusinessException("当前账户密码已经过期，请联系安全保密管理员对账号进行密码修改后再操作");
+            }
+        }
+        return PasswordUtils.verifyPassword(password, uaaUser.getPassword());
+    }
+
+    @Override
+    public void updatePassword(UserDetail userDetail, String oldPwd, String newPwd) {
+        if (this.verifyPassword(userDetail, oldPwd)) {
+            UaaUserExample example = new UaaUserExample();
+            UaaUserExample.Criteria criteria = example.createCriteria();
+            criteria.andUsernameEqualTo(userDetail.getUsername());
+            UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+            try {
+                uaaUser.setPassword(PasswordUtils.createHash(newPwd));
+            } catch (PasswordUtils.CannotPerformOperationException e) {
+                throw new BusinessException("密码加密失败，请重试");
+            }
+            uaaUserMapper.updateByPrimaryKey(uaaUser);
+        } else {
+            throw new BusinessException("当前账户密码错误");
+        }
+    }
+
+    @Override
+    public boolean verifyTotp(UserDetail userDetail, String totp) {
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(userDetail.getUsername());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser == null) {
+            return false;
+        }
+        if (!uaaUser.getEnabled()) {
+            logger.warn("账号：{}，校验TOTP时，因账号未启用被拒绝。", userDetail.getUsername());
+            throw new BusinessException("当前账户未启用，请联系安全保密管理员对账号进行启用后再操作");
+        }
+        if (uaaUser.getLocked()) {
+            logger.warn("账号：{}，校验TOTP时，因账号锁定状态被拒绝。", userDetail.getUsername());
+            throw new BusinessException("当前账户被锁定，请联系安全保密管理员对账号进行解锁后再操作");
+        }
+        if (uaaUser.getLockTime() != null) {
+            // 判断锁定时间
+            if (new Date().before(uaaUser.getLockTime())) {
+                logger.warn("账号：{}，校验TOTP时，因账号锁定状态被拒绝。", userDetail.getUsername());
+                throw new BusinessException("当前账户被锁定，请联系安全保密管理员对账号进行解锁后再操作");
+            }
+        }
+        if (uaaUser.getPasswordExpirationTime() != null) {
+            // 判断密码有效期
+            if (new Date().before(uaaUser.getPasswordExpirationTime())) {
+                logger.warn("账号：{}，校验TOTP时，因账号过期被拒绝。", userDetail.getUsername());
+                throw new BusinessException("当前账户密码已经过期，请联系安全保密管理员对账号进行密码修改后再操作");
+            }
+        }
+        if (ObjectUtils.isEmpty(uaaUser.getTotp())) {
+            logger.warn("账号：{}，校验TOTP时，因未开启两步认证U2F被拒绝。", userDetail.getUsername());
+            throw new BusinessException("您未开启两步认证U2F");
+        }
+        return GoogleAuthenticator.authcode(totp, uaaUser.getTotp());
+    }
+
+    @Override
+    public void addTotp(UserDetail userDetail, String totp) {
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(userDetail.getUsername());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser == null) {
+            logger.warn("账号：{}，设置TOTP秘钥时，因账号未找到被拒绝。", userDetail.getUsername());
+            throw new BusinessException("未找到当前账户信息，请重试");
+        }
+        if (!ObjectUtils.isEmpty(uaaUser.getTotp())) {
+            logger.warn("账号：{}，设置TOTP秘钥时，因账号已经启用TOTP被拒绝。", userDetail.getUsername());
+            throw new BusinessException("当前账户已经启用TOTP，请先关闭后再操作");
+        }
+        uaaUser.setTotp(totp);
+        uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
+    }
+
+    @Override
+    public void removeTotp(UserDetail userDetail) {
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(userDetail.getUsername());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser == null) {
+            logger.warn("账号：{}，设置TOTP秘钥时，因账号未找到被拒绝。", userDetail.getUsername());
+            throw new BusinessException("未找到当前账户信息，请重试");
+        }
+        uaaUser.setTotp(null);
+        uaaUserMapper.updateByPrimaryKey(uaaUser);
+    }
+
     private UserDetail convert(UaaUser uaaUser) {
         if (uaaUser == null) {
             return null;
@@ -615,7 +737,7 @@ public class UserServiceImpl implements UserService {
         example.createCriteria().andEmailEqualTo(email.trim().toLowerCase()).andEmailVerifiedEqualTo(true);
         UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
         if (uaaUser != null) {
-            throw new BusinessException("电子邮箱地址已经被注册，您不妨直接登陆试试");
+            throw new BusinessException("电子邮箱地址已经被注册，您不妨直接登录试试");
         }
     }
 
@@ -625,7 +747,7 @@ public class UserServiceImpl implements UserService {
         example.createCriteria().andEmailEqualTo(phone.trim().toLowerCase()).andEmailVerifiedEqualTo(true);
         UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
         if (uaaUser != null) {
-            throw new BusinessException("手机号已经被注册，您不妨直接登陆试试");
+            throw new BusinessException("手机号已经被注册，您不妨直接登录试试");
         }
     }
 
