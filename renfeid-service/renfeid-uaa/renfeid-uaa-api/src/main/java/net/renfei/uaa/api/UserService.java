@@ -29,6 +29,9 @@ import java.util.List;
  * @author renfei
  */
 public interface UserService {
+    int MAX_FIRST_NAME = 10;
+    int MAX_LAST_NAME = 15;
+
     /**
      * 根据 Token 获取用户详情对象
      *
@@ -45,6 +48,24 @@ public interface UserService {
      * @return 用户详情对象
      */
     APIResult<UserDetail> getUserDetailByToken(String token, String ip);
+
+    /**
+     * 根据 email 获取用户详情对象
+     * 无论是否被禁用或锁定都会被查询出来
+     *
+     * @param email email
+     * @return 用户详情对象
+     */
+    APIResult<UserDetail> getUserDetailByEmail(String email);
+
+    /**
+     * 根据 phone 获取用户详情对象
+     * 无论是否被禁用或锁定都会被查询出来
+     *
+     * @param phone phone
+     * @return 用户详情对象
+     */
+    APIResult<UserDetail> getUserDetailByPhone(String phone);
 
     /**
      * 登录
@@ -200,4 +221,47 @@ public interface UserService {
      * @param userDetail 用户
      */
     void removeTotp(UserDetail userDetail);
+
+    /**
+     * 给邮箱发送验证码
+     *
+     * @param newEmail 新邮箱
+     * @return
+     */
+    APIResult sendEmailVerCode(String newEmail);
+
+    /**
+     * 更新邮箱地址
+     *
+     * @param newEmail 新邮箱
+     * @param verCode  验证码
+     * @return
+     */
+    APIResult updateEmail(String newEmail, String verCode);
+
+    /**
+     * 给手机发送验证码
+     *
+     * @param newPhone 新手机
+     * @return
+     */
+    APIResult sendPhoneVerCode(String newPhone);
+
+    /**
+     * 更新手机号
+     *
+     * @param newPhone 新手机号
+     * @param verCode  验证码
+     * @return
+     */
+    APIResult updatePhone(String newPhone, String verCode);
+
+    /**
+     * 更新姓名称呼
+     *
+     * @param firstName 名字
+     * @param lastName  姓氏
+     * @return
+     */
+    APIResult updateFirstName(String firstName, String lastName);
 }

@@ -152,6 +152,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public APIResult<UserDetail> getUserDetailByEmail(String email) {
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andEmailEqualTo(email);
+        return new APIResult<>(convert(ListUtils.getOne(uaaUserMapper.selectByExample(example))));
+    }
+
+    @Override
+    public APIResult<UserDetail> getUserDetailByPhone(String phone) {
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andPhoneEqualTo(phone);
+        return new APIResult<>(convert(ListUtils.getOne(uaaUserMapper.selectByExample(example))));
+    }
+
+    @Override
     public APIResult<UserDetail> signIn(SignInAo signIn, HttpServletRequest request) {
         UaaUserExample example = new UaaUserExample();
         UaaUserExample.Criteria criteria = example.createCriteria();
@@ -678,6 +694,220 @@ public class UserServiceImpl implements UserService {
         }
         uaaUser.setTotp(null);
         uaaUserMapper.updateByPrimaryKey(uaaUser);
+    }
+
+    @Override
+    public APIResult sendEmailVerCode(String newEmail) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message(StateCodeEnum.Unauthorized.getDescribe())
+                    .build();
+        }
+        if (ObjectUtils.isEmpty(newEmail)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请先填写新的电子邮箱地址")
+                    .build();
+        }
+        newEmail = newEmail.trim().toLowerCase();
+        if (!StringUtils.isEmail(newEmail)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请填写正确的电子邮箱地址")
+                    .build();
+        }
+        if (newEmail.equals(userDetail.getEmail())) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("新电子邮箱地址不能与旧邮箱地址一致")
+                    .build();
+        }
+        verificationCodeService.sendVerificationCode(false,
+                DateUtils.nextMinutes(10), newEmail, "UPDATE_EMAIL", userDetail, null);
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult updateEmail(String newEmail, String verCode) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message(StateCodeEnum.Unauthorized.getDescribe())
+                    .build();
+        }
+        if (ObjectUtils.isEmpty(newEmail)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请先填写新的电子邮箱地址")
+                    .build();
+        }
+        newEmail = newEmail.trim().toLowerCase();
+        if (!StringUtils.isEmail(newEmail)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请填写正确的电子邮箱地址")
+                    .build();
+        }
+        if (userDetail.getEmail().trim().toLowerCase().equals(newEmail)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("新的电子邮箱地址不能跟旧的电子邮箱地址一样")
+                    .build();
+        }
+        boolean verificationCode = verificationCodeService.verificationCode(verCode, newEmail, "UPDATE_EMAIL");
+        if (!verificationCode) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("验证码错误或已经过期")
+                    .build();
+        }
+        // 查找新的电子邮箱地址是否被占用
+        if (this.getUserDetailByEmail(newEmail).getData() != null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("新的电子邮箱地址已经被占用")
+                    .build();
+        }
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(userDetail.getUsername());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser == null) {
+            logger.error("在数据库中未能找到账户信息，UUID：{}，UserName：{}，Email：{}",
+                    userDetail.getUuid(), userDetail.getUsername(), userDetail.getEmail());
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("在数据库中未能找到您的账户信息")
+                    .build();
+        }
+        uaaUser.setEmail(newEmail);
+        uaaUser.setEmailVerified(true);
+        uaaUserMapper.updateByPrimaryKey(uaaUser);
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult sendPhoneVerCode(String newPhone) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message(StateCodeEnum.Unauthorized.getDescribe())
+                    .build();
+        }
+        if (ObjectUtils.isEmpty(newPhone)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("手机号不能为空")
+                    .build();
+        }
+        newPhone = newPhone.trim().toLowerCase().replace("+86", "");
+        if (!StringUtils.isChinaPhone(newPhone)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("只支持中国大陆的手机号码")
+                    .build();
+        }
+        verificationCodeService.sendVerificationCode(false,
+                DateUtils.nextMinutes(10), newPhone, "UPDATE_PHONE", userDetail, null);
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult updatePhone(String newPhone, String verCode) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message(StateCodeEnum.Unauthorized.getDescribe())
+                    .build();
+        }
+        if (ObjectUtils.isEmpty(newPhone) || newPhone.isEmpty()) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("手机号不能为空")
+                    .build();
+        }
+        newPhone = newPhone.trim().toLowerCase().replace("+86", "");
+        if (!StringUtils.isChinaPhone(newPhone)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("只支持中国大陆的手机号码")
+                    .build();
+        }
+        if (!ObjectUtils.isEmpty(userDetail.getPhone())) {
+            if (userDetail.getPhone().trim().toLowerCase().equals(newPhone)) {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Failure)
+                        .message("新的手机号码不能跟旧的手机号码一样")
+                        .build();
+            }
+        }
+        boolean verificationCode =
+                verificationCodeService.verificationCode(verCode, newPhone, "UPDATE_PHONE");
+        if (!verificationCode) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("验证码错误或已经过期")
+                    .build();
+        }
+        // 查找新的手机号码是否被占用
+        if (this.getUserDetailByPhone(newPhone).getData() != null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("新的手机号码已经被占用")
+                    .build();
+        }
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(userDetail.getUsername());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        if (uaaUser == null) {
+            logger.error("在数据库中未能找到账户信息，UUID：{}，UserName：{}，Email：{}",
+                    userDetail.getUuid(), userDetail.getUsername(), userDetail.getEmail());
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("在数据库中未能找到您的账户信息")
+                    .build();
+        }
+        uaaUser.setPhone(newPhone);
+        uaaUser.setPhoneVerified(true);
+        uaaUserMapper.updateByPrimaryKey(uaaUser);
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult updateFirstName(String firstName, String lastName) {
+        UserDetail userDetail = systemService.currentUserDetail();
+        if (userDetail == null) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Unauthorized)
+                    .message(StateCodeEnum.Unauthorized.getDescribe())
+                    .build();
+        }
+        if (!ObjectUtils.isEmpty(firstName) && firstName.length() > MAX_FIRST_NAME) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("姓氏超过系统允许最大长度 " + MAX_FIRST_NAME + " 位。")
+                    .build();
+        }
+        if (!ObjectUtils.isEmpty(lastName) && lastName.length() > MAX_LAST_NAME) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("名称超过系统允许最大长度 " + MAX_LAST_NAME + " 位。")
+                    .build();
+        }
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(userDetail.getUsername());
+        UaaUser uaaUser = ListUtils.getOne(uaaUserMapper.selectByExample(example));
+        uaaUser.setFirstName(firstName);
+        uaaUser.setLastName(lastName);
+        uaaUserMapper.updateByPrimaryKey(uaaUser);
+        return APIResult.success();
     }
 
     private UserDetail convert(UaaUser uaaUser) {
