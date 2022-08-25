@@ -21,9 +21,11 @@ const SectionWrapper = ({ children, ...props }: any) => {
                     label: (
                         <>
                             <SettingOutlined />
-                            <a href="/account/manage">
-                                个人设置
-                            </a>
+                            <Link href={"/account/manage"}>
+                                <a>
+                                    个人设置
+                                </a>
+                            </Link>
                         </>
                     ),
                     key: 'manage',
@@ -32,9 +34,11 @@ const SectionWrapper = ({ children, ...props }: any) => {
                     label: (
                         <>
                             <LockOutlined />
-                            <a href="/account/manage/password">
-                                修改密码
-                            </a>
+                            <Link href={"/account/manage/password"}>
+                                <a>
+                                    修改密码
+                                </a>
+                            </Link>
                         </>
                     ),
                     key: 'password',

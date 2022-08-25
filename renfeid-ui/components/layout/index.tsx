@@ -61,7 +61,8 @@ const MyLayout = ({ children }: any) => {
                         registrationIp: "",
                         secretLevel: "",
                         username: "",
-                        uuid: ""
+                        uuid: "",
+                        u2fEnable: false,
                     })
                 }
             })
