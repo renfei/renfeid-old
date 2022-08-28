@@ -30,11 +30,6 @@ const getAnalyticsTag = () => {
           var s = document.getElementsByTagName("script")[0];
           s.parentNode.insertBefore(hm, s);
         })();
-
-        let noscriptWaring = document.getElementById('noscript-waring');
-        if (noscriptWaring) {
-            noscriptWaring.style.display = 'none';
-        }
         `,
     }
 }

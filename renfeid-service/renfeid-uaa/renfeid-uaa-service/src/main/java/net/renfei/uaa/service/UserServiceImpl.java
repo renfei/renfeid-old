@@ -168,6 +168,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public APIResult<UserDetail> getUserDetailByUsername(String username) {
+        UaaUserExample example = new UaaUserExample();
+        UaaUserExample.Criteria criteria = example.createCriteria();
+        criteria.andUsernameEqualTo(username);
+        return new APIResult<>(convert(ListUtils.getOne(uaaUserMapper.selectByExample(example))));
+    }
+
+    @Override
     public APIResult<UserDetail> signIn(SignInAo signIn, HttpServletRequest request) {
         UaaUserExample example = new UaaUserExample();
         UaaUserExample.Criteria criteria = example.createCriteria();

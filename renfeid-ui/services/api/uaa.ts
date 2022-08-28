@@ -9,6 +9,8 @@ import UserSignInLog = API.UserSignInLog
 import TotpVo = API.TotpVo
 import TotpAo = API.TotpAo
 import UpdatePasswordAo = API.UpdatePasswordAo
+import ResetPasswordAo = API.ResetPasswordAo
+import FindUsernameAo = API.FindUsernameAo
 
 export const requestServerSecretKey = async () => {
     let url = `/api/auth/secretKey`
@@ -212,6 +214,70 @@ export const updatePassword = async (updatePassword: UpdatePasswordAo) => {
     return await fetch(url, {
         method: 'PUT',
         body: JSON.stringify(updatePassword),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const sendFindPasswordVerCode = async (account: String) => {
+    let url = `/api/auth/findPassword/${account}`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(""),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const sendFindUsernameVerCode = async (account: String) => {
+    let url = `/api/auth/findUsername/${account}`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(""),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const resetPasswordByVerCode = async (resetPassword: ResetPasswordAo) => {
+    let url = `/api/auth/resetPassword`
+    return await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(resetPassword),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const findUsernameByVerCode = async (findUsername: FindUsernameAo) => {
+    let url = `/api/auth/findUsername`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(findUsername),
         headers: {
             'content-type': 'application/json',
             'Authorization': '',

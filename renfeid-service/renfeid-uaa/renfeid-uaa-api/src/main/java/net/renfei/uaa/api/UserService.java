@@ -68,6 +68,15 @@ public interface UserService {
     APIResult<UserDetail> getUserDetailByPhone(String phone);
 
     /**
+     * 根据 username 获取用户详情对象
+     * 无论是否被禁用或锁定都会被查询出来
+     *
+     * @param username 用户名
+     * @return 用户详情对象
+     */
+    APIResult<UserDetail> getUserDetailByUsername(String username);
+
+    /**
      * 登录
      *
      * @param signIn  登录请求对象

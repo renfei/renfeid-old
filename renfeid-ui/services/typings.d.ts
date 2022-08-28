@@ -346,4 +346,16 @@ declare namespace API {
         newPwd: string,
         keyId: string,
     }
+
+    interface ResetPasswordAo {
+        password: string,
+        tOtp: string,
+        keyUuid: string,
+        verCode: string,
+    }
+
+    interface FindUsernameAo {
+        phone: string,
+        verCode: string,
+    }
 }

@@ -11,9 +11,6 @@ class Document extends NextDocument<Props> {
             <Html>
                 <Head />
                 <body>
-                    <div id="noscript-waring" style={{ border: '5px solid #ff0000', padding: '20px', backgroundColor: '#ffff00', color: '#ff0000' }}>
-                        <FrownOutlined />您的浏览器未启用 JavaScript 脚本功能，我站将无法正常显示和提供正常的功能，请先启用 JavaScript 脚本功能。
-                    </div>
                     <Main />
                     <NextScript />
                     <Script

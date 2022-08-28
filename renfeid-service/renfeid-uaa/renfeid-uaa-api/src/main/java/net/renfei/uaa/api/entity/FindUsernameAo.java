@@ -13,20 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.common.core.service;
+package net.renfei.uaa.api.entity;
 
-
-import net.renfei.uaa.api.entity.UserDetail;
-
-import java.util.Date;
+import java.io.Serializable;
 
 /**
- * 验证码服务
- *
  * @author renfei
  */
-public interface VerificationCodeService {
-    void sendVerificationCode(boolean uuidVerificationCode, Date expires,
-                              String addressee, String authType, UserDetail account, String callBack);
-    boolean verificationCode(String code, String addressee, String authType);
+public class FindUsernameAo implements Serializable {
+    private static final long serialVersionUID = -3316408227872898096L;
+    private String phone;
+    private String verCode;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getVerCode() {
+        return verCode;
+    }
+
+    public void setVerCode(String verCode) {
+        this.verCode = verCode;
+    }
 }

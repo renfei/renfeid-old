@@ -198,7 +198,7 @@ const SignInPage = (req: NextApiRequest, res: NextApiResponse) => {
                                         <Form.Item>
                                             <Row>
                                                 <Col style={{ textAlign: 'right' }}>
-                                                    <Link href={"/"}>忘记密码？</Link>
+                                                    <Link href={"/auth/recoverAccount"}>忘记密码？</Link>
                                                 </Col>
                                             </Row>
                                         </Form.Item>

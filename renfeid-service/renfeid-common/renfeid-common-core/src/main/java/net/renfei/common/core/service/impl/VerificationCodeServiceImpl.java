@@ -51,10 +51,10 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
     }
 
     @Override
-    public void sendVerificationCode(boolean numberVerificationCode, Date expires, String addressee,
+    public void sendVerificationCode(boolean uuidVerificationCode, Date expires, String addressee,
                                      String authType, UserDetail account, String callBack) {
         String verificationCodeString;
-        if (numberVerificationCode) {
+        if (uuidVerificationCode) {
             verificationCodeString = UUID.randomUUID().toString().replace("-", "").toLowerCase();
         } else {
             verificationCodeString = StringUtils.getRandomNumber(6);

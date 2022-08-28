@@ -181,4 +181,32 @@ public class AuthorizationController extends AbstractController {
     public APIResult updatePassword(@RequestBody UpdatePasswordAo updatePassword) {
         return authorizationService.updatePassword(updatePassword);
     }
+
+    @PostMapping("findPassword/{account}")
+    @Operation(summary = "发送找回密码的验证码", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "发送找回密码的验证码", operation = OperationTypeEnum.RETRIEVE)
+    public APIResult sendFindPasswordVerCode(@PathVariable("account") String account) {
+        return authorizationService.sendFindPasswordVerCode(account);
+    }
+
+    @PostMapping("findUsername/{account}")
+    @Operation(summary = "发送找回用户名的验证码", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "发送找回用户名的验证码", operation = OperationTypeEnum.RETRIEVE)
+    public APIResult sendFindUsernameVerCode(@PathVariable("account") String account) {
+        return authorizationService.sendFindUsernameVerCode(account);
+    }
+
+    @PutMapping("resetPassword")
+    @Operation(summary = "使用验证码重置密码", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "使用验证码重置密码", operation = OperationTypeEnum.UPDATE)
+    public APIResult resetPasswordByVerCode(@RequestBody ResetPasswordAo resetPasswordAo) {
+        return authorizationService.resetPasswordByVerCode(resetPasswordAo);
+    }
+
+    @PostMapping("findUsername")
+    @Operation(summary = "使用验证码找回用户名", tags = {"认证接口"})
+    @OperationLog(module = SystemTypeEnum.AUTH, desc = "使用验证码找回用户名", operation = OperationTypeEnum.RETRIEVE)
+    public APIResult<String> findUsernameByVerCode(@RequestBody FindUsernameAo findUsernameAo) {
+        return authorizationService.findUsernameByVerCode(findUsernameAo);
+    }
 }

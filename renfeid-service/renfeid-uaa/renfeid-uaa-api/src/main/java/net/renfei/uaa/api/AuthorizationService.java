@@ -133,4 +133,36 @@ public interface AuthorizationService {
      * @return
      */
     APIResult updatePassword(UpdatePasswordAo updatePassword);
+
+    /**
+     * 发送找回密码的验证码
+     *
+     * @param account 电子邮箱或手机号
+     * @return
+     */
+    APIResult sendFindPasswordVerCode(String account);
+
+    /**
+     * 找回用户名，如果是邮箱则直接发送邮件，如果是手机号则发送找回验证码
+     *
+     * @param account 电子邮箱或手机号
+     * @return
+     */
+    APIResult sendFindUsernameVerCode(String account);
+
+    /**
+     * 使用验证码重置密码
+     *
+     * @param resetPasswordAo
+     * @return
+     */
+    APIResult resetPasswordByVerCode(ResetPasswordAo resetPasswordAo);
+
+    /**
+     * 使用验证码找回用户名
+     *
+     * @param findUsernameAo
+     * @return
+     */
+    APIResult<String> findUsernameByVerCode(FindUsernameAo findUsernameAo);
 }

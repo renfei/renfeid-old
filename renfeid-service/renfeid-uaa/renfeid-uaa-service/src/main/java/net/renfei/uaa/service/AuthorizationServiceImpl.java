@@ -28,6 +28,7 @@ import net.renfei.common.core.config.RedisConfig;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.entity.SystemLogEntity;
 import net.renfei.common.core.service.*;
+import net.renfei.common.core.utils.DateUtils;
 import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.common.core.utils.AESUtils;
 import net.renfei.common.core.utils.IpUtils;
@@ -441,6 +442,150 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             return APIResult.success();
         } catch (BusinessException businessException) {
             return APIResult.builder().code(StateCodeEnum.Failure).message(businessException.getMessage()).build();
+        }
+    }
+
+    @Override
+    public APIResult sendFindPasswordVerCode(String account) {
+        if (ObjectUtils.isEmpty(account)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请输入您的的邮箱地址或者手机号。")
+                    .build();
+        }
+        UserDetail userDetail = null;
+        boolean useEmail = true;
+        if (StringUtils.isEmail(account)) {
+            // 使用邮箱找回密码
+            userDetail = userService.getUserDetailByEmail(account).getData();
+        } else if (StringUtils.isChinaPhone(account)) {
+            // 使用手机号找回密码
+            userDetail = userService.getUserDetailByPhone(account).getData();
+            useEmail = false;
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请输入您的的邮箱地址或者手机号。")
+                    .build();
+        }
+        if (userDetail != null && useEmail) {
+            verificationCodeService.sendVerificationCode(false, DateUtils.nextHours(2),
+                    userDetail.getEmail(), "RESET_PASSWORD", userDetail, null);
+        } else if (userDetail != null && !ObjectUtils.isEmpty(userDetail.getPhone())) {
+            verificationCodeService.sendVerificationCode(false, DateUtils.nextHours(2),
+                    userDetail.getPhone(), "RESET_PASSWORD", userDetail, null);
+        }
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult sendFindUsernameVerCode(String account) {
+        if (ObjectUtils.isEmpty(account)) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请输入您的的邮箱地址或者手机号。")
+                    .build();
+        }
+        UserDetail userDetail = null;
+        boolean useEmail = true;
+        if (StringUtils.isEmail(account)) {
+            // 使用邮箱找回密码
+            userDetail = userService.getUserDetailByEmail(account).getData();
+        } else if (StringUtils.isChinaPhone(account)) {
+            // 使用手机号找回密码
+            userDetail = userService.getUserDetailByPhone(account).getData();
+            useEmail = false;
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请输入您的的邮箱地址或者手机号。")
+                    .build();
+        }
+        if (userDetail != null && useEmail) {
+            List<String> contents = new ArrayList<>();
+            String userName = userDetail.getUsername();
+            contents.add("尊敬的 " + userName + " :");
+            contents.add("这封信是由[RENFEI.NET]系统自动发送的。");
+            contents.add("您收到这封邮件，是由于在[RENFEI.NET]进行了找回用户名的操作。如果您并没有访问过[RENFEI.NET]或没有进行上述操作，请忽略这封邮件。您不需要退订或进行其他进一步的操作。");
+            contents.add("----------------------------------------------------------------------");
+            contents.add("用户名找回操作");
+            contents.add("----------------------------------------------------------------------");
+            contents.add("我们帮您找回了您注册时使用的用户名，期待您的归来！");
+            contents.add("您的用户名是：");
+            contents.add("<span style=\"color:red;font-size:18px;font-weight:800;\">" + userName + "</span>");
+            contents.add("----");
+            contents.add("感谢您的访问，祝您使用愉快！");
+            emailService.send(
+                    userDetail.getEmail(),
+                    userDetail.getUsername(),
+                    "我们帮您找回了您的用户名",
+                    contents
+            );
+        } else if (userDetail != null && !ObjectUtils.isEmpty(userDetail.getPhone())) {
+            verificationCodeService.sendVerificationCode(false, DateUtils.nextHours(2),
+                    userDetail.getPhone(), "FIND_USERNAME", userDetail, null);
+        }
+        return APIResult.success();
+    }
+
+    public APIResult resetPasswordByVerCode(ResetPasswordAo resetPasswordAo) {
+        // 为了复用对象，此处 TOTP 字段是邮箱地址或者手机号
+        if (ObjectUtils.isEmpty(resetPasswordAo.gettOtp())) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请输入您的的邮箱地址或者手机号。")
+                    .build();
+        }
+        UserDetail userDetail;
+        if (StringUtils.isEmail(resetPasswordAo.gettOtp())) {
+            // 使用邮箱找回密码
+            userDetail = userService.getUserDetailByEmail(resetPasswordAo.gettOtp()).getData();
+        } else if (StringUtils.isChinaPhone(resetPasswordAo.gettOtp())) {
+            // 使用手机号找回密码
+            userDetail = userService.getUserDetailByPhone(resetPasswordAo.gettOtp()).getData();
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("根据您输入的邮箱地址或者手机号未找到对应的账户。")
+                    .build();
+        }
+        if (!verificationCodeService.verificationCode(resetPasswordAo.getVerCode(),
+                resetPasswordAo.gettOtp(), "RESET_PASSWORD")) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("验证码错误或已经失效。")
+                    .build();
+        }
+        userService.resetPassword(Long.parseLong(userDetail.getId()), resetPasswordAo);
+        return APIResult.success();
+    }
+
+    @Override
+    public APIResult<String> findUsernameByVerCode(FindUsernameAo findUsernameAo) {
+        if (!verificationCodeService.verificationCode(findUsernameAo.getVerCode(),
+                findUsernameAo.getPhone(), "FIND_USERNAME")) {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("验证码错误或已经失效。")
+                    .build();
+        }
+        UserDetail userDetail;
+        if (StringUtils.isChinaPhone(findUsernameAo.getPhone())) {
+            // 使用手机号找回密码
+            userDetail = userService.getUserDetailByPhone(findUsernameAo.getPhone()).getData();
+            if (userDetail != null) {
+                return new APIResult<>(userDetail.getUsername());
+            } else {
+                return APIResult.builder()
+                        .code(StateCodeEnum.Failure)
+                        .message("您的手机号似乎没有注册。")
+                        .build();
+            }
+        } else {
+            return APIResult.builder()
+                    .code(StateCodeEnum.Failure)
+                    .message("请输入正确的手机号码。")
+                    .build();
         }
     }
 }
