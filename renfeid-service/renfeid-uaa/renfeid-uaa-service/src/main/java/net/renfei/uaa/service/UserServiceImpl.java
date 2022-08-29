@@ -269,6 +269,8 @@ public class UserServiceImpl implements UserService {
                 String.format("账号：%s，登入系统。", signIn.getUserName()),
                 uaaUser.getUuid(), uaaUser.getUsername(), request);
         logger.info("账号：{}，登入系统。", signIn.getUserName());
+        uaaUser.setTrialErrorTimes(0);
+        uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
         UserDetail userDetail = convert(uaaUser);
         this.fillRoleDetailList(userDetail);
         return new APIResult<>(userDetail);

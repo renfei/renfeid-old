@@ -556,6 +556,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                     .message("验证码错误或已经失效。")
                     .build();
         }
+        resetPasswordAo.setPassword(this.decryptAesByKeyId(
+                resetPasswordAo.getPassword(), resetPasswordAo.getKeyUuid()
+        ).getData());
         userService.resetPassword(Long.parseLong(userDetail.getId()), resetPasswordAo);
         return APIResult.success();
     }
