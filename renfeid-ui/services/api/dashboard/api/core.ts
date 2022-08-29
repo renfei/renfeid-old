@@ -1,5 +1,6 @@
 import * as Fetch from '../../../../utils/request'
 import ReplyCommentAo = API.ReplyCommentAo
+import CronJobAo = API.CronJobAo
 
 export const uploadFile = async (token: string, headers: Headers, file: any) => {
     const url = `/_/api/core/system/upload`
@@ -100,6 +101,92 @@ export const replyComment = async (id: string, replyComment: ReplyCommentAo) => 
 
 export const deleteComment = async (id: string) => {
     let url = `/api/dash/core/comment/${id}`
+    return await fetch(url, {
+        method: 'DELETE'
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const queryJobList = async () => {
+    let url = `/api/dash/core/system/crontab`
+    return await fetch(url, {
+        method: 'GET',
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const createJob = async (jobName: string, jobGroup: string, cronJobAo: CronJobAo) => {
+    let url = `/api/dash/core/system/crontab/${jobGroup}/${jobName}`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(cronJobAo),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const rescheduleJob = async (jobName: string, jobGroup: string, cron: string) => {
+    let url = `/api/dash/core/system/crontab/${jobGroup}/${jobName}/reschedule`
+    return await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(cron),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const pauseJob = async (jobName: string, jobGroup: string) => {
+    let url = `/api/dash/core/system/crontab/${jobGroup}/${jobName}/pause`
+    return await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(""),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const resumeJob = async (jobName: string, jobGroup: string) => {
+    let url = `/api/dash/core/system/crontab/${jobGroup}/${jobName}/resume`
+    return await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(""),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const deleteJob = async (jobName: string, jobGroup: string) => {
+    let url = `/api/dash/core/system/crontab/${jobGroup}/${jobName}`
     return await fetch(url, {
         method: 'DELETE'
     }).then((res: any) => {

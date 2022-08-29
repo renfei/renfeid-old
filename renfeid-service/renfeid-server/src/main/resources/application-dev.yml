@@ -48,6 +48,10 @@ spring:
     uris: http://local.renfei.net:9200
     username: elastic
     password: elastic
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
 
 # 自定义配置
 system:

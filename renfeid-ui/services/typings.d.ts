@@ -358,4 +358,20 @@ declare namespace API {
         phone: string,
         verCode: string,
     }
+
+    interface CronJobVo {
+        jobName: string,
+        groupName: string,
+        className: string,
+        cronExpression: string,
+        state: string,
+        nextFireTime: string,
+        param?: any,
+    }
+
+    interface CronJobAo {
+        className: string,
+        cronExpression: string,
+        param?: any,
+    }
 }

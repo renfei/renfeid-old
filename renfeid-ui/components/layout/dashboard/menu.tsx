@@ -8,7 +8,7 @@ const { Sider } = Layout
 
 const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
     (icon, index) => {
-        const key = String(index + 1)
+        const key: string = String(index + 1)
 
         return {
             key: `sub${key}`,
@@ -82,6 +82,10 @@ const menu = [
             {
                 key: '/dashboard/sys/log',
                 label: '系统审计日志',
+            },
+            {
+                key: '/dashboard/sys/crontab',
+                label: '系统定时任务',
             }
         ]
     },

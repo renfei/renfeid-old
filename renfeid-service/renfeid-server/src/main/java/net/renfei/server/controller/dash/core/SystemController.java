@@ -22,6 +22,7 @@ import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.*;
+import net.renfei.common.core.service.QuartzService;
 import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.service.SystemService;
 import net.renfei.server.controller.AbstractController;
@@ -46,15 +47,18 @@ import java.util.List;
 public class SystemController extends AbstractController {
     private final UserService userService;
     private final SystemService systemService;
+    private final QuartzService quartzService;
     private final UaaUtilService uaaUtilService;
     private final SystemLogService systemLogService;
 
     public SystemController(UserService userService,
                             SystemService systemService,
+                            QuartzService quartzService,
                             UaaUtilService uaaUtilService,
                             SystemLogService systemLogService) {
         this.userService = userService;
         this.systemService = systemService;
+        this.quartzService = quartzService;
         this.uaaUtilService = uaaUtilService;
         this.systemLogService = systemLogService;
     }
@@ -123,65 +127,140 @@ public class SystemController extends AbstractController {
                 // 系统管理员，看不见安全保密管理员、安全审计管理员的日志
                 excludeUsername = new ArrayList<>();
                 List<UserDetail> securitySupers = userService.queryUserListByRoleName(systemConfig.getSecuritySuperRoleName());
-                if(!securitySupers.isEmpty()){
+                if (!securitySupers.isEmpty()) {
                     List<String> finalExcludeUsername = new ArrayList<>();
-                    securitySupers.forEach(securitySuper-> finalExcludeUsername.add(securitySuper.getUsername()));
+                    securitySupers.forEach(securitySuper -> finalExcludeUsername.add(securitySuper.getUsername()));
                     excludeUsername.addAll(finalExcludeUsername);
                 }
                 List<UserDetail> auditSupers = userService.queryUserListByRoleName(systemConfig.getAuditSuperRoleName());
-                if(!auditSupers.isEmpty()){
+                if (!auditSupers.isEmpty()) {
                     List<String> finalExcludeUsername = new ArrayList<>();
-                    auditSupers.forEach(auditSuper-> finalExcludeUsername.add(auditSuper.getUsername()));
+                    auditSupers.forEach(auditSuper -> finalExcludeUsername.add(auditSuper.getUsername()));
                     excludeUsername.addAll(finalExcludeUsername);
                 }
             } else if (uaaUtilService.isSecuritySuperUser(userDetail)) {
                 // 安全保密管理员，看不见系统管理员的日志
                 excludeUsername = new ArrayList<>();
                 List<UserDetail> systemSupers = userService.queryUserListByRoleName(systemConfig.getSystemSuperRoleName());
-                if(!systemSupers.isEmpty()){
+                if (!systemSupers.isEmpty()) {
                     List<String> finalExcludeUsername = new ArrayList<>();
-                    systemSupers.forEach(securitySuper-> finalExcludeUsername.add(securitySuper.getUsername()));
+                    systemSupers.forEach(securitySuper -> finalExcludeUsername.add(securitySuper.getUsername()));
                     excludeUsername.addAll(finalExcludeUsername);
                 }
             } else if (uaaUtilService.isAuditSuperUser(userDetail)) {
                 // 安全审计管理员，仅能进行查询分析系统管理员和安全管理员的操作日志
                 inUsername = new ArrayList<>();
                 List<UserDetail> systemSupers = userService.queryUserListByRoleName(systemConfig.getSystemSuperRoleName());
-                if(!systemSupers.isEmpty()){
+                if (!systemSupers.isEmpty()) {
                     List<String> finalExcludeUsername = new ArrayList<>();
-                    systemSupers.forEach(securitySuper-> finalExcludeUsername.add(securitySuper.getUsername()));
+                    systemSupers.forEach(securitySuper -> finalExcludeUsername.add(securitySuper.getUsername()));
                     inUsername.addAll(finalExcludeUsername);
                 }
                 List<UserDetail> securitySupers = userService.queryUserListByRoleName(systemConfig.getSecuritySuperRoleName());
-                if(!securitySupers.isEmpty()){
+                if (!securitySupers.isEmpty()) {
                     List<String> finalExcludeUsername = new ArrayList<>();
-                    securitySupers.forEach(securitySuper-> finalExcludeUsername.add(securitySuper.getUsername()));
+                    securitySupers.forEach(securitySuper -> finalExcludeUsername.add(securitySuper.getUsername()));
                     inUsername.addAll(finalExcludeUsername);
                 }
             } else {
                 // 啥也不是，屏蔽全部三员账号
                 excludeUsername = new ArrayList<>();
                 List<UserDetail> systemSupers = userService.queryUserListByRoleName(systemConfig.getSystemSuperRoleName());
-                if(!systemSupers.isEmpty()){
+                if (!systemSupers.isEmpty()) {
                     List<String> finalExcludeUsername = new ArrayList<>();
-                    systemSupers.forEach(securitySuper-> finalExcludeUsername.add(securitySuper.getUsername()));
+                    systemSupers.forEach(securitySuper -> finalExcludeUsername.add(securitySuper.getUsername()));
                     excludeUsername.addAll(finalExcludeUsername);
                 }
                 List<UserDetail> securitySupers = userService.queryUserListByRoleName(systemConfig.getSecuritySuperRoleName());
-                if(!securitySupers.isEmpty()){
+                if (!securitySupers.isEmpty()) {
                     List<String> finalExcludeUsername = new ArrayList<>();
-                    securitySupers.forEach(securitySuper-> finalExcludeUsername.add(securitySuper.getUsername()));
+                    securitySupers.forEach(securitySuper -> finalExcludeUsername.add(securitySuper.getUsername()));
                     excludeUsername.addAll(finalExcludeUsername);
                 }
                 List<UserDetail> auditSupers = userService.queryUserListByRoleName(systemConfig.getAuditSuperRoleName());
-                if(!auditSupers.isEmpty()){
+                if (!auditSupers.isEmpty()) {
                     List<String> finalExcludeUsername = new ArrayList<>();
-                    auditSupers.forEach(auditSuper-> finalExcludeUsername.add(auditSuper.getUsername()));
+                    auditSupers.forEach(auditSuper -> finalExcludeUsername.add(auditSuper.getUsername()));
                     excludeUsername.addAll(finalExcludeUsername);
                 }
             }
         }
         return new APIResult<>(systemLogService.querySystemLog(startDate, endDate, logLevel,
                 systemType, operationType, reqUri, username, reqIp, excludeUsername, inUsername, pages, rows));
+    }
+
+    @GetMapping("crontab")
+    @Operation(summary = "查看系统定时任务列表", tags = {"系统相关接口"}, description = "创建系统定时任务")
+    @OperationLog(module = SystemTypeEnum.SYS_QUARTZ, desc = "查看系统定时任务列表", operation = OperationTypeEnum.RETRIEVE)
+    public APIResult<List<CronJobVo>> queryJobList() {
+        return quartzService.queryJobList();
+    }
+
+    @PostMapping("crontab/{jobGroup}/{jobName}")
+    @Operation(summary = "创建系统定时任务", tags = {"系统相关接口"},
+            description = "创建系统定时任务",
+            parameters = {
+                    @Parameter(name = "jobName", description = "任务名称"),
+                    @Parameter(name = "jobGroup", description = "任务组名")
+            })
+    @OperationLog(module = SystemTypeEnum.SYS_QUARTZ, desc = "创建系统定时任务", operation = OperationTypeEnum.CREATE)
+    public APIResult createJob(@PathVariable("jobName") String jobName,
+                               @PathVariable("jobGroup") String jobGroup,
+                               @RequestBody CronJobAo cronJobAo) {
+        return quartzService.createJob(jobName, jobGroup, cronJobAo);
+    }
+
+    @PutMapping("crontab/{jobGroup}/{jobName}/reschedule")
+    @Operation(summary = "重排定时任务", tags = {"系统相关接口"},
+            description = "重排定时任务",
+            parameters = {
+                    @Parameter(name = "jobName", description = "任务名称"),
+                    @Parameter(name = "jobGroup", description = "任务组名"),
+                    @Parameter(name = "cron", description = "定时表达式")
+            })
+    @OperationLog(module = SystemTypeEnum.SYS_QUARTZ, desc = "重排定时任务", operation = OperationTypeEnum.UPDATE)
+    public APIResult rescheduleJob(@PathVariable("jobName") String jobName,
+                                   @PathVariable("jobGroup") String jobGroup,
+                                   @RequestBody String cron) {
+        return quartzService.rescheduleJob(jobName, jobGroup, cron);
+    }
+
+    @PutMapping("crontab/{jobGroup}/{jobName}/pause")
+    @Operation(summary = "暂停定时任务", tags = {"系统相关接口"},
+            description = "暂停定时任务",
+            parameters = {
+                    @Parameter(name = "jobName", description = "任务名称"),
+                    @Parameter(name = "jobGroup", description = "任务组名")
+            })
+    @OperationLog(module = SystemTypeEnum.SYS_QUARTZ, desc = "暂停定时任务", operation = OperationTypeEnum.UPDATE)
+    public APIResult pauseJob(@PathVariable("jobName") String jobName,
+                              @PathVariable("jobGroup") String jobGroup) {
+        return quartzService.pauseJob(jobName, jobGroup);
+    }
+
+    @PutMapping("crontab/{jobGroup}/{jobName}/resume")
+    @Operation(summary = "恢复定时任务", tags = {"系统相关接口"},
+            description = "恢复定时任务",
+            parameters = {
+                    @Parameter(name = "jobName", description = "任务名称"),
+                    @Parameter(name = "jobGroup", description = "任务组名")
+            })
+    @OperationLog(module = SystemTypeEnum.SYS_QUARTZ, desc = "恢复定时任务", operation = OperationTypeEnum.UPDATE)
+    public APIResult resumeJob(@PathVariable("jobName") String jobName,
+                               @PathVariable("jobGroup") String jobGroup) {
+        return quartzService.resumeJob(jobName, jobGroup);
+    }
+
+    @DeleteMapping("crontab/{jobGroup}/{jobName}")
+    @Operation(summary = "删除定时任务", tags = {"系统相关接口"},
+            description = "删除定时任务",
+            parameters = {
+                    @Parameter(name = "jobName", description = "任务名称"),
+                    @Parameter(name = "jobGroup", description = "任务组名")
+            })
+    @OperationLog(module = SystemTypeEnum.SYS_QUARTZ, desc = "删除定时任务", operation = OperationTypeEnum.DELETE)
+    public APIResult deleteJob(@PathVariable("jobName") String jobName,
+                               @PathVariable("jobGroup") String jobGroup) {
+        return quartzService.deleteJob(jobName, jobGroup);
     }
 }

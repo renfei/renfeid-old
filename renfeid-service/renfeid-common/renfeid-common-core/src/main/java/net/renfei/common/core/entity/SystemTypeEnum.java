@@ -75,6 +75,10 @@ public enum SystemTypeEnum {
      */
     SYS_SETTING(""),
     /**
+     * 系统定时任务模块
+     */
+    SYS_QUARTZ(""),
+    /**
      * 系统日志
      */
     SYS_LOGS("");

@@ -13,7 +13,7 @@
 
     <!-- 属性文件 -->
     <property name="processName" value="renfeid"/>
-    <property name="logDir" value="/app/log"/>
+    <property name="logDir" value="/opt/renfeid/log"/>
 
     <!-- Console 输出设置 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
