@@ -6,7 +6,7 @@ import Layout from '../components/layout'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space } from 'antd'
 import moment from 'moment'
-import { QRCodeCanvas } from 'qrcode.react'
+import { QRCodeSVG } from 'qrcode.react'
 import { ArrowRightOutlined, WechatOutlined, GithubOutlined } from '@ant-design/icons'
 import styles from '../styles/Home.module.css'
 import GoogleAdsense from '../components/GoogleAdsense'
@@ -303,8 +303,17 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                         <Title level={5}><WechatOutlined style={{ paddingRight: '10px' }} />微信订阅号</Title>
                                         <Text type="secondary" style={{ fontSize: '12px' }}>扫码关注「任霏博客」微信订阅号</Text>
                                         <div style={{ textAlign: 'center', marginTop: '0.5em' }}>
-                                            <QRCodeCanvas
+                                            <QRCodeSVG
                                                 value="http://weixin.qq.com/r/OkSQiJLEx8_4rdbr9xEo"
+                                                level={"M"}
+                                                imageSettings={{
+                                                    src: "https://cdn.renfei.net/Logo/wechat_64.png",
+                                                    x: undefined,
+                                                    y: undefined,
+                                                    height: 28,
+                                                    width: 28,
+                                                    excavate: true,
+                                                }}
                                             />
                                         </div>
                                     </div>

@@ -1,5 +1,5 @@
 import { Button, Space, message } from 'antd'
-import { QRCodeCanvas } from 'qrcode.react'
+import { QRCodeSVG } from 'qrcode.react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import styles from "../styles/CMS.module.css"
 import {
@@ -24,10 +24,19 @@ const share = (props: {
     <Space size={4}>
       <Button type="text" shape="circle" className={styles.wechatShareBtn} icon={<WechatFilled />}>
         <div className={styles.wechatShare}>
-          <QRCodeCanvas
+          <QRCodeSVG
             width={150}
             height={150}
             value={props.url}
+            level={"M"}
+            imageSettings={{
+              src: "https://cdn.renfei.net/Logo/renfei_64.png",
+              x: undefined,
+              y: undefined,
+              height: 34,
+              width: 34,
+              excavate: true,
+            }}
           />
         </div>
       </Button>

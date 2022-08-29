@@ -5,7 +5,7 @@ import { Col, Row, Typography, Form, Input, Button, message } from 'antd'
 import Layout from "../../../components/layout"
 import CheckSignInStatus from '../../../utils/CheckSignInStatus'
 import * as api from "../../../services/api"
-import { QRCodeCanvas } from 'qrcode.react'
+import { QRCodeSVG } from 'qrcode.react'
 import { encrypt } from "../../../utils/encryption"
 import APIResult = API.APIResult
 import UserInfo = API.UserInfo
@@ -158,7 +158,7 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                         未开启
                       </Form.Item>
                       <Form.Item label="二维码" style={{ marginBottom: '0' }}>
-                        <QRCodeCanvas
+                        <QRCodeSVG
                           value={totp.totpString}
                         />
                       </Form.Item>
