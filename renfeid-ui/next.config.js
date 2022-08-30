@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const withPWA = require('next-pwa')({
+    dest: 'public',
+    register: true,
+    skipWaiting: true,
+})
+
+const nextConfig = withPWA({
     reactStrictMode: true,
     compress: false,
     images: {
@@ -7,6 +13,6 @@ const nextConfig = {
             'cdn.renfei.net'
         ],
     },
-}
+})
 
-export default nextConfig
+module.exports = nextConfig
