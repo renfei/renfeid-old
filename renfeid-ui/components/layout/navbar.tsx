@@ -5,13 +5,6 @@ import React, { useState } from 'react'
 import TopBarWrapper from "./top-bar-wrapper"
 import { SearchOutlined, UnorderedListOutlined, CloseOutlined } from '@ant-design/icons'
 
-const hotSearch = [
-    'Test1',
-    'Test2',
-    'Test3',
-    'Test4',
-];
-
 const menuList = [
     {
         text: '首页',
@@ -205,15 +198,22 @@ const Navbar = ({ children, ...props }: any) => {
                                                 }
                                             }} />
                                         }
+                                        onPressEnter={(event) => {
+                                            if (event && event.target) {
+                                                window.location.href = `/search?w=${(event.target as HTMLInputElement).value}`
+                                            }
+                                        }}
                                     />
                                 </Form.Item>
                             </Form>
                             <Typography.Title level={5} style={{ color: 'rgba(255, 255, 255, 0.95)' }}>搜索热词</Typography.Title>
                             <List
-                                dataSource={hotSearch}
-                                renderItem={item => (
+                                dataSource={props.hotSearch}
+                                renderItem={(item: string) => (
                                     <List.Item style={{ color: 'rgba(255, 255, 255, 0.9)', borderBottom: '1px solid rgba(255, 255, 255, 0.5)' }}>
-                                        {item}
+                                        <Link href={`/search?w=${item}`}>
+                                            <a target={'_blank'}>{item}</a>
+                                        </Link>
                                     </List.Item>
                                 )}
                             />

@@ -374,4 +374,20 @@ declare namespace API {
         cronExpression: string,
         param?: any,
     }
+
+    interface SearchItem {
+        uuid: string,
+        originalId: string,
+        title: string,
+        content: string,
+        url: string,
+        type: string,
+        date: string,
+        image: string,
+    }
+
+    interface HotSearch {
+        word: string,
+        cont: string,
+    }
 }

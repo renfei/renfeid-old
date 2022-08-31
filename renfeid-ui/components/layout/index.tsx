@@ -6,6 +6,8 @@ import SectionWrapper from "./section-wrapper"
 import Footer from './footer'
 import * as api from '../../services/api'
 import UserInfo = API.UserInfo
+import APIResult = API.APIResult
+import HotSearch = API.HotSearch
 
 const { Content } = Layout
 
@@ -46,6 +48,7 @@ const MyLayout = ({ children }: any) => {
     const [topBarWrapper, setTopBarWrapper] = useState<string>(
         process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview' ? ('当前是预览模式，仅支持查看，不支持其他操作。') : ('')
     )
+    const [hotSearch, setHotSearch] = useState<string[]>()
 
     useEffect(() => {
         if (!userInfo) {
@@ -67,18 +70,29 @@ const MyLayout = ({ children }: any) => {
                 }
             })
         }
+        if (!hotSearch) {
+            api.clientQueryHotSearchList().then((res: APIResult<HotSearch[]>) => {
+                if (res.code == 200 && res.data) {
+                    let list: string[] = []
+                    for (let i = 0; i < res.data.length; i++) {
+                        list.push(res.data[i].word)
+                    }
+                    setHotSearch(list)
+                }
+            })
+        }
         if (!intervalMessage) {
             setInterval(() => {
                 getMessage()
             }, 10000)
             setIntervalMessage(true)
         }
-    }, [userInfo, intervalMessage])
+    }, [userInfo, hotSearch, intervalMessage])
 
     return (
         <>
             <Layout>
-                <Navbar>
+                <Navbar hotSearch={hotSearch}>
                     {topBarWrapper}
                 </Navbar>
                 <SectionWrapper

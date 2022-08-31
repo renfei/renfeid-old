@@ -1,5 +1,6 @@
 package net.renfei.common.core.repositories;
 
+import net.renfei.common.core.entity.HotSearch;
 import net.renfei.common.core.repositories.entity.CoreLogs;
 import net.renfei.common.core.repositories.entity.CoreLogsExample;
 import net.renfei.common.core.repositories.entity.CoreLogsWithBLOBs;
@@ -37,4 +38,6 @@ public interface CoreLogsMapper {
     int updateByPrimaryKeyWithBLOBs(CoreLogsWithBLOBs record);
 
     int updateByPrimaryKey(CoreLogs record);
+
+    List<HotSearch> selectHotSearchList();
 }

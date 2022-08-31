@@ -421,4 +421,17 @@
       requ_ip = #{requIp,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectHotSearchList" resultType="net.renfei.common.core.entity.HotSearch">
+    SELECT
+      log_desc AS word,
+      COUNT( 1 ) AS cont
+    FROM
+      core_logs
+    WHERE
+      log_module = 'SEARCH'
+    GROUP BY
+      word
+    ORDER BY
+      cont DESC
+  </select>
 </mapper>

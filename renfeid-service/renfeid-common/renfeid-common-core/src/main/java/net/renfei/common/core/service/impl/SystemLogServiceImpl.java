@@ -18,13 +18,12 @@ package net.renfei.common.core.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import net.renfei.common.api.entity.ListData;
-import net.renfei.common.core.entity.LogLevelEnum;
-import net.renfei.common.core.entity.OperationTypeEnum;
-import net.renfei.common.core.entity.SystemLogEntity;
-import net.renfei.common.core.entity.SystemTypeEnum;
+import net.renfei.common.core.config.SystemConfig;
+import net.renfei.common.core.entity.*;
 import net.renfei.common.core.repositories.CoreLogsMapper;
 import net.renfei.common.core.repositories.entity.CoreLogsExample;
 import net.renfei.common.core.repositories.entity.CoreLogsWithBLOBs;
+import net.renfei.common.core.service.RedisService;
 import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.utils.IpUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static net.renfei.common.core.config.RedisConfig.REDIS_KEY_DATABASE;
+
 /**
  * 系统审计日志服务
  *
@@ -43,9 +44,16 @@ import java.util.List;
  */
 @Service
 public class SystemLogServiceImpl implements SystemLogService {
+    private final static String REDIS_KEY = REDIS_KEY_DATABASE + ":log:";
+    private final RedisService redisService;
+    private final SystemConfig systemConfig;
     private final CoreLogsMapper coreLogsMapper;
 
-    public SystemLogServiceImpl(CoreLogsMapper coreLogsMapper) {
+    public SystemLogServiceImpl(RedisService redisService,
+                                SystemConfig systemConfig,
+                                CoreLogsMapper coreLogsMapper) {
+        this.redisService = redisService;
+        this.systemConfig = systemConfig;
         this.coreLogsMapper = coreLogsMapper;
     }
 
@@ -170,5 +178,30 @@ public class SystemLogServiceImpl implements SystemLogService {
             systemLogListData.setData(systemLogEntities);
         }
         return systemLogListData;
+    }
+
+    @Override
+    public List<HotSearch> queryHotSearchList(int size) {
+        List<HotSearch> hotSearches = null;
+        String redisKey = REDIS_KEY + "search:hot:" + size;
+        if (systemConfig.getEnableCache()) {
+            // 启用了缓存
+            if (redisService.hasKey(redisKey)) {
+                Object object = redisService.get(redisKey);
+                if (object instanceof List) {
+                    hotSearches = (List<HotSearch>) object;
+                }
+            }
+        }
+        if (hotSearches == null) {
+            try (Page<HotSearch> page = PageHelper.startPage(1, size)) {
+                coreLogsMapper.selectHotSearchList();
+                hotSearches = page.getResult();
+            }
+            if (hotSearches != null && systemConfig.getEnableCache()) {
+                redisService.set(redisKey, hotSearches);
+            }
+        }
+        return hotSearches;
     }
 }

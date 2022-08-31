@@ -16,10 +16,7 @@
 package net.renfei.common.core.service;
 
 import net.renfei.common.api.entity.ListData;
-import net.renfei.common.core.entity.LogLevelEnum;
-import net.renfei.common.core.entity.OperationTypeEnum;
-import net.renfei.common.core.entity.SystemLogEntity;
-import net.renfei.common.core.entity.SystemTypeEnum;
+import net.renfei.common.core.entity.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -42,4 +39,6 @@ public interface SystemLogService {
               String desc, String userUuid, String username, HttpServletRequest request);
 
     ListData<SystemLogEntity> queryUserSignInLog(String userName, int pages, int rows);
+
+    List<HotSearch> queryHotSearchList(int size);
 }
