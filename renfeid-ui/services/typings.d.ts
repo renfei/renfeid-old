@@ -390,4 +390,11 @@ declare namespace API {
         word: string,
         cont: string,
     }
+
+    interface SiteMapXml {
+        loc: string,
+        changefreqEnum: string,
+        priority: string,
+        lastmod: string,
+    }
 }

@@ -4,9 +4,9 @@ import React from 'react'
 const SitemapXsl: React.FC = () => null
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  if (res) {
-    res.setHeader('Content-Type', 'text/xml')
-    res.write(`<?xml version="1.0" encoding="UTF-8"?>
+    if (res) {
+        res.setHeader('Content-Type', 'text/xml')
+        res.write(`<?xml version="1.0" encoding="UTF-8"?>
     <xsl:stylesheet version="1.0"
                     xmlns:html="http://www.w3.org/TR/REC-html40"
                     xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
         <xsl:template match="/">
             <html xmlns="http://www.w3.org/1999/xhtml">
             <head>
-                <title>XML Sitemap</title>
+                <title>RENFEI.NET Sitemap</title>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <meta name="robots" content="noindex,follow" />
                 <style type="text/css">
@@ -79,7 +79,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
                   
                   
         <xsl:template match="sitemap:urlset">
-            <h1>XML Sitemap</h1>
+            <h1>RENFEI.NET Sitemap</h1>
             <div id="intro">
                 <p>
                     This is a XML Sitemap which is supposed to be processed by search engines which follow the XML Sitemap standard like Baidu, Bing, Google and Yahoo.
@@ -123,11 +123,11 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
             </div>
         </xsl:template>
     </xsl:stylesheet>`)
-    res.end()
-  }
-  return {
-    props: {},
-  }
+        res.end()
+    }
+    return {
+        props: {},
+    }
 }
 
 export default SitemapXsl
