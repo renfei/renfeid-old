@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next'
 import React from 'react'
-import nookies from 'nookies'
 import * as Fetch from '../utils/request'
 import { convertToHeaders } from '../utils/request'
 import APIResult = API.APIResult
@@ -23,7 +22,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     <changefreq>${resp.data[i].changefreqEnum}</changefreq>
     <priority>${resp.data[i].priority}</priority>
     <lastmod>${resp.data[i].lastmod}</lastmod>
-  </url>`
+  </url>
+`
     }
   }
   if (res) {
