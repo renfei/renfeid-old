@@ -76,6 +76,7 @@ public class SystemConfig {
     private Leaf leaf;
     private AccessLimit accessLimit;
     private Cloudflare cloudflare;
+    private WeChat weChat;
 
     @Data
     public static class Jwt {
@@ -147,5 +148,17 @@ public class SystemConfig {
     public static class Cloudflare {
         public String accountId;
         public String token;
+    }
+
+    @Data
+    public static class WeChat {
+        private Mp mp;
+        @Data
+        public static class Mp {
+            private String appId;
+            private String appSecret;
+            private String token;
+            private String encodingAESKey;
+        }
     }
 }

@@ -1,3 +1,6 @@
+logging:
+  level:
+    net.renfei: DEBUG
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -134,3 +137,9 @@ system:
   cloudflare:
     accountId: dd
     token: dd
+  weChat:
+    mp:
+      appId: wx0aeac235b86963c1
+      appSecret: a2443ee4b6d60e202287c3a27a89d712
+      token: tttt123sdg
+      encodingAESKey: <encodingAESKey>
