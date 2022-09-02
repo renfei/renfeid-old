@@ -7,7 +7,7 @@ COPY mybatis-generator ./app/mybatis-generator
 COPY renfeid-bpm ./app/renfeid-bpm
 COPY renfeid-cms ./app/renfeid-cms
 COPY renfeid-common ./app/renfeid-common
-COPY renfeid-proprietary ./app/renfeid-proprietary
+COPY renfeid-pro ./app/renfeid-pro
 COPY renfeid-server ./app/renfeid-server
 COPY renfeid-uaa ./app/renfeid-uaa
 COPY pom.xml ./app/pom.xml

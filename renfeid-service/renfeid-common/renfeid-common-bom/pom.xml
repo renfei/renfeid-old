@@ -60,7 +60,7 @@
             </dependency>
             <dependency>
                 <groupId>net.renfei</groupId>
-                <artifactId>renfeid-proprietary-discuz</artifactId>
+                <artifactId>renfeid-pro-discuz</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

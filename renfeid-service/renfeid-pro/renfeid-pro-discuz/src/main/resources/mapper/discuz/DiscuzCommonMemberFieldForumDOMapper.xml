@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.renfei.pro.discuz.repositories.DiscuzCommonMemberFieldForumDOMapper">
+  <resultMap id="BaseResultMap" type="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDO">
+    <id column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="publishfeed" jdbcType="TINYINT" property="publishfeed" />
+    <result column="customshow" jdbcType="BIT" property="customshow" />
+    <result column="customstatus" jdbcType="VARCHAR" property="customstatus" />
+    <result column="authstr" jdbcType="VARCHAR" property="authstr" />
+    <result column="attentiongroup" jdbcType="VARCHAR" property="attentiongroup" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOWithBLOBs">
+    <result column="medals" jdbcType="LONGVARCHAR" property="medals" />
+    <result column="sightml" jdbcType="LONGVARCHAR" property="sightml" />
+    <result column="groupterms" jdbcType="LONGVARCHAR" property="groupterms" />
+    <result column="groups" jdbcType="LONGVARCHAR" property="groups" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    uid, publishfeed, customshow, customstatus, authstr, attentiongroup
+  </sql>
+  <sql id="Blob_Column_List">
+    medals, sightml, groupterms, groups
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from bbs_common_member_field_forum
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bbs_common_member_field_forum
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from bbs_common_member_field_forum
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bbs_common_member_field_forum
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOExample">
+    delete from bbs_common_member_field_forum
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOWithBLOBs">
+    insert into bbs_common_member_field_forum (uid, publishfeed, customshow, 
+      customstatus, authstr, attentiongroup, 
+      medals, sightml, groupterms, 
+      groups)
+    values (#{uid,jdbcType=INTEGER}, #{publishfeed,jdbcType=TINYINT}, #{customshow,jdbcType=BIT}, 
+      #{customstatus,jdbcType=VARCHAR}, #{authstr,jdbcType=VARCHAR}, #{attentiongroup,jdbcType=VARCHAR}, 
+      #{medals,jdbcType=LONGVARCHAR}, #{sightml,jdbcType=LONGVARCHAR}, #{groupterms,jdbcType=LONGVARCHAR}, 
+      #{groups,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOWithBLOBs">
+    insert into bbs_common_member_field_forum
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="publishfeed != null">
+        publishfeed,
+      </if>
+      <if test="customshow != null">
+        customshow,
+      </if>
+      <if test="customstatus != null">
+        customstatus,
+      </if>
+      <if test="authstr != null">
+        authstr,
+      </if>
+      <if test="attentiongroup != null">
+        attentiongroup,
+      </if>
+      <if test="medals != null">
+        medals,
+      </if>
+      <if test="sightml != null">
+        sightml,
+      </if>
+      <if test="groupterms != null">
+        groupterms,
+      </if>
+      <if test="groups != null">
+        groups,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="publishfeed != null">
+        #{publishfeed,jdbcType=TINYINT},
+      </if>
+      <if test="customshow != null">
+        #{customshow,jdbcType=BIT},
+      </if>
+      <if test="customstatus != null">
+        #{customstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="authstr != null">
+        #{authstr,jdbcType=VARCHAR},
+      </if>
+      <if test="attentiongroup != null">
+        #{attentiongroup,jdbcType=VARCHAR},
+      </if>
+      <if test="medals != null">
+        #{medals,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sightml != null">
+        #{sightml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="groupterms != null">
+        #{groupterms,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="groups != null">
+        #{groups,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOExample" resultType="java.lang.Long">
+    select count(*) from bbs_common_member_field_forum
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bbs_common_member_field_forum
+    <set>
+      <if test="record.uid != null">
+        uid = #{record.uid,jdbcType=INTEGER},
+      </if>
+      <if test="record.publishfeed != null">
+        publishfeed = #{record.publishfeed,jdbcType=TINYINT},
+      </if>
+      <if test="record.customshow != null">
+        customshow = #{record.customshow,jdbcType=BIT},
+      </if>
+      <if test="record.customstatus != null">
+        customstatus = #{record.customstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authstr != null">
+        authstr = #{record.authstr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attentiongroup != null">
+        attentiongroup = #{record.attentiongroup,jdbcType=VARCHAR},
+      </if>
+      <if test="record.medals != null">
+        medals = #{record.medals,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.sightml != null">
+        sightml = #{record.sightml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.groupterms != null">
+        groupterms = #{record.groupterms,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.groups != null">
+        groups = #{record.groups,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update bbs_common_member_field_forum
+    set uid = #{record.uid,jdbcType=INTEGER},
+      publishfeed = #{record.publishfeed,jdbcType=TINYINT},
+      customshow = #{record.customshow,jdbcType=BIT},
+      customstatus = #{record.customstatus,jdbcType=VARCHAR},
+      authstr = #{record.authstr,jdbcType=VARCHAR},
+      attentiongroup = #{record.attentiongroup,jdbcType=VARCHAR},
+      medals = #{record.medals,jdbcType=LONGVARCHAR},
+      sightml = #{record.sightml,jdbcType=LONGVARCHAR},
+      groupterms = #{record.groupterms,jdbcType=LONGVARCHAR},
+      groups = #{record.groups,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bbs_common_member_field_forum
+    set uid = #{record.uid,jdbcType=INTEGER},
+      publishfeed = #{record.publishfeed,jdbcType=TINYINT},
+      customshow = #{record.customshow,jdbcType=BIT},
+      customstatus = #{record.customstatus,jdbcType=VARCHAR},
+      authstr = #{record.authstr,jdbcType=VARCHAR},
+      attentiongroup = #{record.attentiongroup,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOWithBLOBs">
+    update bbs_common_member_field_forum
+    <set>
+      <if test="publishfeed != null">
+        publishfeed = #{publishfeed,jdbcType=TINYINT},
+      </if>
+      <if test="customshow != null">
+        customshow = #{customshow,jdbcType=BIT},
+      </if>
+      <if test="customstatus != null">
+        customstatus = #{customstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="authstr != null">
+        authstr = #{authstr,jdbcType=VARCHAR},
+      </if>
+      <if test="attentiongroup != null">
+        attentiongroup = #{attentiongroup,jdbcType=VARCHAR},
+      </if>
+      <if test="medals != null">
+        medals = #{medals,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sightml != null">
+        sightml = #{sightml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="groupterms != null">
+        groupterms = #{groupterms,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="groups != null">
+        groups = #{groups,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDOWithBLOBs">
+    update bbs_common_member_field_forum
+    set publishfeed = #{publishfeed,jdbcType=TINYINT},
+      customshow = #{customshow,jdbcType=BIT},
+      customstatus = #{customstatus,jdbcType=VARCHAR},
+      authstr = #{authstr,jdbcType=VARCHAR},
+      attentiongroup = #{attentiongroup,jdbcType=VARCHAR},
+      medals = #{medals,jdbcType=LONGVARCHAR},
+      sightml = #{sightml,jdbcType=LONGVARCHAR},
+      groupterms = #{groupterms,jdbcType=LONGVARCHAR},
+      groups = #{groups,jdbcType=LONGVARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="net.renfei.pro.discuz.repositories.entity.DiscuzCommonMemberFieldForumDO">
+    update bbs_common_member_field_forum
+    set publishfeed = #{publishfeed,jdbcType=TINYINT},
+      customshow = #{customshow,jdbcType=BIT},
+      customstatus = #{customstatus,jdbcType=VARCHAR},
+      authstr = #{authstr,jdbcType=VARCHAR},
+      attentiongroup = #{attentiongroup,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+</mapper>

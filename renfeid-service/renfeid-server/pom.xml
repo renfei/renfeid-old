@@ -36,7 +36,7 @@
 
         <dependency>
             <groupId>net.renfei</groupId>
-            <artifactId>renfeid-proprietary-discuz</artifactId>
+            <artifactId>renfeid-pro-discuz</artifactId>
         </dependency>
 
         <dependency>

@@ -37,7 +37,7 @@ import java.util.Properties;
  * @author renfei
  */
 @Configuration
-@MapperScan(basePackages = "net.renfei.proprietary.discuz.repositories", sqlSessionTemplateRef = "discuzSessionTemplate", annotationClass = Mapper.class)
+@MapperScan(basePackages = "net.renfei.pro.discuz.repositories", sqlSessionTemplateRef = "discuzSessionTemplate", annotationClass = Mapper.class)
 public class DiscuzDataSourceConfig {
     @Bean(name = "discuzDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.discuz")

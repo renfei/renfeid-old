@@ -23,8 +23,8 @@ import net.renfei.common.api.utils.StringUtils;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.search.entity.SearchItem;
 import net.renfei.common.search.entity.TypeEnum;
-import net.renfei.proprietary.discuz.repositories.entity.DiscuzForumPostDO;
-import net.renfei.proprietary.discuz.service.DiscuzService;
+import net.renfei.pro.discuz.repositories.entity.DiscuzForumPostDO;
+import net.renfei.pro.discuz.service.DiscuzService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
