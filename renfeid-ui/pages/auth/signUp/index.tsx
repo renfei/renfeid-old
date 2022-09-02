@@ -42,11 +42,10 @@ const SignUpSubmit = async (req: NextApiRequest, res: NextApiResponse, values: S
       }
       message.error(SignUpVo.message)
       return SignUpVo.message
-    } else if (!SignUpVo.data) {
-      message.error('数据异常，请重试')
-      return SignUpVo.message
     } else {
       // TODO
+      message.success('注册成功！')
+      gotoRedirect('/auth/signIn')
     }
     gotoRedirect(redirectPath)
     return ""

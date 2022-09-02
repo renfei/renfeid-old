@@ -21,7 +21,7 @@ const SignUpActivation = async (req: NextApiRequest, res: NextApiResponse, value
     if (result.code != 200) {
       message.error(result.message)
     } else {
-      // TODO
+      message.success('激活成功，正在跳转登录页面')
       window.location.replace('/auth/signIn')
     }
     return ""
@@ -75,8 +75,9 @@ const SignUpActivationPage = (req: NextApiRequest, res: NextApiResponse) => {
                   autoComplete="off"
                   onFinish={async (values) => {
                     setLoading(true)
-                    if (!values.username || !values.code) {
+                    if (!values.emailOrPhone || !values.code) {
                       message.error('请填写账号与验证码')
+                      setLoading(false)
                       return false
                     }
                     const rtn = await SignUpActivation(req, res, values)
@@ -85,12 +86,11 @@ const SignUpActivationPage = (req: NextApiRequest, res: NextApiResponse) => {
                   }}
                 >
                   <Form.Item
-                    name="userName"
-                    rules={[{ required: true, message: '请输入您的账号！' }]}
+                    name="emailOrPhone"
+                    rules={[{ required: true, message: '请输入您注册时填写的邮箱或手机号！' }]}
                   >
                     <Input
-                      placeholder="账号"
-                      autoComplete='username'
+                      placeholder="注册时填写的邮箱或手机号"
                       prefix={<UserOutlined />}
                     />
                   </Form.Item>
