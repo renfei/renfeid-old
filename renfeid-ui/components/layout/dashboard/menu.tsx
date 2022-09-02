@@ -86,6 +86,10 @@ const menu = [
             {
                 key: '/dashboard/sys/crontab',
                 label: '系统定时任务',
+            },
+            {
+                key: '/dashboard/sys/druid',
+                label: '数据库连接池',
             }
         ]
     },

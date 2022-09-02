@@ -17,23 +17,31 @@ package net.renfei.common.core.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
+import com.alibaba.druid.support.http.StatViewServlet;
+import com.alibaba.druid.support.http.WebStatFilter;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+import javax.servlet.Servlet;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -45,6 +53,8 @@ import java.util.Properties;
 @EnableAutoConfiguration(exclude = {DruidDataSourceAutoConfigure.class})
 @MapperScan(basePackages = "net.renfei.**.repositories", sqlSessionTemplateRef = "primarySessionTemplate", annotationClass = Mapper.class)
 public class PrimaryDataSourceConfig {
+    private final static Logger logger = LoggerFactory.getLogger(PrimaryDataSourceConfig.class);
+
     @Primary
     @Bean(name = "primaryDataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
@@ -76,6 +86,12 @@ public class PrimaryDataSourceConfig {
     @Value("${mybatis.mapper-locations}")
     public String locationPattern;
 
+    @Value("${spring.datasource.druid.stat-view-servlet.login-username}")
+    public String loginUsername;
+
+    @Value("${spring.datasource.druid.stat-view-servlet.login-password}")
+    public String loginPassword;
+
     @Primary
     @Bean(name = "primarySessionFactory")
     public SqlSessionFactory primarySessionFactory(@Qualifier("primaryDataSource") DataSource dataSource) throws Exception {
@@ -96,5 +112,41 @@ public class PrimaryDataSourceConfig {
     @Bean(name = "primarySessionTemplate")
     public SqlSessionTemplate primarySessionTemplate(@Qualifier("primarySessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    /**
+     * 配置druid管理页面的访问控制
+     * 访问网址: http://127.0.0.1:9595/druid
+     *
+     * @return
+     */
+    @Bean
+    public ServletRegistrationBean<Servlet> druidServlet() {
+        logger.info("init Druid Servlet Configuration");
+        ServletRegistrationBean<Servlet> servletRegistrationBean = new ServletRegistrationBean<>();
+        //配置一个拦截器
+        servletRegistrationBean.setServlet(new StatViewServlet());
+        //指定拦截器只拦截druid管理页面的请求
+        servletRegistrationBean.addUrlMappings("/druid/*");
+        HashMap<String, String> initParam = new HashMap<>();
+        //登录druid管理页面的用户名
+        initParam.put("loginUsername", loginUsername);
+        //登录druid管理页面的密码
+        initParam.put("loginPassword", loginPassword);
+        //是否允许重置druid的统计信息
+        initParam.put("resetEnable", "true");
+        //ip白名单，如果没有设置或为空，则表示允许所有访问
+        initParam.put("allow", "");
+        servletRegistrationBean.setInitParameters(initParam);
+        return servletRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<WebStatFilter> filterRegistrationBean() {
+        FilterRegistrationBean<WebStatFilter> filterRegistrationBean = new FilterRegistrationBean<WebStatFilter>();
+        filterRegistrationBean.setFilter(new WebStatFilter());
+        filterRegistrationBean.addUrlPatterns("/*");
+        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+        return filterRegistrationBean;
     }
 }

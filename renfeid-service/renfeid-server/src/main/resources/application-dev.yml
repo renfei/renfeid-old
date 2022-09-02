@@ -6,6 +6,7 @@ spring:
     password: root
     driver-class-name: org.mariadb.jdbc.Driver
     druid:
+      # 其他配置在：net.renfei.common.core.config.PrimaryDataSourceConfig
       stat-view-servlet:
         login-username: admin
         login-password: admin
