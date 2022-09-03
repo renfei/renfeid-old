@@ -1,6 +1,7 @@
 import * as Fetch from '../../../../utils/request'
 import ReplyCommentAo = API.ReplyCommentAo
 import CronJobAo = API.CronJobAo
+import CoreSiteFriendlyLink = API.CoreSiteFriendlyLink
 
 export const uploadFile = async (token: string, headers: Headers, file: any) => {
     const url = `/_/api/core/system/upload`
@@ -189,6 +190,60 @@ export const deleteJob = async (jobName: string, jobGroup: string) => {
     let url = `/api/dash/core/system/crontab/${jobGroup}/${jobName}`
     return await fetch(url, {
         method: 'DELETE'
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const queryAllFriendlyLink = async () => {
+    let url = `/api/dash/core/system/friendlylink`
+    return await fetch(url, {
+        method: 'GET',
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const createFriendlyLink = async (friendlyLink: CoreSiteFriendlyLink) => {
+    let url = `/api/dash/core/system/friendlylink`
+    return await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(friendlyLink),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const updateFriendlyLink = async (id: string, friendlyLink: CoreSiteFriendlyLink) => {
+    let url = `/api/dash/core/system/friendlylink/${id}`
+    return await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(friendlyLink),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const deleteFriendlyLink = async (id: string) => {
+    let url = `/api/dash/core/system/friendlylink/${id}`
+    return await fetch(url, {
+        method: 'DELETE',
     }).then((res: any) => {
         return res.json()
     }).catch((error: any) => {

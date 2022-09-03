@@ -25,11 +25,11 @@
                         connectionURL="jdbc:mysql://localhost:3306/renfeid"
                         userId="root" password="root" />
         <!-- 生成的包名和工程名 -->
-        <javaModelGenerator targetPackage="net.renfei.cms.repositories.entity"
+        <javaModelGenerator targetPackage="net.renfei.common.core.repositories.entity"
                             targetProject="src/main/java"/>
         <sqlMapGenerator targetPackage="mapper"
                          targetProject="src/main/resources" />
-        <javaClientGenerator targetPackage="net.renfei.cms.repositories"
+        <javaClientGenerator targetPackage="net.renfei.common.core.repositories"
                              targetProject="src/main/java" type="XMLMAPPER" />
         <!-- 数据库表 -->
 <!--        <table schema="renfeid" tableName="uaa_user" />-->
@@ -46,7 +46,8 @@
 <!--        <table schema="renfeid" tableName="cms_category" />-->
 <!--        <table schema="renfeid" tableName="core_comments" />-->
 <!--        <table schema="renfeid" tableName="core_system_setting" />-->
-        <table schema="renfeid" tableName="cms_tag" />
-        <table schema="renfeid" tableName="cms_posts_tag" />
+<!--        <table schema="renfeid" tableName="cms_tag" />-->
+<!--        <table schema="renfeid" tableName="cms_posts_tag" />-->
+        <table schema="renfeid" tableName="core_site_friendly_link" />
     </context>
 </generatorConfiguration>

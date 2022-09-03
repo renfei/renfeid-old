@@ -397,4 +397,25 @@ declare namespace API {
         priority: string,
         lastmod: string,
     }
+
+    interface SiteFriendlyLinkVo {
+        text: string,
+        link: string,
+    }
+
+    interface CoreSiteFriendlyLink {
+        sitename: string,
+        sitelink: string,
+        inSiteLink?: string,
+        contactName?: string,
+        remarks?: string,
+        id: string,
+        isDelete: boolean,
+        addtime: string,
+        auditPass: boolean,
+        linkType: number,
+        contactEmail?: string,
+        contactQq?: string,
+        orderId: number,
+    }
 }

@@ -13,8 +13,10 @@ import GoogleAdsense from '../components/GoogleAdsense'
 import PostVo = API.PostVo
 import APIResult = API.APIResult
 import ListData = API.ListData
+import SiteFriendlyLinkVo = API.SiteFriendlyLinkVo
 import * as api from '../services/api'
 import { convertToHeaders } from '../utils/request'
+import { useState } from 'react'
 
 const { Title, Paragraph, Text } = Typography
 const { Meta } = Card
@@ -53,16 +55,10 @@ const weiboData = [
     },
 ]
 
-const friendlyLinks = [
-    {
-        title: '任霏博客',
-        link: 'https://www.renfei.net',
-    },
-]
-
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
     const accessToken = nookies.get(context)['accessToken']
     const result: APIResult<ListData<PostVo>> = await api.getPosts(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), undefined, 1, 11, accessToken)
+    const siteFriendlyLink: APIResult<SiteFriendlyLinkVo[]> = await api.queryFriendlyLink(convertToHeaders(context.req.headers, context.req.socket.remoteAddress), accessToken)
 
     let postsDataTop2: PostVo[] = []
     let postsData3To5: PostVo[] = []
@@ -92,12 +88,14 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
                 postsDataTop2: postsDataTop2,
                 postsData3To5: postsData3To5,
                 postsData6To11: postsData6To11,
+                siteFriendlyLink: siteFriendlyLink,
             }
         }
     }
 }
 
 const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    const [SiteFriendlyLink] = useState<SiteFriendlyLinkVo[] | undefined>(data.siteFriendlyLink.data)
     return (
         <div className={styles.container}>
             <Head>
@@ -339,19 +337,19 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                     style={{ fontSize: '12px', color: 'rgba(0, 0, 0, 0.6)!important', fontWeight: '100' }}
                 >
                     {
-                        friendlyLinks.length > 0 ? (
+                        SiteFriendlyLink && SiteFriendlyLink.length > 0 ? (
                             <div style={{ padding: '20px 0' }}>
                                 友情链接：
                                 <Space>
                                     {
-                                        friendlyLinks.map(friendly => (
+                                        SiteFriendlyLink.map(friendly => (
                                             <a
-                                                key={friendly.title}
+                                                key={friendly.text}
                                                 href={friendly.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
-                                                {friendly.title}
+                                                {friendly.text}
                                             </a>
                                         ))
                                     }

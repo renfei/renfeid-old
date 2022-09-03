@@ -84,6 +84,10 @@ const menu = [
                 label: '系统审计日志',
             },
             {
+                key: '/dashboard/sys/friendlylink',
+                label: '友情链接管理',
+            },
+            {
                 key: '/dashboard/sys/crontab',
                 label: '系统定时任务',
             },
