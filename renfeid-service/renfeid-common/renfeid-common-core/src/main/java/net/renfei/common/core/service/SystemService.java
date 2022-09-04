@@ -33,15 +33,6 @@ import java.util.List;
  */
 public interface SystemService extends ApplicationContextAware {
     /**
-     * 【危险】在主机上执行命令
-     *
-     * @param command 命令
-     * @return
-     * @throws IOException
-     */
-    String execCommand(String... command) throws IOException;
-
-    /**
      * 刷新系统配置（无需停机更新配置）
      */
     void refreshConfiguration();

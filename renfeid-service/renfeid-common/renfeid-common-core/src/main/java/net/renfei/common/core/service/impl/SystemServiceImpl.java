@@ -83,25 +83,6 @@ public class SystemServiceImpl implements SystemService {
     }
 
     /**
-     * 【危险】在主机上执行命令
-     *
-     * @param command 命令
-     * @return
-     * @throws IOException
-     */
-    @Override
-    public String execCommand(String... command) throws IOException {
-        Process process = Runtime.getRuntime().exec(command);
-        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        return sb.toString();
-    }
-
-    /**
      * 刷新系统配置（无需停机更新配置）
      */
     @Override
