@@ -27,9 +27,17 @@ import java.util.Map;
 public interface EmailService {
     boolean send(String to, String name, String subject, List<String> contents);
 
+    boolean send(String to, String cc, String name, String subject, List<String> contents);
+
     boolean send(String to, String name, String subject, String contents);
+
+    boolean send(String to, String cc, String name, String subject, String contents);
 
     boolean send(String to, String name, String subject, List<String> contents, Map<String, File> attachment);
 
+    boolean send(String to, String cc, String name, String subject, List<String> contents, Map<String, File> attachment);
+
     boolean send(String to, String name, String subject, String contents, Map<String, File> attachment);
+
+    boolean send(String to, String cc, String name, String subject, String contents, Map<String, File> attachment);
 }
