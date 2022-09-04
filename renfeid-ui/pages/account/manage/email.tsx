@@ -96,20 +96,15 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     userInfo.email ? userInfo.email : '暂无'
                   }
                 </Form.Item>
-                <Form.Item label="新的邮箱" name="newEmail" style={{ marginBottom: '0' }}>
+                <Form.Item label="新的邮箱" name="newEmail" help="点击下方发送验证码，我们会给您的新电子邮箱内发送一封验证码邮件。">
                   <Input
                     placeholder="新的电子邮箱地址"
                   />
                 </Form.Item>
-                <Form.Item label=" " colon={false} style={{ marginBottom: '0' }}>
-                  <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
-                    点击下方发送验证码，我们会给您的新电子邮箱内发送一封验证码邮件。
-                  </Typography.Text>
-                </Form.Item>
                 <Form.Item label=" " colon={false}>
                   <Button type={'primary'} block loading={sendLoading} onClick={sendEmailCode}>发送验证码</Button>
                 </Form.Item>
-                <Form.Item label="验证码" name="vcode">
+                <Form.Item label="验证码" name="vcode" tooltip="我们会给您的新电子邮箱内发送一封验证码邮件，请到邮箱中查收验证码。">
                   <Input
                     placeholder="请到邮箱查收邮件中的验证码"
                   />

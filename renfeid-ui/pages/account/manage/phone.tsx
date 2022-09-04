@@ -96,20 +96,15 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     userInfo.phone ? userInfo.phone : '暂无'
                   }
                 </Form.Item>
-                <Form.Item label="新的手机" name="newPhone" style={{ marginBottom: '0' }}>
+                <Form.Item label="新的手机" name="newPhone" help="点击下方发送验证码，我们会给您的新手机号码发送一条短信。">
                   <Input
                     placeholder="新的手机号码"
                   />
                 </Form.Item>
-                <Form.Item label=" " colon={false} style={{ marginBottom: '0' }}>
-                  <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
-                    点击下方发送验证码，我们会给您的新手机号码发送一条短信。
-                  </Typography.Text>
-                </Form.Item>
                 <Form.Item label=" " colon={false}>
                   <Button type={'primary'} block loading={sendLoading} onClick={sendPhoneVerCode}>发送验证码</Button>
                 </Form.Item>
-                <Form.Item label="验证码" name="vcode">
+                <Form.Item label="验证码" name="vcode" tooltip="我们会给您的新手机号码发送一条验证码短信，请到手机上查收验证码短信。">
                   <Input
                     placeholder="请到手机短信中查收验证码"
                   />

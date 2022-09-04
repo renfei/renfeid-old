@@ -157,23 +157,20 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                       <Form.Item label="当前状态">
                         未开启
                       </Form.Item>
-                      <Form.Item label="二维码" style={{ marginBottom: '0' }}>
+                      <Form.Item
+                        label="二维码"
+                        help="请使用 Google Authenticator、Authy或1Password 扫描二维码添加动态验证码"
+                        tooltip="使用 Google Authenticator、Authy或1Password 等支持TOTP的APP扫描二维码添加动态验证码"
+                      >
                         <QRCodeSVG
                           value={totp.totpString}
                         />
                       </Form.Item>
-                      <Form.Item label=" " colon={false}>
-                        <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
-                          请使用 Google Authenticator、Authy或1Password 扫描二维码添加动态验证码。
-                        </Typography.Text>
-                      </Form.Item>
-                      <Form.Item label="秘钥" style={{ marginBottom: '0' }}>
+                      <Form.Item
+                        label="秘钥"
+                        tooltip="当无法扫描时，请复制TOTP秘钥，进行手动添加。"
+                      >
                         {totp.secretKey}
-                      </Form.Item>
-                      <Form.Item label=" " colon={false}>
-                        <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
-                          当无法扫描时，请复制上方的秘钥，进行手动添加。
-                        </Typography.Text>
                       </Form.Item>
                       <Form.Item label="密码" name="password">
                         <Input.Password
