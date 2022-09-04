@@ -94,6 +94,10 @@ const menu = [
             {
                 key: '/dashboard/sys/druid',
                 label: '数据库连接池',
+            },
+            {
+                key: '/dashboard/sys/setting',
+                label: '系统设置',
             }
         ]
     },

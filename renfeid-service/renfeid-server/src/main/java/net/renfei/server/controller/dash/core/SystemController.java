@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.common.api.constant.APIResult;
+import net.renfei.common.api.constant.enums.SystemSettingEnum;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.*;
@@ -26,6 +27,7 @@ import net.renfei.common.core.service.QuartzService;
 import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.service.SystemService;
 import net.renfei.server.controller.AbstractController;
+import net.renfei.server.entity.SystemSettingVo;
 import net.renfei.uaa.api.UserService;
 import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.service.UaaUtilService;
@@ -262,5 +264,28 @@ public class SystemController extends AbstractController {
     public APIResult deleteJob(@PathVariable("jobName") String jobName,
                                @PathVariable("jobGroup") String jobGroup) {
         return quartzService.deleteJob(jobName, jobGroup);
+    }
+
+    @GetMapping("setting/{setting}")
+    @Operation(summary = "查询系统全局设置", tags = {"系统相关接口"},
+            description = "查询系统全局设置",
+            parameters = {@Parameter(name = "setting", description = "系统设置KEY")})
+    @OperationLog(module = SystemTypeEnum.SYS_SETTING, desc = "查询系统全局设置")
+    public APIResult<SystemSettingVo> querySystemSetting(@PathVariable("setting") SystemSettingEnum setting) {
+        SystemSettingVo systemSettingVo = new SystemSettingVo();
+        systemSettingVo.setSetting(setting);
+        systemSettingVo.setValues(systemService.querySystemSetting(setting));
+        return new APIResult<>(systemSettingVo);
+    }
+
+    @PutMapping("setting/{setting}")
+    @Operation(summary = "修改系统全局设置", tags = {"系统相关接口"},
+            description = "修改系统全局设置",
+            parameters = {@Parameter(name = "setting", description = "系统设置KEY")})
+    @OperationLog(module = SystemTypeEnum.SYS_SETTING, desc = "修改系统全局设置",operation = OperationTypeEnum.UPDATE)
+    public APIResult<String> updateSystemSetting(@PathVariable("setting") SystemSettingEnum setting,
+                                                         @RequestBody SystemSettingVo systemSetting) {
+        systemService.updateSystemSetting(setting,systemSetting.getValues());
+        return new APIResult<>("");
     }
 }

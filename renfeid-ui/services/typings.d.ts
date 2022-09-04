@@ -418,4 +418,9 @@ declare namespace API {
         contactQq?: string,
         orderId: number,
     }
+
+    interface SystemSettingVo {
+        setting: string,
+        values: string[]
+    }
 }

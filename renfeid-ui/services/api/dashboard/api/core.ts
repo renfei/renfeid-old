@@ -2,6 +2,7 @@ import * as Fetch from '../../../../utils/request'
 import ReplyCommentAo = API.ReplyCommentAo
 import CronJobAo = API.CronJobAo
 import CoreSiteFriendlyLink = API.CoreSiteFriendlyLink
+import SystemSettingVo = API.SystemSettingVo
 
 export const uploadFile = async (token: string, headers: Headers, file: any) => {
     const url = `/_/api/core/system/upload`
@@ -244,6 +245,27 @@ export const deleteFriendlyLink = async (id: string) => {
     let url = `/api/dash/core/system/friendlylink/${id}`
     return await fetch(url, {
         method: 'DELETE',
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}
+
+export const querySystemSetting = async (setting: string, token: string, headers: Headers) => {
+    const url = `/_/api/core/system/setting/${setting}`
+    return Fetch.get(url, headers, token, true)
+}
+
+export const updateSystemSetting = async (setting: string, SystemSettingVo: SystemSettingVo) => {
+    let url = `/api/dash/core/system/setting/${setting}`
+    return await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(SystemSettingVo),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
     }).then((res: any) => {
         return res.json()
     }).catch((error: any) => {
