@@ -27,6 +27,7 @@ import net.renfei.common.core.service.RedisService;
 import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.utils.IpUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -45,6 +46,10 @@ import static net.renfei.common.core.config.RedisConfig.REDIS_KEY_DATABASE;
 @Service
 public class SystemLogServiceImpl implements SystemLogService {
     private final static String REDIS_KEY = REDIS_KEY_DATABASE + ":log:";
+    /**
+     * text max length(utf8mb4) = 16383
+     */
+    private final static int MYSQL_TEXT_MAX_LENGTH = 16383;
     private final RedisService redisService;
     private final SystemConfig systemConfig;
     private final CoreLogsMapper coreLogsMapper;
@@ -119,6 +124,7 @@ public class SystemLogServiceImpl implements SystemLogService {
         return systemLogListData;
     }
 
+    @Async
     @Override
     public void save(SystemLogEntity systemLogEntity) {
         CoreLogsWithBLOBs logs = new CoreLogsWithBLOBs();
@@ -127,9 +133,19 @@ public class SystemLogServiceImpl implements SystemLogService {
         if (logs.getLogTime() == null) {
             logs.setLogTime(new Date());
         }
+        if (logs.getRespParam() != null && logs.getRespParam().length() > MYSQL_TEXT_MAX_LENGTH) {
+            logs.setRespParam(logs.getRespParam().substring(0, MYSQL_TEXT_MAX_LENGTH));
+        }
+        if (logs.getRequParam() != null && logs.getRequParam().length() > MYSQL_TEXT_MAX_LENGTH) {
+            logs.setRequParam(logs.getRequParam().substring(0, MYSQL_TEXT_MAX_LENGTH));
+        }
+        if (logs.getRequAgent() != null && logs.getRequAgent().length() > MYSQL_TEXT_MAX_LENGTH) {
+            logs.setRequAgent(logs.getRequAgent().substring(0, MYSQL_TEXT_MAX_LENGTH));
+        }
         coreLogsMapper.insertSelective(logs);
     }
 
+    @Async
     @Override
     public void save(LogLevelEnum logLevel, SystemTypeEnum systemType, OperationTypeEnum operationType,
                      String desc, String userUuid, String username, HttpServletRequest request) {

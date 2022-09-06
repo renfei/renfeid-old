@@ -656,4 +656,9 @@
       source_url = #{sourceUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="addViews" parameterType="java.lang.Long">
+    update cms_posts
+    set post_views = post_views + 1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

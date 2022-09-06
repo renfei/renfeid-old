@@ -37,4 +37,6 @@ public interface CmsPostsMapper {
     int updateByPrimaryKeyWithBLOBs(CmsPostsWithBLOBs row);
 
     int updateByPrimaryKey(CmsPosts row);
+
+    int addViews(Long id);
 }
