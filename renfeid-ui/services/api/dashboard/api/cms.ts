@@ -42,7 +42,7 @@ export const queryPostList = async (categoryId?: number, title?: string, postSta
         url += 'endDate=' + endDate + '&'
     }
     if (page) {
-        url += 'page=' + page + '&'
+        url += 'pages=' + page + '&'
     }
     if (rows) {
         url += 'rows=' + rows + '&'

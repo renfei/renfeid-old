@@ -118,7 +118,7 @@ public class PostsController extends AbstractController {
                     .message("标签不存在")
                     .build();
         }
-        return postService.queryPostList(null, Long.parseLong(tag.getId()), pages, rows, true, null);
+        return postService.queryPostListByTag(Long.parseLong(tag.getId()), pages, rows, true);
     }
 
     @GetMapping("posts/{id}")

@@ -148,7 +148,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                             views={data.post.postViews}
                         />
                         <Divider />
-                        <Row>
+                        <Row gutter={20}>
                             <Col xs={24} sm={24} md={16} lg={17}>
                                 <div
                                     className={styles.posts_content}

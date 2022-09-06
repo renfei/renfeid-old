@@ -123,7 +123,11 @@ public class OperationLogAspect {
             }
             systemLogEntity.setLogTime(new Date());
             systemLogEntity.setLogDesc(annotation.desc());
-            systemLogService.save(systemLogEntity);
+            try {
+                systemLogService.save(systemLogEntity);
+            } catch (Exception e) {
+                logger.error("AOP插入日志失败。", e);
+            }
         }
     }
 

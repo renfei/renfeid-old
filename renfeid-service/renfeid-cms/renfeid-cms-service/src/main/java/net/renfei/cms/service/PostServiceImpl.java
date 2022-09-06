@@ -470,9 +470,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public APIResult addViews(long postId) {
-        Post post = convert(cmsPostsMapper.selectByPrimaryKey(postId));
+        CmsPostsWithBLOBs post = cmsPostsMapper.selectByPrimaryKey(postId);
         post.setPostViews(post.getPostViews() + 1);
-        cmsPostsMapper.updateByPrimaryKeyWithBLOBs(convert(post));
+        cmsPostsMapper.updateByPrimaryKeyWithBLOBs(post);
         return APIResult.success();
     }
 

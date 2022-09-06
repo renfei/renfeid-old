@@ -78,7 +78,7 @@ export const getPosts = async (headers: Headers, categoryId?: string, page?: num
             url += 'categoryId=' + categoryId + '&'
         }
         if (page) {
-            url += 'page=' + page + '&'
+            url += 'pages=' + page + '&'
         }
         if (rows) {
             url += 'rows=' + rows + '&'
@@ -135,7 +135,7 @@ export const getHotPosts = async (headers: Headers, quantity?: number, token?: s
         }
         return result
     } else {
-        let url = `/-/api/cms/posts/hot`
+        let url = `/-/api/cms/posts`
         if (quantity) {
             url += '?quantity=' + quantity + '&'
         }
@@ -249,7 +249,7 @@ export const getPostsByTag = async (headers: Headers, tagEnName: string, page?: 
     } else {
         let url = `/-/api/cms/posts/tag/${tagEnName}?`
         if (page) {
-            url += 'page=' + page + '&'
+            url += 'pages=' + page + '&'
         }
         if (rows) {
             url += 'rows=' + rows + '&'

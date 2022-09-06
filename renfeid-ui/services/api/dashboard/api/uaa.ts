@@ -31,7 +31,7 @@ export const queryUserList = async (username?: string, email?: string, phone?: s
         url += 'enabled=' + enabled + '&'
     }
     if (page) {
-        url += 'page=' + page + '&'
+        url += 'pages=' + page + '&'
     }
     if (rows) {
         url += 'rows=' + rows + '&'
@@ -144,7 +144,7 @@ export const queryRoleList = async (roleName?: string, page?: number, rows?: num
         url += 'roleName=' + roleName + '&'
     }
     if (page) {
-        url += 'page=' + page + '&'
+        url += 'pages=' + page + '&'
     }
     if (rows) {
         url += 'rows=' + rows + '&'
@@ -165,7 +165,7 @@ export const queryRoleListInner = async (token: string, headers: Headers, roleNa
         url += 'roleName=' + roleName + '&'
     }
     if (page) {
-        url += 'page=' + page + '&'
+        url += 'pages=' + page + '&'
     }
     if (rows) {
         url += 'rows=' + rows + '&'
