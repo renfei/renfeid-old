@@ -34,41 +34,63 @@
 <details>
 <summary>点此展开查看详情</summary>
 
-| 工程名                                       | 描述                      |
-|-------------------------------------------|-------------------------|
-| + renfeid-bpm                             | 流程引擎服务（待开发）             |
-| + renfeid-cms                             | 内容管理服务（CMS）             |
-| &nbsp;&nbsp; - renfeid-cms-api            | 内容管理服务接口                |
-| &nbsp;&nbsp; - renfeid-cms-service        | 内容管理服务实现                |
-| + renfeid-common                          | 通用模块                    |
-| &nbsp;&nbsp; - renfeid-common-api         | 全局通用的接口与对象              |
-| &nbsp;&nbsp; - renfeid-common-bom         | 全局统一制品清单                |
-| &nbsp;&nbsp; - renfeid-common-core        | 核心服务                    |
-| &nbsp;&nbsp; - renfeid-common-leaf        | 分布式发号器雪花算法（美团实现）        |
-| &nbsp;&nbsp; - renfeid-common-search      | 搜索引擎服务（ElasticSearch实现） |
-| + renfeid-proprietary                     | 任霏博客私有功能（闭源）            |
-| &nbsp;&nbsp; - renfeid-proprietary-discuz | 与Discuz的集成              |
-| &nbsp;&nbsp; - 其他（工具箱、微博、相册等）             | 闭源管理                    |
-| + renfeid-server                          | 服务入口（类似微服务的网关）          |
-| + renfeid-uaa                             | 用户认证与鉴权                 |
-| &nbsp;&nbsp; - renfeid-uaa-api            | UAA暴露的接口                |
-| &nbsp;&nbsp; - renfeid-uaa-service        | UAA服务实现                 |
-| + mybatis-generator                       | mybatis dao层生成          |
+| 工程名                                  | 描述                      |
+|--------------------------------------|-------------------------|
+| + renfeid-bpm                        | 流程引擎服务（待开发）             |
+| + renfeid-cms                        | 内容管理服务（CMS）             |
+| &nbsp;&nbsp; - renfeid-cms-api       | 内容管理服务接口                |
+| &nbsp;&nbsp; - renfeid-cms-service   | 内容管理服务实现                |
+| + renfeid-common                     | 通用模块                    |
+| &nbsp;&nbsp; - renfeid-common-api    | 全局通用的接口与对象              |
+| &nbsp;&nbsp; - renfeid-common-bom    | 全局统一制品清单                |
+| &nbsp;&nbsp; - renfeid-common-core   | 核心服务                    |
+| &nbsp;&nbsp; - renfeid-common-leaf   | 分布式发号器雪花算法（美团实现）        |
+| &nbsp;&nbsp; - renfeid-common-search | 搜索引擎服务（ElasticSearch实现） |
+| + renfeid-pro                        | 私有功能仅供参考                |
+| &nbsp;&nbsp; - renfeid-pro-discuz    | 与Discuz的集成              |
+| &nbsp;&nbsp; - renfeid-pro-wechat    | 与微信公众号的集成               |
+| &nbsp;&nbsp; - 其他（工具箱、微博、相册等）        | 闭源管理                    |
+| + renfeid-server                     | 服务入口（类似微服务的网关）          |
+| + renfeid-uaa                        | 用户认证与鉴权                 |
+| &nbsp;&nbsp; - renfeid-uaa-api       | UAA暴露的接口                |
+| &nbsp;&nbsp; - renfeid-uaa-service   | UAA服务实现                 |
+| + mybatis-generator                  | mybatis dao层生成          |
 
 </details>
 
-关于 ```renfeid-proprietary``` 模块的说明，这个模块中是我自己网站特有的功能，你可以直接删除掉。 ```mybatis-generator``` 模块只是为了方便自动生成 mybatis
+关于 ```renfeid-pro``` 模块的说明，这个模块中是我自己网站特有的功能，你可以直接删除掉。 ```mybatis-generator```
+模块只是为了方便自动生成 mybatis
 dao层，没有实际的作用，可以删除。
 
 ### 前端项目目录结构
 
-为啥选择了 React？ 我作为后端开发，尝试了 Vue 和 React，最后我觉得 React 更像后端开发，我更喜欢、看着舒服、用着顺手，所以就选择了 React。
+为啥选择了 React？ 我作为后端开发，尝试了 Vue 和 React，最后我觉得 React 更像后端开发，我更喜欢、看着舒服、用着顺手，所以就选择了
+React。
+
+<details>
+<summary>点此展开查看详情</summary>
+
+| 工程名                                   | 描述    |
+|---------------------------------------|-------|
+| + components                          | 组件目录  |
+| &nbsp;&nbsp; + layout                 | 前台布局  |
+| &nbsp;&nbsp;&nbsp;&nbsp; - dashboard  | 后台布局  |
+| + pages                               | 页面    |
+| &nbsp;&nbsp; - api                    | API接口 |
+| &nbsp;&nbsp; - 其他                     | 页面实现  |
+| + public                              | 静态文件  |
+| + services                            | 服务    |
+| + styles                              | 样式    |
+| + utils                               | 工具    |
+
+</details>
 
 ## 构建
 
 ### 后端项目构建
 
-后端使用 ```Maven``` 来管理依赖，如果你已经安装了 ```Maven``` 可以直接使用 mvn 命令，如果你的机器上没有安装  ```Maven```，那么你可以使用目录中自带的 ```mvnw```
+后端使用 ```Maven``` 来管理依赖，如果你已经安装了 ```Maven``` 可以直接使用 mvn 命令，如果你的机器上没有安装  ```Maven```
+，那么你可以使用目录中自带的 ```mvnw```
 来代替 ```mvn``` 命令。
 
 <details>
@@ -94,12 +116,12 @@ mvn package
 
 ### 前端项目构建
 
-前端我使用 ```yarn``` 来代替 ```npm``` 包管理器，后端同学注意了这里的 ```yarn``` 跟 ```Apache Hadoop YARN``` 没有任何关系，完全是两个东西。
+前端我使用 ```npm``` 包管理器。
 
 <details>
 <summary>点此展开查看构建命令</summary>
 
-首先，进入前端项目的 ```renfeidvue``` 目录里执行下面的命令：
+首先，进入前端项目的 ```renfeid-ui``` 目录里执行下面的命令：
 
 ```bash
 # install dependencies
@@ -114,22 +136,6 @@ $ npm run start
 ```
 
 </details>
-
-## 配置文件
-
-无论前端后端，我基本会使用`development`、`staging`、`production`三种环境配置文件：
-
-### 后端配置文件
-
-* [application-development.yml](renfeid-service/renfeid-server/src/main/resources/application-development.yml): 开发环境配置文件
-* application-staging.yml: UAT测试环境配置文件
-* application-production.yml: 生产环境配置文件
-
-### 前端配置文件
-
-* [.env.development](renfeid-ui/.env.development): 开发环境配置文件
-* .env.staging: UAT测试环境配置文件
-* .env.production: 生产环境配置文件
 
 ## 涉密应用系统"三员"
 
