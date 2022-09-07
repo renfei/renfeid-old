@@ -27,8 +27,6 @@ USER renfeid:renfeid
 
 COPY --from=builder /app/renfeid-server/target ./target
 
-COPY ./target/renfeid.jar app.jar
-
 EXPOSE 9595
 
 ENTRYPOINT [ "java", \
@@ -47,5 +45,5 @@ ENTRYPOINT [ "java", \
              "-Dfile.encoding=UTF-8", \
              "-Xverify:none", \
              "-jar", \
-             "/app/app.jar" \
+             "/app/renfeid.jar" \
 ]
