@@ -11,6 +11,7 @@ cache:
 node_package:
   stage: package
   image: node:16-alpine
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   script:
@@ -29,6 +30,7 @@ node_package:
 node_package_jh:
   stage: package
   image: node:16-alpine
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/'
   script:
@@ -47,6 +49,7 @@ node_package_jh:
 maven_package:
   stage: package
   image: maven:3.8.6-openjdk-8
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   script:
@@ -63,12 +66,13 @@ maven_package:
 maven_package_jh:
   stage: package
   image: maven:3.8.6-openjdk-8
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/'
   script:
+    - cp -rf renfeid-service/lib/maven/settings.xml /usr/share/maven/conf/settings.xml
     - mvn clean package -f renfeid-service/pom.xml
       -P prod -Dmaven.test.skip=true
-      -Dmaven.repo.remote=https://maven.aliyun.com/repository/public
       -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
   artifacts:
     name: 'maven-package'
@@ -80,6 +84,7 @@ maven_package_jh:
 docker_build_node:
   stage: build
   image: docker:latest
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   services:
@@ -94,6 +99,7 @@ docker_build_node:
 docker_build_node_jh:
   stage: build
   image: docker:latest
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/'
   services:
@@ -108,6 +114,7 @@ docker_build_node_jh:
 docker_build_maven:
   stage: build
   image: docker:latest
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   services:
@@ -122,6 +129,7 @@ docker_build_maven:
 docker_build_maven_jh:
   stage: build
   image: docker:latest
+  interruptible: true
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /jihulab.com/'
   services:

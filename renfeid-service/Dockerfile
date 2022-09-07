@@ -1,12 +1,18 @@
 FROM openjdk:8-jdk-alpine
 WORKDIR /app
 
+ENV TZ="Asia/Shanghai"
+
 RUN addgroup -S renfeid && adduser -S renfeid -G renfeid
 USER renfeid:renfeid
 
 COPY --chown=renfeid:renfeid renfeid-server/target ./
 
 EXPOSE 9595
+
+HEALTHCHECK --start-period=30s --interval=30s --timeout=3s --retries=3 \
+            CMD curl --silent --fail --request GET http://localhost:9595/actuator/health \
+                | jq --exit-status '.status == "UP"' || exit 1
 
 ENTRYPOINT [ "java", \
              "-Xms128M", \
