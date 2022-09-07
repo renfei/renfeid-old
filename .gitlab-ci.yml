@@ -14,7 +14,6 @@ node_package:
   rules:
     - if: '$CI_COMMIT_TAG && $CI_SERVER_URL =~ /gitlab.com/'
   script:
-    - cd renfeid-ui
     - npm install -config renfeid-ui/package.json
     - npm run build -config renfeid-ui/package.json
   artifacts:
