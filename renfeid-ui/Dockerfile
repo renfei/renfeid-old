@@ -6,10 +6,10 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY renfeid-ui/public ./public
-COPY renfeid-ui/package.json ./package.json
+COPY public ./public
+COPY package.json ./package.json
 
-COPY --chown=nextjs:nodejs renfeid-ui/.next ./.next
+COPY --chown=nextjs:nodejs .next ./.next
 
 USER nextjs
 

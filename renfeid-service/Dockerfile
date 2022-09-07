@@ -4,7 +4,7 @@ WORKDIR /app
 RUN addgroup -S renfeid && adduser -S renfeid -G renfeid
 USER renfeid:renfeid
 
-COPY --chown=renfeid:renfeid renfeid-service/renfeid-server/target ./
+COPY --chown=renfeid:renfeid renfeid-server/target ./
 
 EXPOSE 9595
 
