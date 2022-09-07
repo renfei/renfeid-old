@@ -27,8 +27,7 @@ USER renfeid:renfeid
 
 COPY --from=builder /app/renfeid-server/target ./target
 
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+COPY ./target/renfeid.jar app.jar
 
 EXPOSE 9595
 
