@@ -1,31 +1,10 @@
-#
-# Build stage
-#
-FROM maven:3.8.6-openjdk-8 AS builder
-RUN mkdir /app
-COPY mybatis-generator ./app/mybatis-generator
-COPY renfeid-bpm ./app/renfeid-bpm
-COPY renfeid-cms ./app/renfeid-cms
-COPY renfeid-common ./app/renfeid-common
-COPY renfeid-pro ./app/renfeid-pro
-COPY renfeid-server ./app/renfeid-server
-COPY renfeid-uaa ./app/renfeid-uaa
-COPY pom.xml ./app/pom.xml
-
-WORKDIR /app
-
-RUN mvn clean package -Dmaven.test.skip=true -P prod
-
-#
-# Package stage
-#
-FROM openjdk:8-jdk-alpine AS runner
+FROM openjdk:8-jdk-alpine
 WORKDIR /app
 
 RUN addgroup -S renfeid && adduser -S renfeid -G renfeid
 USER renfeid:renfeid
 
-COPY --from=builder /app/renfeid-server/target ./target
+COPY --chown=renfeid:renfeid renfeid-service/target ./
 
 EXPOSE 9595
 
