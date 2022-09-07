@@ -25,7 +25,7 @@ WORKDIR /app
 RUN addgroup -S renfeid && adduser -S renfeid -G renfeid
 USER renfeid:renfeid
 
-COPY --from=builder renfeid-service/renfeid-server/target ./app/target
+COPY --from=builder /app/renfeid-server/target ./target
 
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
