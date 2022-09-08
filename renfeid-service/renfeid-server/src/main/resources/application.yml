@@ -24,6 +24,10 @@ spring:
           username: renfei
           password: renfei
 
+flowable:
+  # database-schema: renfeid
+  database-schema-update: false
+
 management:
   endpoints:
     enabled-by-default: false

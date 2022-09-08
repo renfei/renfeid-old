@@ -30,6 +30,11 @@
         <dependencies>
             <dependency>
                 <groupId>net.renfei</groupId>
+                <artifactId>renfeid-bpm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.renfei</groupId>
                 <artifactId>renfeid-cms-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -165,7 +170,7 @@
             </dependency>
             <dependency>
                 <groupId>org.flowable</groupId>
-                <artifactId>flowable-spring-boot-starter-process</artifactId>
+                <artifactId>flowable-spring-boot-starter</artifactId>
                 <version>${flowable.version}</version>
                 <exclusions>
                     <exclusion>
@@ -173,33 +178,6 @@
                         <artifactId>mybatis</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.flowable</groupId>
-                <artifactId>flowable-idm-spring</artifactId>
-                <version>${flowable.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.mybatis</groupId>
-                        <artifactId>mybatis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.flowable</groupId>
-                <artifactId>flowable-idm-spring-configurator</artifactId>
-                <version>${flowable.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.mybatis</groupId>
-                        <artifactId>mybatis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.flowable</groupId>
-                <artifactId>flowable-json-converter</artifactId>
-                <version>${flowable.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.sentry</groupId>

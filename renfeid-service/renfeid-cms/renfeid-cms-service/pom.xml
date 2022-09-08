@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>net.renfei</groupId>
-            <artifactId>renfeid-common-core</artifactId>
+            <artifactId>renfeid-bpm</artifactId>
         </dependency>
 
         <dependency>
