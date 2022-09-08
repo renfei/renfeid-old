@@ -64,6 +64,7 @@ public class SystemConfig {
     private Boolean enableSignUp;
     private Boolean enableAudit;
     private Boolean bindingIp;
+    private Boolean recordResponse;
     private String ip2LocationBinFile;
     private String ip2LocationBinFileV6;
     private Jwt jwt;
