@@ -129,13 +129,22 @@ system:
   leaf:
     port: 2181
     zk: localhost
+  # 访问频次限制
   accessLimit:
+    # 是否启用访问频次限制
     enable: true
+    # 是否启用 WAF 防火墙联动（启用后超过频次将拉黑IP）
     blacklistEnable: true
+    # 全局限速包括页面与接口所有
     globalRate: 250
-    apiRate: 300
-    blacklistRate: 600
+    # 开放 API 限速（当它大于全局时取全局限速，全局限速优先级更高）
+    apiRate: 250
+    # WAF 联动拉黑的阈值
+    blacklistRate: 500
+    # 数据采集周期（秒）
     time: 300
+    # 通知邮件（联动 WAF 拉黑 IP 后有邮件通知）
+    noticeEmail: i@renfei.net
   cloudflare:
     accountId: dd
     token: dd

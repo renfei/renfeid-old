@@ -143,6 +143,7 @@ public class SystemConfig {
         private Long apiRate;
         private Long blacklistRate;
         private Long time;
+        private String noticeEmail;
     }
 
     @Data
