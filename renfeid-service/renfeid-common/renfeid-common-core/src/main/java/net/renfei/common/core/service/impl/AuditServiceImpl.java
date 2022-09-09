@@ -106,16 +106,7 @@ public class AuditServiceImpl implements AuditService {
                     String link = systemConfig.getSiteDomainName();
                     SystemTypeEnum systemTypeEnum = SystemTypeEnum.valueOf(parentComment.getSysType());
                     link += systemTypeEnum.getUriPath() + "/" + comment.getObjectId();
-                    switch (systemTypeEnum) {
-                        case POSTS:
-                            try {
-                                content.add("回顾：<a href=\"" + link + "\">点此链接回到当时的文章</a>");
-                            } catch (Exception ignored) {
-                            }
-                            break;
-                        default:
-                            return;
-                    }
+                    content.add("回顾：<a href=\"" + link + "\">点此链接回到当时的内容</a>");
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     content.add("在 " + sdf.format(parentComment.getAddtime()) + " 时您写到：");
                     content.add(parentComment.getContent());
