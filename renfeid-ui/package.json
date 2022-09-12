@@ -13,7 +13,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@tinymce/tinymce-react": "^4.2.0",
-    "antd": "^4.23.0",
+    "antd": "^4.23.1",
     "cookie": "^0.5.0",
     "crypto-js": "^4.1.1",
     "env-cmd": "^10.1.0",
