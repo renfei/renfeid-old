@@ -24,6 +24,7 @@ import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.repositories.entity.CoreSiteFriendlyLinkWithBLOBs;
 import net.renfei.common.core.service.SiteFriendlyLinkService;
 import net.renfei.server.controller.AbstractController;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class SiteFriendlyLinkDashController extends AbstractController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasPermission('','core:friendlylink:query')")
     @Operation(summary = "查询全部友情链接列表", tags = {"友情链接管理接口"})
     @OperationLog(module = SystemTypeEnum.SYSTEM, desc = "查询全部友情链接列表")
     public APIResult<List<CoreSiteFriendlyLinkWithBLOBs>> queryAllFriendlyLink() {
@@ -51,6 +53,7 @@ public class SiteFriendlyLinkDashController extends AbstractController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasPermission('','core:friendlylink:create')")
     @Operation(summary = "创建友情链", tags = {"友情链接管理接口"})
     @OperationLog(module = SystemTypeEnum.SYSTEM, desc = "创建友情链", operation = OperationTypeEnum.CREATE)
     public APIResult createFriendlyLink(@RequestBody CoreSiteFriendlyLinkWithBLOBs friendlyLink) {
@@ -58,6 +61,7 @@ public class SiteFriendlyLinkDashController extends AbstractController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasPermission('','core:friendlylink:update')")
     @Operation(summary = "修改友情链", tags = {"友情链接管理接口"})
     @OperationLog(module = SystemTypeEnum.SYSTEM, desc = "修改友情链", operation = OperationTypeEnum.UPDATE)
     public APIResult updateFriendlyLink(@PathVariable("id") long id,
@@ -67,6 +71,7 @@ public class SiteFriendlyLinkDashController extends AbstractController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasPermission('','core:friendlylink:delete')")
     @Operation(summary = "删除友情链", tags = {"友情链接管理接口"})
     @OperationLog(module = SystemTypeEnum.SYSTEM, desc = "删除友情链", operation = OperationTypeEnum.DELETE)
     public APIResult deleteFriendlyLink(@PathVariable("id") long id) {

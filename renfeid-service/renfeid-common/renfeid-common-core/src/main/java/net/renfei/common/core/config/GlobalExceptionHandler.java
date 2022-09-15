@@ -20,6 +20,7 @@ import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.api.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -57,6 +58,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = OutOfSecretLevelException.class)
     public APIResult outOfSecretLevelExceptionError(HttpServletRequest request,
+                                                    HttpServletResponse response,
+                                                    OutOfSecretLevelException e) {
+        response.setStatus(403);
+        logger.warn("Request'{}':{}", request.getRequestURI(), e.getMessage());
+        return APIResult.builder()
+                .code(StateCodeEnum.Forbidden)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public APIResult AccessDeniedExceptionError(HttpServletRequest request,
                                                     HttpServletResponse response,
                                                     OutOfSecretLevelException e) {
         response.setStatus(403);

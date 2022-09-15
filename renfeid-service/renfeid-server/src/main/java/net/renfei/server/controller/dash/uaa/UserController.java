@@ -33,6 +33,7 @@ import net.renfei.uaa.api.UserService;
 import net.renfei.uaa.api.entity.ResetPasswordAo;
 import net.renfei.uaa.api.entity.RoleDetail;
 import net.renfei.uaa.api.entity.UserDetail;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +60,7 @@ public class UserController extends AbstractController {
     }
 
     @GetMapping("user")
+    @PreAuthorize("hasPermission('','uaa:user:query')")
     @Operation(summary = "查询用户账户列表", tags = {"用户管理接口"},
             parameters = {
                     @Parameter(name = "username", description = "用户名"),
@@ -86,6 +88,7 @@ public class UserController extends AbstractController {
     }
 
     @PostMapping("user")
+    @PreAuthorize("hasPermission('','uaa:user:create')")
     @Operation(summary = "创建用户", tags = {"用户管理接口"})
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "创建用户", operation = OperationTypeEnum.CREATE)
     public APIResult<UserDetail> createUser(@RequestBody UserDetail userDetail) {
@@ -126,6 +129,7 @@ public class UserController extends AbstractController {
     }
 
     @PutMapping("user/{id}")
+    @PreAuthorize("hasPermission('','uaa:user:update')")
     @Operation(summary = "修改用户资料", tags = {"用户管理接口"}, parameters = {
             @Parameter(name = "id", description = "用户ID")
     }, description = "此接口只能更新基础资料，修改密码、更改密级等有专门的接口")
@@ -135,6 +139,7 @@ public class UserController extends AbstractController {
     }
 
     @PutMapping("user/{id}/secret-level/{secretLevel}")
+    @PreAuthorize("hasPermission('','uaa:user:secretlevel')")
     @Operation(summary = "给用户定密", tags = {"用户管理接口"}, parameters = {
             @Parameter(name = "id", description = "用户ID"),
             @Parameter(name = "secretLevel", description = "密级")
@@ -146,6 +151,7 @@ public class UserController extends AbstractController {
     }
 
     @PutMapping("user/{id}/enable/{enable}")
+    @PreAuthorize("hasPermission('','uaa:user:enable')")
     @Operation(summary = "用户启用或禁用", tags = {"用户管理接口"}, parameters = {
             @Parameter(name = "id", description = "用户ID"),
             @Parameter(name = "enable", description = "启用或禁用")
@@ -156,6 +162,7 @@ public class UserController extends AbstractController {
     }
 
     @PutMapping("user/{id}/reset-password")
+    @PreAuthorize("hasPermission('','uaa:user:resetpassword')")
     @Operation(summary = "重置用户密码", tags = {"用户管理接口"}, parameters = {
             @Parameter(name = "id", description = "用户ID")
     })
@@ -168,6 +175,7 @@ public class UserController extends AbstractController {
     }
 
     @DeleteMapping("user/{id}")
+    @PreAuthorize("hasPermission('','uaa:user:delete')")
     @Operation(summary = "删除用户", tags = {"用户管理接口"}, parameters = {
             @Parameter(name = "id", description = "用户ID")
     }, description = "由于需要可审计，避免毁尸灭迹，用户暂时不支持删除操作")
@@ -180,6 +188,7 @@ public class UserController extends AbstractController {
     }
 
     @PutMapping("user/{id}/role")
+    @PreAuthorize("hasPermission('','uaa:user:role')")
     @Operation(summary = "编辑用户角色", tags = {"用户管理接口"}, parameters = {
             @Parameter(name = "id", description = "用户ID")
     })

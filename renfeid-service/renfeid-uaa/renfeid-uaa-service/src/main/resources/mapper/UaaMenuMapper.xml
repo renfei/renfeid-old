@@ -5,12 +5,14 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="pid" jdbcType="BIGINT" property="pid" />
     <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="menu_type" jdbcType="VARCHAR" property="menuType" />
+    <result column="permission_expr" jdbcType="VARCHAR" property="permissionExpr" />
     <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" />
     <result column="menu_target" jdbcType="VARCHAR" property="menuTarget" />
     <result column="menu_class" jdbcType="VARCHAR" property="menuClass" />
     <result column="menu_title" jdbcType="VARCHAR" property="menuTitle" />
     <result column="menu_onclick" jdbcType="VARCHAR" property="menuOnclick" />
-    <result column="menu_order" jdbcType="INTEGER" property="menuOrder" />
+    <result column="menu_order" jdbcType="VARCHAR" property="menuOrder" />
     <result column="enable" jdbcType="BIT" property="enable" />
     <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -79,8 +81,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, pid, menu_name, menu_icon, menu_target, menu_class, menu_title, menu_onclick, 
-    menu_order, enable, add_time, update_time
+    id, pid, menu_name, menu_type, permission_expr, menu_icon, menu_target, menu_class, 
+    menu_title, menu_onclick, menu_order, enable, add_time, update_time
   </sql>
   <sql id="Blob_Column_List">
     menu_href, menu_css, extend_json
@@ -135,17 +137,17 @@
   </delete>
   <insert id="insert" parameterType="net.renfei.uaa.repositories.entity.UaaMenuWithBLOBs">
     insert into uaa_menu (id, pid, menu_name, 
-      menu_icon, menu_target, menu_class, 
-      menu_title, menu_onclick, menu_order, 
-      enable, add_time, update_time, 
-      menu_href, menu_css, extend_json
-      )
+      menu_type, permission_expr, menu_icon, 
+      menu_target, menu_class, menu_title, 
+      menu_onclick, menu_order, enable, 
+      add_time, update_time, menu_href, 
+      menu_css, extend_json)
     values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{menuName,jdbcType=VARCHAR}, 
-      #{menuIcon,jdbcType=VARCHAR}, #{menuTarget,jdbcType=VARCHAR}, #{menuClass,jdbcType=VARCHAR}, 
-      #{menuTitle,jdbcType=VARCHAR}, #{menuOnclick,jdbcType=VARCHAR}, #{menuOrder,jdbcType=INTEGER}, 
-      #{enable,jdbcType=BIT}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{menuHref,jdbcType=LONGVARCHAR}, #{menuCss,jdbcType=LONGVARCHAR}, #{extendJson,jdbcType=LONGVARCHAR}
-      )
+      #{menuType,jdbcType=VARCHAR}, #{permissionExpr,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, 
+      #{menuTarget,jdbcType=VARCHAR}, #{menuClass,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR}, 
+      #{menuOnclick,jdbcType=VARCHAR}, #{menuOrder,jdbcType=VARCHAR}, #{enable,jdbcType=BIT}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{menuHref,jdbcType=LONGVARCHAR}, 
+      #{menuCss,jdbcType=LONGVARCHAR}, #{extendJson,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.uaa.repositories.entity.UaaMenuWithBLOBs">
     insert into uaa_menu
@@ -158,6 +160,12 @@
       </if>
       <if test="menuName != null">
         menu_name,
+      </if>
+      <if test="menuType != null">
+        menu_type,
+      </if>
+      <if test="permissionExpr != null">
+        permission_expr,
       </if>
       <if test="menuIcon != null">
         menu_icon,
@@ -206,6 +214,12 @@
       <if test="menuName != null">
         #{menuName,jdbcType=VARCHAR},
       </if>
+      <if test="menuType != null">
+        #{menuType,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionExpr != null">
+        #{permissionExpr,jdbcType=VARCHAR},
+      </if>
       <if test="menuIcon != null">
         #{menuIcon,jdbcType=VARCHAR},
       </if>
@@ -222,7 +236,7 @@
         #{menuOnclick,jdbcType=VARCHAR},
       </if>
       <if test="menuOrder != null">
-        #{menuOrder,jdbcType=INTEGER},
+        #{menuOrder,jdbcType=VARCHAR},
       </if>
       <if test="enable != null">
         #{enable,jdbcType=BIT},
@@ -253,92 +267,102 @@
   <update id="updateByExampleSelective" parameterType="map">
     update uaa_menu
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=BIGINT},
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
       </if>
-      <if test="record.pid != null">
-        pid = #{record.pid,jdbcType=BIGINT},
+      <if test="row.pid != null">
+        pid = #{row.pid,jdbcType=BIGINT},
       </if>
-      <if test="record.menuName != null">
-        menu_name = #{record.menuName,jdbcType=VARCHAR},
+      <if test="row.menuName != null">
+        menu_name = #{row.menuName,jdbcType=VARCHAR},
       </if>
-      <if test="record.menuIcon != null">
-        menu_icon = #{record.menuIcon,jdbcType=VARCHAR},
+      <if test="row.menuType != null">
+        menu_type = #{row.menuType,jdbcType=VARCHAR},
       </if>
-      <if test="record.menuTarget != null">
-        menu_target = #{record.menuTarget,jdbcType=VARCHAR},
+      <if test="row.permissionExpr != null">
+        permission_expr = #{row.permissionExpr,jdbcType=VARCHAR},
       </if>
-      <if test="record.menuClass != null">
-        menu_class = #{record.menuClass,jdbcType=VARCHAR},
+      <if test="row.menuIcon != null">
+        menu_icon = #{row.menuIcon,jdbcType=VARCHAR},
       </if>
-      <if test="record.menuTitle != null">
-        menu_title = #{record.menuTitle,jdbcType=VARCHAR},
+      <if test="row.menuTarget != null">
+        menu_target = #{row.menuTarget,jdbcType=VARCHAR},
       </if>
-      <if test="record.menuOnclick != null">
-        menu_onclick = #{record.menuOnclick,jdbcType=VARCHAR},
+      <if test="row.menuClass != null">
+        menu_class = #{row.menuClass,jdbcType=VARCHAR},
       </if>
-      <if test="record.menuOrder != null">
-        menu_order = #{record.menuOrder,jdbcType=INTEGER},
+      <if test="row.menuTitle != null">
+        menu_title = #{row.menuTitle,jdbcType=VARCHAR},
       </if>
-      <if test="record.enable != null">
-        enable = #{record.enable,jdbcType=BIT},
+      <if test="row.menuOnclick != null">
+        menu_onclick = #{row.menuOnclick,jdbcType=VARCHAR},
       </if>
-      <if test="record.addTime != null">
-        add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      <if test="row.menuOrder != null">
+        menu_order = #{row.menuOrder,jdbcType=VARCHAR},
       </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      <if test="row.enable != null">
+        enable = #{row.enable,jdbcType=BIT},
       </if>
-      <if test="record.menuHref != null">
-        menu_href = #{record.menuHref,jdbcType=LONGVARCHAR},
+      <if test="row.addTime != null">
+        add_time = #{row.addTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.menuCss != null">
-        menu_css = #{record.menuCss,jdbcType=LONGVARCHAR},
+      <if test="row.updateTime != null">
+        update_time = #{row.updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.extendJson != null">
-        extend_json = #{record.extendJson,jdbcType=LONGVARCHAR},
+      <if test="row.menuHref != null">
+        menu_href = #{row.menuHref,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="row.menuCss != null">
+        menu_css = #{row.menuCss,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="row.extendJson != null">
+        extend_json = #{row.extendJson,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update uaa_menu
-    set id = #{record.id,jdbcType=BIGINT},
-      pid = #{record.pid,jdbcType=BIGINT},
-      menu_name = #{record.menuName,jdbcType=VARCHAR},
-      menu_icon = #{record.menuIcon,jdbcType=VARCHAR},
-      menu_target = #{record.menuTarget,jdbcType=VARCHAR},
-      menu_class = #{record.menuClass,jdbcType=VARCHAR},
-      menu_title = #{record.menuTitle,jdbcType=VARCHAR},
-      menu_onclick = #{record.menuOnclick,jdbcType=VARCHAR},
-      menu_order = #{record.menuOrder,jdbcType=INTEGER},
-      enable = #{record.enable,jdbcType=BIT},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      menu_href = #{record.menuHref,jdbcType=LONGVARCHAR},
-      menu_css = #{record.menuCss,jdbcType=LONGVARCHAR},
-      extend_json = #{record.extendJson,jdbcType=LONGVARCHAR}
-    <if test="_parameter != null">
+    set id = #{row.id,jdbcType=BIGINT},
+      pid = #{row.pid,jdbcType=BIGINT},
+      menu_name = #{row.menuName,jdbcType=VARCHAR},
+      menu_type = #{row.menuType,jdbcType=VARCHAR},
+      permission_expr = #{row.permissionExpr,jdbcType=VARCHAR},
+      menu_icon = #{row.menuIcon,jdbcType=VARCHAR},
+      menu_target = #{row.menuTarget,jdbcType=VARCHAR},
+      menu_class = #{row.menuClass,jdbcType=VARCHAR},
+      menu_title = #{row.menuTitle,jdbcType=VARCHAR},
+      menu_onclick = #{row.menuOnclick,jdbcType=VARCHAR},
+      menu_order = #{row.menuOrder,jdbcType=VARCHAR},
+      enable = #{row.enable,jdbcType=BIT},
+      add_time = #{row.addTime,jdbcType=TIMESTAMP},
+      update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      menu_href = #{row.menuHref,jdbcType=LONGVARCHAR},
+      menu_css = #{row.menuCss,jdbcType=LONGVARCHAR},
+      extend_json = #{row.extendJson,jdbcType=LONGVARCHAR}
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
     update uaa_menu
-    set id = #{record.id,jdbcType=BIGINT},
-      pid = #{record.pid,jdbcType=BIGINT},
-      menu_name = #{record.menuName,jdbcType=VARCHAR},
-      menu_icon = #{record.menuIcon,jdbcType=VARCHAR},
-      menu_target = #{record.menuTarget,jdbcType=VARCHAR},
-      menu_class = #{record.menuClass,jdbcType=VARCHAR},
-      menu_title = #{record.menuTitle,jdbcType=VARCHAR},
-      menu_onclick = #{record.menuOnclick,jdbcType=VARCHAR},
-      menu_order = #{record.menuOrder,jdbcType=INTEGER},
-      enable = #{record.enable,jdbcType=BIT},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null">
+    set id = #{row.id,jdbcType=BIGINT},
+      pid = #{row.pid,jdbcType=BIGINT},
+      menu_name = #{row.menuName,jdbcType=VARCHAR},
+      menu_type = #{row.menuType,jdbcType=VARCHAR},
+      permission_expr = #{row.permissionExpr,jdbcType=VARCHAR},
+      menu_icon = #{row.menuIcon,jdbcType=VARCHAR},
+      menu_target = #{row.menuTarget,jdbcType=VARCHAR},
+      menu_class = #{row.menuClass,jdbcType=VARCHAR},
+      menu_title = #{row.menuTitle,jdbcType=VARCHAR},
+      menu_onclick = #{row.menuOnclick,jdbcType=VARCHAR},
+      menu_order = #{row.menuOrder,jdbcType=VARCHAR},
+      enable = #{row.enable,jdbcType=BIT},
+      add_time = #{row.addTime,jdbcType=TIMESTAMP},
+      update_time = #{row.updateTime,jdbcType=TIMESTAMP}
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
@@ -350,6 +374,12 @@
       </if>
       <if test="menuName != null">
         menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        menu_type = #{menuType,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionExpr != null">
+        permission_expr = #{permissionExpr,jdbcType=VARCHAR},
       </if>
       <if test="menuIcon != null">
         menu_icon = #{menuIcon,jdbcType=VARCHAR},
@@ -367,7 +397,7 @@
         menu_onclick = #{menuOnclick,jdbcType=VARCHAR},
       </if>
       <if test="menuOrder != null">
-        menu_order = #{menuOrder,jdbcType=INTEGER},
+        menu_order = #{menuOrder,jdbcType=VARCHAR},
       </if>
       <if test="enable != null">
         enable = #{enable,jdbcType=BIT},
@@ -394,12 +424,14 @@
     update uaa_menu
     set pid = #{pid,jdbcType=BIGINT},
       menu_name = #{menuName,jdbcType=VARCHAR},
+      menu_type = #{menuType,jdbcType=VARCHAR},
+      permission_expr = #{permissionExpr,jdbcType=VARCHAR},
       menu_icon = #{menuIcon,jdbcType=VARCHAR},
       menu_target = #{menuTarget,jdbcType=VARCHAR},
       menu_class = #{menuClass,jdbcType=VARCHAR},
       menu_title = #{menuTitle,jdbcType=VARCHAR},
       menu_onclick = #{menuOnclick,jdbcType=VARCHAR},
-      menu_order = #{menuOrder,jdbcType=INTEGER},
+      menu_order = #{menuOrder,jdbcType=VARCHAR},
       enable = #{enable,jdbcType=BIT},
       add_time = #{addTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -412,12 +444,14 @@
     update uaa_menu
     set pid = #{pid,jdbcType=BIGINT},
       menu_name = #{menuName,jdbcType=VARCHAR},
+      menu_type = #{menuType,jdbcType=VARCHAR},
+      permission_expr = #{permissionExpr,jdbcType=VARCHAR},
       menu_icon = #{menuIcon,jdbcType=VARCHAR},
       menu_target = #{menuTarget,jdbcType=VARCHAR},
       menu_class = #{menuClass,jdbcType=VARCHAR},
       menu_title = #{menuTitle,jdbcType=VARCHAR},
       menu_onclick = #{menuOnclick,jdbcType=VARCHAR},
-      menu_order = #{menuOrder,jdbcType=INTEGER},
+      menu_order = #{menuOrder,jdbcType=VARCHAR},
       enable = #{enable,jdbcType=BIT},
       add_time = #{addTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

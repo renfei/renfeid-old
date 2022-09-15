@@ -220,42 +220,6 @@ export const deleteRole = async (id: string) => {
 }
 
 // 查询系统API接口列表
-export const querySystemApiInner = async (token: string, headers: Headers, apiurl?: string, pages?: string, rows?: string,) => {
-    let url = `/_/api/uaa/system/api?`
-    if (apiurl) {
-        url += 'url=' + apiurl + '&'
-    }
-    if (pages) {
-        url += 'pages=' + pages + '&'
-    }
-    if (rows) {
-        url += 'rows=' + rows + '&'
-    }
-    return Fetch.get(url, headers, token, true)
-}
-
-// 查询系统API接口列表
-export const querySystemApi = async (apiurl?: string, pages?: string, rows?: string,) => {
-    let url = `/api/uaa/system/api?`
-    if (apiurl) {
-        url += 'url=' + apiurl + '&'
-    }
-    if (pages) {
-        url += 'pages=' + pages + '&'
-    }
-    if (rows) {
-        url += 'rows=' + rows + '&'
-    }
-    return await fetch(url, {
-        method: 'GET',
-    }).then((res: any) => {
-        return res.json()
-    }).catch((error: any) => {
-        return Promise.reject(error)
-    })
-}
-
-// 查询系统API接口列表
 export const queryAllMenuTreeInner = async (token: string, headers: Headers) => {
     let url = `/_/api/uaa/menu/tree/all`
     return Fetch.get(url, headers, token, true)

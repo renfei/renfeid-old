@@ -28,7 +28,7 @@ import java.util.List;
  */
 public interface MenuService {
     /**
-     * 查询所有菜单树
+     * 查询所有菜单树包括按钮
      *
      * @return
      */
@@ -41,6 +41,15 @@ public interface MenuService {
      * @return
      */
     APIResult<List<MenuTree>> queryMenuTreeByUser(UserDetail userDetail);
+
+    /**
+     * 根据ID查询菜单列表
+     *
+     * @param ids         菜单ID
+     * @param haveDisable 是否包含已禁用
+     * @return
+     */
+    APIResult<List<MenuTree>> queryMenuListById(List<Long> ids, boolean haveDisable);
 
     /**
      * 创建菜单

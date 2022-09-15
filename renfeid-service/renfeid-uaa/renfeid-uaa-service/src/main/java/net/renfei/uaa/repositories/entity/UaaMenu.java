@@ -10,6 +10,10 @@ public class UaaMenu implements Serializable {
 
     private String menuName;
 
+    private String menuType;
+
+    private String permissionExpr;
+
     private String menuIcon;
 
     private String menuTarget;
@@ -20,7 +24,7 @@ public class UaaMenu implements Serializable {
 
     private String menuOnclick;
 
-    private Integer menuOrder;
+    private String menuOrder;
 
     private Boolean enable;
 
@@ -52,6 +56,22 @@ public class UaaMenu implements Serializable {
 
     public void setMenuName(String menuName) {
         this.menuName = menuName;
+    }
+
+    public String getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(String menuType) {
+        this.menuType = menuType;
+    }
+
+    public String getPermissionExpr() {
+        return permissionExpr;
+    }
+
+    public void setPermissionExpr(String permissionExpr) {
+        this.permissionExpr = permissionExpr;
     }
 
     public String getMenuIcon() {
@@ -94,11 +114,11 @@ public class UaaMenu implements Serializable {
         this.menuOnclick = menuOnclick;
     }
 
-    public Integer getMenuOrder() {
+    public String getMenuOrder() {
         return menuOrder;
     }
 
-    public void setMenuOrder(Integer menuOrder) {
+    public void setMenuOrder(String menuOrder) {
         this.menuOrder = menuOrder;
     }
 
@@ -135,6 +155,8 @@ public class UaaMenu implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", pid=").append(pid);
         sb.append(", menuName=").append(menuName);
+        sb.append(", menuType=").append(menuType);
+        sb.append(", permissionExpr=").append(permissionExpr);
         sb.append(", menuIcon=").append(menuIcon);
         sb.append(", menuTarget=").append(menuTarget);
         sb.append(", menuClass=").append(menuClass);

@@ -945,6 +945,14 @@ public class UserServiceImpl implements UserService {
         userDetail.setEnabled(uaaUser.getEnabled());
         userDetail.setLastName(uaaUser.getLastName());
         userDetail.setFirstName(uaaUser.getFirstName());
+        List<RoleDetail> data = new ArrayList<>();
+        if (systemConfig.getEnableSuperTubeUser()
+                && uaaUser.getUsername().equals(systemConfig.getSuperTubeUserName())) {
+            data = roleService.queryRoleList(false, null, 1, Integer.MAX_VALUE).getData().getData();
+        } else {
+            data = roleService.queryRoleListByUser(uaaUser.getId(), 1, Integer.MAX_VALUE).getData();
+        }
+        userDetail.setRoleDetailList(data);
         return userDetail;
     }
 

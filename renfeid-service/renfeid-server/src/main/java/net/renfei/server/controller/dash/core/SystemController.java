@@ -31,6 +31,7 @@ import net.renfei.server.entity.SystemSettingVo;
 import net.renfei.uaa.api.UserService;
 import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.service.UaaUtilService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,6 +67,7 @@ public class SystemController extends AbstractController {
     }
 
     @GetMapping("refreshConfiguration")
+    @PreAuthorize("hasPermission('','core:system:config')")
     @Operation(summary = "刷新系统配置", tags = {"系统相关接口"})
     @OperationLog(module = SystemTypeEnum.SYSTEM, desc = "刷新系统配置", operation = OperationTypeEnum.UPDATE)
     public APIResult refreshConfiguration() {
@@ -74,6 +76,7 @@ public class SystemController extends AbstractController {
     }
 
     @GetMapping("environment")
+    @PreAuthorize("hasPermission('','core:environment:query')")
     @Operation(summary = "获取运行环境信息", tags = {"系统相关接口"})
     @OperationLog(module = SystemTypeEnum.SYSTEM, desc = "获取运行环境信息", operation = OperationTypeEnum.RETRIEVE)
     public APIResult<EnvironmentInfo> getEnvironmentInfo() {
@@ -81,6 +84,7 @@ public class SystemController extends AbstractController {
     }
 
     @PostMapping("upload")
+    @PreAuthorize("hasPermission('','core:file:upload')")
     @Operation(summary = "上传文件", tags = {"系统相关接口"},
             description = "此接口上传的文件将立即公开访问",
             parameters = {
@@ -92,6 +96,7 @@ public class SystemController extends AbstractController {
     }
 
     @GetMapping("log")
+    @PreAuthorize("hasPermission('','core:log:query')")
     @Operation(summary = "系统审计日志", tags = {"系统相关接口"},
             description = "系统审计日志",
             parameters = {
@@ -192,6 +197,7 @@ public class SystemController extends AbstractController {
     }
 
     @GetMapping("crontab")
+    @PreAuthorize("hasPermission('','core:crontab:query')")
     @Operation(summary = "查看系统定时任务列表", tags = {"系统相关接口"}, description = "创建系统定时任务")
     @OperationLog(module = SystemTypeEnum.SYS_QUARTZ, desc = "查看系统定时任务列表", operation = OperationTypeEnum.RETRIEVE)
     public APIResult<List<CronJobVo>> queryJobList() {
@@ -199,6 +205,7 @@ public class SystemController extends AbstractController {
     }
 
     @PostMapping("crontab/{jobGroup}/{jobName}")
+    @PreAuthorize("hasPermission('','core:crontab:create')")
     @Operation(summary = "创建系统定时任务", tags = {"系统相关接口"},
             description = "创建系统定时任务",
             parameters = {
@@ -213,6 +220,7 @@ public class SystemController extends AbstractController {
     }
 
     @PutMapping("crontab/{jobGroup}/{jobName}/reschedule")
+    @PreAuthorize("hasPermission('','core:crontab:reschedule')")
     @Operation(summary = "重排定时任务", tags = {"系统相关接口"},
             description = "重排定时任务",
             parameters = {
@@ -228,6 +236,7 @@ public class SystemController extends AbstractController {
     }
 
     @PutMapping("crontab/{jobGroup}/{jobName}/pause")
+    @PreAuthorize("hasPermission('','core:crontab:pause')")
     @Operation(summary = "暂停定时任务", tags = {"系统相关接口"},
             description = "暂停定时任务",
             parameters = {
@@ -241,6 +250,7 @@ public class SystemController extends AbstractController {
     }
 
     @PutMapping("crontab/{jobGroup}/{jobName}/resume")
+    @PreAuthorize("hasPermission('','core:crontab:resume')")
     @Operation(summary = "恢复定时任务", tags = {"系统相关接口"},
             description = "恢复定时任务",
             parameters = {
@@ -254,6 +264,7 @@ public class SystemController extends AbstractController {
     }
 
     @DeleteMapping("crontab/{jobGroup}/{jobName}")
+    @PreAuthorize("hasPermission('','core:crontab:delete')")
     @Operation(summary = "删除定时任务", tags = {"系统相关接口"},
             description = "删除定时任务",
             parameters = {
@@ -267,6 +278,7 @@ public class SystemController extends AbstractController {
     }
 
     @GetMapping("setting/{setting}")
+    @PreAuthorize("hasPermission('','core:setting:query')")
     @Operation(summary = "查询系统全局设置", tags = {"系统相关接口"},
             description = "查询系统全局设置",
             parameters = {@Parameter(name = "setting", description = "系统设置KEY")})
@@ -279,6 +291,7 @@ public class SystemController extends AbstractController {
     }
 
     @PutMapping("setting/{setting}")
+    @PreAuthorize("hasPermission('','core:setting:update')")
     @Operation(summary = "修改系统全局设置", tags = {"系统相关接口"},
             description = "修改系统全局设置",
             parameters = {@Parameter(name = "setting", description = "系统设置KEY")})

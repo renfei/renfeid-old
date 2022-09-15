@@ -3,7 +3,6 @@
 <mapper namespace="net.renfei.uaa.repositories.UaaAuthorityMapper">
   <resultMap id="BaseResultMap" type="net.renfei.uaa.repositories.entity.UaaAuthority">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="authority_type" jdbcType="VARCHAR" property="authorityType" />
     <result column="role_id" jdbcType="BIGINT" property="roleId" />
     <result column="target_id" jdbcType="BIGINT" property="targetId" />
     <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
@@ -68,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, authority_type, role_id, target_id, add_time, update_time
+    id, role_id, target_id, add_time, update_time
   </sql>
   <select id="selectByExample" parameterType="net.renfei.uaa.repositories.entity.UaaAuthorityExample" resultMap="BaseResultMap">
     select
@@ -101,21 +100,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="net.renfei.uaa.repositories.entity.UaaAuthority">
-    insert into uaa_authority (id, authority_type, role_id, 
-      target_id, add_time, update_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{authorityType,jdbcType=VARCHAR}, #{roleId,jdbcType=BIGINT}, 
-      #{targetId,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into uaa_authority (id, role_id, target_id, 
+      add_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, #{targetId,jdbcType=BIGINT}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="net.renfei.uaa.repositories.entity.UaaAuthority">
     insert into uaa_authority
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
-      </if>
-      <if test="authorityType != null">
-        authority_type,
       </if>
       <if test="roleId != null">
         role_id,
@@ -133,9 +127,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
-      </if>
-      <if test="authorityType != null">
-        #{authorityType,jdbcType=VARCHAR},
       </if>
       <if test="roleId != null">
         #{roleId,jdbcType=BIGINT},
@@ -160,47 +151,40 @@
   <update id="updateByExampleSelective" parameterType="map">
     update uaa_authority
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=BIGINT},
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
       </if>
-      <if test="record.authorityType != null">
-        authority_type = #{record.authorityType,jdbcType=VARCHAR},
+      <if test="row.roleId != null">
+        role_id = #{row.roleId,jdbcType=BIGINT},
       </if>
-      <if test="record.roleId != null">
-        role_id = #{record.roleId,jdbcType=BIGINT},
+      <if test="row.targetId != null">
+        target_id = #{row.targetId,jdbcType=BIGINT},
       </if>
-      <if test="record.targetId != null">
-        target_id = #{record.targetId,jdbcType=BIGINT},
+      <if test="row.addTime != null">
+        add_time = #{row.addTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.addTime != null">
-        add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      <if test="row.updateTime != null">
+        update_time = #{row.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
     update uaa_authority
-    set id = #{record.id,jdbcType=BIGINT},
-      authority_type = #{record.authorityType,jdbcType=VARCHAR},
-      role_id = #{record.roleId,jdbcType=BIGINT},
-      target_id = #{record.targetId,jdbcType=BIGINT},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null">
+    set id = #{row.id,jdbcType=BIGINT},
+      role_id = #{row.roleId,jdbcType=BIGINT},
+      target_id = #{row.targetId,jdbcType=BIGINT},
+      add_time = #{row.addTime,jdbcType=TIMESTAMP},
+      update_time = #{row.updateTime,jdbcType=TIMESTAMP}
+    <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="net.renfei.uaa.repositories.entity.UaaAuthority">
     update uaa_authority
     <set>
-      <if test="authorityType != null">
-        authority_type = #{authorityType,jdbcType=VARCHAR},
-      </if>
       <if test="roleId != null">
         role_id = #{roleId,jdbcType=BIGINT},
       </if>
@@ -218,8 +202,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="net.renfei.uaa.repositories.entity.UaaAuthority">
     update uaa_authority
-    set authority_type = #{authorityType,jdbcType=VARCHAR},
-      role_id = #{roleId,jdbcType=BIGINT},
+    set role_id = #{roleId,jdbcType=BIGINT},
       target_id = #{targetId,jdbcType=BIGINT},
       add_time = #{addTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

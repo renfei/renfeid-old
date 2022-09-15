@@ -28,6 +28,7 @@ import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -49,6 +50,7 @@ public class PostDashController extends AbstractController {
     }
 
     @GetMapping("posts")
+    @PreAuthorize("hasPermission('','cms:post:query')")
     @Operation(summary = "查询文章内容列表", tags = {"文章内容接口"},
             parameters = {
                     @Parameter(name = "categoryId", description = "内容分类ID"),
@@ -74,6 +76,7 @@ public class PostDashController extends AbstractController {
     }
 
     @GetMapping("posts/{id}")
+    @PreAuthorize("hasPermission('','cms:post:query')")
     @Operation(summary = "获取文章内容详情", tags = {"文章内容接口"}, parameters = {
             @Parameter(name = "id", description = "文章内容ID")
     })
@@ -83,6 +86,7 @@ public class PostDashController extends AbstractController {
     }
 
     @GetMapping("posts/archival/{id}")
+    @PreAuthorize("hasPermission('','cms:post:query')")
     @Operation(summary = "获取历史版本文章内容列表", tags = {"历史版本文章内容接口"}, parameters = {
             @Parameter(name = "id", description = "文章内容ID")
     })
@@ -92,6 +96,7 @@ public class PostDashController extends AbstractController {
     }
 
     @GetMapping("posts/archival/{id}/{archivalId}")
+    @PreAuthorize("hasPermission('','cms:post:query')")
     @Operation(summary = "获取历史版本文章内容详情", tags = {"历史版本文章内容接口"}, parameters = {
             @Parameter(name = "id", description = "文章内容ID")
     })
@@ -102,6 +107,7 @@ public class PostDashController extends AbstractController {
     }
 
     @PostMapping("posts")
+    @PreAuthorize("hasPermission('','cms:post:create')")
     @Operation(summary = "创建文章内容", tags = {"文章内容接口"})
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "创建文章内容", operation = OperationTypeEnum.CREATE)
     public APIResult<Post> createPost(@RequestBody Post post) {
@@ -109,6 +115,7 @@ public class PostDashController extends AbstractController {
     }
 
     @PutMapping("posts/{id}")
+    @PreAuthorize("hasPermission('','cms:post:update')")
     @Operation(summary = "修改文章内容", tags = {"文章内容接口"},
             parameters = {@Parameter(name = "id", description = "内容ID")})
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "修改文章内容", operation = OperationTypeEnum.UPDATE)
@@ -117,6 +124,7 @@ public class PostDashController extends AbstractController {
     }
 
     @PutMapping("posts/{id}/offline")
+    @PreAuthorize("hasPermission('','cms:post:offline')")
     @Operation(summary = "下线文章内容", tags = {"文章内容接口"}, description = "下线内容，上线请重新编辑发布",
             parameters = {@Parameter(name = "id", description = "内容ID")})
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "下线文章内容", operation = OperationTypeEnum.UPDATE)
@@ -125,6 +133,7 @@ public class PostDashController extends AbstractController {
     }
 
     @DeleteMapping("posts/{id}")
+    @PreAuthorize("hasPermission('','cms:post:delete')")
     @Operation(summary = "删除文章内容", tags = {"文章内容接口"},
             parameters = {@Parameter(name = "id", description = "内容ID")})
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "删除文章内容", operation = OperationTypeEnum.DELETE)

@@ -17,18 +17,15 @@ package net.renfei.server.config;
 
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.server.filter.AuthorizationFilter;
-import net.renfei.server.security.AccessDecisionManagerImpl;
-import net.renfei.server.security.FilterInvocationSecurityMetadataSourceImpl;
 import net.renfei.server.security.handler.AccessDeniedHandlerImpl;
 import net.renfei.server.security.handler.AuthenticationEntryPointImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -38,20 +35,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true)
 public class SecurityConfiguration {
     private final SystemConfig systemConfig;
     private final AuthorizationFilter authorizationFilter;
-    private final AccessDecisionManagerImpl accessDecisionManager;
-    private final FilterInvocationSecurityMetadataSourceImpl filterInvocationSecurityMetadataSource;
 
     public SecurityConfiguration(SystemConfig systemConfig,
-                                 AuthorizationFilter authorizationFilter,
-                                 AccessDecisionManagerImpl accessDecisionManager,
-                                 FilterInvocationSecurityMetadataSourceImpl filterInvocationSecurityMetadataSource) {
+                                 AuthorizationFilter authorizationFilter    ) {
         this.systemConfig = systemConfig;
         this.authorizationFilter = authorizationFilter;
-        this.accessDecisionManager = accessDecisionManager;
-        this.filterInvocationSecurityMetadataSource = filterInvocationSecurityMetadataSource;
     }
 
     @Bean
@@ -64,14 +59,7 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/_/api/**").authenticated()
-                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-                    @Override
-                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        o.setSecurityMetadataSource(filterInvocationSecurityMetadataSource);
-                        o.setAccessDecisionManager(accessDecisionManager);
-                        return o;
-                    }
-                })
+                .antMatchers("/-/api/account/**").authenticated()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().permitAll()
                 .and().exceptionHandling()

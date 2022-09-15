@@ -15,19 +15,19 @@ public interface UaaAuthorityMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(UaaAuthority record);
+    int insert(UaaAuthority row);
 
-    int insertSelective(UaaAuthority record);
+    int insertSelective(UaaAuthority row);
 
     List<UaaAuthority> selectByExample(UaaAuthorityExample example);
 
     UaaAuthority selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") UaaAuthority record, @Param("example") UaaAuthorityExample example);
+    int updateByExampleSelective(@Param("row") UaaAuthority row, @Param("example") UaaAuthorityExample example);
 
-    int updateByExample(@Param("record") UaaAuthority record, @Param("example") UaaAuthorityExample example);
+    int updateByExample(@Param("row") UaaAuthority row, @Param("example") UaaAuthorityExample example);
 
-    int updateByPrimaryKeySelective(UaaAuthority record);
+    int updateByPrimaryKeySelective(UaaAuthority row);
 
-    int updateByPrimaryKey(UaaAuthority record);
+    int updateByPrimaryKey(UaaAuthority row);
 }

@@ -3,7 +3,7 @@ import nookies from 'nookies'
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import type { DataNode } from 'antd/es/tree'
-import { Col, Row, Button, Typography, Modal, Space, Form, Input, Select, Tree, Switch, message } from 'antd'
+import { Col, Row, Button, Typography, Modal, Space, Form, Input, Select, Tree, Switch, message, Dropdown } from 'antd'
 import {
     PlusOutlined,
     SaveOutlined,
@@ -62,6 +62,7 @@ const helpModal = () => {
                     <li>点击左侧菜单树中要修改的菜单，将自动填充表单数据</li>
                     <li>点击右下角的删除按钮</li>
                 </ol>
+                <p>权限标识：工程师开发的每个接口都有个权限标识，用于识别每个接口，请联系工程师获取对应接口的权限表达式。</p>
                 <p>在此处添加菜单后，需要到「角色管理」中对给角色分配菜单权限，然后将角色分配给用户才能看到新菜单。</p>
             </div>
         ),
@@ -105,33 +106,55 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
 const DashboardUaaMenu = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [form] = Form.useForm()
     const [menuTreeList, setMenuTreeList] = useState<MenuTree[]>(data.menuTreeList)
-    const [menuList, setMenuList] = useState<AntdSelectOption[]>(convertToAntdSelectOption(data.menuTreeList))
     const [menuDataNode, setTreeDataNode] = useState<DataNode[]>(convertToDataNode(data.menuTreeList))
     const [currentId, setCurrentId] = useState<string>()
+    const [pid, setPid] = useState<string>('-1')
+    const [pidName, setPidName] = useState<string>("顶级菜单")
+    const [enable, setEnable] = useState<boolean>(true)
 
     const onSelectTree = (selectedKeys: any[], e: any) => {
         if (selectedKeys.length > 0) {
             setCurrentId(selectedKeys[0])
             let slectMenuTree: MenuTree | undefined = findMenuData(selectedKeys[0], menuTreeList)
-            console.info(slectMenuTree)
             if (slectMenuTree) {
+                let pidMenu: MenuTree | undefined = findMenuData(slectMenuTree.pid + "", menuTreeList)
                 form.setFieldsValue({
                     id: slectMenuTree.id,
                     menuName: slectMenuTree.menuName,
+                    menuType: slectMenuTree.menuType,
+                    permissionExpr: slectMenuTree.permissionExpr,
                     menuHref: slectMenuTree.menuHref,
-                    pid: slectMenuTree.pid,
                     menuIcon: slectMenuTree.menuIcon,
                     menuTarget: slectMenuTree.menuTarget,
                     menuClass: slectMenuTree.menuClass,
                     menuTitle: slectMenuTree.menuTitle,
                     menuOnclick: slectMenuTree.menuOnclick,
                     menuOrder: slectMenuTree.menuOrder,
-                    enable: slectMenuTree.enable,
                     addTime: slectMenuTree.addTime,
                     updateTime: slectMenuTree.updateTime,
                     menuCss: slectMenuTree.menuCss,
                     extendJson: slectMenuTree.extendJson,
                 })
+                setPid(slectMenuTree.pid + "")
+                if (pidMenu) {
+                    setPidName(pidMenu.menuName)
+                } else {
+                    setPidName("顶级菜单")
+                }
+                setEnable(slectMenuTree.enable + "" == "true")
+            } else {
+                message.error(`遇到错误，未找到该菜单:${selectedKeys[0]}`)
+            }
+        }
+    }
+
+    const onSelectPid = (selectedKeys: any[], e: any) => {
+        if (selectedKeys.length > 0) {
+            setCurrentId(selectedKeys[0])
+            let slectMenuTree: MenuTree | undefined = findMenuData(selectedKeys[0], menuTreeList)
+            if (slectMenuTree) {
+                setPid(slectMenuTree.id)
+                setPidName(slectMenuTree.menuName)
             } else {
                 message.error(`遇到错误，未找到该菜单:${selectedKeys[0]}`)
             }
@@ -139,11 +162,12 @@ const DashboardUaaMenu = ({ data }: InferGetServerSidePropsType<typeof getServer
     }
 
     const reloadTree = async () => {
+        setPid("-1")
+        setPidName("顶级菜单")
         const resultMenuTree: APIResult<MenuTree[]> = await api.queryAllMenuTree()
         if (resultMenuTree.code == 200 && resultMenuTree.data) {
             form.resetFields()
             setMenuTreeList(resultMenuTree.data)
-            setMenuList(convertToAntdSelectOption(resultMenuTree.data))
             setTreeDataNode(convertToDataNode(resultMenuTree.data))
         } else {
             message.error(resultMenuTree.message)
@@ -169,15 +193,17 @@ const DashboardUaaMenu = ({ data }: InferGetServerSidePropsType<typeof getServer
         let menu: MenuTree = {
             id: values.id,
             menuName: values.menuName,
+            menuType: values.menuType,
+            permissionExpr: values.permissionExpr,
             menuHref: values.menuHref,
-            pid: values.pid,
+            pid: pid,
             menuIcon: values.menuIcon,
             menuTarget: values.menuTarget,
             menuClass: values.menuClass,
             menuTitle: values.menuTitle,
             menuOnclick: values.menuOnclick,
             menuOrder: values.menuOrder,
-            enable: values.enable,
+            enable: enable + "",
             addTime: values.addTime,
             updateTime: values.updateTime,
             menuCss: values.menuCss,
@@ -219,7 +245,8 @@ const DashboardUaaMenu = ({ data }: InferGetServerSidePropsType<typeof getServer
                     <div style={{ backgroundColor: '#fff', padding: '24px' }}>
                         <Tree
                             defaultExpandAll={true}
-                            showLine={true}
+                            showLine={{ showLeafIcon: false }}
+                            showIcon={false}
                             treeData={menuDataNode}
                             onSelect={onSelectTree}
                         />
@@ -241,6 +268,8 @@ const DashboardUaaMenu = ({ data }: InferGetServerSidePropsType<typeof getServer
                                     <Button
                                         onClick={() => {
                                             form.resetFields()
+                                            setPid("-1")
+                                            setPidName("顶级菜单")
                                         }}
                                         type="primary"
                                         icon={<PlusOutlined />}>
@@ -261,9 +290,20 @@ const DashboardUaaMenu = ({ data }: InferGetServerSidePropsType<typeof getServer
                                         label="父级菜单"
                                         name="pid"
                                     >
-                                        <Select
-                                            options={menuList}
-                                        />
+                                        <Dropdown
+                                            overlay={(
+                                                <Tree
+                                                    defaultExpandAll={true}
+                                                    showLine={{ showLeafIcon: false }}
+                                                    treeData={menuDataNode}
+                                                    onSelect={onSelectPid}
+                                                />
+                                            )}
+                                        >
+                                            <a>
+                                                {`${pidName}`}
+                                            </a>
+                                        </Dropdown>
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={6} style={{ padding: '0 5px' }}>
@@ -272,6 +312,26 @@ const DashboardUaaMenu = ({ data }: InferGetServerSidePropsType<typeof getServer
                                         name="menuName"
                                     >
                                         <Input placeholder="菜单显示的名称" />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={6} style={{ padding: '0 5px' }}>
+                                    <Form.Item
+                                        label="权限类型"
+                                        name="menuType"
+                                    >
+                                        <Select defaultValue={"MENU"}>
+                                            <Select.Option value="MENU">菜单</Select.Option>
+                                            <Select.Option value="BUTTON">按钮</Select.Option>
+                                            <Select.Option value="API">接口</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={6} style={{ padding: '0 5px' }}>
+                                    <Form.Item
+                                        label="权限标识"
+                                        name="permissionExpr"
+                                    >
+                                        <Input placeholder="权限表达式请咨询工程师" />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={6} style={{ padding: '0 5px' }}>
@@ -349,9 +409,10 @@ const DashboardUaaMenu = ({ data }: InferGetServerSidePropsType<typeof getServer
                                 <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={6} style={{ padding: '0 5px' }}>
                                     <Form.Item
                                         label="是否启用"
-                                        name="enable"
                                     >
-                                        <Switch defaultChecked />
+                                        <Switch checked={enable} onChange={(checked: boolean, event: any) => {
+                                            setEnable(checked)
+                                        }} />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} sm={24} md={24} lg={12} xl={8} xxl={6} style={{ padding: '0 5px' }}>
@@ -465,22 +526,6 @@ const convertToList = (menuTreeList: MenuTree[]): MenuTree[] => {
     return []
 }
 
-const convertToAntdSelectOption = (menuTreeList: MenuTree[]): AntdSelectOption[] => {
-    let menuList: MenuTree[] = convertToList(menuTreeList)
-    let antdSelectOptions: AntdSelectOption[] = []
-    antdSelectOptions.push({
-        label: '顶级菜单',
-        value: '-1'
-    })
-    menuList.forEach(element => {
-        antdSelectOptions.push({
-            label: element.menuName,
-            value: element.id
-        })
-    })
-    return antdSelectOptions
-}
-
 // 递归树查找数据
 const findMenuData = (id: string, menuTreeList: MenuTree[] | undefined): MenuTree | undefined => {
     if (menuTreeList) {
@@ -488,7 +533,10 @@ const findMenuData = (id: string, menuTreeList: MenuTree[] | undefined): MenuTre
             if (menuTreeList[i].id == id) {
                 return menuTreeList[i]
             } else if (menuTreeList[i].child) {
-                return findMenuData(id, menuTreeList[i].child)
+                let child: MenuTree | undefined = findMenuData(id, menuTreeList[i].child)
+                if (child) {
+                    return child
+                }
             }
         }
     }

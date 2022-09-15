@@ -20,7 +20,6 @@ import APIResult = API.APIResult
 import ListData = API.ListData
 import RoleDetail = API.RoleDetail
 import AntdSelectOption = API.AntdSelectOption
-import SystemApi = API.SystemApi
 import Authority = API.Authority
 import MenuTree = API.MenuTree
 import { convertToHeaders } from '../../../utils/request'
@@ -73,25 +72,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
             },
         }
     }
-    let apiList: AntdSelectOption[] = []
-    const resultSystemApi: APIResult<ListData<SystemApi>> = await api.querySystemApiInner(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress), undefined, '1', '2147483647')
-    if (resultSystemApi.code == 401) {
-        return {
-            redirect: {
-                destination: '/auth/signIn?redirect=' + context.req.url,
-                permanent: false,
-            },
-        }
-    }
-    if (resultSystemApi.code == 200 && resultSystemApi.data) {
-        for (let i = 0; i < resultSystemApi.data.data.length; i++) {
-            let option: AntdSelectOption = {
-                label: resultSystemApi.data.data[i].summary,
-                value: resultSystemApi.data.data[i].id,
-            }
-            apiList.push(option)
-        }
-    }
+
     let menuTreeList: MenuTree[] = []
     const resultMenuTree: APIResult<MenuTree[]> = await api.queryMenuTreeInner(accessToken, convertToHeaders(context.req.headers, context.req.socket.remoteAddress))
     if (resultMenuTree.code == 401) {
@@ -108,7 +89,6 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     return {
         props: {
             data: {
-                apiList: apiList,
                 menuTreeList: menuTreeList
             }
         }
@@ -118,9 +98,10 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
 const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [inited, setInited] = useState<boolean>(false)
     const [roleList, setRoleList] = useState<RoleDetail[]>()
-    const [apiList, setApiList] = useState<AntdSelectOption[]>(data.apiList)
+    const [menuTree, setMenuTree] = useState<MenuTree[]>(data.menuTreeList)
     const [menuDataNode, setTreeDataNode] = useState<DataNode[]>(convertToDataNode(data.menuTreeList))
     const [treeCheckedKeys, setTreeCheckedKeys] = useState<string[]>([])
+    const [menuList, setMenuList] = useState<MenuTree[]>([])
     const [loading, setLoading] = useState(false)
     const [visibleModel, setVisibleModel] = useState(false)
     const [modelLoading, setModelLoading] = useState(false)
@@ -283,26 +264,23 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                             type="primary"
                             icon={<EditOutlined />}
                             onClick={() => {
-                                let systemApis: string[] = []
                                 let menus: string[] = []
-                                if (record.authorityList) {
-                                    record.authorityList.forEach(element => {
-                                        if (element.authorityType == 'API') {
-                                            systemApis.push(element.targetId.toString())
-                                        }
-                                        if (element.authorityType == 'MENU') {
-                                            menus.push(element.targetId.toString())
-                                        }
-                                    })
-                                }
+                                let menuList: MenuTree[] = []
                                 modelForm.setFieldsValue({
                                     id: record.id,
                                     roleName: record.roleName,
                                     roleDescribe: record.roleDescribe,
                                     extendJson: record.extendJson,
-                                    systemApi: systemApis,
                                 })
+                                if (record.menuList) {
+                                    for (let i = 0; i < record.menuList.length; i++) {
+                                        menus.push(record.menuList[i].id)
+                                        menuList.push(record.menuList[i])
+                                    }
+                                }
+                                console.info(record)
                                 setTreeCheckedKeys(menus)
+                                setMenuList(menuList)
                                 setVisibleModel(true)
                             }}
                         >编辑</Button>
@@ -361,7 +339,7 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
             extendJson: modelForm.getFieldValue('extendJson'),
             addTime: '',
             builtInRole: false,
-            authorityList: authorityList
+            menuList: menuList
         }
         if (!modelForm.getFieldValue('id')) {
             // 新增
@@ -391,10 +369,33 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
 
     const onMenuTreeCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
         let checkeds: string[] = []
+        let selectMenuList: MenuTree[] = []
         for (let i = 0; i < info.checkedNodes.length; i++) {
             checkeds.push(info.checkedNodes[i].key.toString())
+            let menu: MenuTree | undefined = findMenuData(info.checkedNodes[i].key.toString(), menuTree)
+            if (menu) {
+                selectMenuList.push(menu)
+            }
         }
         setTreeCheckedKeys(checkeds)
+        setMenuList(selectMenuList)
+    }
+
+    // 递归树查找数据
+    const findMenuData = (id: string, menuTreeList: MenuTree[] | undefined): MenuTree | undefined => {
+        if (menuTreeList) {
+            for (let i = 0; i < menuTreeList.length; i++) {
+                if (menuTreeList[i].id == id) {
+                    return menuTreeList[i]
+                } else if (menuTreeList[i].child) {
+                    let child: MenuTree | undefined = findMenuData(id, menuTreeList[i].child)
+                    if (child) {
+                        return child
+                    }
+                }
+            }
+        }
+        return undefined
     }
 
     return (
@@ -439,6 +440,7 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                                             systemApi: []
                                         })
                                         setTreeCheckedKeys([])
+                                        setMenuList([])
                                         setVisibleModel(true)
                                     }}
                                 >
@@ -480,13 +482,7 @@ const DashboardUaaRole = ({ data }: InferGetServerSidePropsType<typeof getServer
                     <Form.Item name="extendJson" label="扩展信息">
                         <TextArea rows={4} />
                     </Form.Item>
-                    <Form.Item name="systemApi" label="接口权限">
-                        <Select
-                            mode="multiple"
-                            options={apiList}
-                        />
-                    </Form.Item>
-                    <Form.Item name="menuTree" label="菜单权限">
+                    <Form.Item name="menuTree" label="菜单与权限">
                         <Tree
                             checkable
                             checkStrictly

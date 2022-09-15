@@ -47,7 +47,8 @@ public class RoleDetail implements ConfigAttribute, GrantedAuthority, Serializab
     private String extendJson;
 
     @Schema(description = "拥有的权限列表")
-    private List<Authority> authorityList;
+    private List<MenuTree> menuList;
+    private List<String> authorityList;
 
     @Override
     public String getAttribute() {
@@ -115,11 +116,19 @@ public class RoleDetail implements ConfigAttribute, GrantedAuthority, Serializab
         this.extendJson = extendJson;
     }
 
-    public List<Authority> getAuthorityList() {
+    public List<MenuTree> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<MenuTree> menuList) {
+        this.menuList = menuList;
+    }
+
+    public List<String> getAuthorityList() {
         return authorityList;
     }
 
-    public void setAuthorityList(List<Authority> authorityList) {
+    public void setAuthorityList(List<String> authorityList) {
         this.authorityList = authorityList;
     }
 }

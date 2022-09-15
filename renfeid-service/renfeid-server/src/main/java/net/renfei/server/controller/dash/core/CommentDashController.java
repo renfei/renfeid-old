@@ -27,6 +27,7 @@ import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.common.core.service.CommentService;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.server.entity.ReplyCommentAo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -45,6 +46,7 @@ public class CommentDashController extends AbstractController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasPermission('','core:comment:query')")
     @Operation(summary = "查询评论列表", tags = {"评论管理接口"},
             parameters = {
                     @Parameter(name = "haveDelete", description = "是否包含已删除评论"),
@@ -59,6 +61,7 @@ public class CommentDashController extends AbstractController {
     }
 
     @PostMapping("{id}/reply")
+    @PreAuthorize("hasPermission('','core:comment:reply')")
     @Operation(summary = "后台回复评论", tags = {"评论管理接口"},
             parameters = {
                     @Parameter(name = "commentId", description = "回复的评论ID")
@@ -69,6 +72,7 @@ public class CommentDashController extends AbstractController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasPermission('','core:comment:delete')")
     @Operation(summary = "后台删除评论", tags = {"评论管理接口"},
             parameters = {
                     @Parameter(name = "commentId", description = "评论ID")

@@ -35,6 +35,10 @@ public class MenuTree implements Serializable {
     private String pid;
     @Schema(description = "菜单名称")
     private String menuName;
+    @Schema(description = "类型")
+    private AuthorityTypeEnum menuType;
+    @Schema(description = "权限表达式")
+    private String permissionExpr;
     @Schema(description = "菜单图标")
     private String menuIcon;
     @Schema(description = "菜单目标")
@@ -84,6 +88,22 @@ public class MenuTree implements Serializable {
 
     public void setMenuName(String menuName) {
         this.menuName = menuName;
+    }
+
+    public AuthorityTypeEnum getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(AuthorityTypeEnum menuType) {
+        this.menuType = menuType;
+    }
+
+    public String getPermissionExpr() {
+        return permissionExpr;
+    }
+
+    public void setPermissionExpr(String permissionExpr) {
+        this.permissionExpr = permissionExpr;
     }
 
     public String getMenuIcon() {

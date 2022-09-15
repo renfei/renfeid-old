@@ -20,6 +20,7 @@ import net.renfei.common.api.constant.enums.SecretLevelEnum;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户信息对象
@@ -55,6 +56,9 @@ public class UserInfo implements Serializable {
     private String firstName;
     @Schema(description = "两步认证启用状态")
     private Boolean u2fEnable;
+
+    @Schema(description = "权限标识列表")
+    private List<String> authorityList;
 
     public Long getId() {
         return id;
@@ -158,5 +162,13 @@ public class UserInfo implements Serializable {
 
     public void setU2fEnable(Boolean u2fEnable) {
         this.u2fEnable = u2fEnable;
+    }
+
+    public List<String> getAuthorityList() {
+        return authorityList;
+    }
+
+    public void setAuthorityList(List<String> authorityList) {
+        this.authorityList = authorityList;
     }
 }

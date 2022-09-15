@@ -303,6 +303,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             UserInfo userInfo = new UserInfo();
             BeanUtils.copyProperties(userDetail, userInfo);
             userInfo.setU2fEnable(!ObjectUtils.isEmpty(userDetail.getTotp()));
+            List<String> authorityList = new ArrayList<>();
+            for (RoleDetail roleDetail : userDetail.getRoleDetailList()
+            ) {
+                for (MenuTree menuTree : roleDetail.getMenuList()
+                ) {
+                    if (!ObjectUtils.isEmpty(menuTree.getPermissionExpr())) {
+                        authorityList.add(menuTree.getPermissionExpr());
+                    }
+                }
+            }
+            userInfo.setAuthorityList(authorityList);
             return userInfo;
         }
         return null;
