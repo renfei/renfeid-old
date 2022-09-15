@@ -15,15 +15,12 @@
  */
 package net.renfei.server.filter;
 
-import net.renfei.cloudflare.Cloudflare;
-import net.renfei.cloudflare.entity.common.ApiToken;
-import net.renfei.cloudflare.entity.common.Response;
-import net.renfei.cloudflare.entity.firewall.FirewallRule;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
 import net.renfei.common.core.config.RedisConfig;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.utils.IpUtils;
+import net.renfei.server.service.AccessLimitBlockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -48,11 +45,14 @@ public class AccessLimitFilter extends AbstractFilter implements Filter {
     private final static String REDIS_KEY = RedisConfig.REDIS_KEY_DATABASE + ":limit:access";
     private final SystemConfig systemConfig;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final AccessLimitBlockService accessLimitBlockService;
 
     public AccessLimitFilter(SystemConfig systemConfig,
-                             RedisTemplate<String, Object> redisTemplate) {
+                             RedisTemplate<String, Object> redisTemplate,
+                             AccessLimitBlockService accessLimitBlockService) {
         this.systemConfig = systemConfig;
         this.redisTemplate = redisTemplate;
+        this.accessLimitBlockService = accessLimitBlockService;
     }
 
     @Override
@@ -81,34 +81,7 @@ public class AccessLimitFilter extends AbstractFilter implements Filter {
                     if (currentCnt > systemConfig.getAccessLimit().getBlacklistRate()) {
                         // 达到拉黑的阈值
                         block = true;
-                        if (systemConfig.getAccessLimit().getBlacklistEnable()) {
-                            // 调用防火墙接口拉入黑名单
-                            // 目前只支持Cloudflare，百度云加速的API需要代理商才能调用
-                            ApiToken apiToken = new ApiToken(systemConfig.getCloudflare().getToken());
-                            Cloudflare cloudflare = new Cloudflare(apiToken);
-                            FirewallRule firewallRule = new FirewallRule();
-                            firewallRule.setMode("managed_challenge");
-                            firewallRule.setNotes("renfeid program automatic setting.");
-                            FirewallRule.Configuration configuration = new FirewallRule.Configuration();
-                            configuration.setTarget("ip");
-                            configuration.setValue(ip);
-                            firewallRule.setConfiguration(configuration);
-                            try {
-                                Response<FirewallRule> response = cloudflare.firewall().createAccessRuleByAccount(systemConfig.getCloudflare().getAccountId(), firewallRule);
-                                if (response.getSuccess()) {
-                                    logger.warn("IP address {} reaches the blacklist threshold.", ip);
-                                } else {
-                                    if (response.getMessages() != null && !response.getMessages().isEmpty()) {
-                                        logger.error(response.getMessages().toString());
-                                    } else if (response.getErrors() != null && !response.getErrors().isEmpty()) {
-                                        logger.error(response.getErrors().toString());
-                                    }
-                                    logger.warn("IP address {} blacklist setting failed.", ip);
-                                }
-                            } catch (Exception e) {
-                                logger.error(e.getMessage(), e);
-                            }
-                        }
+                        accessLimitBlockService.block(ip);
                     } else if (httpRequest.getRequestURI().toLowerCase().startsWith("/api/")) {
                         if (currentCnt > apiLimit) {
                             block = true;

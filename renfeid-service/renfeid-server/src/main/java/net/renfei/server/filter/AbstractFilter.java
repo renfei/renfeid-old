@@ -29,7 +29,7 @@ import java.io.Writer;
  * @author renfei
  */
 public abstract class AbstractFilter {
-    protected void responseResult(Logger logger, HttpServletResponse response, APIResult result) {
+    protected void responseResult(Logger logger, HttpServletResponse response, APIResult<?> result) {
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Type", "application/json");
         response.setHeader("Access-Control-Allow-Credentials", "true");

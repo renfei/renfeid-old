@@ -26,6 +26,7 @@ import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.uaa.api.RoleService;
 import net.renfei.uaa.api.entity.RoleDetail;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -44,6 +45,7 @@ public class RoleController extends AbstractController {
     }
 
     @GetMapping("role")
+    @PreAuthorize("hasPermission('','uaa:role:query')")
     @Operation(summary = "查询角色列表", tags = {"角色管理接口"},
             parameters = {
                     @Parameter(name = "roleName", description = "角色名称"),
@@ -58,6 +60,7 @@ public class RoleController extends AbstractController {
     }
 
     @PostMapping("role")
+    @PreAuthorize("hasPermission('','uaa:role:create')")
     @Operation(summary = "创建角色", tags = {"角色管理接口"})
     @OperationLog(module = SystemTypeEnum.SYS_ROLE, desc = "创建角色", operation = OperationTypeEnum.CREATE)
     public APIResult<RoleDetail> createRole(@RequestBody RoleDetail roleDetail) {
@@ -65,6 +68,7 @@ public class RoleController extends AbstractController {
     }
 
     @PutMapping("role/{id}")
+    @PreAuthorize("hasPermission('','uaa:role:update')")
     @Operation(summary = "编辑角色", tags = {"角色管理接口"}, parameters = {
             @Parameter(name = "id", description = "角色ID")
     })
@@ -74,6 +78,7 @@ public class RoleController extends AbstractController {
     }
 
     @DeleteMapping("role/{id}")
+    @PreAuthorize("hasPermission('','uaa:role:delete')")
     @Operation(summary = "删除角色", tags = {"角色管理接口"}, parameters = {
             @Parameter(name = "id", description = "角色ID")
     })

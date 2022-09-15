@@ -6,8 +6,6 @@ import java.util.Date;
 public class UaaAuthority implements Serializable {
     private Long id;
 
-    private String authorityType;
-
     private Long roleId;
 
     private Long targetId;
@@ -24,14 +22,6 @@ public class UaaAuthority implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getAuthorityType() {
-        return authorityType;
-    }
-
-    public void setAuthorityType(String authorityType) {
-        this.authorityType = authorityType;
     }
 
     public Long getRoleId() {
@@ -73,7 +63,6 @@ public class UaaAuthority implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", authorityType=").append(authorityType);
         sb.append(", roleId=").append(roleId);
         sb.append(", targetId=").append(targetId);
         sb.append(", addTime=").append(addTime);

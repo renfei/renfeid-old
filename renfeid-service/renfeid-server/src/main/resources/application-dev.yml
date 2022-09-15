@@ -89,6 +89,8 @@ system:
   enableAudit: true
   # Token 是否与 IP 做强绑定
   bindingIp: false
+  # 是否记录响应内容（开启后日志表将变大）
+  recordResponse: false
   # IP2Location 数据库 Bin 文件请到此处下载：https://github.com/renfei/ip2location
   ip2LocationBinFile: classpath:/IP2LOCATION-LITE-DB11/IP2LOCATION-LITE-DB11.BIN
   ip2LocationBinFileV6: classpath:/IP2LOCATION-LITE-DB11/IP2LOCATION-LITE-DB11.IPV6.BIN
@@ -127,13 +129,22 @@ system:
   leaf:
     port: 2181
     zk: localhost
+  # 访问频次限制
   accessLimit:
+    # 是否启用访问频次限制
     enable: true
+    # 是否启用 WAF 防火墙联动（启用后超过频次将拉黑IP）
     blacklistEnable: true
+    # 全局限速包括页面与接口所有
     globalRate: 250
-    apiRate: 300
-    blacklistRate: 600
+    # 开放 API 限速（当它大于全局时取全局限速，全局限速优先级更高）
+    apiRate: 250
+    # WAF 联动拉黑的阈值
+    blacklistRate: 500
+    # 数据采集周期（秒）
     time: 300
+    # 通知邮件（联动 WAF 拉黑 IP 后有邮件通知）
+    noticeEmail: i@renfei.net
   cloudflare:
     accountId: dd
     token: dd

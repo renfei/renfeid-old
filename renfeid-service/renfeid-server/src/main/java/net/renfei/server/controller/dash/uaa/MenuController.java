@@ -25,6 +25,7 @@ import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.uaa.api.MenuService;
 import net.renfei.uaa.api.entity.MenuTree;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class MenuController extends AbstractController {
     }
 
     @GetMapping("menu/tree/all")
+    @PreAuthorize("hasPermission('','uaa:menu:query')")
     @Operation(summary = "获取全部菜单树", tags = {"后台菜单管理接口"}, description = "这个菜单树是系统全部菜单")
     @OperationLog(module = SystemTypeEnum.SYS_MENU, desc = "获取全部菜单树")
     public APIResult<List<MenuTree>> queryAllMenuTree() {
@@ -52,6 +54,7 @@ public class MenuController extends AbstractController {
     }
 
     @GetMapping("menu/tree")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "获取当前登录用户的菜单树", tags = {"后台菜单管理接口"}, description = "这个菜单树是当前登录用户拥有的菜单")
     @OperationLog(module = SystemTypeEnum.SYS_MENU, desc = "获取菜单树")
     public APIResult<List<MenuTree>> queryMenuTreeByUser() {
@@ -59,6 +62,7 @@ public class MenuController extends AbstractController {
     }
 
     @PostMapping("menu")
+    @PreAuthorize("hasPermission('','uaa:menu:create')")
     @Operation(summary = "创建菜单", tags = {"后台菜单管理接口"})
     @OperationLog(module = SystemTypeEnum.SYS_MENU, desc = "创建菜单", operation = OperationTypeEnum.CREATE)
     public APIResult<MenuTree> createMenu(@RequestBody MenuTree menuTree) {
@@ -66,6 +70,7 @@ public class MenuController extends AbstractController {
     }
 
     @PutMapping("menu/{id}")
+    @PreAuthorize("hasPermission('','uaa:menu:update')")
     @Operation(summary = "修改菜单", tags = {"后台菜单管理接口"}, parameters = {
             @Parameter(name = "id", description = "菜单ID")
     })
@@ -75,6 +80,7 @@ public class MenuController extends AbstractController {
     }
 
     @DeleteMapping("menu/{id}")
+    @PreAuthorize("hasPermission('','uaa:menu:delete')")
     @Operation(summary = "删除菜单", tags = {"后台菜单管理接口"}, parameters = {
             @Parameter(name = "id", description = "菜单ID")
     })

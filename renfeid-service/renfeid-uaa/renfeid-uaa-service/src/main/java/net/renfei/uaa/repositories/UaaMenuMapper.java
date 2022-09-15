@@ -16,9 +16,9 @@ public interface UaaMenuMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(UaaMenuWithBLOBs record);
+    int insert(UaaMenuWithBLOBs row);
 
-    int insertSelective(UaaMenuWithBLOBs record);
+    int insertSelective(UaaMenuWithBLOBs row);
 
     List<UaaMenuWithBLOBs> selectByExampleWithBLOBs(UaaMenuExample example);
 
@@ -26,15 +26,15 @@ public interface UaaMenuMapper {
 
     UaaMenuWithBLOBs selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") UaaMenuWithBLOBs record, @Param("example") UaaMenuExample example);
+    int updateByExampleSelective(@Param("row") UaaMenuWithBLOBs row, @Param("example") UaaMenuExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") UaaMenuWithBLOBs record, @Param("example") UaaMenuExample example);
+    int updateByExampleWithBLOBs(@Param("row") UaaMenuWithBLOBs row, @Param("example") UaaMenuExample example);
 
-    int updateByExample(@Param("record") UaaMenu record, @Param("example") UaaMenuExample example);
+    int updateByExample(@Param("row") UaaMenu row, @Param("example") UaaMenuExample example);
 
-    int updateByPrimaryKeySelective(UaaMenuWithBLOBs record);
+    int updateByPrimaryKeySelective(UaaMenuWithBLOBs row);
 
-    int updateByPrimaryKeyWithBLOBs(UaaMenuWithBLOBs record);
+    int updateByPrimaryKeyWithBLOBs(UaaMenuWithBLOBs row);
 
-    int updateByPrimaryKey(UaaMenu record);
+    int updateByPrimaryKey(UaaMenu row);
 }

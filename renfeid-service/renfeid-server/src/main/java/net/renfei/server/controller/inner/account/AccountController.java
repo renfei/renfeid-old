@@ -23,6 +23,7 @@ import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.uaa.api.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +45,7 @@ public class AccountController extends AbstractController {
     }
 
     @PostMapping("email/verCode")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "修改邮箱，发送验证邮件", tags = {"前台账户管理接口"})
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改邮箱，发送验证邮件")
     public APIResult sendEmailVerCode(@RequestParam("newEmail") String newEmail) {
@@ -51,6 +53,7 @@ public class AccountController extends AbstractController {
     }
 
     @PostMapping("email")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "修改邮箱", tags = {"前台账户管理接口"})
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改邮箱", operation = OperationTypeEnum.UPDATE)
     public APIResult updateEmail(@RequestParam("newEmail") String newEmail, @RequestParam("verCode") String verCode) {
@@ -58,6 +61,7 @@ public class AccountController extends AbstractController {
     }
 
     @PostMapping("phone/verCode")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "修改手机号，发送短信验证码", tags = {"前台账户管理接口"})
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改手机号，发送短信验证码")
     public APIResult sendPhoneVerCode(@RequestParam("newPhone") String newPhone) {
@@ -65,6 +69,7 @@ public class AccountController extends AbstractController {
     }
 
     @PostMapping("phone")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "修改手机号", tags = {"前台账户管理接口"})
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "前台账户管理接口", operation = OperationTypeEnum.UPDATE)
     public APIResult updatePhone(@RequestParam("newPhone") String newPhone,
@@ -73,6 +78,7 @@ public class AccountController extends AbstractController {
     }
 
     @PostMapping({"firstName", "lastName"})
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "修改姓名称呼", tags = {"前台账户管理接口"})
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "修改姓名称呼", operation = OperationTypeEnum.UPDATE)
     public APIResult updateFirstName(@RequestParam(value = "firstName", required = false) String firstName,

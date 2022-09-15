@@ -219,7 +219,9 @@ declare namespace API {
         addTime: string,
         updateTime: string,
         builtInRole: boolean,
+        menuList: MenuTree[],
         extendJson?: string,
+        authorityList: string[],
     }
 
     interface UserDetail {
@@ -269,18 +271,12 @@ declare namespace API {
         authorityList?: Authority[]
     }
 
-    interface SystemApi {
-        id: string,
-        urlPath: string,
-        methodName: string,
-        summary: string,
-        description: string,
-    }
-
     interface MenuTree {
         id: string,
         pid?: string,
         menuName: string,
+        menuType: string,
+        permissionExpr: string,
         menuHref: string,
         menuIcon?: string,
         menuTarget?: string,

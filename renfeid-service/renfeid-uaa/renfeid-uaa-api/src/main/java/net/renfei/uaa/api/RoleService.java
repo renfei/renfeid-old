@@ -39,15 +39,6 @@ public interface RoleService {
     APIResult<ListData<RoleDetail>> queryRoleList(boolean haveBuiltInRoles, String roleName, int pages, int rows);
 
     /**
-     * 根据资源ID获取所需的角色列表
-     *
-     * @param authorityTypeEnum 资源类型
-     * @param resourceId        资源ID
-     * @return 所需的角色列表
-     */
-    APIResult<List<RoleDetail>> queryRoleListByResource(AuthorityTypeEnum authorityTypeEnum, long resourceId);
-
-    /**
      * 根据用户ID获取拥有的角色列表
      *
      * @param userId 用户ID
@@ -66,14 +57,6 @@ public interface RoleService {
      * @return
      */
     APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request);
-
-    /**
-     * 查询角色拥有的权限列表
-     *
-     * @param roleId 角色ID
-     * @return
-     */
-    APIResult<List<Authority>> queryAuthorityListByRole(long roleId);
 
     /**
      * 创建角色

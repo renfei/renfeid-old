@@ -3546,7 +3546,6 @@ DROP TABLE IF EXISTS `uaa_authority`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `uaa_authority` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `authority_type` varchar(255) DEFAULT NULL COMMENT '授权类型（菜单、接口）',
   `role_id` bigint(20) unsigned NOT NULL COMMENT '角色ID',
   `target_id` bigint(20) unsigned NOT NULL COMMENT '目标ID',
   `add_time` datetime NOT NULL COMMENT '添加时间',
@@ -3561,7 +3560,7 @@ CREATE TABLE `uaa_authority` (
 
 LOCK TABLES `uaa_authority` WRITE;
 /*!40000 ALTER TABLE `uaa_authority` DISABLE KEYS */;
-INSERT INTO `uaa_authority` VALUES (31,'API',1552836803759710216,1,'2022-07-29 12:00:16',NULL),(32,'MENU',1552836803759710216,3,'2022-07-29 12:00:16',NULL),(33,'MENU',1552836803759710216,2,'2022-07-29 12:00:16',NULL),(34,'API',1552219847201390592,1,'2022-07-29 12:01:55',NULL),(35,'MENU',1552219847201390592,1,'2022-07-29 12:01:55',NULL),(36,'MENU',1552219847201390592,2,'2022-07-29 12:01:55',NULL),(37,'MENU',1552219847201390592,3,'2022-07-29 12:01:55',NULL),(38,'MENU',1552219847201390592,4,'2022-07-29 12:01:55',NULL);
+INSERT INTO `uaa_authority` VALUES (31,1552836803759710216,1,'2022-07-29 12:00:16',NULL),(32,1552836803759710216,3,'2022-07-29 12:00:16',NULL),(33,1552836803759710216,2,'2022-07-29 12:00:16',NULL),(34,1552219847201390592,1,'2022-07-29 12:01:55',NULL),(35,1552219847201390592,1,'2022-07-29 12:01:55',NULL),(36,1552219847201390592,2,'2022-07-29 12:01:55',NULL),(37,1552219847201390592,3,'2022-07-29 12:01:55',NULL),(38,1552219847201390592,4,'2022-07-29 12:01:55',NULL);
 /*!40000 ALTER TABLE `uaa_authority` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3575,7 +3574,9 @@ DROP TABLE IF EXISTS `uaa_menu`;
 CREATE TABLE `uaa_menu` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `pid` bigint(20) unsigned DEFAULT NULL COMMENT '父级ID',
-  `menu_name` varchar(255) DEFAULT NULL COMMENT '菜单名称',
+  `menu_name` varchar(255) NOT NULL COMMENT '菜单名称',
+  `menu_type` varchar(255) NOT NULL DEFAULT 'MENU' COMMENT '菜单、按钮、接口',
+  `permission_expr` varchar(255) DEFAULT NULL COMMENT '权限表达式',
   `menu_icon` varchar(255) DEFAULT NULL COMMENT '菜单图标',
   `menu_target` varchar(255) DEFAULT NULL COMMENT '菜单打开方式',
   `menu_class` varchar(255) DEFAULT NULL COMMENT '菜单样式类',
@@ -3589,7 +3590,7 @@ CREATE TABLE `uaa_menu` (
   `menu_css` text DEFAULT NULL COMMENT '菜单CSS样式',
   `extend_json` text DEFAULT NULL COMMENT '扩展JSON',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3598,7 +3599,7 @@ CREATE TABLE `uaa_menu` (
 
 LOCK TABLES `uaa_menu` WRITE;
 /*!40000 ALTER TABLE `uaa_menu` DISABLE KEYS */;
-INSERT INTO `uaa_menu` VALUES (1,NULL,'控制面板',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 16:21:33',NULL,'/dashboard',NULL,NULL),(2,NULL,'内容管理系统',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:01:05',NULL,'#',NULL,NULL),(3,2,'内容列表',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:01:26',NULL,'/dashboard/cms/posts',NULL,NULL),(4,2,'内容分类',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:07:31',NULL,'/dashboard/cms/category',NULL,NULL),(5,NULL,'用户账户与认证',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:09:22',NULL,'#',NULL,NULL),(6,5,'用户账号管理',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:09:47',NULL,'/dashboard/uaa/user',NULL,NULL),(7,5,'用户权限管理',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:10:07',NULL,'/dashboard/uaa/perm',NULL,NULL),(8,5,'角色管理',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:10:24',NULL,'/dashboard/uaa/role',NULL,NULL),(9,5,'菜单管理',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:10:43',NULL,'/dashboard/uaa/menu',NULL,NULL),(10,NULL,'系统设置',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2022-07-28 17:10:52',NULL,'#',NULL,NULL);
+INSERT INTO `uaa_menu` VALUES (1,NULL,'控制面板','MENU',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 16:21:33','2022-09-15 15:30:29','/dashboard',NULL,NULL),(2,NULL,'内容管理系统','MENU',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:01:05','2022-09-15 14:35:48','#',NULL,NULL),(3,2,'内容列表','MENU','cms:post:query','',NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:01:26','2022-09-15 14:35:50','/dashboard/cms/posts',NULL,NULL),(4,2,'内容分类','MENU','cms:category:query',NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:07:31','2022-09-15 14:35:51','/dashboard/cms/category',NULL,NULL),(5,NULL,'用户账户与认证','MENU',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:09:22','2022-09-15 14:35:52','#',NULL,NULL),(6,5,'用户账号管理','MENU',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:09:47','2022-09-15 14:35:54','/dashboard/uaa/user',NULL,NULL),(7,5,'用户权限管理','MENU',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:10:07','2022-09-15 14:35:55','/dashboard/uaa/perm',NULL,NULL),(8,5,'角色管理','MENU',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:10:24','2022-09-15 14:35:56','/dashboard/uaa/role',NULL,NULL),(9,5,'菜单管理','MENU',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:10:43','2022-09-15 14:35:58','/dashboard/uaa/menu',NULL,NULL),(10,NULL,'系统设置','MENU',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-07-28 17:10:52','2022-09-15 14:35:59','#',NULL,NULL),(11,3,'新建内容','BUTTON','cms:post:create',NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-09-15 11:45:59','2022-09-15 14:36:01','#',NULL,NULL),(12,3,'修改内容','BUTTON','cms:post:update',NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-09-15 15:11:34',NULL,'#',NULL,NULL),(13,3,'删除内容','BUTTON','cms:post:delete',NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-09-15 15:11:58',NULL,'#',NULL,NULL),(14,3,'下线内容','BUTTON','cms:post:offline',NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-09-15 15:12:25',NULL,'#',NULL,NULL),(15,4,'创建分类','BUTTON','cms:category:create',NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-09-15 15:13:14',NULL,'#',NULL,NULL),(16,4,'修改分类','BUTTON','cms:category:update',NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-09-15 15:13:39',NULL,'#',NULL,NULL),(17,4,'删除分类','BUTTON','cms:category:delete',NULL,NULL,NULL,NULL,NULL,NULL,1,'2022-09-15 15:33:10',NULL,'#',NULL,NULL);
 /*!40000 ALTER TABLE `uaa_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3656,33 +3657,6 @@ CREATE TABLE `uaa_secret_key` (
 LOCK TABLES `uaa_secret_key` WRITE;
 /*!40000 ALTER TABLE `uaa_secret_key` DISABLE KEYS */;
 /*!40000 ALTER TABLE `uaa_secret_key` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `uaa_system_api`
---
-
-DROP TABLE IF EXISTS `uaa_system_api`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `uaa_system_api` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `url_path` varchar(255) NOT NULL COMMENT 'API路径',
-  `method_name` varchar(255) NOT NULL COMMENT '请求方法',
-  `summary` varchar(255) NOT NULL COMMENT '概述',
-  `description` varchar(255) DEFAULT NULL COMMENT '详细描述',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='系统接口列表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `uaa_system_api`
---
-
-LOCK TABLES `uaa_system_api` WRITE;
-/*!40000 ALTER TABLE `uaa_system_api` DISABLE KEYS */;
-INSERT INTO `uaa_system_api` VALUES (1,'/_/api/uaa/user/*','PUT','修改用户资料','此接口只能更新基础资料，修改密码、更改密级等有专门的接口'),(2,'/_/api/uaa/user/*/secret-level/*','PUT','给用户定密','给用户定密'),(3,'/_/api/uaa/user/*/role','PUT','编辑用户角色','编辑用户角色'),(4,'/_/api/uaa/user/*/reset-password','PUT','重置用户密码','重置用户密码');
-/*!40000 ALTER TABLE `uaa_system_api` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

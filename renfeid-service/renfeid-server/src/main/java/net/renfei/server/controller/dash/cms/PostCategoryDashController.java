@@ -27,6 +27,7 @@ import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -45,6 +46,7 @@ public class PostCategoryDashController extends AbstractController {
     }
 
     @GetMapping("posts/category")
+    @PreAuthorize("hasPermission('','cms:category:query')")
     @Operation(summary = "查询文章内容分类列表", tags = {"文章内容分类管理接口"},
             parameters = {
                     @Parameter(name = "enName", description = "分类英文名称"),
@@ -64,6 +66,7 @@ public class PostCategoryDashController extends AbstractController {
     }
 
     @PostMapping("posts/category")
+    @PreAuthorize("hasPermission('','cms:category:create')")
     @Operation(summary = "创建文章内容分类", tags = {"文章内容分类管理接口"})
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "创建文章内容分类", operation = OperationTypeEnum.CREATE)
     public APIResult<PostCategory> createPostCategory(@RequestBody PostCategory postCategory) {
@@ -71,6 +74,7 @@ public class PostCategoryDashController extends AbstractController {
     }
 
     @PutMapping("posts/category/{id}")
+    @PreAuthorize("hasPermission('','cms:category:update')")
     @Operation(summary = "修改文章内容分类", tags = {"文章内容分类管理接口"}, parameters = {
             @Parameter(name = "id", description = "文章内容分类ID")
     })
@@ -81,6 +85,7 @@ public class PostCategoryDashController extends AbstractController {
     }
 
     @DeleteMapping("posts/category/{id}")
+    @PreAuthorize("hasPermission('','cms:category:delete')")
     @Operation(summary = "删除文章内容分类", tags = {"文章内容分类管理接口"}, parameters = {
             @Parameter(name = "id", description = "文章内容分类ID")
     })

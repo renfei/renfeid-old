@@ -68,7 +68,7 @@ public class MenuServiceImpl implements MenuService {
         ) {
             menuTreeList.add(convert(uaaMenu));
         }
-        queryMenuTree(null, menuTreeList);
+        queryMenuTree(null, menuTreeList, null);
         return new APIResult<>(menuTreeList);
     }
 
@@ -77,22 +77,21 @@ public class MenuServiceImpl implements MenuService {
         List<Long> menuIds = new ArrayList<>();
         for (RoleDetail roleDetail : userDetail.getRoleDetailList()
         ) {
-            if (roleDetail.getAuthorityList() != null && !roleDetail.getAuthorityList().isEmpty()) {
-                roleDetail.getAuthorityList()
-                        .stream()
-                        .filter(authority -> AuthorityTypeEnum.MENU.equals(authority.getAuthorityType()))
-                        .forEach(authority -> menuIds.add(authority.getTargetId()));
+            if (roleDetail.getMenuList() != null && !roleDetail.getMenuList().isEmpty()) {
+                roleDetail.getMenuList()
+                        .forEach(authority -> menuIds.add(Long.parseLong(authority.getId())));
             }
         }
         UaaMenuExample example = new UaaMenuExample();
         example.setOrderByClause("menu_order");
+        UaaMenuExample.Criteria criteria = example.createCriteria();
+        criteria.andMenuTypeEqualTo("MENU");
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (uaaUtilService.isSuperTubeUser(currentUserDetail) || uaaUtilService.isSecuritySuperUser(currentUserDetail)) {
             // 超管也或安全管理员，给全部菜单
             return queryAllMenuTree();
         } else {
-            example.createCriteria()
-                    .andIdIn(menuIds)
+            criteria.andIdIn(menuIds)
                     .andEnableEqualTo(true)
                     .andPidIsNull();
         }
@@ -102,7 +101,24 @@ public class MenuServiceImpl implements MenuService {
         ) {
             menuTreeList.add(convert(uaaMenu));
         }
-        queryMenuTree(menuIds, menuTreeList);
+        queryMenuTree(menuIds, menuTreeList, AuthorityTypeEnum.MENU);
+        return new APIResult<>(menuTreeList);
+    }
+
+    @Override
+    public APIResult<List<MenuTree>> queryMenuListById(List<Long> ids, boolean haveDisable) {
+        UaaMenuExample example = new UaaMenuExample();
+        example.setOrderByClause("menu_order");
+        UaaMenuExample.Criteria criteria = example.createCriteria().andIdIn(ids);
+        if (!haveDisable) {
+            criteria.andEnableEqualTo(true);
+        }
+        List<UaaMenuWithBLOBs> uaaMenuList = uaaMenuMapper.selectByExampleWithBLOBs(example);
+        List<MenuTree> menuTreeList = new ArrayList<>();
+        for (UaaMenuWithBLOBs uaaMenu : uaaMenuList
+        ) {
+            menuTreeList.add(convert(uaaMenu));
+        }
         return new APIResult<>(menuTreeList);
     }
 
@@ -142,12 +158,15 @@ public class MenuServiceImpl implements MenuService {
         return APIResult.success();
     }
 
-    private void queryMenuTree(List<Long> menuIds, List<MenuTree> menuTreeList) {
+    private void queryMenuTree(List<Long> menuIds, List<MenuTree> menuTreeList, AuthorityTypeEnum menuType) {
         for (MenuTree menuTree : menuTreeList
         ) {
             UaaMenuExample example = new UaaMenuExample();
             example.setOrderByClause("menu_order");
             UaaMenuExample.Criteria criteria = example.createCriteria().andPidEqualTo(Long.parseLong(menuTree.getId()));
+            if (menuType != null) {
+                criteria.andMenuTypeEqualTo(menuType.toString());
+            }
             if (menuIds != null && !menuIds.isEmpty()) {
                 criteria.andIdIn(menuIds).andEnableEqualTo(true);
             }
@@ -159,7 +178,7 @@ public class MenuServiceImpl implements MenuService {
                     childMenuTreeList.add(convert(uaaMenu));
                 }
                 menuTree.setChild(childMenuTreeList);
-                queryMenuTree(menuIds, childMenuTreeList);
+                queryMenuTree(menuIds, childMenuTreeList, menuType);
             }
         }
     }
@@ -169,12 +188,14 @@ public class MenuServiceImpl implements MenuService {
         menuTree.setId(uaaMenu.getId() + "");
         menuTree.setPid(uaaMenu.getPid() == null ? null : (uaaMenu.getPid() + ""));
         menuTree.setMenuName(uaaMenu.getMenuName());
+        menuTree.setMenuType(AuthorityTypeEnum.valueOf(uaaMenu.getMenuType()));
+        menuTree.setPermissionExpr(uaaMenu.getPermissionExpr());
         menuTree.setMenuIcon(uaaMenu.getMenuIcon());
         menuTree.setMenuTarget(uaaMenu.getMenuTarget());
         menuTree.setMenuClass(uaaMenu.getMenuClass());
         menuTree.setMenuTitle(uaaMenu.getMenuTitle());
         menuTree.setMenuOnclick(uaaMenu.getMenuOnclick());
-        menuTree.setMenuOrder(uaaMenu.getMenuOrder());
+        menuTree.setMenuOrder(uaaMenu.getMenuOrder() == null ? null : Integer.parseInt(uaaMenu.getMenuOrder()));
         menuTree.setEnable(uaaMenu.getEnable());
         menuTree.setAddTime(uaaMenu.getAddTime());
         menuTree.setUpdateTime(uaaMenu.getUpdateTime());
@@ -189,12 +210,14 @@ public class MenuServiceImpl implements MenuService {
         uaaMenu.setId(ObjectUtils.isEmpty(menuTree.getId()) ? null : Long.parseLong(menuTree.getId()));
         uaaMenu.setPid(ObjectUtils.isEmpty(menuTree.getPid()) ? null : Long.parseLong(menuTree.getPid()));
         uaaMenu.setMenuName(menuTree.getMenuName());
+        uaaMenu.setMenuType(menuTree.getMenuType().toString());
+        uaaMenu.setPermissionExpr(menuTree.getPermissionExpr());
         uaaMenu.setMenuIcon(menuTree.getMenuIcon());
         uaaMenu.setMenuTarget(menuTree.getMenuTarget());
         uaaMenu.setMenuClass(menuTree.getMenuClass());
         uaaMenu.setMenuTitle(menuTree.getMenuTitle());
         uaaMenu.setMenuOnclick(menuTree.getMenuOnclick());
-        uaaMenu.setMenuOrder(menuTree.getMenuOrder());
+        uaaMenu.setMenuOrder(menuTree.getMenuOrder() == null ? null : menuTree.getMenuOrder().toString());
         uaaMenu.setEnable(menuTree.getEnable());
         uaaMenu.setAddTime(menuTree.getAddTime());
         uaaMenu.setUpdateTime(menuTree.getUpdateTime());

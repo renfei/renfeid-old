@@ -133,8 +133,12 @@ public class SystemLogServiceImpl implements SystemLogService {
         if (logs.getLogTime() == null) {
             logs.setLogTime(new Date());
         }
-        if (logs.getRespParam() != null && logs.getRespParam().length() > MYSQL_TEXT_MAX_LENGTH) {
-            logs.setRespParam(logs.getRespParam().substring(0, MYSQL_TEXT_MAX_LENGTH));
+        if (systemConfig.getRecordResponse()) {
+            if (logs.getRespParam() != null && logs.getRespParam().length() > MYSQL_TEXT_MAX_LENGTH) {
+                logs.setRespParam(logs.getRespParam().substring(0, MYSQL_TEXT_MAX_LENGTH));
+            }
+        } else {
+            logs.setRespParam(null);
         }
         if (logs.getRequParam() != null && logs.getRequParam().length() > MYSQL_TEXT_MAX_LENGTH) {
             logs.setRequParam(logs.getRequParam().substring(0, MYSQL_TEXT_MAX_LENGTH));

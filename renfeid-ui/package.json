@@ -13,14 +13,14 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@tinymce/tinymce-react": "^4.2.0",
-    "antd": "^4.23.0",
+    "antd": "^4.23.1",
     "cookie": "^0.5.0",
     "crypto-js": "^4.1.1",
     "env-cmd": "^10.1.0",
     "form-data": "^4.0.0",
     "formidable": "^3.2.4",
     "highlight.js": "^11.6.0",
-    "next": "12.2.5",
+    "next": "12.3.0",
     "next-seo": "^5.5.0",
     "node-rsa": "^1.1.1",
     "nookies": "^2.5.2",
@@ -34,13 +34,13 @@
     "@types/cookie": "^0.5.1",
     "@types/crypto-js": "^4.1.1",
     "@types/formidable": "^2.0.5",
-    "@types/node": "18.7.15",
+    "@types/node": "18.7.16",
     "@types/node-rsa": "^1.1.1",
     "@types/react": "18.0.18",
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "18.0.6",
     "eslint": "8.23.0",
-    "eslint-config-next": "12.2.5",
-    "typescript": "4.8.2"
+    "eslint-config-next": "12.3.0",
+    "typescript": "4.8.3"
   }
 }
