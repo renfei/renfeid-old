@@ -167,6 +167,18 @@ public class UserServiceImpl implements UserService {
         return new APIResult<>(convert(ListUtils.getOne(uaaUserMapper.selectByExample(example))));
     }
 
+    /**
+     * 根据 id 获取用户详情对象
+     * 无论是否被禁用或锁定都会被查询出来
+     *
+     * @param id id
+     * @return 用户详情对象
+     */
+    @Override
+    public UserDetail getUserDetailById(long id) {
+        return convert(uaaUserMapper.selectByPrimaryKey(id));
+    }
+
     @Override
     public APIResult<UserDetail> getUserDetailByUsername(String username) {
         UaaUserExample example = new UaaUserExample();

@@ -3,33 +3,32 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>renfeid-cms</artifactId>
+        <artifactId>renfeid-bpm</artifactId>
         <groupId>net.renfei</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>renfeid-cms-service</artifactId>
+    <artifactId>renfeid-bpm-service</artifactId>
 
     <properties>
-        <java.version>1.8</java.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>net.renfei</groupId>
-            <artifactId>renfeid-cms-api</artifactId>
+            <artifactId>renfeid-bpm-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.renfei</groupId>
-            <artifactId>renfeid-bpm-service</artifactId>
+            <artifactId>renfeid-common-core</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <groupId>com.googlecode.aviator</groupId>
+            <artifactId>aviator</artifactId>
         </dependency>
     </dependencies>
 </project>
