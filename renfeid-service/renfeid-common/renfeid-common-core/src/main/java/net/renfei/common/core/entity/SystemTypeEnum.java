@@ -81,7 +81,8 @@ public enum SystemTypeEnum {
     /**
      * 系统日志
      */
-    SYS_LOGS("");
+    SYS_LOGS(""),
+    FLOWABLE("");
 
     private final String uriPath;
 
