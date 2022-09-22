@@ -169,6 +169,12 @@ a {
     margin-left: 10px;
 }
 
+.hljs {
+    border-radius: 0.5rem;
+    font-size: 14px;
+    line-height: normal;
+}
+
 @media only screen and (max-width: 833px) {
     .nav-menu-mobile {
         display: flex;

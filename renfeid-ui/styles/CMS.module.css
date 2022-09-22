@@ -13,13 +13,21 @@
 
 .posts_content {
     padding: 0 20px 40px 0;
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: .012em;
+}
+
+.posts_content p {
+    text-indent: 2em;
 }
 
 .posts_content img {
     width: 100%;
     height: auto;
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
-    border-radius: 0.25rem !important;
+    border-radius: 0.5rem !important;
+    margin-bottom: 20px;
 }
 
 .posts_content_copyright {

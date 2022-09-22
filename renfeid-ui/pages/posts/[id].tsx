@@ -18,7 +18,7 @@ import ListData = API.ListData
 import PostCategory = API.PostCategory
 import Tag = API.Tag
 import UserInfo = API.UserInfo
-import 'highlight.js/styles/intellij-light.css'
+import 'highlight.js/styles/github-dark-dimmed.css'
 import { convertToHeaders } from '../../utils/request'
 import PostSidebar from '../../components/PostSidebar'
 import CheckSignInStatus from '../../utils/CheckSignInStatus'
@@ -71,12 +71,32 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
 }
 
 const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    const [init, setInit] = useState<boolean>(false)
 
     useEffect(() => {
-        hljs.initHighlighting();
-        let hljsElements = document.getElementsByClassName('hljs')
-        for (let i = 0; i < hljsElements.length; i++) {
-            hljsElements[i].innerHTML = "<ol><li>" + hljsElements[i].innerHTML.replace(/\n/g, "\n</li><li>") + "\n</li></ol>";
+        if (!init) {
+            hljs.initHighlighting();
+            let hljsElements = document.getElementsByClassName('hljs')
+            for (let i = 0; i < hljsElements.length; i++) {
+                hljsElements[i].innerHTML = "<ol><li>" + hljsElements[i].innerHTML.replace(/\n/g, "\n</li><li>") + "\n</li></ol>";
+            }
+            const postsContents = document.getElementsByClassName('renfeid_posts_content')
+            if (postsContents && postsContents.length > 0) {
+                const postsContent = postsContents[0]
+                const imgs = postsContent.getElementsByTagName('img')
+                if (imgs && imgs.length > 0) {
+                    for (let i = 0; i < imgs.length; i++) {
+                        let imgElement = imgs[i]
+                        const aElement = document.createElement('a')
+                        aElement.href = `${imgElement.src}`
+                        aElement.target = '_blank'
+                        aElement.title = `${imgElement.alt}`
+                        imgElement.parentElement?.replaceChild(aElement, imgElement)
+                        aElement.appendChild(imgElement)
+                    }
+                }
+            }
+            setInit(true)
         }
     }, [])
 
@@ -151,7 +171,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                         <Row gutter={20}>
                             <Col xs={24} sm={24} md={16} lg={17}>
                                 <div
-                                    className={styles.posts_content}
+                                    className={styles.posts_content + ' renfeid_posts_content'}
                                     dangerouslySetInnerHTML={{ __html: data.post.postContent }}></div>
                                 <Share
                                     url={`${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts/${data.post.id}`}
