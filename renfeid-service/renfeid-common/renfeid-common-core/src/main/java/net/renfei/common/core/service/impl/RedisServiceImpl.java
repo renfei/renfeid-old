@@ -15,6 +15,7 @@
  */
 package net.renfei.common.core.service.impl;
 
+import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.service.RedisService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class RedisServiceImpl implements RedisService {
+    private final SystemConfig systemConfig;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisServiceImpl(RedisTemplate<String, Object> redisTemplate) {
+    public RedisServiceImpl(SystemConfig systemConfig,
+                            RedisTemplate<String, Object> redisTemplate) {
+        this.systemConfig = systemConfig;
         this.redisTemplate = redisTemplate;
     }
 
@@ -44,7 +48,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void set(String key, Object value) {
-        redisTemplate.opsForValue().set(key, value);
+        this.set(key, value, systemConfig.getRedis().getDefaultTtl());
     }
 
     @Override

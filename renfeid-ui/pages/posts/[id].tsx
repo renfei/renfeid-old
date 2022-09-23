@@ -218,7 +218,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                     client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE}
                                     slot={"641095"}
                                 />
-                                <div className={"renfeid_card " + styles.posts_relevant}>
+                                <div className={"renfeid_card"}>
                                     <Title level={4} style={{ marginBottom: '0' }}>相关推荐</Title>
                                     <Text type="secondary">猜你还喜欢这些内容，不妨试试阅读一下</Text>
                                     <Row style={{ paddingTop: '10px' }}>

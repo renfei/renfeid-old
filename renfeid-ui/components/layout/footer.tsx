@@ -96,19 +96,19 @@ const footMenuList = [
         links: [
             {
                 title: '关于任霏博客',
-                link: '/about',
+                link: '/page/about',
                 newWindow: false,
                 nofollow: false,
             },
             {
                 title: '隐私与 Cookie',
-                link: '/page/1',
+                link: '/page/policies/cookies',
                 newWindow: false,
                 nofollow: false,
             },
             {
                 title: '使用条款',
-                link: '/page/2',
+                link: '/page/policies/terms',
                 newWindow: false,
                 nofollow: false,
             },
@@ -149,13 +149,13 @@ const footLinks = [
     },
     {
         title: '使用条款',
-        link: '/page/2',
+        link: '/page/policies/terms',
         newWindow: false,
         nofollow: false,
     },
     {
         title: '隐私与 Cookie',
-        link: '/page/1',
+        link: '/page/policies/cookies',
         newWindow: false,
         nofollow: false,
     },

@@ -77,7 +77,7 @@ const PostSidebar = (props: {
           {
             props.tags ? (
               props.tags.map(tag => (
-                <Tag key={tag.id}>
+                <Tag key={tag.id} style={{ marginBottom: '4px' }}>
                   <Link href={`/posts/tag/${tag.enName}`}>
                     <a>{tag.zhName}</a>
                   </Link>

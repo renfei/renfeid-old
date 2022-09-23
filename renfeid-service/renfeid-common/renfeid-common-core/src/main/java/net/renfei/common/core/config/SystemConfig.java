@@ -78,6 +78,7 @@ public class SystemConfig {
     private AccessLimit accessLimit;
     private Cloudflare cloudflare;
     private WeChat weChat;
+    private Redis redis;
 
     @Data
     public static class Jwt {
@@ -155,6 +156,7 @@ public class SystemConfig {
     @Data
     public static class WeChat {
         private Mp mp;
+
         @Data
         public static class Mp {
             private String appId;
@@ -162,5 +164,10 @@ public class SystemConfig {
             private String token;
             private String encodingAESKey;
         }
+    }
+
+    @Data
+    public static class Redis {
+        private Long defaultTtl;
     }
 }
