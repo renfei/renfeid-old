@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {Button, Result} from 'antd'
+import { Button, Result } from 'antd'
 import Layout from "../components/layout"
 import styles from "../styles/Home.module.css"
 
@@ -9,11 +9,10 @@ const Error404Page = () => {
             <div className={styles.container}>
                 <Head>
                     <title>404 - 页面没有找到</title>
-                    <meta name="description" content="页面没有找到"/>
-                    <link rel="icon" href="/favicon.ico"/>
+                    <meta name="description" content="页面没有找到" />
                 </Head>
 
-                <div style={{backgroundColor: '#ffffff'}}>
+                <div style={{ backgroundColor: '#ffffff' }}>
                     <Result
                         status="404"
                         title="404"

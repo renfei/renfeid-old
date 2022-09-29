@@ -98,7 +98,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
             }
             setInit(true)
         }
-    }, [])
+    }, [init])
 
     return (
         <>

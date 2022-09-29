@@ -15,7 +15,6 @@ const ErrorPage = ({ err }: any) => {
                 <Head>
                     <title>500 - 服务器错误</title>
                     <meta name="description" content="服务器错误" />
-                    <link rel="icon" href="/favicon.ico" />
                 </Head>
 
                 <div style={{ backgroundColor: '#ffffff' }}>

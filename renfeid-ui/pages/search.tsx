@@ -74,7 +74,6 @@ const SearchPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePr
         <meta name="keywords" content="任霏,博客,任霏博客,RenFei,NeilRen,技术,blog" />
         <meta name="author" content="任霏,i@renfei.net" />
         <meta name="copyright" content="CopyRight RENFEI.NET, All Rights Reserved." />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main style={{ backgroundColor: '#ffffff' }}>

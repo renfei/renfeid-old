@@ -9,7 +9,16 @@ class Document extends NextDocument<Props> {
     render() {
         return (
             <Html lang="zh">
-                <Head />
+                <Head>
+                    <link rel="icon" href="/favicon.ico" />
+                    <link rel="dns-prefetch" href="https://cdn.renfei.net"></link>
+                    <link rel="dns-prefetch" href="https://cloudflareinsights.com"></link>
+                    <link rel="dns-prefetch" href="https://hm.baidu.com"></link>
+                    <link rel="dns-prefetch" href="https://www.google-analytics.com"></link>
+                    <link rel="dns-prefetch" href="https://adservice.google.com"></link>
+                    <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net"></link>
+                    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"></link>
+                </Head>
                 <body>
                     <Main />
                     <NextScript />
