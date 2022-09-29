@@ -11,6 +11,7 @@ import {
   LinkedinFilled,
   LinkOutlined,
   EyeFilled,
+  MailFilled,
 } from '@ant-design/icons'
 
 const share = (props: {
@@ -63,6 +64,11 @@ const share = (props: {
       <Button type="text" shape="circle" icon={<LinkedinFilled />}
         onClick={() => {
           window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${props.url}&title=${props.title}&source=RENFEI.NET`, '_blank')
+        }}
+      />
+      <Button type="text" shape="circle" icon={<MailFilled />}
+        onClick={() => {
+          window.open(`mailto:?subject=${props.title}&body=${props.url}`, '_blank')
         }}
       />
       <CopyToClipboard text={`${props.url}`}
