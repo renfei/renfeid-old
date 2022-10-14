@@ -78,6 +78,12 @@ const footMenuList = [
                 nofollow: true,
             },
             {
+                title: '华为云计算',
+                link: 'https://activity.huaweicloud.com/discount_area_v5/index.html?fromacct=ae5273ee-690d-4a4c-8dee-615c8ceb0a70&utm_source=cmVuX2ZlaQ===&utm_medium=cps&utm_campaign=201905',
+                newWindow: true,
+                nofollow: true,
+            },
+            {
                 title: '东路互联虚拟主机',
                 link: 'https://www.donglu.net/user/aff.php?aff=114',
                 newWindow: true,

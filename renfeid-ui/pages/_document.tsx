@@ -8,8 +8,13 @@ type Props = {}
 class Document extends NextDocument<Props> {
     render() {
         return (
-            <Html lang="zh">
+            <Html lang="zh-CN">
                 <Head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <meta http-equiv="Content-Language" content="zh-CN" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+                    <meta name="renderer" content="webkit" />
+                    <meta http-equiv="X-UA-Compatible" content="edge" />
                     <link rel="icon" href="/favicon.ico" />
                     <link rel="dns-prefetch" href="https://cdn.renfei.net"></link>
                     <link rel="dns-prefetch" href="https://cloudflareinsights.com"></link>
