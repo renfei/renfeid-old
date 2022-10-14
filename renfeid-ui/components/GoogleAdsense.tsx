@@ -1,5 +1,3 @@
-import Script from 'next/script'
-
 const GoogleAdsense = (props: any) => {
     if (process.env.NEXT_PUBLIC_RENFEID_ACTIVE == 'preview') {
         return (<></>)
@@ -12,11 +10,12 @@ const GoogleAdsense = (props: any) => {
                     data-ad-slot={props.slot}
                     data-ad-format="auto"
                     data-full-width-responsive="true"></ins>
-                <Script
-                    id={props.slot}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `(adsbygoogle = window.adsbygoogle || []).push({})`
+                    }}
                 >
-                    {`(adsbygoogle = window.adsbygoogle || []).push({})`}
-                </Script>
+                </script>
             </>
         )
     }
