@@ -17,6 +17,10 @@ package net.renfei.common.core.service.aliyun;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
+import com.aliyuncs.cdn.model.v20180510.BatchSetCdnDomainConfigRequest;
+import com.aliyuncs.cdn.model.v20180510.DescribeCdnDomainConfigsRequest;
+import com.aliyuncs.cdn.model.v20180510.DescribeCdnDomainConfigsResponse;
+import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.green.model.v20180509.TextScanRequest;
 import com.aliyuncs.http.FormatType;
 import com.aliyuncs.http.HttpResponse;
@@ -121,5 +125,66 @@ public class AliyunService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取CDN黑名单
+     *
+     * @param domainName 域名
+     * @return 黑名单
+     */
+    public List<String> getCdnDomainBlackList(String domainName) {
+        List<String> blackList = new ArrayList<>();
+        DescribeCdnDomainConfigsRequest request = new DescribeCdnDomainConfigsRequest();
+        request.setDomainName(domainName);
+        request.setFunctionNames("ip_black_list_set");
+        try {
+            DescribeCdnDomainConfigsResponse response = client.getAcsResponse(request);
+            for (DescribeCdnDomainConfigsResponse.DomainConfig config : response.getDomainConfigs()
+            ) {
+                if ("ip_black_list_set".equals(config.getFunctionName())) {
+                    for (DescribeCdnDomainConfigsResponse.DomainConfig.FunctionArg arg : config.getFunctionArgs()
+                    ) {
+                        blackList.add(arg.getArgValue());
+                    }
+                    break;
+                }
+            }
+
+        } catch (ClientException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return blackList;
+    }
+
+    /**
+     * 设置CDN黑名单
+     *
+     * @param domainName 域名
+     * @param blackList  黑名单
+     */
+    public void setCdnDomainBlackList(String domainName, List<String> blackList) {
+        BatchSetCdnDomainConfigRequest request = new BatchSetCdnDomainConfigRequest();
+        request.setDomainNames(domainName);
+        StringBuilder functions = new StringBuilder("[{\"functionName\":\"ip_black_list_set\",\"functionArgs\": [")
+                .append("{\"argName\": \"ip_list\",\"argValue\": \"");
+        for (String blackIp : blackList
+        ) {
+            functions
+                    .append(blackIp)
+                    .append(",");
+        }
+        if (functions.toString().endsWith(",")) {
+            String functionsString = functions.toString();
+            functions = new StringBuilder(functionsString.substring(0, functionsString.length() - 1));
+        }
+        functions.append("\"}]}]");
+        System.out.println(functions);
+        request.setFunctions(functions.toString());
+        try {
+            client.getAcsResponse(request);
+        } catch (ClientException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 }

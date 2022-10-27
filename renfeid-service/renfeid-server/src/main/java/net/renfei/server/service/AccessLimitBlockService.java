@@ -21,10 +21,13 @@ import net.renfei.cloudflare.entity.common.Response;
 import net.renfei.cloudflare.entity.firewall.FirewallRule;
 import net.renfei.common.core.config.SystemConfig;
 import net.renfei.common.core.service.EmailService;
+import net.renfei.common.core.service.aliyun.AliyunService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 访问频率超限处理
@@ -36,11 +39,14 @@ public class AccessLimitBlockService {
     private final static Logger logger = LoggerFactory.getLogger(AccessLimitBlockService.class);
     private final SystemConfig systemConfig;
     private final EmailService emailService;
+    private final AliyunService aliyunService;
 
     public AccessLimitBlockService(SystemConfig systemConfig,
-                                   EmailService emailService) {
+                                   EmailService emailService,
+                                   AliyunService aliyunService) {
         this.systemConfig = systemConfig;
         this.emailService = emailService;
+        this.aliyunService = aliyunService;
     }
 
     /**
@@ -52,7 +58,11 @@ public class AccessLimitBlockService {
     public void block(String ip) {
         if (systemConfig.getAccessLimit().getBlacklistEnable()) {
             // 调用防火墙接口拉入黑名单
-            // 目前只支持Cloudflare，百度云加速的API需要代理商才能调用
+            // 阿里云CDN
+            List<String> cdnDomainBlackList = aliyunService.getCdnDomainBlackList("www.renfei.net");
+            cdnDomainBlackList.add(ip);
+            aliyunService.setCdnDomainBlackList("www.renfei.net", cdnDomainBlackList);
+            // Cloudflare
             ApiToken apiToken = new ApiToken(systemConfig.getCloudflare().getToken());
             Cloudflare cloudflare = new Cloudflare(apiToken);
             FirewallRule firewallRule = new FirewallRule();
