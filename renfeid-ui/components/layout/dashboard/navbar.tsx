@@ -56,9 +56,7 @@ const DashboardNavbar = () => {
                         <>
                             <LogoutOutlined />
                             <Link href={"/auth/signOut"}>
-                                <a>
-                                    退出登录
-                                </a>
+                                退出登录
                             </Link>
                         </>
                     ),

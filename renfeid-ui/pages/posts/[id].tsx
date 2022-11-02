@@ -192,9 +192,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                                     4.0</a> 版权协议，转载请附上原文出处链接及本声明。</p>
                                                 <p>原文链接：<Link
                                                     href={'https://www.renfei.net/posts/' + data.post.id}>
-                                                    <a>
-                                                        https://www.renfei.net/posts/{data.post.id}
-                                                    </a>
+                                                    https://www.renfei.net/posts/{data.post.id}
                                                 </Link>
                                                 </p>
                                             </>
@@ -204,10 +202,10 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                                 <p>版权声明：本文转载自「{data.post.sourceName}」，版权归原所有者。</p>
                                                 <p>原文链接：<Link
                                                     href={data.post.sourceUrl}
+                                                    target="_blank"
+                                                    rel="noreferrer noopener nofollow"
                                                 >
-                                                    <a target="_blank" rel="noreferrer noopener nofollow">
-                                                        {data.post.sourceUrl}
-                                                    </a>
+                                                    {data.post.sourceUrl}
                                                 </Link>
                                                 </p>
                                             </>
@@ -228,15 +226,13 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                                     data.postRelevant5.map((post: PostVo) => (
                                                         <Link key={"relevant_" + post.id}
                                                             href={'/posts/' + post.id}>
-                                                            <a key={"a_" + post.id}>
-                                                                <Title key={"title_" + post.id} level={5}
-                                                                    style={{ marginBottom: '0' }}
-                                                                    ellipsis>
-                                                                    {post.postTitle}
-                                                                </Title>
-                                                                <Divider key={"divider_" + post.id}
-                                                                    style={{ margin: '5px 0' }} />
-                                                            </a>
+                                                            <Title key={"title_" + post.id} level={5}
+                                                                style={{ marginBottom: '0' }}
+                                                                ellipsis>
+                                                                {post.postTitle}
+                                                            </Title>
+                                                            <Divider key={"divider_" + post.id}
+                                                                style={{ margin: '5px 0' }} />
                                                         </Link>
                                                     ))
                                                 ) : ''
@@ -248,15 +244,13 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                                     data.postRelevant10.map((post: PostVo) => (
                                                         <Link key={"relevant_" + post.id}
                                                             href={'/posts/' + post.id}>
-                                                            <a key={"a_" + post.id}>
-                                                                <Title key={"title_" + post.id} level={5}
-                                                                    style={{ marginBottom: '0' }}
-                                                                    ellipsis>
-                                                                    {post.postTitle}
-                                                                </Title>
-                                                                <Divider key={"divider_" + post.id}
-                                                                    style={{ margin: '5px 0' }} />
-                                                            </a>
+                                                            <Title key={"title_" + post.id} level={5}
+                                                                style={{ marginBottom: '0' }}
+                                                                ellipsis>
+                                                                {post.postTitle}
+                                                            </Title>
+                                                            <Divider key={"divider_" + post.id}
+                                                                style={{ margin: '5px 0' }} />
                                                         </Link>
                                                     ))
                                                 ) : ''

@@ -201,8 +201,8 @@ const SearchPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePr
                         hotSearch && hotSearch.data ? (
                           hotSearch.data.map((hot: HotSearch) => (
                             <li key={hot.word}>
-                              <Link href={`/search?w=${hot.word}`}>
-                                <a target={'_blank'}>{hot.word}</a>
+                              <Link href={`/search?w=${hot.word}`} target={'_blank'}>
+                                {hot.word}
                               </Link>
                             </li>
                           ))

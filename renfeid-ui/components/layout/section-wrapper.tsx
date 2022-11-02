@@ -22,9 +22,7 @@ const SectionWrapper = ({ children, ...props }: any) => {
                         <>
                             <SettingOutlined />
                             <Link href={"/account/manage"}>
-                                <a>
-                                    个人设置
-                                </a>
+                                个人设置
                             </Link>
                         </>
                     ),
@@ -35,9 +33,7 @@ const SectionWrapper = ({ children, ...props }: any) => {
                         <>
                             <LockOutlined />
                             <Link href={"/account/manage/password"}>
-                                <a>
-                                    修改密码
-                                </a>
+                                修改密码
                             </Link>
                         </>
                     ),
@@ -51,9 +47,7 @@ const SectionWrapper = ({ children, ...props }: any) => {
                         <>
                             <LogoutOutlined />
                             <Link href={"/auth/signOut"}>
-                                <a>
-                                    退出登录
-                                </a>
+                                退出登录
                             </Link>
                         </>
                     ),
@@ -88,9 +82,7 @@ const SectionWrapper = ({ children, ...props }: any) => {
                                             <Link
                                                 href={'/auth/signOut'}
                                             >
-                                                <a>
-                                                    登出
-                                                </a>
+                                                登出
                                             </Link>
                                         </>
                                     ) : (
@@ -98,17 +90,13 @@ const SectionWrapper = ({ children, ...props }: any) => {
                                             <Link
                                                 href={'/auth/signIn' + path}
                                             >
-                                                <a>
-                                                    登录
-                                                </a>
+                                                登录
                                             </Link>
                                             <Divider type={'vertical'} />
                                             <Link
                                                 href={'/auth/signUp'}
                                             >
-                                                <a>
-                                                    注册
-                                                </a>
+                                                注册
                                             </Link>
                                         </>
                                     )

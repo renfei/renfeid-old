@@ -46,20 +46,18 @@ const PostSidebar = (props: {
           <Typography.Text type="secondary" style={{ fontSize: '12px' }}>感谢您的关注与反馈</Typography.Text>
           <div style={{ textAlign: 'center', marginTop: '0.5em' }}>
             如果您发现了BUG、安全漏洞、或者希望讨论技术内容，请点击下方链接对我进行反馈。<br />
-            <Link href="https://github.com/renfei/feedback/discussions">
-              <a target="_blank" rel="nofollow noopener">
-                <Tag color="processing">feedback</Tag>
-              </a>
+            <Link href="https://github.com/renfei/feedback/discussions" target="_blank" rel="nofollow noopener">
+              <Tag color="processing">feedback</Tag>
             </Link>
           </div>
         </div>
-        <Card type="inner" title="内容分类" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
+        <Card type="inner" title="内容分类" extra={<Link href="/posts">全部内容</Link>} className={'ant-card-renfeid'}>
           <List
             dataSource={props.category}
             renderItem={item => (
               <List.Item>
-                <Link href={`/posts/cat/${item.enName}`}>
-                  <a style={{ maxWidth: '100%' }}><Typography.Text ellipsis={true}>{item.zhName}</Typography.Text></a>
+                <Link href={`/posts/cat/${item.enName}`} style={{ maxWidth: '100%' }}>
+                  <Typography.Text ellipsis={true}>{item.zhName}</Typography.Text>
                 </Link>
               </List.Item>
             )}
@@ -73,13 +71,13 @@ const PostSidebar = (props: {
             />
           ) : ''
         }
-        <Card type="inner" title="内容标签" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
+        <Card type="inner" title="内容标签" extra={<Link href="/posts">全部内容</Link>} className={'ant-card-renfeid'}>
           {
             props.tags ? (
               props.tags.map(tag => (
                 <Tag key={tag.id} style={{ marginBottom: '4px' }}>
                   <Link href={`/posts/tag/${tag.enName}`}>
-                    <a>{tag.zhName}</a>
+                    {tag.zhName}
                   </Link>
                 </Tag>
               ))
@@ -99,20 +97,20 @@ const PostSidebar = (props: {
             dataSource={props.lastComment}
             renderItem={item => (
               <List.Item>
-                <Link href={`${getSysTypeUrl(item.sysType)}${item.objectId}#cmt-${item.id}`}>
-                  <a style={{ maxWidth: '100%' }}><Typography.Text ellipsis={true}>{item.content}</Typography.Text></a>
+                <Link href={`${getSysTypeUrl(item.sysType)}${item.objectId}#cmt-${item.id}`} style={{ maxWidth: '100%' }}>
+                  <Typography.Text ellipsis={true}>{item.content}</Typography.Text>
                 </Link>
               </List.Item>
             )}
           />
         </Card>
-        <Card type="inner" title="热文排行" extra={<Link href="/posts"><a>全部内容</a></Link>} className={'ant-card-renfeid'}>
+        <Card type="inner" title="热文排行" extra={<Link href="/posts">全部内容</Link>} className={'ant-card-renfeid'}>
           <List
             dataSource={props.hotPost}
             renderItem={item => (
               <List.Item>
-                <Link href={`/posts/${item.id}`}>
-                  <a style={{ maxWidth: '100%' }}><Typography.Text ellipsis={true}>{item.postTitle}</Typography.Text></a>
+                <Link href={`/posts/${item.id}`} style={{ maxWidth: '100%' }}>
+                  <Typography.Text ellipsis={true}>{item.postTitle}</Typography.Text>
                 </Link>
               </List.Item>
             )}

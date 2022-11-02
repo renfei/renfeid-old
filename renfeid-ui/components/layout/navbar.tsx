@@ -96,8 +96,8 @@ const Navbar = ({ children, ...props }: any) => {
     menuList.forEach(element => {
         menuElement.push(
             <li key={element.href}>
-                <Link href={element.href}>
-                    <a target={element.target}>{element.text}</a>
+                <Link href={element.href} target={element.target}>
+                    {element.text}
                 </Link>
             </li>
         )
@@ -120,15 +120,13 @@ const Navbar = ({ children, ...props }: any) => {
                                 </li>
                                 <li>
                                     <Link href={"/"}>
-                                        <a>
-                                            <Image
-                                                className={"nav-logo"}
-                                                src="https://cdn.renfei.net/Logo/RF_white.svg"
-                                                alt={"任霏博客"}
-                                                height={30}
-                                                width={30}
-                                            />
-                                        </a>
+                                        <Image
+                                            className={"nav-logo"}
+                                            src="https://cdn.renfei.net/Logo/RF_white.svg"
+                                            alt={"任霏博客"}
+                                            height={30}
+                                            width={30}
+                                        />
                                     </Link>
                                 </li>
                                 <li onClick={clickSearch} style={{ cursor: 'pointer' }}><SearchOutlined /></li>
@@ -136,15 +134,13 @@ const Navbar = ({ children, ...props }: any) => {
                             <ul className={"nav-menu"}>
                                 <li>
                                     <Link href={"/"}>
-                                        <a>
-                                            <Image
-                                                className={"nav-logo"}
-                                                src="https://cdn.renfei.net/Logo/RF_white.svg"
-                                                alt={"任霏博客"}
-                                                height={30}
-                                                width={30}
-                                            />
-                                        </a>
+                                        <Image
+                                            className={"nav-logo"}
+                                            src="https://cdn.renfei.net/Logo/RF_white.svg"
+                                            alt={"任霏博客"}
+                                            height={30}
+                                            width={30}
+                                        />
                                     </Link>
                                 </li>
                                 {menuElement}
@@ -167,8 +163,8 @@ const Navbar = ({ children, ...props }: any) => {
                                 dataSource={menuList}
                                 renderItem={item => (
                                     <List.Item style={{ color: 'rgba(255, 255, 255, 0.9)', borderBottom: '1px solid rgba(255, 255, 255, 0.5)' }}>
-                                        <Link href={item.href}>
-                                            <a target={item.target} onClick={menuElementClick}>{item.text}</a>
+                                        <Link href={item.href} target={item.target} onClick={menuElementClick}>
+                                            {item.text}
                                         </Link>
                                     </List.Item>
                                 )}
@@ -211,8 +207,8 @@ const Navbar = ({ children, ...props }: any) => {
                                 dataSource={props.hotSearch}
                                 renderItem={(item: string) => (
                                     <List.Item style={{ color: 'rgba(255, 255, 255, 0.9)', borderBottom: '1px solid rgba(255, 255, 255, 0.5)' }}>
-                                        <Link href={`/search?w=${item}`}>
-                                            <a target={'_blank'}>{item}</a>
+                                        <Link href={`/search?w=${item}`} target={'_blank'}>
+                                            {item}
                                         </Link>
                                     </List.Item>
                                 )}

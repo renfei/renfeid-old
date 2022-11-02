@@ -74,8 +74,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     {data.userInfo.email}
                   </div>
                   <div>
-                    <Link href="/account/manage/email">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }}>修改电子邮箱地址...</a>
+                    <Link href="/account/manage/email" style={{ color: '#1890ff', fontSize: '12px' }}>
+                      修改电子邮箱地址...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -85,8 +85,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     {data.userInfo.phone}
                   </div>
                   <div>
-                    <Link href="/account/manage/phone">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }}>修改手机号码...</a>
+                    <Link href="/account/manage/phone" style={{ color: '#1890ff', fontSize: '12px' }}>
+                      修改手机号码...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -95,8 +95,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     {data.userInfo.lastName}
                   </div>
                   <div>
-                    <Link href="/account/manage/name">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }}>修改我的姓氏...</a>
+                    <Link href="/account/manage/name" style={{ color: '#1890ff', fontSize: '12px' }}>
+                      修改我的姓氏...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -105,8 +105,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     {data.userInfo.firstName}
                   </div>
                   <div>
-                    <Link href="/account/manage/name">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }}>修改我的名字...</a>
+                    <Link href="/account/manage/name" style={{ color: '#1890ff', fontSize: '12px' }}>
+                      修改我的名字...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -129,8 +129,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     ********
                   </div>
                   <div>
-                    <Link href="/account/manage/password">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }}>更改密码...</a>
+                    <Link href="/account/manage/password" style={{ color: '#1890ff', fontSize: '12px' }}>
+                      更改密码...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -141,8 +141,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     }
                   </div>
                   <div>
-                    <Link href="/account/manage/u2f">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }}>更改两步认证...</a>
+                    <Link href="/account/manage/u2f" style={{ color: '#1890ff', fontSize: '12px' }}>
+                      更改两步认证...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -158,8 +158,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     }
                   </div>
                   <div>
-                    <Link href="/account/manage/signInLog">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }}>查看更多登录记录...</a>
+                    <Link href="/account/manage/signInLog" style={{ color: '#1890ff', fontSize: '12px' }}>
+                      查看更多登录记录...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -182,8 +182,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     管理员
                   </div>
                   <div>
-                    <Link href="https://bbs.renfei.net/home.php?mod=spacecp&ac=usergroup">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }} target={'_blank'}>前往查看...</a>
+                    <Link href="https://bbs.renfei.net/home.php?mod=spacecp&ac=usergroup" style={{ color: '#1890ff', fontSize: '12px' }} target={'_blank'}>
+                      前往查看...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -192,8 +192,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     3521
                   </div>
                   <div>
-                    <Link href="https://bbs.renfei.net/home.php?mod=spacecp&ac=credit">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }} target={'_blank'}>前往查看...</a>
+                    <Link href="https://bbs.renfei.net/home.php?mod=spacecp&ac=credit" style={{ color: '#1890ff', fontSize: '12px' }} target={'_blank'}>
+                      前往查看...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -202,8 +202,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     3521
                   </div>
                   <div>
-                    <Link href="https://bbs.renfei.net/forum.php?mod=guide&view=my">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }} target={'_blank'}>前往查看...</a>
+                    <Link href="https://bbs.renfei.net/forum.php?mod=guide&view=my" style={{ color: '#1890ff', fontSize: '12px' }} target={'_blank'}>
+                      前往查看...
                     </Link>
                   </div>
                 </Descriptions.Item>
@@ -213,8 +213,8 @@ const AccountManagePage = ({ data }: InferGetServerSidePropsType<typeof getServe
                     3521
                   </div>
                   <div>
-                    <Link href="https://bbs.renfei.net/home.php?mod=space&uid=1&do=profile">
-                      <a style={{ color: '#1890ff', fontSize: '12px' }} target={'_blank'}>前往查看...</a>
+                    <Link href="https://bbs.renfei.net/home.php?mod=space&uid=1&do=profile" style={{ color: '#1890ff', fontSize: '12px' }} target={'_blank'}>
+                      前往查看...
                     </Link>
                   </div>
                 </Descriptions.Item>

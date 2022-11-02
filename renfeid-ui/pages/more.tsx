@@ -23,24 +23,22 @@ const MorePage = () => {
           <Row style={{ padding: '20px 0' }}>
             <Col xs={24} sm={12} md={8} lg={6} style={MetaPageColStyle}>
               <Link href={'/page/about'}>
-                <a>
-                  <Card
-                    style={{ width: '100%' }}
-                    cover={
-                      <Image
-                        width={658}
-                        height={400}
-                        alt={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
-                        src="https://cdn.renfei.net/renfeid/img/aboutimg.webp"
-                      />
-                    }
-                  >
-                    <Meta
-                      title={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
-                      description={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}更多信息，联系方式与我的历史等信息。`}
+                <Card
+                  style={{ width: '100%' }}
+                  cover={
+                    <Image
+                      width={658}
+                      height={400}
+                      alt={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
+                      src="https://cdn.renfei.net/renfeid/img/aboutimg.webp"
                     />
-                  </Card>
-                </a>
+                  }
+                >
+                  <Meta
+                    title={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
+                    description={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}更多信息，联系方式与我的历史等信息。`}
+                  />
+                </Card>
               </Link>
             </Col>
             <Col xs={24} sm={12} md={8} lg={6} style={MetaPageColStyle}>

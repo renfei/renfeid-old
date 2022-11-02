@@ -123,18 +123,16 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                 <Col span={9} className={styles.banner_col}>
                                     <div className={styles.banner_content_wrapper}>
                                         <Link href={`/posts/${data.postsDataTop2[0].id}`} style={{ display: 'block' }}>
-                                            <a>
-                                                <Title
-                                                    level={2}
-                                                    className={styles.banner_content_h2}>
-                                                    {data.postsDataTop2[0].postTitle}
-                                                </Title>
-                                                <p className={styles.banner_content_p}>
-                                                    {data.postsDataTop2[0].postExcerpt}
-                                                </p>
-                                                <span
-                                                    className={styles.banner_content_icon}><ArrowRightOutlined /></span>
-                                            </a>
+                                            <Title
+                                                level={2}
+                                                className={styles.banner_content_h2}>
+                                                {data.postsDataTop2[0].postTitle}
+                                            </Title>
+                                            <p className={styles.banner_content_p}>
+                                                {data.postsDataTop2[0].postExcerpt}
+                                            </p>
+                                            <span
+                                                className={styles.banner_content_icon}><ArrowRightOutlined /></span>
                                         </Link>
                                     </div>
                                 </Col>
@@ -152,30 +150,28 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                 {
                                     data.postsDataTop2.length > 1 ? (
                                         <Link href={`/posts/${data.postsDataTop2[1].id}`} style={{ display: 'block' }}>
-                                            <a>
-                                                <Card
-                                                    bordered={false}
-                                                    cover={
-                                                        <Image
-                                                            style={{ borderRadius: '16px 16px 16px 16px' }}
-                                                            width={1280}
-                                                            height={640}
-                                                            alt={data.postsDataTop2[1].postTitle}
-                                                            src={data.postsDataTop2[1].featuredImage} />
-                                                    }
-                                                >
-                                                    <Paragraph
-                                                        ellipsis={{
-                                                            rows: 2,
-                                                            expandable: false,
-                                                        }}
-                                                        className={styles.banner_content_h3}>
-                                                        {data.postsDataTop2[1].postTitle}
-                                                    </Paragraph>
-                                                    <Meta
-                                                        title={data.postsDataTop2[1].postExcerpt} />
-                                                </Card>
-                                            </a>
+                                            <Card
+                                                bordered={false}
+                                                cover={
+                                                    <Image
+                                                        style={{ borderRadius: '16px 16px 16px 16px' }}
+                                                        width={1280}
+                                                        height={640}
+                                                        alt={data.postsDataTop2[1].postTitle}
+                                                        src={data.postsDataTop2[1].featuredImage} />
+                                                }
+                                            >
+                                                <Paragraph
+                                                    ellipsis={{
+                                                        rows: 2,
+                                                        expandable: false,
+                                                    }}
+                                                    className={styles.banner_content_h3}>
+                                                    {data.postsDataTop2[1].postTitle}
+                                                </Paragraph>
+                                                <Meta
+                                                    title={data.postsDataTop2[1].postExcerpt} />
+                                            </Card>
                                         </Link>
                                     ) : ''
                                 }
@@ -187,30 +183,28 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                             data.postsData3To5.map((post: PostVo) => (
                                                 <Col key={post.id} span={24}>
                                                     <Link href={`/posts/${post.id}`}>
-                                                        <a>
-                                                            <Row>
-                                                                <Col span={15}>
-                                                                    <Paragraph
-                                                                        ellipsis={{
-                                                                            rows: 3,
-                                                                            expandable: false,
-                                                                        }}
-                                                                        className={styles.banner_content_h3}>
-                                                                        {post.postTitle}
-                                                                    </Paragraph>
-                                                                </Col>
-                                                                <Col span={9}>
-                                                                    <Image
-                                                                        className={styles.posts_img_radius}
-                                                                        src={post.featuredImage}
-                                                                        alt={post.postTitle}
-                                                                        layout={"intrinsic"}
-                                                                        width={"1280"}
-                                                                        height={"640"}
-                                                                    />
-                                                                </Col>
-                                                            </Row>
-                                                        </a>
+                                                        <Row>
+                                                            <Col span={15}>
+                                                                <Paragraph
+                                                                    ellipsis={{
+                                                                        rows: 3,
+                                                                        expandable: false,
+                                                                    }}
+                                                                    className={styles.banner_content_h3}>
+                                                                    {post.postTitle}
+                                                                </Paragraph>
+                                                            </Col>
+                                                            <Col span={9}>
+                                                                <Image
+                                                                    className={styles.posts_img_radius}
+                                                                    src={post.featuredImage}
+                                                                    alt={post.postTitle}
+                                                                    layout={"intrinsic"}
+                                                                    width={"1280"}
+                                                                    height={"640"}
+                                                                />
+                                                            </Col>
+                                                        </Row>
                                                     </Link>
                                                     <Divider style={{ margin: '12px 0' }} />
                                                 </Col>
@@ -229,31 +223,29 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                     <Col key={post.id} md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
                                         <div className={styles.posts_more}>
                                             <Link href={`/posts/${post.id}`}>
-                                                <a>
-                                                    <Row>
-                                                        <Col span={15}>
-                                                            <Paragraph
-                                                                ellipsis={{
-                                                                    rows: 2,
-                                                                    expandable: false,
-                                                                }}
-                                                                className={styles.banner_content_h4}
-                                                            >
-                                                                {post.postTitle}
-                                                            </Paragraph>
-                                                        </Col>
-                                                        <Col span={9}>
-                                                            <Image
-                                                                className={styles.posts_img_radius}
-                                                                src={post.featuredImage}
-                                                                alt={post.postTitle}
-                                                                layout={"intrinsic"}
-                                                                width={"1280"}
-                                                                height={"640"}
-                                                            />
-                                                        </Col>
-                                                    </Row>
-                                                </a>
+                                                <Row>
+                                                    <Col span={15}>
+                                                        <Paragraph
+                                                            ellipsis={{
+                                                                rows: 2,
+                                                                expandable: false,
+                                                            }}
+                                                            className={styles.banner_content_h4}
+                                                        >
+                                                            {post.postTitle}
+                                                        </Paragraph>
+                                                    </Col>
+                                                    <Col span={9}>
+                                                        <Image
+                                                            className={styles.posts_img_radius}
+                                                            src={post.featuredImage}
+                                                            alt={post.postTitle}
+                                                            layout={"intrinsic"}
+                                                            width={"1280"}
+                                                            height={"640"}
+                                                        />
+                                                    </Col>
+                                                </Row>
                                             </Link>
                                         </div>
                                     </Col>
@@ -263,9 +255,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                     </Row>
                     <div style={{ textAlign: 'center', padding: '20px 0 40px 0' }}>
                         <Link href={"/posts"}>
-                            <a>
-                                <Button style={{ padding: '0 40px' }}>浏览任霏博客</Button>
-                            </a>
+                            <Button style={{ padding: '0 40px' }}>浏览任霏博客</Button>
                         </Link>
                     </div>
                     <Row gutter={40}>
@@ -320,10 +310,10 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                         <Title level={5}><GithubOutlined style={{ paddingRight: '10px' }} />开源与反馈</Title>
                                         <Text type="secondary" style={{ fontSize: '12px' }}>基于开源回归开源</Text>
                                         <ul style={{ paddingLeft: '15px' }}>
-                                            <li>开源仓库：<Link href="https://github.com/renfei/renfeid"><a target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/renfeid</a></Link></li>
-                                            <li>反馈讨论：<Link href="https://github.com/renfei/feedback/discussions"><a target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/feedback/discussions</a></Link></li>
-                                            <li>开发预览：<Link href="https://preview.renfei.net/"><a target={'_blank'} rel={'nofollow noopener'}>preview.renfei.net</a></Link></li>
-                                            <li>更多内容：参见《<Link href="/page/about"><a target={'_blank'}>关于页面</a></Link>》</li>
+                                            <li>开源仓库：<Link href="https://github.com/renfei/renfeid" target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/renfeid</Link></li>
+                                            <li>反馈讨论：<Link href="https://github.com/renfei/feedback/discussions" target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/feedback/discussions</Link></li>
+                                            <li>开发预览：<Link href="https://preview.renfei.net/" target={'_blank'} rel={'nofollow noopener'}>preview.renfei.net</Link></li>
+                                            <li>更多内容：参见《<Link href="/page/about" target={'_blank'}>关于页面</Link>》</li>
                                         </ul>
                                     </div>
                                 </Col>
