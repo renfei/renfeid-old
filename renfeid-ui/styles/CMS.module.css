@@ -13,13 +13,14 @@
 
 .posts_content {
     padding: 0 20px 40px 0;
-    font-size: 16px;
-    line-height: 28px;
+    font-size: 18px;
+    line-height: 32px;
     letter-spacing: .012em;
 }
 
 .posts_content p {
     text-indent: 2em;
+    margin: 28px 0 !important;
 }
 
 .posts_content img {
