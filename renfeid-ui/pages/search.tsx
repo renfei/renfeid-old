@@ -123,7 +123,7 @@ const SearchPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePr
                       onChange: page => {
                         console.log(page);
                       },
-                      itemRender: (page, t, originalElement,) => { return (<Link href={`?w=${word}${type ? '&type=' + type : ''}&p=${page}`}>{originalElement}</Link>) },
+                      itemRender: (page, t, originalElement,) => { return (<Link href={`?w=${word}${type ? '&type=' + type : ''}&p=${page}`} legacyBehavior>{originalElement}</Link>) },
                       showSizeChanger: false,
                       current: p ? parseInt(p) : 1,
                       pageSize: 10,
