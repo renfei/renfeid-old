@@ -98,7 +98,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public boolean send(String to, String name, String subject, List<String> contents, Map<String, File> attachment) {
-        return send(to, name, subject, contents, attachment);
+        return send(to, null, name, subject, contents, attachment);
     }
 
     /**
