@@ -28,6 +28,7 @@ import net.renfei.common.core.service.SystemLogService;
 import net.renfei.common.core.service.SystemService;
 import net.renfei.server.controller.AbstractController;
 import net.renfei.server.entity.SystemSettingVo;
+import net.renfei.server.job.ResetElasticSearchIndexJob;
 import net.renfei.uaa.api.UserService;
 import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.service.UaaUtilService;
@@ -53,17 +54,20 @@ public class SystemController extends AbstractController {
     private final QuartzService quartzService;
     private final UaaUtilService uaaUtilService;
     private final SystemLogService systemLogService;
+    private final ResetElasticSearchIndexJob resetElasticSearchIndexJob;
 
     public SystemController(UserService userService,
                             SystemService systemService,
                             QuartzService quartzService,
                             UaaUtilService uaaUtilService,
-                            SystemLogService systemLogService) {
+                            SystemLogService systemLogService,
+                            ResetElasticSearchIndexJob resetElasticSearchIndexJob) {
         this.userService = userService;
         this.systemService = systemService;
         this.quartzService = quartzService;
         this.uaaUtilService = uaaUtilService;
         this.systemLogService = systemLogService;
+        this.resetElasticSearchIndexJob = resetElasticSearchIndexJob;
     }
 
     @GetMapping("refreshConfiguration")
@@ -72,6 +76,15 @@ public class SystemController extends AbstractController {
     @OperationLog(module = SystemTypeEnum.SYSTEM, desc = "刷新系统配置", operation = OperationTypeEnum.UPDATE)
     public APIResult refreshConfiguration() {
         systemService.refreshConfiguration();
+        return APIResult.success();
+    }
+
+    @GetMapping("resetElasticSearchIndex")
+    @PreAuthorize("hasPermission('','core:system:config')")
+    @Operation(summary = "刷新搜索引擎", tags = {"系统相关接口"})
+    @OperationLog(module = SystemTypeEnum.SYSTEM, desc = "刷新搜索引擎", operation = OperationTypeEnum.UPDATE)
+    public APIResult resetElasticSearchIndex() {
+        resetElasticSearchIndexJob.executeInternal();
         return APIResult.success();
     }
 

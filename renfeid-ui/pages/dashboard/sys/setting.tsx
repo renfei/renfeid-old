@@ -99,6 +99,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
 const DashboardSystemCrontab = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [SYSTEM_RUNNING_STATUS_LOADING, setSYSTEM_RUNNING_STATUS_LOADING] = useState<boolean>(false)
   const [GLOBAL_COMMENT_STATUS_LOADING, setGLOBAL_COMMENT_STATUS_LOADING] = useState<boolean>(false)
+  const [RESET_ELASTICSEARCH_INDEX_LOADING, setRESET_ELASTICSEARCH_INDEX_LOADING] = useState<boolean>(false)
   const [SYSTEM_RUNNING_STATUS, setSYSTEM_RUNNING_STATUS] = useState<SystemSettingVo | null>(data.SYSTEM_RUNNING_STATUS)
   const [GLOBAL_COMMENT_STATUS, setGLOBAL_COMMENT_STATUS] = useState<SystemSettingVo | null>(data.GLOBAL_COMMENT_STATUS)
   const [modelForm] = Form.useForm()
@@ -107,6 +108,17 @@ const DashboardSystemCrontab = ({ data }: InferGetServerSidePropsType<typeof get
     SYSTEM_RUNNING_STATUS: SYSTEM_RUNNING_STATUS ? SYSTEM_RUNNING_STATUS.values[0] : '',
     GLOBAL_COMMENT_STATUS: GLOBAL_COMMENT_STATUS ? GLOBAL_COMMENT_STATUS.values[0] : '',
   })
+
+  const resetElasticSearchIndex = () => {
+    setRESET_ELASTICSEARCH_INDEX_LOADING(true)
+    api.resetElasticSearchIndex().then(res => {
+      message.info("执行完成！")
+      setRESET_ELASTICSEARCH_INDEX_LOADING(false)
+    }).catch(e => {
+      message.error("执行失败！")
+      setRESET_ELASTICSEARCH_INDEX_LOADING(false)
+    })
+  }
 
   return (
     <>
@@ -231,6 +243,24 @@ const DashboardSystemCrontab = ({ data }: InferGetServerSidePropsType<typeof get
                     <Select.Option value="OPENED">开放</Select.Option>
                     <Select.Option value="CLOSED">关闭</Select.Option>
                   </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={4}>
+                <Form.Item
+                  label="搜索引擎"
+                  name="RESET_ELASTICSEARCH_INDEX"
+                  help="刷新搜索引擎"
+                  tooltip={(
+                    <>
+                      <p>重建搜索引擎的索引。</p>
+                    </>
+                  )}
+                >
+                  <Button
+                    block
+                    onClick={resetElasticSearchIndex}
+                    loading={RESET_ELASTICSEARCH_INDEX_LOADING}
+                  >刷新</Button>
                 </Form.Item>
               </Col>
             </Row>

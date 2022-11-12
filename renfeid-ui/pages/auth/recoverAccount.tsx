@@ -175,6 +175,7 @@ const SignInPage = (req: NextApiRequest, res: NextApiResponse) => {
                   style={{ padding: '20px 20px 20px 0', display: 'flex', justifyContent: 'center' }}>
                   <Image
                     src={"/image/people_search_re_5rre.svg"}
+                    style={{ width: '100%', height: 'auto' }}
                     alt="SignIn"
                     width={898.09814}
                     height={398.74219}

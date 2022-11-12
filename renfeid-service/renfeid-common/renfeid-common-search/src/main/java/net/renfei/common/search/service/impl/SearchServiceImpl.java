@@ -28,6 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -104,7 +105,9 @@ public class SearchServiceImpl implements SearchService {
             queryBuilder.must(wordBuilder);
         }
         if (type != null) {
-            queryBuilder.must(QueryBuilders.termQuery("type", type.getName()));
+            if (!TypeEnum.ALL.equals(type)) {
+                queryBuilder.must(QueryBuilders.termQuery("type", type.getName()));
+            }
         }
         if (startDate != null) {
             queryBuilder.must(QueryBuilders.rangeQuery("date").gt(startDate));
@@ -125,7 +128,6 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public ListData<SearchItem> search(QueryBuilder queryBuilder, String pages, String rows) {
-        createIndex();
         int page = NumberUtils.parseInt(pages, 1) - 1,
                 size = NumberUtils.parseInt(rows, 10);
         if (page < 0) {
@@ -159,12 +161,22 @@ public class SearchServiceImpl implements SearchService {
      * 创建索引库，如果不存在触发全量同步
      */
     @Override
-    public void createIndex() {
+    public void createIndex(List<SearchItem> searchItemAll) {
         /*
         由于我的博客数据量小，更新频率低，所以采取每天删掉索引重建的方式来同步数据
         省去了丢失的全量同步，新增的增量同步，直接每天凌晨全量导入
          */
-        // TODO 设置索引信息(绑定实体类)  返回IndexOperations
+        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(SearchItem.class);
+        if (!indexOperations.exists()) {
+            // 不存在索引库，创建索引库
+            indexOperations.create();
+            //Creates the index mapping for the entity this IndexOperations is bound to.
+            //为该IndexOperations绑定到的实体创建索引映射。  有一个为给定类创建索引的重载,需要类的字节码文件
+            Document mapping = indexOperations.createMapping();
+            //writes a mapping to the index  将刚刚通过类创建的映射写入索引
+            indexOperations.putMapping(mapping);
+            this.searchRepository.saveAll(searchItemAll);
+        }
     }
 
     @Override

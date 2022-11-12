@@ -149,4 +149,9 @@ public interface PostService {
      * @return
      */
     APIResult addViews(long postId);
+
+    /**
+     * 更新文章排序指数
+     */
+    void updatePageRank();
 }

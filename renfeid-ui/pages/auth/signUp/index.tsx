@@ -119,6 +119,7 @@ const SignUpPage = (req: NextApiRequest, res: NextApiResponse) => {
                   <Image
                     src={"/image/hire_re_gn5j.svg"}
                     alt="SignUp"
+                    style={{ width: '100%', height: 'auto' }}
                     width={898.09814}
                     height={398.74219}
                   />

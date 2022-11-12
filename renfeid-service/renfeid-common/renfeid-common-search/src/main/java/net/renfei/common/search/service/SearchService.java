@@ -21,6 +21,7 @@ import net.renfei.common.search.entity.TypeEnum;
 import org.elasticsearch.index.query.QueryBuilder;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 搜索服务
@@ -28,7 +29,7 @@ import java.util.Date;
  * @author renfei
  */
 public interface SearchService {
-    void createIndex();
+    void createIndex(List<SearchItem> searchItemAll);
 
     void deleteIndex();
 

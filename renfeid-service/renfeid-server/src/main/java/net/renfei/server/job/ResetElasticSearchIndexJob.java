@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.renfei.cms.jobs;
+package net.renfei.server.job;
 
-import net.renfei.cms.api.PostService;
 import net.renfei.common.core.service.EmailService;
+import net.renfei.common.search.entity.SearchItem;
+import net.renfei.common.search.service.SearchService;
+import net.renfei.server.service.AggregateService;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -28,20 +30,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 定时任务：更新博客文章的排名指数
+ * 定时任务：更新搜索引擎的索引内容
  *
  * @author renfei
  */
 @Service
-public class UpdateBlogPageRankJob extends QuartzJobBean {
-    private static final Logger logger = LoggerFactory.getLogger(UpdateBlogPageRankJob.class);
-    private final PostService postService;
+public class ResetElasticSearchIndexJob extends QuartzJobBean {
+    private final static Logger logger = LoggerFactory.getLogger(ResetElasticSearchIndexJob.class);
     private final EmailService emailService;
+    private final SearchService searchService;
+    private final AggregateService aggregateService;
 
-    public UpdateBlogPageRankJob(PostService postService,
-                                 EmailService emailService) {
-        this.postService = postService;
+    public ResetElasticSearchIndexJob(EmailService emailService,
+                                      SearchService searchService,
+                                      AggregateService aggregateService) {
         this.emailService = emailService;
+        this.searchService = searchService;
+        this.aggregateService = aggregateService;
     }
 
     @Override
@@ -50,18 +55,23 @@ public class UpdateBlogPageRankJob extends QuartzJobBean {
     }
 
     public void executeInternal() {
-        logger.info("UpdateBlogPageRankJob Start.");
+        logger.info("ResetElasticSearchIndexJob Start.");
         try {
-            postService.updatePageRank();
+            List<SearchItem> searchItemAll = aggregateService.queryAllData(true);
+            if (searchItemAll != null && !searchItemAll.isEmpty()) {
+                // 先删除，再重建
+                searchService.deleteIndex();
+                searchService.createIndex(searchItemAll);
+            }
         } catch (Exception exception) {
             List<String> data = new ArrayList<>();
-            data.add("UpdateBlogPageRankJob：更新文章评级");
+            data.add("ResetElasticSearchIndexJob：更新搜索引擎");
             data.add("定时执行任务失败。");
             data.add("异常信息：");
             data.add(exception.getMessage());
-            logger.error("UpdateBlogPageRankJob：更新文章评级", exception);
-            emailService.send("i@renfei.net", "RenFei", "定时任务【UpdateBlogPageRankJob】执行失败通知", data);
+            logger.error("ResetElasticSearchIndexJob：更新搜索引擎", exception);
+            emailService.send("i@renfei.net", "RenFei", "定时任务【ResetElasticSearchIndexJob】执行失败通知", data);
         }
-        logger.info("UpdateBlogPageRankJob End.");
+        logger.info("ResetElasticSearchIndexJob End.");
     }
 }

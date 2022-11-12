@@ -2,10 +2,11 @@ import Head from 'next/head'
 import Link from 'next/link'
 import nookies from 'nookies'
 import Image from 'next/image'
+import { QRCodeSVG } from 'qrcode.react'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Typography, Divider, Row, Col, Input, Select, Button, List, Space, message } from 'antd'
-import { LikeOutlined, MessageOutlined, EyeFilled } from '@ant-design/icons'
+import { WechatOutlined } from '@ant-design/icons'
 import Layout from "../components/layout"
 import * as api from '../services/api'
 import APIResult = API.APIResult
@@ -37,6 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
     props: {
       data: {
         w: w || null,
+        p: p || null,
         type: type || null,
         searchItem: searchItem || null,
         hotSearch: hotSearch || null,
@@ -82,8 +84,8 @@ const SearchPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePr
             word ? (<>
               <Typography.Title level={2}>搜索：{word}</Typography.Title>
               <Divider />
-              <Row>
-                <Col xs={24} sm={16} md={18} style={{ paddingRight: '20px' }}>
+              <Row gutter={20}>
+                <Col xs={24} sm={24} md={16} lg={17}>
                   <Input.Group compact>
                     <Select
                       style={{ width: '100px' }}
@@ -149,14 +151,31 @@ const SearchPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePr
                           description={item.date}
                         />
                         <Typography.Paragraph ellipsis={{ rows: 3 }}>
-                          {item.content}
+                          {item.content.length > 200 ? item.content.substring(0, 200) : item.content}
                         </Typography.Paragraph>
                       </List.Item>
                     )}
                   />
                 </Col>
-                <Col xs={24} sm={8} md={6}>
-                  占位
+                <Col xs={24} sm={24} md={8} lg={7}>
+                  <div className={'renfeid_card'}>
+                    <Typography.Title level={5}><WechatOutlined style={{ paddingRight: '10px' }} />微信订阅号</Typography.Title>
+                    <Typography.Text type="secondary" style={{ fontSize: '12px' }}>扫码关注「任霏博客」微信订阅号</Typography.Text>
+                    <div style={{ textAlign: 'center', marginTop: '0.5em' }}>
+                      <QRCodeSVG
+                        value="http://weixin.qq.com/r/OkSQiJLEx8_4rdbr9xEo"
+                        level={"M"}
+                        imageSettings={{
+                          src: "https://cdn.renfei.net/Logo/wechat_64.png",
+                          x: undefined,
+                          y: undefined,
+                          height: 28,
+                          width: 28,
+                          excavate: true,
+                        }}
+                      />
+                    </div>
+                  </div>
                 </Col>
               </Row>
             </>) : (<>

@@ -272,3 +272,18 @@ export const updateSystemSetting = async (setting: string, SystemSettingVo: Syst
         return Promise.reject(error)
     })
 }
+
+export const resetElasticSearchIndex = async () => {
+    const url = `/api/dash/core/system/resetElasticSearchIndex`
+    return await fetch(url, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}

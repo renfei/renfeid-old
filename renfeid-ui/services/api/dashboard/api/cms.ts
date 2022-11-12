@@ -338,3 +338,18 @@ export const queryAllTag = async (token: string, headers: Headers) => {
         return Fetch.get(url, headers, token, true)
     }
 }
+
+export const updateBlogPageRankJob = async () => {
+    const url = `/api/dash/cms/updateBlogPageRankJob`
+    return await fetch(url, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': '',
+        }
+    }).then((res: any) => {
+        return res.json()
+    }).catch((error: any) => {
+        return Promise.reject(error)
+    })
+}

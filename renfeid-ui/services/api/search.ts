@@ -61,7 +61,7 @@ export const search = async (headers: Headers, w: string, type?: string, p?: str
       url += `&type=${type}`
     }
     if (p) {
-      p += `&p=${p}`
+      url += `&p=${p}`
     }
     return Fetch.get(url, headers, token, true)
   }

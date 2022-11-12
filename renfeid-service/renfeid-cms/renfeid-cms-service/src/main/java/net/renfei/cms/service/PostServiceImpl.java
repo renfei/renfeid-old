@@ -26,6 +26,7 @@ import net.renfei.cms.repositories.CmsCategoryMapper;
 import net.renfei.cms.repositories.CmsPostsArchivalMapper;
 import net.renfei.cms.repositories.CmsPostsMapper;
 import net.renfei.cms.repositories.entity.*;
+import net.renfei.cms.utils.PageRankUtil;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.constant.enums.StateCodeEnum;
@@ -56,6 +57,9 @@ import static net.renfei.common.core.config.RedisConfig.REDIS_KEY_DATABASE;
 @Service
 public class PostServiceImpl implements PostService {
     private final static String REDIS_KEY = REDIS_KEY_DATABASE + ":post:";
+    private static final Double DATE_WEIGHTED = 37.5D;
+    private static final Double VIEW_WEIGHTED = 57.5D;
+    private static final Double COMMENTHTED = 5D;
     private final RedisService redisService;
     private final SystemConfig systemConfig;
     private final SystemService systemService;
@@ -472,6 +476,40 @@ public class PostServiceImpl implements PostService {
     public APIResult addViews(long postId) {
         cmsPostsMapper.addViews(postId);
         return APIResult.success();
+    }
+
+    @Override
+    public void updatePageRank() {
+        CmsPostsExample example = new CmsPostsExample();
+        List<CmsPostsWithBLOBs> cmsPostsWithBLOBs = cmsPostsMapper.selectByExampleWithBLOBs(example);
+        for (CmsPostsWithBLOBs cmsPost : cmsPostsWithBLOBs
+        ) {
+            setPageRank(cmsPost);
+            long id = cmsPost.getId();
+            example = new CmsPostsExample();
+            example.createCriteria()
+                    .andIdEqualTo(id);
+            cmsPost.setId(null);
+            cmsPostsMapper.updateByExampleSelective(cmsPost, example);
+        }
+    }
+
+    private void setPageRank(CmsPostsWithBLOBs postsDO) {
+        PageRankUtil pageRankUtil = new PageRankUtil();
+        postsDO.setPageRank(pageRankUtil.getPageRank(
+                postsDO.getPostDate(),
+                postsDO.getPostViews(),
+                0L,
+                DATE_WEIGHTED, VIEW_WEIGHTED, COMMENTHTED
+        ));
+        postsDO.setAvgViews(pageRankUtil.getAvgViews(
+                postsDO.getPostDate(),
+                postsDO.getPostViews()
+        ));
+        postsDO.setAvgComment(pageRankUtil.getAvgComments(
+                postsDO.getPostDate(),
+                0L
+        ));
     }
 
     private void postCheck(String value, String prompt) {
