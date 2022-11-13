@@ -45,6 +45,13 @@ const App = ({ Component, pageProps }: Props) => {
                 setConsoleLog(1)
             }
         }
+        var ads = document.getElementsByClassName("adsbygoogle").length;
+        for (var i = 0; i < ads; i++) {
+            try {
+                // @ts-ignore
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) { }
+        }
     }, [consoleLog])
     return getLayout(
         <>

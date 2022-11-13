@@ -10,12 +10,6 @@ const GoogleAdsense = (props: any) => {
                     data-ad-slot={props.slot}
                     data-ad-format="auto"
                     data-full-width-responsive="true"></ins>
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `(adsbygoogle = window.adsbygoogle || []).push({})`
-                    }}
-                >
-                </script>
             </>
         )
     }
