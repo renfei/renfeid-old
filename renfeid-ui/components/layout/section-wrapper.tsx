@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Divider, Dropdown, Button, Menu } from 'antd'
 import { LogoutOutlined, SettingOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
@@ -21,9 +20,9 @@ const SectionWrapper = ({ children, ...props }: any) => {
                     label: (
                         <>
                             <SettingOutlined />
-                            <Link href={"/account/manage"}>
+                            <a href={"/account/manage"}>
                                 个人设置
-                            </Link>
+                            </a>
                         </>
                     ),
                     key: 'manage',
@@ -32,9 +31,9 @@ const SectionWrapper = ({ children, ...props }: any) => {
                     label: (
                         <>
                             <LockOutlined />
-                            <Link href={"/account/manage/password"}>
+                            <a href={"/account/manage/password"}>
                                 修改密码
-                            </Link>
+                            </a>
                         </>
                     ),
                     key: 'password',
@@ -46,9 +45,9 @@ const SectionWrapper = ({ children, ...props }: any) => {
                     label: (
                         <>
                             <LogoutOutlined />
-                            <Link href={"/auth/signOut"}>
+                            <a href={"/auth/signOut"}>
                                 退出登录
-                            </Link>
+                            </a>
                         </>
                     ),
                     key: 'signOut',
@@ -79,25 +78,25 @@ const SectionWrapper = ({ children, ...props }: any) => {
                                                 </Button>
                                             </Dropdown>
                                             <Divider type={'vertical'} />
-                                            <Link
+                                            <a
                                                 href={'/auth/signOut'}
                                             >
                                                 登出
-                                            </Link>
+                                            </a>
                                         </>
                                     ) : (
                                         <>
-                                            <Link
+                                            <a
                                                 href={'/auth/signIn' + path}
                                             >
                                                 登录
-                                            </Link>
+                                            </a>
                                             <Divider type={'vertical'} />
-                                            <Link
+                                            <a
                                                 href={'/auth/signUp'}
                                             >
                                                 注册
-                                            </Link>
+                                            </a>
                                         </>
                                     )
                                 }

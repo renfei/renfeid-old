@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
 import { Row, Col, List, Space, Button } from 'antd'
 import { LikeOutlined, MessageOutlined, EyeFilled } from '@ant-design/icons'
@@ -23,7 +22,7 @@ const PostList = (props: { posts: ListData<PostVo>, path: string }) => {
           onChange: page => {
             console.log(page);
           },
-          itemRender: (page, type, originalElement,) => { return (<Link href={`${props.path}?page=${page}`} legacyBehavior>{originalElement}</Link>) },
+          itemRender: (page, type, originalElement,) => { return (<a href={`${props.path}?page=${page}`}>{originalElement}</a>) },
           showSizeChanger: false,
           pageSize: 10,
           total: props.posts.total

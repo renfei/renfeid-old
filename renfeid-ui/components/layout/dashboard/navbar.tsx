@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { Layout, Menu, Space, Dropdown, Button, Badge } from 'antd'
@@ -55,9 +54,9 @@ const DashboardNavbar = () => {
                     label: (
                         <>
                             <LogoutOutlined />
-                            <Link href={"/auth/signOut"}>
+                            <a href={"/auth/signOut"}>
                                 退出登录
-                            </Link>
+                            </a>
                         </>
                     ),
                     key: '100',

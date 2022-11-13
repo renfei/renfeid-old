@@ -122,7 +122,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                 </Col>
                                 <Col span={9} className={styles.banner_col}>
                                     <div className={styles.banner_content_wrapper}>
-                                        <Link href={`/posts/${data.postsDataTop2[0].id}`} style={{ display: 'block' }}>
+                                        <a href={`/posts/${data.postsDataTop2[0].id}`} style={{ display: 'block' }}>
                                             <Title
                                                 level={2}
                                                 className={styles.banner_content_h2}>
@@ -133,7 +133,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                             </p>
                                             <span
                                                 className={styles.banner_content_icon}><ArrowRightOutlined /></span>
-                                        </Link>
+                                        </a>
                                     </div>
                                 </Col>
                             </Row>
@@ -149,7 +149,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                             <Col span={12}>
                                 {
                                     data.postsDataTop2.length > 1 ? (
-                                        <Link href={`/posts/${data.postsDataTop2[1].id}`} style={{ display: 'block' }}>
+                                        <a href={`/posts/${data.postsDataTop2[1].id}`} style={{ display: 'block' }}>
                                             <Card
                                                 bordered={false}
                                                 cover={
@@ -172,7 +172,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                                 <Meta
                                                     title={data.postsDataTop2[1].postExcerpt} />
                                             </Card>
-                                        </Link>
+                                        </a>
                                     ) : ''
                                 }
                             </Col>
@@ -182,7 +182,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                         data.postsData3To5.length > 0 ? (
                                             data.postsData3To5.map((post: PostVo) => (
                                                 <Col key={post.id} span={24}>
-                                                    <Link href={`/posts/${post.id}`}>
+                                                    <a href={`/posts/${post.id}`}>
                                                         <Row>
                                                             <Col span={15}>
                                                                 <Paragraph
@@ -205,7 +205,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                                                 />
                                                             </Col>
                                                         </Row>
-                                                    </Link>
+                                                    </a>
                                                     <Divider style={{ margin: '12px 0' }} />
                                                 </Col>
                                             ))
@@ -222,7 +222,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                 data.postsData6To11.map((post: PostVo) => (
                                     <Col key={post.id} md={8} sm={12} xs={24} className={styles.posts_more_wrapper}>
                                         <div className={styles.posts_more}>
-                                            <Link href={`/posts/${post.id}`}>
+                                            <a href={`/posts/${post.id}`}>
                                                 <Row>
                                                     <Col span={15}>
                                                         <Paragraph
@@ -246,7 +246,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                                         />
                                                     </Col>
                                                 </Row>
-                                            </Link>
+                                            </a>
                                         </div>
                                     </Col>
                                 ))
@@ -254,9 +254,9 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                         }
                     </Row>
                     <div style={{ textAlign: 'center', padding: '20px 0 40px 0' }}>
-                        <Link href={"/posts"}>
+                        <a href={"/posts"}>
                             <Button style={{ padding: '0 40px' }}>浏览任霏博客</Button>
-                        </Link>
+                        </a>
                     </div>
                     <Row gutter={40}>
                         <Col sm={12} xs={24}>
@@ -310,10 +310,10 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                         <Title level={5}><GithubOutlined style={{ paddingRight: '10px' }} />开源与反馈</Title>
                                         <Text type="secondary" style={{ fontSize: '12px' }}>基于开源回归开源</Text>
                                         <ul style={{ paddingLeft: '15px' }}>
-                                            <li>开源仓库：<Link href="https://github.com/renfei/renfeid" target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/renfeid</Link></li>
-                                            <li>反馈讨论：<Link href="https://github.com/renfei/feedback/discussions" target={'_blank'} rel={'nofollow noopener'}>github.com/renfei/feedback/discussions</Link></li>
-                                            <li>开发预览：<Link href="https://preview.renfei.net/" target={'_blank'} rel={'nofollow noopener'}>preview.renfei.net</Link></li>
-                                            <li>更多内容：参见《<Link href="/page/about" target={'_blank'}>关于页面</Link>》</li>
+                                            <li>开源仓库：<a href="https://github.com/renfei/renfeid" target={'_blank'} rel={'nofollow noopener noreferrer'}>github.com/renfei/renfeid</a></li>
+                                            <li>反馈讨论：<a href="https://github.com/renfei/feedback/discussions" target={'_blank'} rel={'nofollow noopener noreferrer'}>github.com/renfei/feedback/discussions</a></li>
+                                            <li>开发预览：<a href="https://preview.renfei.net/" target={'_blank'} rel={'nofollow noopener noreferrer'}>preview.renfei.net</a></li>
+                                            <li>更多内容：参见《<Link href="/page/about" target={'_blank'} rel="noreferrer">关于页面</Link>》</li>
                                         </ul>
                                     </div>
                                 </Col>

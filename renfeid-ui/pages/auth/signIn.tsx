@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import Image from 'next/image'
 import { GetServerSideProps } from 'next'
 import { parseCookies, setCookie } from 'nookies'
@@ -199,7 +198,7 @@ const SignInPage = (req: NextApiRequest, res: NextApiResponse) => {
                                         <Form.Item>
                                             <Row>
                                                 <Col style={{ textAlign: 'right' }}>
-                                                    <Link href={"/auth/recoverAccount"}>忘记密码？</Link>
+                                                    <a href={"/auth/recoverAccount"}>忘记密码？</a>
                                                 </Col>
                                             </Row>
                                         </Form.Item>

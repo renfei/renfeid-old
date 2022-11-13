@@ -46,9 +46,9 @@ const PostSidebar = (props: {
           <Typography.Text type="secondary" style={{ fontSize: '12px' }}>感谢您的关注与反馈</Typography.Text>
           <div style={{ textAlign: 'center', marginTop: '0.5em' }}>
             如果您发现了BUG、安全漏洞、或者希望讨论技术内容，请点击下方链接对我进行反馈。<br />
-            <Link href="https://github.com/renfei/feedback/discussions" target="_blank" rel="nofollow noopener">
+            <a href="https://github.com/renfei/feedback/discussions" target="_blank" rel="nofollow noopener noreferrer">
               <Tag color="processing">feedback</Tag>
-            </Link>
+            </a>
           </div>
         </div>
         <Card type="inner" title="内容分类" extra={<Link href="/posts">全部内容</Link>} className={'ant-card-renfeid'}>
@@ -56,9 +56,9 @@ const PostSidebar = (props: {
             dataSource={props.category}
             renderItem={item => (
               <List.Item>
-                <Link href={`/posts/cat/${item.enName}`} style={{ maxWidth: '100%' }}>
+                <a href={`/posts/cat/${item.enName}`} style={{ maxWidth: '100%' }}>
                   <Typography.Text ellipsis={true}>{item.zhName}</Typography.Text>
-                </Link>
+                </a>
               </List.Item>
             )}
           />
@@ -76,9 +76,9 @@ const PostSidebar = (props: {
             props.tags ? (
               props.tags.map(tag => (
                 <Tag key={tag.id} style={{ marginBottom: '4px' }}>
-                  <Link href={`/posts/tag/${tag.enName}`}>
+                  <a href={`/posts/tag/${tag.enName}`}>
                     {tag.zhName}
-                  </Link>
+                  </a>
                 </Tag>
               ))
             ) : ''
@@ -97,9 +97,9 @@ const PostSidebar = (props: {
             dataSource={props.lastComment}
             renderItem={item => (
               <List.Item>
-                <Link href={`${getSysTypeUrl(item.sysType)}${item.objectId}#cmt-${item.id}`} style={{ maxWidth: '100%' }}>
+                <a href={`${getSysTypeUrl(item.sysType)}${item.objectId}#cmt-${item.id}`} style={{ maxWidth: '100%' }}>
                   <Typography.Text ellipsis={true}>{item.content}</Typography.Text>
-                </Link>
+                </a>
               </List.Item>
             )}
           />
@@ -109,9 +109,9 @@ const PostSidebar = (props: {
             dataSource={props.hotPost}
             renderItem={item => (
               <List.Item>
-                <Link href={`/posts/${item.id}`} style={{ maxWidth: '100%' }}>
+                <a href={`/posts/${item.id}`} style={{ maxWidth: '100%' }}>
                   <Typography.Text ellipsis={true}>{item.postTitle}</Typography.Text>
-                </Link>
+                </a>
               </List.Item>
             )}
           />

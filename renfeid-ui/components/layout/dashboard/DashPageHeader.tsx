@@ -1,8 +1,7 @@
-import Link from 'next/link'
-import {PageHeader, Breadcrumb} from 'antd'
+import { PageHeader, Breadcrumb } from 'antd'
 
 const itemRender = (route: any, params: any, routes: any, paths: any) => {
-    return (<Link href={route.path}>{route.breadcrumbName}</Link>)
+    return (<a href={route.path}>{route.breadcrumbName}</a>)
 }
 
 const DashPageHeader = (props: any) => {
@@ -10,7 +9,7 @@ const DashPageHeader = (props: any) => {
         <PageHeader
             className="site-page-header"
             title={props.title}
-            breadcrumb={<Breadcrumb itemRender={itemRender} routes={props.routes}/>}
+            breadcrumb={<Breadcrumb itemRender={itemRender} routes={props.routes} />}
             subTitle={props.subTitle}
         />
     )

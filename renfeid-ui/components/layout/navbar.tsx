@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import Image from 'next/image'
 import { Affix, List, Form, Input, Typography } from 'antd'
 import React, { useState } from 'react'
@@ -96,9 +95,9 @@ const Navbar = ({ children, ...props }: any) => {
     menuList.forEach(element => {
         menuElement.push(
             <li key={element.href}>
-                <Link href={element.href} target={element.target}>
+                <a href={element.href} target={element.target}>
                     {element.text}
-                </Link>
+                </a>
             </li>
         )
     })
@@ -119,7 +118,7 @@ const Navbar = ({ children, ...props }: any) => {
                                     }
                                 </li>
                                 <li>
-                                    <Link href={"/"}>
+                                    <a href={"/"}>
                                         <Image
                                             className={"nav-logo"}
                                             src="https://cdn.renfei.net/Logo/RF_white.svg"
@@ -127,13 +126,13 @@ const Navbar = ({ children, ...props }: any) => {
                                             height={30}
                                             width={30}
                                         />
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li onClick={clickSearch} style={{ cursor: 'pointer' }}><SearchOutlined /></li>
                             </ul>
                             <ul className={"nav-menu"}>
                                 <li>
-                                    <Link href={"/"}>
+                                    <a href={"/"}>
                                         <Image
                                             className={"nav-logo"}
                                             src="https://cdn.renfei.net/Logo/RF_white.svg"
@@ -141,7 +140,7 @@ const Navbar = ({ children, ...props }: any) => {
                                             height={30}
                                             width={30}
                                         />
-                                    </Link>
+                                    </a>
                                 </li>
                                 {menuElement}
                                 <li onClick={clickSearch} style={{ cursor: 'pointer' }}>
@@ -163,9 +162,9 @@ const Navbar = ({ children, ...props }: any) => {
                                 dataSource={menuList}
                                 renderItem={item => (
                                     <List.Item style={{ color: 'rgba(255, 255, 255, 0.9)', borderBottom: '1px solid rgba(255, 255, 255, 0.5)' }}>
-                                        <Link href={item.href} target={item.target} onClick={menuElementClick}>
+                                        <a href={item.href} target={item.target} onClick={menuElementClick}>
                                             {item.text}
-                                        </Link>
+                                        </a>
                                     </List.Item>
                                 )}
                             />
@@ -207,9 +206,9 @@ const Navbar = ({ children, ...props }: any) => {
                                 dataSource={props.hotSearch}
                                 renderItem={(item: string) => (
                                     <List.Item style={{ color: 'rgba(255, 255, 255, 0.9)', borderBottom: '1px solid rgba(255, 255, 255, 0.5)' }}>
-                                        <Link href={`/search?w=${item}`} target={'_blank'}>
+                                        <a href={`/search?w=${item}`} target={'_blank'} rel="noreferrer">
                                             {item}
-                                        </Link>
+                                        </a>
                                     </List.Item>
                                 )}
                             />

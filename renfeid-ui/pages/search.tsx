@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import nookies from 'nookies'
 import Image from 'next/image'
 import { QRCodeSVG } from 'qrcode.react'
@@ -125,7 +124,7 @@ const SearchPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePr
                       onChange: page => {
                         console.log(page);
                       },
-                      itemRender: (page, t, originalElement,) => { return (<Link href={`?w=${word}${type ? '&type=' + type : ''}&p=${page}`} legacyBehavior>{originalElement}</Link>) },
+                      itemRender: (page, t, originalElement,) => { return (<a href={`?w=${word}${type ? '&type=' + type : ''}&p=${page}`}>{originalElement}</a>) },
                       showSizeChanger: false,
                       current: p ? parseInt(p) : 1,
                       pageSize: 10,
@@ -220,9 +219,9 @@ const SearchPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePr
                         hotSearch && hotSearch.data ? (
                           hotSearch.data.map((hot: HotSearch) => (
                             <li key={hot.word}>
-                              <Link href={`/search?w=${hot.word}`} target={'_blank'}>
+                              <a href={`/search?w=${hot.word}`} target={'_blank'} rel="noreferrer">
                                 {hot.word}
-                              </Link>
+                              </a>
                             </li>
                           ))
                         ) : ''

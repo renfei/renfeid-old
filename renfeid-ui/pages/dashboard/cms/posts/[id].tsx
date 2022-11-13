@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import nookies from 'nookies'
 import moment from 'moment'
 import React, { useRef, useState } from 'react'
@@ -420,11 +419,11 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
                                                         title="操作"
                                                         key="action"
                                                         render={(_: any, record: DashPost) => (
-                                                            <Link
+                                                            <a
                                                                 href={`/dashboard/cms/posts/` + data.post.id + `/` + record.id}
                                                             >
                                                                 <a target="_blank">查看快照</a>
-                                                            </Link>
+                                                            </a>
                                                         )}
                                                     />
                                                 </Table>

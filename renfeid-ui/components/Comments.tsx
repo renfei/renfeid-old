@@ -1,5 +1,4 @@
 import { Typography, Button, Comment, Form, Input, Divider, message } from 'antd'
-import Link from 'next/link'
 import moment from 'moment'
 import React, { useState } from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
@@ -44,13 +43,13 @@ const Comments = (props: { systemTypeEnum: string, objectId: string, data?: Comm
                                         }}>回复</a>
                                 ]}
                                 author={(
-                                    <Link key={`comment-author-url-${comment.id}`}
+                                    <a key={`comment-author-url-${comment.id}`}
                                         id={`cmt-${comment.id}`}
                                         href={comment.authorUrl ? comment.authorUrl : 'javascript:void(0)'}
                                         target="_blank"
-                                        rel="nofollow noopener">
+                                        rel="nofollow noopener noreferrer">
                                         {comment.author}
-                                    </Link>
+                                    </a>
                                 )}
                                 content={comment.content}
                                 datetime={

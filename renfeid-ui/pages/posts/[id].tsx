@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import moment from 'moment'
 import nookies from 'nookies'
 import { NextSeo, ArticleJsonLd } from 'next-seo'
@@ -190,23 +189,23 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                                     href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
                                                     target="_blank" rel="noreferrer noopener nofollow">CC BY-NC-SA
                                                     4.0</a> 版权协议，转载请附上原文出处链接及本声明。</p>
-                                                <p>原文链接：<Link
+                                                <p>原文链接：<a
                                                     href={'https://www.renfei.net/posts/' + data.post.id}>
                                                     https://www.renfei.net/posts/{data.post.id}
-                                                </Link>
+                                                </a>
                                                 </p>
                                             </>
                                         ) : (
                                             <>
                                                 <p>商业用途请联系作者获得授权。</p>
                                                 <p>版权声明：本文转载自「{data.post.sourceName}」，版权归原所有者。</p>
-                                                <p>原文链接：<Link
+                                                <p>原文链接：<a
                                                     href={data.post.sourceUrl}
                                                     target="_blank"
                                                     rel="noreferrer noopener nofollow"
                                                 >
                                                     {data.post.sourceUrl}
-                                                </Link>
+                                                </a>
                                                 </p>
                                             </>
                                         )
@@ -224,7 +223,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                             {
                                                 data.postRelevant5.length > 0 ? (
                                                     data.postRelevant5.map((post: PostVo) => (
-                                                        <Link key={"relevant_" + post.id}
+                                                        <a key={"relevant_" + post.id}
                                                             href={'/posts/' + post.id}>
                                                             <Title key={"title_" + post.id} level={5}
                                                                 style={{ marginBottom: '0' }}
@@ -233,7 +232,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                                             </Title>
                                                             <Divider key={"divider_" + post.id}
                                                                 style={{ margin: '5px 0' }} />
-                                                        </Link>
+                                                        </a>
                                                     ))
                                                 ) : ''
                                             }
@@ -242,7 +241,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                             {
                                                 data.postRelevant10.length > 0 ? (
                                                     data.postRelevant10.map((post: PostVo) => (
-                                                        <Link key={"relevant_" + post.id}
+                                                        <a key={"relevant_" + post.id}
                                                             href={'/posts/' + post.id}>
                                                             <Title key={"title_" + post.id} level={5}
                                                                 style={{ marginBottom: '0' }}
@@ -251,7 +250,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                                                             </Title>
                                                             <Divider key={"divider_" + post.id}
                                                                 style={{ margin: '5px 0' }} />
-                                                        </Link>
+                                                        </a>
                                                     ))
                                                 ) : ''
                                             }

@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import Image from 'next/image'
 import Layout from '../components/layout'
 import { Row, Col, Avatar, Card } from 'antd'
@@ -22,7 +21,7 @@ const MorePage = () => {
         <section className={"renfeid-content"} style={{ paddingTop: '20px', paddingBottom: '20px' }}>
           <Row style={{ padding: '20px 0' }}>
             <Col xs={24} sm={12} md={8} lg={6} style={MetaPageColStyle}>
-              <Link href={'/page/about'}>
+              <a href={'/page/about'}>
                 <Card
                   style={{ width: '100%' }}
                   cover={
@@ -39,7 +38,7 @@ const MorePage = () => {
                     description={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}更多信息，联系方式与我的历史等信息。`}
                   />
                 </Card>
-              </Link>
+              </a>
             </Col>
             <Col xs={24} sm={12} md={8} lg={6} style={MetaPageColStyle}>
               <Card

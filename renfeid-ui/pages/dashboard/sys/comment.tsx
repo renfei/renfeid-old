@@ -1,6 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
-import nookies from 'nookies'
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Col, Row, Button, Typography, Table, Space, Form, Input, Select, DatePicker, Modal, Descriptions, message } from 'antd'
@@ -87,7 +85,7 @@ const detailModal = (record: Comment, form: any) => {
       <>
         <Descriptions title="评论详情" bordered>
           <Descriptions.Item label="系统模块">{record.sysType}</Descriptions.Item>
-          <Descriptions.Item label="评论对象"><Link href={getSysTypeUrl(record.sysType) + record.objectId} target={'_blank'}>{getSysTypeUrl(record.sysType) + record.objectId}</Link></Descriptions.Item>
+          <Descriptions.Item label="评论对象"><a href={getSysTypeUrl(record.sysType) + record.objectId} target={'_blank'} rel="noreferrer">{getSysTypeUrl(record.sysType) + record.objectId}</a></Descriptions.Item>
           <Descriptions.Item label="评论时间">{record.addtime}</Descriptions.Item>
           <Descriptions.Item label="是否删除">{record.isDelete ? '是' : '否'}</Descriptions.Item>
           <Descriptions.Item label="官方回复">{record.isOwner ? '是' : '否'}</Descriptions.Item>
@@ -186,7 +184,7 @@ const DashboardCommentPosts = ({ data }: InferGetServerSidePropsType<typeof getS
       width: 10,
       dataIndex: 'objectId',
       render: (_: any, record: Comment) => {
-        return (<Link href={getSysTypeUrl(record.sysType) + record.objectId} target={'_blank'}>{getSysTypeUrl(record.sysType) + record.objectId}</Link>)
+        return (<a href={getSysTypeUrl(record.sysType) + record.objectId} target={'_blank'} rel="noreferrer">{getSysTypeUrl(record.sysType) + record.objectId}</a>)
       },
     },
     {
