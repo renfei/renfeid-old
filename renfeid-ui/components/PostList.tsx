@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 import { Row, Col, List, Space, Button } from 'antd'
 import { LikeOutlined, MessageOutlined, EyeFilled } from '@ant-design/icons'
 import PostVo = API.PostVo
@@ -37,11 +36,10 @@ const PostList = (props: { posts: ListData<PostVo>, path: string }) => {
               <IconText icon={MessageOutlined} text="0" key="list-vertical-message" />,
             ]}
             extra={
-              <Image
+              <img
                 width={272}
                 height={136}
-                style={{ borderRadius: '12px' }}
-                layout={"intrinsic"}
+                style={{ borderRadius: '12px', maxWidth: '100%', height: 'auto' }}
                 src={item.featuredImage}
                 alt={item.postTitle}
               />

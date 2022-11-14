@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 import nookies from 'nookies'
 import Layout from '../components/layout'
@@ -113,9 +112,8 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                             <Row>
                                 <Col span={15} className={styles.banner_col}>
                                     <div className={styles.banner_img_wrapper}>
-                                        <Image
+                                        <img
                                             className={styles.banner_img}
-                                            layout='fill'
                                             src={data.postsDataTop2[0].featuredImage}
                                             alt={data.postsDataTop2[0].postTitle} />
                                     </div>
@@ -153,8 +151,8 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                             <Card
                                                 bordered={false}
                                                 cover={
-                                                    <Image
-                                                        style={{ borderRadius: '16px 16px 16px 16px' }}
+                                                    <img
+                                                        style={{ borderRadius: '16px 16px 16px 16px', height: 'auto' }}
                                                         width={1280}
                                                         height={640}
                                                         alt={data.postsDataTop2[1].postTitle}
@@ -195,11 +193,11 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                                                 </Paragraph>
                                                             </Col>
                                                             <Col span={9}>
-                                                                <Image
+                                                                <img
                                                                     className={styles.posts_img_radius}
+                                                                    style={{ width: '100%', height: 'auto' }}
                                                                     src={post.featuredImage}
                                                                     alt={post.postTitle}
-                                                                    layout={"intrinsic"}
                                                                     width={"1280"}
                                                                     height={"640"}
                                                                 />
@@ -236,11 +234,11 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                                         </Paragraph>
                                                     </Col>
                                                     <Col span={9}>
-                                                        <Image
+                                                        <img
                                                             className={styles.posts_img_radius}
+                                                            style={{ width: '100%', height: 'auto' }}
                                                             src={post.featuredImage}
                                                             alt={post.postTitle}
-                                                            layout={"intrinsic"}
                                                             width={"1280"}
                                                             height={"640"}
                                                         />

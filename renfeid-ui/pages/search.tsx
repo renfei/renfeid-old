@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import nookies from 'nookies'
-import Image from 'next/image'
 import { QRCodeSVG } from 'qrcode.react'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
@@ -135,11 +134,10 @@ const SearchPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePr
                       <List.Item
                         key={item.originalId}
                         extra={
-                          <Image
+                          <img
                             width={272}
                             height={136}
-                            style={{ borderRadius: '12px' }}
-                            layout={"intrinsic"}
+                            style={{ borderRadius: '12px', maxWidth: '100%', height: 'auto' }}
                             src={item.image}
                             alt={item.title}
                           />

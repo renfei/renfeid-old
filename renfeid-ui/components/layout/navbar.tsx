@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { Affix, List, Form, Input, Typography } from 'antd'
 import React, { useState } from 'react'
 import TopBarWrapper from "./top-bar-wrapper"
@@ -119,7 +118,7 @@ const Navbar = ({ children, ...props }: any) => {
                                 </li>
                                 <li>
                                     <a href={"/"}>
-                                        <Image
+                                        <img
                                             className={"nav-logo"}
                                             src="https://cdn.renfei.net/Logo/RF_white.svg"
                                             alt={"任霏博客"}
@@ -133,7 +132,7 @@ const Navbar = ({ children, ...props }: any) => {
                             <ul className={"nav-menu"}>
                                 <li>
                                     <a href={"/"}>
-                                        <Image
+                                        <img
                                             className={"nav-logo"}
                                             src="https://cdn.renfei.net/Logo/RF_white.svg"
                                             alt={"任霏博客"}

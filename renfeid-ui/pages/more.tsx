@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import Layout from '../components/layout'
 import { Row, Col, Avatar, Card } from 'antd'
 
@@ -25,7 +24,7 @@ const MorePage = () => {
                 <Card
                   style={{ width: '100%' }}
                   cover={
-                    <Image
+                    <img
                       width={658}
                       height={400}
                       alt={`关于${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
@@ -44,7 +43,7 @@ const MorePage = () => {
               <Card
                 style={{ width: '100%' }}
                 cover={
-                  <Image
+                  <img
                     width={658}
                     height={400}
                     alt="example"
@@ -62,7 +61,7 @@ const MorePage = () => {
               <Card
                 style={{ width: '100%' }}
                 cover={
-                  <Image
+                  <img
                     width={658}
                     height={400}
                     alt="example"
@@ -80,7 +79,7 @@ const MorePage = () => {
               <Card
                 style={{ width: '100%' }}
                 cover={
-                  <Image
+                  <img
                     width={658}
                     height={400}
                     alt="example"
@@ -98,7 +97,7 @@ const MorePage = () => {
               <Card
                 style={{ width: '100%' }}
                 cover={
-                  <Image
+                  <img
                     width={658}
                     height={400}
                     alt="example"
@@ -116,7 +115,7 @@ const MorePage = () => {
               <Card
                 style={{ width: '100%' }}
                 cover={
-                  <Image
+                  <img
                     width={658}
                     height={400}
                     alt="example"
