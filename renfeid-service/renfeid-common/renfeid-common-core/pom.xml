@@ -148,6 +148,10 @@
             <artifactId>aliyun-java-sdk-cdn</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>alidns20150109</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry-logback</artifactId>
         </dependency>

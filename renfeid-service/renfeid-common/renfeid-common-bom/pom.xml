@@ -179,6 +179,11 @@
                 <version>3.7.7</version>
             </dependency>
             <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>alidns20150109</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.flowable</groupId>
                 <artifactId>flowable-spring-boot-starter</artifactId>
                 <version>${flowable.version}</version>
