@@ -36,7 +36,7 @@ public interface SystemLogService {
     void save(SystemLogEntity systemLogEntity);
 
     void save(LogLevelEnum logLevel, SystemTypeEnum systemType, OperationTypeEnum operationType,
-              String desc, String userUuid, String username, HttpServletRequest request);
+              String desc, String userUuid, String username);
 
     ListData<SystemLogEntity> queryUserSignInLog(String userName, int pages, int rows);
 

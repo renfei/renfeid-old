@@ -210,7 +210,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         signIn.setPassword(this.decryptAesByKeyId(
                 signIn.getPassword(), signIn.getKeyUuid()
         ).getData());
-        UserDetail userDetail = userService.signIn(signIn, request).getData();
+        UserDetail userDetail = userService.signIn(signIn).getData();
         String token = jwtService.createJWT(userDetail.getUsername(), IpUtils.getIpAddress(request)).getData();
         // 将此用户的其他token从redis中删除
         redisService.del(REDIS_TOKEN_KEY + userDetail.getUsername());

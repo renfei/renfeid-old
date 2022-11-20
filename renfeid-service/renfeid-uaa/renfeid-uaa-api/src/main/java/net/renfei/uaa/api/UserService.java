@@ -88,17 +88,15 @@ public interface UserService {
     /**
      * 登录
      *
-     * @param signIn  登录请求对象
-     * @param request 请求对象
+     * @param signIn 登录请求对象
      * @return 用户详情对象
      */
-    APIResult<UserDetail> signIn(SignInAo signIn, HttpServletRequest request);
+    APIResult<UserDetail> signIn(SignInAo signIn);
 
     /**
      * 注册
      *
-     * @param signUp  注册请求对象
-     * @param request 请求对象
+     * @param signUp 注册请求对象
      * @return
      */
     APIResult signUp(SignUpAo signUp, HttpServletRequest request);
@@ -132,7 +130,6 @@ public interface UserService {
      * 添加用户（只添加用户，用户的定密、启用由安全保密员操作）
      *
      * @param userDetail 用户详情
-     * @param request    请求对象
      * @return
      */
     APIResult<UserDetail> createUser(UserDetail userDetail, HttpServletRequest request);
@@ -142,7 +139,6 @@ public interface UserService {
      *
      * @param userId     用户ID
      * @param userDetail 用户资料详情
-     * @param request    请求对象
      * @return
      */
     APIResult<UserDetail> updateUser(long userId, UserDetail userDetail, HttpServletRequest request);
@@ -154,7 +150,7 @@ public interface UserService {
      * @param secretLevel 密级
      * @return
      */
-    APIResult determineUserSecretLevel(long userId, SecretLevelEnum secretLevel, HttpServletRequest request);
+    APIResult determineUserSecretLevel(long userId, SecretLevelEnum secretLevel);
 
     /**
      * 禁用用户，登录状态将被踢出
@@ -164,7 +160,7 @@ public interface UserService {
      * @param request 请求对象
      * @return
      */
-    APIResult enableUser(long userId, boolean enable, HttpServletRequest request);
+    APIResult enableUser(long userId, boolean enable);
 
     /**
      * 锁定与解锁用户，等级比禁用低，不会踢出登录状态
@@ -189,7 +185,6 @@ public interface UserService {
      *
      * @param userId         用户ID
      * @param roleDetailList 角色列表
-     * @param request        请求对象
      * @return
      */
     APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request);

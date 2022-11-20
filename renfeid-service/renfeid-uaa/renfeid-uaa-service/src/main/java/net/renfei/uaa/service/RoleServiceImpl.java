@@ -41,6 +41,8 @@ import net.renfei.uaa.repositories.entity.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -154,6 +156,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public APIResult<List<RoleDetail>> authorizationRoleByUser(long userId, List<RoleDetail> roleDetailList, HttpServletRequest request) {
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
         if (uaaUser == null) {
             return APIResult.builder()
@@ -164,8 +169,7 @@ public class RoleServiceImpl implements RoleService {
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (uaaUser.getBuiltInUser()) {
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试编辑内置用户的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-            );
+                    "尝试编辑内置用户的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             return APIResult.builder()
                     .code(StateCodeEnum.Failure)
                     .message("该用户为内置用户，禁止编辑，请求被拒绝")
@@ -194,8 +198,7 @@ public class RoleServiceImpl implements RoleService {
             if (noHaveRole) {
                 systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
                         String.format("尝试给用户授权未拥有的角色[%s]，被拒绝。", noHaveRoleDetail.getRoleName()),
-                        currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-                );
+                        currentUserDetail.getUuid(), currentUserDetail.getUsername());
                 return APIResult.builder()
                         .code(StateCodeEnum.Failure)
                         .message(String.format("您未拥有给用户授权的角色[%s]权限，请求被拒绝", noHaveRoleDetail.getRoleName()))
@@ -219,7 +222,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public APIResult<RoleDetail> createRole(RoleDetail roleDetail, HttpServletRequest request) {
+    public APIResult<RoleDetail> createRole(RoleDetail roleDetail) {
         UaaRole uaaRole = convert(roleDetail);
         if (uaaRole.getRoleName() == null || uaaRole.getRoleName().isEmpty()) {
             return APIResult.builder()
@@ -242,7 +245,7 @@ public class RoleServiceImpl implements RoleService {
         uaaRoleMapper.insertSelective(uaaRole);
         if (roleDetail.getAuthorityList() != null && !roleDetail.getAuthorityList().isEmpty()) {
             // 插入权限关系表
-            updateAuthority(uaaRole.getId(), roleDetail.getMenuList(), request);
+            updateAuthority(uaaRole.getId(), roleDetail.getMenuList());
         }
         // 创建人默认拥有该角色
         UserDetail currentUserDetail = systemService.currentUserDetail();
@@ -256,7 +259,10 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public APIResult<RoleDetail> updateRole(long roleId, RoleDetail roleDetail, HttpServletRequest request) {
+    public APIResult<RoleDetail> updateRole(long roleId, RoleDetail roleDetail) {
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         UaaRole oldUaaRole = uaaRoleMapper.selectByPrimaryKey(roleId);
         if (oldUaaRole == null) {
             return APIResult.builder()
@@ -267,8 +273,7 @@ public class RoleServiceImpl implements RoleService {
         if (oldUaaRole.getBuiltInRole()) {
             UserDetail currentUserDetail = systemService.currentUserDetail();
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试编辑内置角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-            );
+                    "尝试编辑内置角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             return APIResult.builder()
                     .code(StateCodeEnum.Failure)
                     .message("内置角色禁止编辑，请求被拒绝")
@@ -287,8 +292,7 @@ public class RoleServiceImpl implements RoleService {
                 !uaaUtilService.isSecuritySuperUser(currentUserDetail) && !haveRole) {
             // 不是超级管理员，也不是安全保密管理员，也不拥有这个角色
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试编辑未拥有的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-            );
+                    "尝试编辑未拥有的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             return APIResult.builder()
                     .code(StateCodeEnum.Failure)
                     .message("您未拥有该角色，无权编辑，请求被拒绝")
@@ -318,7 +322,7 @@ public class RoleServiceImpl implements RoleService {
         oldUaaRole.setUpdateTime(new Date());
         uaaRoleMapper.updateByPrimaryKeyWithBLOBs(oldUaaRole);
         // 插入权限关系表
-        updateAuthority(oldUaaRole.getId(), roleDetail.getMenuList(), request);
+        updateAuthority(oldUaaRole.getId(), roleDetail.getMenuList());
         return new APIResult<>(convert(oldUaaRole));
     }
 
@@ -335,8 +339,7 @@ public class RoleServiceImpl implements RoleService {
         if (oldUaaRole.getBuiltInRole()) {
             UserDetail currentUserDetail = systemService.currentUserDetail();
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.DELETE,
-                    "尝试删除内置角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-            );
+                    "尝试删除内置角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             return APIResult.builder()
                     .code(StateCodeEnum.Failure)
                     .message("内置角色禁止删除，请求被拒绝")
@@ -355,8 +358,7 @@ public class RoleServiceImpl implements RoleService {
                 !uaaUtilService.isSecuritySuperUser(currentUserDetail) && !haveRole) {
             // 不是超级管理员，也不是安全保密管理员，也不拥有这个角色
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试删除未拥有的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-            );
+                    "尝试删除未拥有的角色，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             return APIResult.builder()
                     .code(StateCodeEnum.Failure)
                     .message("您未拥有该角色，无权编辑，请求被拒绝")
@@ -372,7 +374,10 @@ public class RoleServiceImpl implements RoleService {
         return APIResult.success();
     }
 
-    private void updateAuthority(long roleId, List<MenuTree> menuList, HttpServletRequest request) {
+    private void updateAuthority(long roleId, List<MenuTree> menuList) {
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         if (menuList != null) {
             UserDetail currentUserDetail = systemService.currentUserDetail();
             for (MenuTree menu : menuList
@@ -395,8 +400,7 @@ public class RoleServiceImpl implements RoleService {
                                     String.format("尝试给角色分配自己未拥有的资源，被拒绝。资源类型[%s]ID[%s]。",
                                             menu.getMenuType(),
                                             menu.getId()),
-                                    currentUserDetail.getUuid(), currentUserDetail.getUsername(), request
-                            );
+                                    currentUserDetail.getUuid(), currentUserDetail.getUsername());
                             throw new BusinessException(
                                     String.format("您未拥有资源类型[%s]ID[%s]的权限，无法分配给其他用户，请求被拒绝",
                                             menu.getMenuType(),

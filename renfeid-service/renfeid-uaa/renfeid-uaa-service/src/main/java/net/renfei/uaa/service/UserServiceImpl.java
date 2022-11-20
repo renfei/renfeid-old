@@ -50,6 +50,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -188,7 +190,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public APIResult<UserDetail> signIn(SignInAo signIn, HttpServletRequest request) {
+    public APIResult<UserDetail> signIn(SignInAo signIn) {
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         UaaUserExample example = new UaaUserExample();
         UaaUserExample.Criteria criteria = example.createCriteria();
         if (StringUtils.isChinaPhone(signIn.getUserName())) {
@@ -214,14 +219,14 @@ public class UserServiceImpl implements UserService {
         if (!uaaUser.getEnabled()) {
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.AUTH, OperationTypeEnum.SIGNIN,
                     String.format("账号：%s，尝试登录系统，因账号未启用被拒绝登录。",
-                            signIn.getUserName()), uaaUser.getUuid(), uaaUser.getUsername(), request);
+                            signIn.getUserName()), uaaUser.getUuid(), uaaUser.getUsername());
             logger.warn("账号：{}，尝试登录系统，因账号未启用被拒绝登录。", signIn.getUserName());
             throw new BusinessException("当前账户未启用，请联系安全保密管理员对账号进行启用");
         }
         if (uaaUser.getLocked()) {
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.AUTH, OperationTypeEnum.SIGNIN,
                     String.format("账号：%s，尝试登录系统，因账号锁定拒绝登录。",
-                            signIn.getUserName()), uaaUser.getUuid(), uaaUser.getUsername(), request);
+                            signIn.getUserName()), uaaUser.getUuid(), uaaUser.getUsername());
             logger.warn("账号：{}，尝试登录系统，因账号锁定拒绝登录。", signIn.getUserName());
             throw new BusinessException("当前账户被锁定，请联系安全保密管理员对账号进行解锁");
         }
@@ -231,7 +236,7 @@ public class UserServiceImpl implements UserService {
                 String lockDate = DateUtils.getDate(uaaUser.getLockTime(), "yyyy-MM-dd hh:mm:ss");
                 systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.AUTH, OperationTypeEnum.SIGNIN,
                         String.format("账号：%s，尝试登录系统，因账号处于锁定期被拒绝登录，锁定期[%s]后将自动解锁。",
-                                signIn.getUserName(), lockDate), uaaUser.getUuid(), uaaUser.getUsername(), request);
+                                signIn.getUserName(), lockDate), uaaUser.getUuid(), uaaUser.getUsername());
                 logger.warn("账号：{}，尝试登录系统，因账号处于锁定期被拒绝登录，锁定期[{}]后将自动解锁。", signIn.getUserName(), lockDate);
                 throw new BusinessException("当前账户已被锁定至[" + lockDate + "]，请稍后再试");
             }
@@ -241,7 +246,7 @@ public class UserServiceImpl implements UserService {
             if (new Date().before(uaaUser.getPasswordExpirationTime())) {
                 systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.AUTH, OperationTypeEnum.SIGNIN,
                         String.format("账号：%s，尝试登录系统，因账号长时间未修改密码被拒绝登录。",
-                                signIn.getUserName()), uaaUser.getUuid(), uaaUser.getUsername(), request);
+                                signIn.getUserName()), uaaUser.getUuid(), uaaUser.getUsername());
                 logger.warn("账号：{}，尝试登录系统，因账号长时间未修改密码被拒绝登录。", signIn.getUserName());
                 throw new BusinessException("当前账户由于长时间未修改密码，被限制使用，请联系安全保密管理员重置密码后再登录。");
             }
@@ -266,7 +271,7 @@ public class UserServiceImpl implements UserService {
                 uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
                 systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.AUTH, OperationTypeEnum.SIGNIN,
                         String.format("账号：%s，尝试登录系统，因密码错误被拒绝登录。",
-                                signIn.getUserName()), uaaUser.getUuid(), uaaUser.getUsername(), request);
+                                signIn.getUserName()), uaaUser.getUuid(), uaaUser.getUsername());
                 logger.warn("账号：{}，尝试登录系统，因密码错误被拒绝登录。", signIn.getUserName());
                 throw new BusinessException("用户名或密码错误");
             }
@@ -279,7 +284,7 @@ public class UserServiceImpl implements UserService {
         }
         systemLogService.save(LogLevelEnum.INFO, SystemTypeEnum.AUTH, OperationTypeEnum.SIGNIN,
                 String.format("账号：%s，登入系统。", signIn.getUserName()),
-                uaaUser.getUuid(), uaaUser.getUsername(), request);
+                uaaUser.getUuid(), uaaUser.getUsername());
         logger.info("账号：{}，登入系统。", signIn.getUserName());
         uaaUser.setTrialErrorTimes(0);
         uaaUserMapper.updateByPrimaryKeySelective(uaaUser);
@@ -290,6 +295,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public APIResult signUp(SignUpAo signUp, HttpServletRequest request) {
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         this.checkDuplicateUsername(signUp.getUserName());
         this.checkDuplicateEmail(signUp.getEmail());
         UaaUser uaaUser = new UaaUser();
@@ -448,6 +456,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public APIResult<UserDetail> updateUser(long userId, UserDetail userDetail, HttpServletRequest request) {
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (uaaUser == null) {
@@ -457,14 +468,14 @@ public class UserServiceImpl implements UserService {
         if (uaaUser.getBuiltInUser()) {
             // 内置用户，禁止编辑，去数据库里改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试修改内置用户资料，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+                    "尝试修改内置用户资料，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             throw new BusinessException("内置用户，禁止编辑，请求被拒绝");
         }
         if (userId != Long.parseLong(currentUserDetail.getId())
                 && SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), oldUserDetail.getSecretLevel())) {
             // 如果不是修改自己的，那么需要判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试修改高于自己密级的用户，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+                    "尝试修改高于自己密级的用户，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             throw new OutOfSecretLevelException("您修改的用户密级高于您的密级，您无权编辑，请求被拒绝");
         }
         // 只能修改以下内容，修改密码、更改密级等有专门的接口
@@ -486,18 +497,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public APIResult determineUserSecretLevel(long userId, SecretLevelEnum secretLevel, HttpServletRequest request) {
+    public APIResult determineUserSecretLevel(long userId, SecretLevelEnum secretLevel) {
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         UserDetail currentUserDetail = systemService.currentUserDetail();
         if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), systemConfig.getMaxSecretLevel())) {
             // 判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试定密密级高于系统允许的最大密级，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+                    "尝试定密密级高于系统允许的最大密级，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             throw new OutOfSecretLevelException("您定密的密级高于系统允许的最大密级，请求被拒绝");
         }
         if (SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), secretLevel)) {
             // 判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试给用户定密高于自己的密级，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+                    "尝试给用户定密高于自己的密级，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             throw new OutOfSecretLevelException("您定密的密级高于您自身的密级，请求被拒绝");
         }
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
@@ -508,14 +522,14 @@ public class UserServiceImpl implements UserService {
         if (uaaUser.getBuiltInUser()) {
             // 内置用户，禁止编辑，去数据库里改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试给内置用户定密，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+                    "尝试给内置用户定密，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             throw new BusinessException("内置用户，禁止编辑，请求被拒绝");
         }
         if (userId != Long.parseLong(currentUserDetail.getId())
                 && SecretLevelEnum.outOfSecretLevel(currentUserDetail.getSecretLevel(), oldUserDetail.getSecretLevel())) {
             // 如果不是修改自己的，那么需要判断密级是否跨级修改
             systemLogService.save(LogLevelEnum.WARN, SystemTypeEnum.ACCOUNT, OperationTypeEnum.UPDATE,
-                    "尝试修改高于自己密级的用户，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername(), request);
+                    "尝试修改高于自己密级的用户，被拒绝。", currentUserDetail.getUuid(), currentUserDetail.getUsername());
             throw new OutOfSecretLevelException("您修改的用户密级高于您的密级，您无权编辑，请求被拒绝");
         }
         uaaUser.setSecretLevel(secretLevel.getLevel());
@@ -524,7 +538,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public APIResult enableUser(long userId, boolean enable, HttpServletRequest request) {
+    public APIResult enableUser(long userId, boolean enable) {
         UaaUser uaaUser = uaaUserMapper.selectByPrimaryKey(userId);
         if (uaaUser == null) {
             throw new BusinessException("根据用户ID未找到该用户，请查证");

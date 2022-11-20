@@ -64,7 +64,7 @@ public class RoleController extends AbstractController {
     @Operation(summary = "创建角色", tags = {"角色管理接口"})
     @OperationLog(module = SystemTypeEnum.SYS_ROLE, desc = "创建角色", operation = OperationTypeEnum.CREATE)
     public APIResult<RoleDetail> createRole(@RequestBody RoleDetail roleDetail) {
-        return roleService.createRole(roleDetail, request);
+        return roleService.createRole(roleDetail);
     }
 
     @PutMapping("role/{id}")
@@ -74,7 +74,7 @@ public class RoleController extends AbstractController {
     })
     @OperationLog(module = SystemTypeEnum.SYS_ROLE, desc = "编辑角色", operation = OperationTypeEnum.UPDATE)
     public APIResult<RoleDetail> updateRole(@PathVariable("id") Long roleId, @RequestBody RoleDetail roleDetail) {
-        return roleService.updateRole(roleId, roleDetail, request);
+        return roleService.updateRole(roleId, roleDetail);
     }
 
     @DeleteMapping("role/{id}")

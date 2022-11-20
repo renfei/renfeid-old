@@ -47,7 +47,7 @@ public class LogHandler extends AbstractHandler {
                                     WxSessionManager wxSessionManager) {
         this.logger.debug("\n接收到请求消息，内容：{}", JacksonUtil.obj2String(wxMpXmlMessage));
         systemLogService.save(LogLevelEnum.INFO, SystemTypeEnum.WECHAT_MP, OperationTypeEnum.RETRIEVE,
-                wxMpXmlMessage.getContent(), null, null, null);
+                wxMpXmlMessage.getContent(), null, null);
         return null;
     }
 }

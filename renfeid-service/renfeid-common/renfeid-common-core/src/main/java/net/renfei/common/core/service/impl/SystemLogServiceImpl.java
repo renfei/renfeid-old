@@ -30,6 +30,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -152,7 +155,7 @@ public class SystemLogServiceImpl implements SystemLogService {
     @Async
     @Override
     public void save(LogLevelEnum logLevel, SystemTypeEnum systemType, OperationTypeEnum operationType,
-                     String desc, String userUuid, String username, HttpServletRequest request) {
+                     String desc, String userUuid, String username) {
         CoreLogsWithBLOBs logs = new CoreLogsWithBLOBs();
         logs.setLogTime(new Date());
         logs.setLogLevel(logLevel.toString());
@@ -161,12 +164,14 @@ public class SystemLogServiceImpl implements SystemLogService {
         logs.setLogDesc(desc);
         logs.setUserUuid(userUuid);
         logs.setUserName(username);
-        if (request != null) {
-            logs.setRequMethod(request.getMethod());
-            logs.setRequUri(request.getRequestURI());
-            logs.setRequIp(IpUtils.getIpAddress(request));
-            logs.setRequAgent(request.getHeader("User-Agent"));
-            logs.setRequReferrer(request.getHeader("Referer"));
+        RequestAttributes attribs = RequestContextHolder.getRequestAttributes();
+        if (attribs instanceof ServletRequestAttributes) {
+            HttpServletRequest requests = ((ServletRequestAttributes) attribs).getRequest();
+            logs.setRequMethod(requests.getMethod());
+            logs.setRequUri(requests.getRequestURI());
+            logs.setRequIp(IpUtils.getIpAddress(requests));
+            logs.setRequAgent(requests.getHeader("User-Agent"));
+            logs.setRequReferrer(requests.getHeader("Referer"));
         }
         coreLogsMapper.insertSelective(logs);
     }

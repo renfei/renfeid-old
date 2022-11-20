@@ -40,7 +40,7 @@ public interface SystemService extends ApplicationContextAware {
     /**
      * 【危险】关闭系统，主动退出
      */
-    void shutdownSystem(HttpServletRequest request);
+    void shutdownSystem();
 
     /**
      * 获取当前登录的用户详情

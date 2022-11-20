@@ -62,20 +62,18 @@ public interface RoleService {
      * 创建角色
      *
      * @param roleDetail 角色详情
-     * @param request    请求对象
      * @return
      */
-    APIResult<RoleDetail> createRole(RoleDetail roleDetail, HttpServletRequest request);
+    APIResult<RoleDetail> createRole(RoleDetail roleDetail);
 
     /**
      * 修改角色
      *
      * @param roleId     角色ID
      * @param roleDetail 角色详情
-     * @param request    请求对象
      * @return
      */
-    APIResult<RoleDetail> updateRole(long roleId, RoleDetail roleDetail, HttpServletRequest request);
+    APIResult<RoleDetail> updateRole(long roleId, RoleDetail roleDetail);
 
     /**
      * 删除角色

@@ -147,7 +147,7 @@ public class UserController extends AbstractController {
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "给用户定密", operation = OperationTypeEnum.UPDATE)
     public APIResult determineUserSecretLevel(@PathVariable("id") long userId,
                                               @PathVariable("secretLevel") SecretLevelEnum secretLevel) {
-        return userService.determineUserSecretLevel(userId, secretLevel, request);
+        return userService.determineUserSecretLevel(userId, secretLevel);
     }
 
     @PutMapping("user/{id}/enable/{enable}")
@@ -158,7 +158,7 @@ public class UserController extends AbstractController {
     })
     @OperationLog(module = SystemTypeEnum.ACCOUNT, desc = "用户启用或禁用", operation = OperationTypeEnum.UPDATE)
     public APIResult enableUser(@PathVariable("id") long userId, @PathVariable("enable") boolean enable) {
-        return userService.enableUser(userId, enable, request);
+        return userService.enableUser(userId, enable);
     }
 
     @PutMapping("user/{id}/reset-password")

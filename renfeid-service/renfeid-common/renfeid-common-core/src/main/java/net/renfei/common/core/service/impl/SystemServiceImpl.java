@@ -43,6 +43,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PreDestroy;
@@ -94,15 +96,18 @@ public class SystemServiceImpl implements SystemService {
      * 【危险】关闭系统，主动退出
      */
     @Override
-    public void shutdownSystem(HttpServletRequest request) {
+    public void shutdownSystem() {
         UserDetail userDetail = this.currentUserDetail();
         String userUuid = null, username = null;
         if (userDetail != null) {
             userUuid = userDetail.getUuid();
             username = userDetail.getUsername();
         }
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         systemLogService.save(LogLevelEnum.FATAL, SystemTypeEnum.SYSTEM, OperationTypeEnum.DELETE,
-                "系统停车！！！ System shutdown!!!", userUuid, username, request);
+                "系统停车！！！ System shutdown!!!", userUuid, username);
         ConfigurableApplicationContext ctx = (ConfigurableApplicationContext) context;
         ctx.close();
     }
@@ -200,7 +205,7 @@ public class SystemServiceImpl implements SystemService {
     @PreDestroy
     public void preDestroy() {
         systemLogService.save(LogLevelEnum.FATAL, SystemTypeEnum.SYSTEM, OperationTypeEnum.DELETE,
-                "系统停车！！！ System shutdown!!!", null, null, null);
+                "系统停车！！！ System shutdown!!!", null, null);
         logger.error("系统停车！！！ System shutdown!!!");
     }
 

@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -88,10 +90,13 @@ public class SearchController extends AbstractController {
         double timed = (endTime - startTime) / 1000000000D;
         DecimalFormat df = new DecimalFormat("######0.000000");
         UserDetail userDetail = systemService.currentUserDetail();
+        ServletRequestAttributes servletRequestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 设置子线程共享
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
         if (userDetail == null) {
-            systemLogService.save(LogLevelEnum.INFO, SystemTypeEnum.SEARCH, OperationTypeEnum.RETRIEVE, query, null, null, request);
+            systemLogService.save(LogLevelEnum.INFO, SystemTypeEnum.SEARCH, OperationTypeEnum.RETRIEVE, query, null, null);
         } else {
-            systemLogService.save(LogLevelEnum.INFO, SystemTypeEnum.SEARCH, OperationTypeEnum.RETRIEVE, query, userDetail.getUuid(), userDetail.getUsername(), request);
+            systemLogService.save(LogLevelEnum.INFO, SystemTypeEnum.SEARCH, OperationTypeEnum.RETRIEVE, query, userDetail.getUuid(), userDetail.getUsername());
         }
         return APIResult.builder()
                 .code(StateCodeEnum.OK)
