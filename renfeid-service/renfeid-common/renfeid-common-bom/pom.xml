@@ -13,7 +13,7 @@
         <renfeid.version>3.0.0</renfeid.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <springdoc.version>1.6.12</springdoc.version>
+        <springdoc.version>1.6.13</springdoc.version>
         <druid.version>1.2.15</druid.version>
         <mybatis.version>2.2.2</mybatis.version>
         <pagehelper.version>1.4.5</pagehelper.version>
