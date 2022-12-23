@@ -181,7 +181,7 @@
             <dependency>
                 <groupId>com.aliyun</groupId>
                 <artifactId>alidns20150109</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.flowable</groupId>
