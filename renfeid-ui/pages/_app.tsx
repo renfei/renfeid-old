@@ -13,19 +13,6 @@ type Props = AppProps & {
     Component: Page
 }
 
-const getAnalyticsTag = () => {
-    return {
-        __html: `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments)}
-        gtag('js', new Date());
-        gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
-          page_path: window.location.pathname,
-        });
-        `,
-    }
-}
-
 const App = ({ Component, pageProps }: Props) => {
     const getLayout = Component.getLayout ?? ((page: ReactNode) => page)
     const [consoleLog, setConsoleLog] = useState<number>(0)
@@ -73,7 +60,7 @@ const App = ({ Component, pageProps }: Props) => {
                 ]}
             />
             <Component {...pageProps} />
-            <script dangerouslySetInnerHTML={getAnalyticsTag()} />
+            {/* <script dangerouslySetInnerHTML={getAnalyticsTag()} /> */}
         </>
     )
 }

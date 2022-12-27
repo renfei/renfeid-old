@@ -5,6 +5,12 @@ import Script from 'next/script'
 
 type Props = {}
 
+const getAnalyticsTag = () => {
+    return {
+        __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments)}gtag('js', new Date());gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {page_path: window.location.pathname,});`,
+    }
+}
+
 class Document extends NextDocument<Props> {
     render() {
         return (
@@ -25,6 +31,7 @@ class Document extends NextDocument<Props> {
                     <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"></link>
                     <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com"></link>
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" crossOrigin="anonymous"></script>
+                    <script dangerouslySetInnerHTML={getAnalyticsTag()} />
                 </Head>
                 <body>
                     <Main />
