@@ -27,6 +27,11 @@ const { Title, Text } = Typography
 
 
 export const getServerSideProps: GetServerSideProps = async (context: any) => {
+    if (!(!isNaN(parseFloat(context.query.id)) && isFinite(context.query.id))) {
+        return {
+            notFound: true,
+        }
+    }
     const accessToken = nookies.get(context)['accessToken']
     const userInfo: UserInfo | null = await CheckSignInStatus(context)
     const postPassword = context.query.postPassword

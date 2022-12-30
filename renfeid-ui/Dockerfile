@@ -14,6 +14,8 @@ COPY --chown=nextjs:nodejs ./.next/static ./.next/static
 
 USER nextjs
 
+RUN mkdir /tmp/upload
+
 EXPOSE 3000
 
 ENV PORT 3000
