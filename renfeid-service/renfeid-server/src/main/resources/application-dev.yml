@@ -92,8 +92,7 @@ system:
   # 是否记录响应内容（开启后日志表将变大）
   recordResponse: false
   # IP2Location 数据库 Bin 文件请到此处下载：https://github.com/renfei/ip2location
-  ip2LocationBinFile: classpath:/IP2LOCATION-LITE-DB11/IP2LOCATION-LITE-DB11.BIN
-  ip2LocationBinFileV6: classpath:/IP2LOCATION-LITE-DB11/IP2LOCATION-LITE-DB11.IPV6.BIN
+  ip2LocationBinFile: classpath:/IP2LOCATION-LITE-DB11/IP2LOCATION-LITE-DB11.IPV6.BIN
   # 忽略鉴权的地址
   authIgnore:
     - /_/api/test

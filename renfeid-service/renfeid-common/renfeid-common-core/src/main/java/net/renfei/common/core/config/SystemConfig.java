@@ -66,7 +66,6 @@ public class SystemConfig {
     private Boolean bindingIp;
     private Boolean recordResponse;
     private String ip2LocationBinFile;
-    private String ip2LocationBinFileV6;
     private Jwt jwt;
     private UCenter uCenter;
     private List<String> authIgnore;
