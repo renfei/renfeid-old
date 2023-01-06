@@ -30,7 +30,8 @@ public class IpUtils {
         final String unknown = "unknown";
         if (ip != null && ip.length() != 0 && !unknown.equalsIgnoreCase(ip)) {
             if (ip.contains(",")) {
-                ip = ip.split(",")[0];
+                String[] ipArr = ip.split(",");
+                ip = ipArr[ipArr.length - 1].trim();
             }
         }
         if (ObjectUtils.isEmpty(ip) || unknown.equalsIgnoreCase(ip)) {
