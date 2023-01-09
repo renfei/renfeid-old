@@ -15,9 +15,11 @@
  */
 package net.renfei.cms.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import net.renfei.cms.api.constant.enums.PostStatusEnum;
 import net.renfei.common.api.constant.enums.SecretLevelEnum;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -38,6 +40,8 @@ public class Post implements Serializable {
     @Schema(description = "作者ID")
     private String postAuthor;
     @Schema(description = "发布时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date postDate;
     @Schema(description = "文章状态")
     private PostStatusEnum postStatus;
@@ -48,6 +52,8 @@ public class Post implements Serializable {
     @Schema(description = "文章内容密码")
     private String postPassword;
     @Schema(description = "文章内容修改时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date postModified;
     @Schema(description = "文章内容修改人ID")
     private Long postModifiedUser;
