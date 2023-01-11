@@ -1,4 +1,3 @@
-import 'antd/dist/antd.css'
 import '../styles/globals.css'
 import { LogoJsonLd, SiteLinksSearchBoxJsonLd, SocialProfileJsonLd } from 'next-seo'
 import React, { ReactNode, useEffect, useState } from 'react'

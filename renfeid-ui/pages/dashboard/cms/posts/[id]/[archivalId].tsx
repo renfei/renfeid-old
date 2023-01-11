@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import nookies from 'nookies'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import React, { useState } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Editor } from '@tinymce/tinymce-react'
@@ -147,7 +147,7 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
         form.setFieldsValue({ id: data.post.id })
         form.setFieldsValue({ categoryId: data.post.categoryId })
         form.setFieldsValue({ postAuthor: data.post.postAuthor })
-        form.setFieldsValue({ postDate: moment(data.post.postDate) })
+        form.setFieldsValue({ postDate: dayjs(data.post.postDate) })
         form.setFieldsValue({ postStatus: data.post.postStatus })
         form.setFieldsValue({ postViews: data.post.postViews })
         form.setFieldsValue({ commentStatus: data.post.commentStatus })
@@ -323,7 +323,7 @@ const DashboardCmsPostEdit = ({ data }: InferGetServerSidePropsType<typeof getSe
                                                 <DatePicker
                                                     style={{ width: '100%' }}
                                                     showTime
-                                                    format="yyyy-MM-DD HH:mm:ss" />
+                                                    format="YYYY-MM-DD HH:mm:ss" />
                                             </Form.Item>
                                         </Col>
                                         <Col xs={24} sm={1} md={1} lg={1} xl={1} xxl={1}> </Col>

@@ -1,5 +1,5 @@
 import nookies from 'nookies'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { NextSeo, ArticleJsonLd } from 'next-seo'
 import React, { useState, useEffect } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
@@ -99,7 +99,7 @@ const PostsPage = ({ data }: InferGetServerSidePropsType<typeof getServerSidePro
                 url="https://example.com/blog"
                 title={`${process.env.NEXT_PUBLIC_RENFEID_SITE_NAME}`}
                 images={jsonLdImages}
-                datePublished={moment(listData?.data[0].postDate).format()}
+                datePublished={dayjs(listData?.data[0].postDate).format()}
                 authorName="任霏"
                 description="任霏的个人博客栏目，专注分享科技、软件、开发等技术内容，记录分享个人的实践与成长。"
             />

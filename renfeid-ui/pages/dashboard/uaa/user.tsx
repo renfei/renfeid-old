@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { Col, Row, Button, Typography, Table, Space, Form, Input, Select, Modal, Tag, message } from 'antd'
 import {
@@ -396,7 +396,7 @@ const DashboardUaaUser = () => {
             emailVerified: true,
             phone: modelForm.getFieldValue('phone'),
             phoneVerified: false,
-            registrationDate: moment(new Date()).format('yyyy-MM-DD HH:mm:ss'),
+            registrationDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
             password: secretValue.value,
             registrationIp: '',
             lockTime: '',

@@ -3,8 +3,10 @@ import Link from 'next/link'
 import nookies from 'nookies'
 import Layout from '../components/layout'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { Col, Row, Button, Typography, Divider, Card, Comment, List, Tooltip, Space } from 'antd'
-import moment from 'moment'
+import { Col, Row, Button, Typography, Divider, Card, List, Tooltip, Space } from 'antd'
+import { Comment } from '@ant-design/compatible'
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
 import { QRCodeSVG } from 'qrcode.react'
 import { ArrowRightOutlined, WechatOutlined, GithubOutlined } from '@ant-design/icons'
 import styles from '../styles/Home.module.css'
@@ -32,8 +34,8 @@ const weiboData = [
             </p>
         ),
         datetime: (
-            <Tooltip title={moment().subtract(1, 'days').format('yyyy-MM-DD HH:mm:ss')}>
-                <span>{moment().subtract(1, 'days').fromNow()}</span>
+            <Tooltip title={dayjs().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
+                <span>{dayjs().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>
             </Tooltip>
         ),
     },
@@ -47,8 +49,8 @@ const weiboData = [
             </p>
         ),
         datetime: (
-            <Tooltip title={moment().subtract(2, 'days').format('yyyy-MM-DD HH:mm:ss')}>
-                <span>{moment().subtract(2, 'days').fromNow()}</span>
+            <Tooltip title={dayjs().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}>
+                <span>{dayjs().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>
             </Tooltip>
         ),
     },
@@ -285,7 +287,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                             <Row gutter={20}>
                                 <Col lg={12} xs={24}>
                                     <div className={'renfeid_card'}>
-                                        <Title level={5}><WechatOutlined style={{ paddingRight: '10px' }} />微信订阅号</Title>
+                                        <Title level={5}><WechatOutlined />微信订阅号</Title>
                                         <Text type="secondary" style={{ fontSize: '12px' }}>扫码关注「任霏博客」微信订阅号</Text>
                                         <div style={{ textAlign: 'center', marginTop: '0.5em' }}>
                                             <QRCodeSVG
@@ -305,7 +307,7 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                                 </Col>
                                 <Col lg={12} xs={24}>
                                     <div className={'renfeid_card'}>
-                                        <Title level={5}><GithubOutlined style={{ paddingRight: '10px' }} />开源与反馈</Title>
+                                        <Title level={5}><GithubOutlined />开源与反馈</Title>
                                         <Text type="secondary" style={{ fontSize: '12px' }}>基于开源回归开源</Text>
                                         <ul style={{ paddingLeft: '15px' }}>
                                             <li>开源仓库：<a href="https://github.com/renfei/renfeid" target={'_blank'} rel={'nofollow noopener noreferrer'}>github.com/renfei/renfeid</a></li>
@@ -327,20 +329,19 @@ const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) 
                         SiteFriendlyLink && SiteFriendlyLink.length > 0 ? (
                             <div style={{ padding: '20px 0' }}>
                                 友情链接：
-                                <Space>
-                                    {
-                                        SiteFriendlyLink.map(friendly => (
-                                            <a
-                                                key={friendly.text}
-                                                href={friendly.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                {friendly.text}
-                                            </a>
-                                        ))
-                                    }
-                                </Space>
+                                {
+                                    SiteFriendlyLink.map(friendly => (
+                                        <a
+                                            key={friendly.text}
+                                            href={friendly.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ padding: '0 5px' }}
+                                        >
+                                            {friendly.text}
+                                        </a>
+                                    ))
+                                }
                             </div>
                         ) : ''
                     }

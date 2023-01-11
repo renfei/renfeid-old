@@ -1,4 +1,4 @@
-import { Layout, Divider, Space, Col, Row, Button, Typography, Card, Comment, List, Tooltip } from 'antd'
+import { Layout, Divider, Space, Col, Row, Typography } from 'antd'
 import React from 'react'
 
 const { Title } = Typography
@@ -207,8 +207,8 @@ const MyFooter = (props: any) => {
                             ) : ''
                         }
                     </Row>
-                    <div style={{ textAlign: 'right', fontSize: '11px', color: '#6c757d!important' }}>
-                        <Space>
+                    <div style={{ textAlign: 'right' }}>
+                        <Space style={{ fontSize: '11px', color: '#6c757d!important', fontWeight: '100' }}>
                             {
                                 footLinks.length > 0 ? (
                                     footLinks.map(link => (
@@ -227,7 +227,7 @@ const MyFooter = (props: any) => {
                         </Space>
                     </div>
                     <Divider style={{ margin: '7px 0' }} />
-                    <div style={{ fontSize: '11px', color: '#6c757d!important' }}>
+                    <div style={{ fontSize: '11px', color: '#6c757d!important', fontWeight: '100' }}>
                         <div style={{ float: 'left' }}>
                             Copyright © {new Date().getFullYear()} RENFEI.NET All rights reserved.
                         </div>

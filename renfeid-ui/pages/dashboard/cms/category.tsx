@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import nookies from 'nookies'
-import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Col, Row, Button, Typography, Table, Space, Form, Input, Select, Modal, message } from 'antd'

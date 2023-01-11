@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import nookies from 'nookies'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Col, Row, Button, Typography, Table, Space, Form, Input, Select, DatePicker, Modal, message } from 'antd'
@@ -279,7 +279,7 @@ const DashboardCmsPosts = ({ data }: InferGetServerSidePropsType<typeof getServe
                             <DatePicker
                                 style={{ width: '100%' }}
                                 showTime
-                                format="yyyy-MM-DD HH:mm:ss" />
+                                format="YYYY-MM-DD HH:mm:ss" />
                         </Form.Item>
                     </Col>, <Col span={6} key="endDate">
                     <Form.Item
@@ -289,7 +289,7 @@ const DashboardCmsPosts = ({ data }: InferGetServerSidePropsType<typeof getServe
                         <DatePicker
                             style={{ width: '100%' }}
                             showTime
-                            format="yyyy-MM-DD HH:mm:ss" />
+                            format="YYYY-MM-DD HH:mm:ss" />
                     </Form.Item>
                 </Col>,
                     <Col span={6}></Col>,
@@ -301,10 +301,10 @@ const DashboardCmsPosts = ({ data }: InferGetServerSidePropsType<typeof getServe
         const advancedSearch = async (values: any) => {
             let params: QueryCriteria = {
                 categoryId: values.categoryId,
-                endDate: values.endDate ? moment(values.endDate).format('yyyy-MM-DD HH:mm:ss') : undefined,
+                endDate: values.endDate ? dayjs(values.endDate).format('YYYY-MM-DD HH:mm:ss') : undefined,
                 pagination: pagination,
                 postStatus: values.postStatus,
-                startDate: values.startDate ? moment(values.startDate).format('yyyy-MM-DD HH:mm:ss') : undefined,
+                startDate: values.startDate ? dayjs(values.startDate).format('YYYY-MM-DD HH:mm:ss') : undefined,
                 title: values.title
             }
             await queryData(params)

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import nookies from 'nookies'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Col, Row, Button, Typography, Table, Space, Form, Input, Select, DatePicker, Modal, Descriptions } from 'antd'
@@ -308,7 +308,7 @@ const DashboardCmsPosts = ({ data }: InferGetServerSidePropsType<typeof getServe
                         <DatePicker
                             style={{ width: '100%' }}
                             showTime
-                            format="yyyy-MM-DD HH:mm:ss" />
+                            format="YYYY-MM-DD HH:mm:ss" />
                     </Form.Item>
                 </Col>,
                 <Col span={6} key="endDate">
@@ -319,7 +319,7 @@ const DashboardCmsPosts = ({ data }: InferGetServerSidePropsType<typeof getServe
                         <DatePicker
                             style={{ width: '100%' }}
                             showTime
-                            format="yyyy-MM-DD HH:mm:ss" />
+                            format="YYYY-MM-DD HH:mm:ss" />
                     </Form.Item>
                 </Col>,
                 <Col span={6} key="logLevel">

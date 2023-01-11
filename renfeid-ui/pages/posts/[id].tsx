@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import nookies from 'nookies'
 import { NextSeo, ArticleJsonLd } from 'next-seo'
 import React, { useState, useEffect } from 'react'
@@ -116,7 +116,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                     url: `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}/posts/${data.post.id}`,
                     type: 'article',
                     article: {
-                        publishedTime: `${moment(data.post.postDate).format()}`,
+                        publishedTime: `${dayjs(data.post.postDate).format()}`,
                         authors: [
                             `${process.env.NEXT_PUBLIC_RENFEID_SITE_DOMAIN}`
                         ],
@@ -147,7 +147,7 @@ const PostPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProp
                 images={[
                     `${data.post.featuredImage}`
                 ]}
-                datePublished={moment(data.post.postDate).format()}
+                datePublished={dayjs(data.post.postDate).format()}
                 authorName={[
                     {
                         name: `${data.post.postAuthor}`,

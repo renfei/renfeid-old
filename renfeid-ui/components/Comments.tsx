@@ -1,5 +1,6 @@
-import { Typography, Button, Comment, Form, Input, Divider, message } from 'antd'
-import moment from 'moment'
+import { Typography, Button, Form, Input, Divider, message } from 'antd'
+import { Comment } from '@ant-design/compatible'
+import dayjs from 'dayjs'
 import React, { useState } from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import CommentTree = API.CommentTree
@@ -33,7 +34,7 @@ const Comments = (props: { systemTypeEnum: string, objectId: string, data?: Comm
                                 className={"renfeid-comment"}
                                 key={`comment-${comment.id}`}
                                 actions={[
-                                    <span key={`comment-nested-datetime-${comment.id}`}>{moment(comment.addtime).format('yyyy-MM-DD HH:mm:ss')}</span>,
+                                    <span key={`comment-nested-datetime-${comment.id}`}>{dayjs(comment.addtime).format('YYYY-MM-DD HH:mm:ss')}</span>,
                                     <span key={`comment-nested-author-address-${comment.id}`}>{comment.authorAddress}</span>,
                                     <a key={`comment-nested-reply-to-${comment.id}`}
                                         href="#CommentEditor"
@@ -102,7 +103,7 @@ const Comments = (props: { systemTypeEnum: string, objectId: string, data?: Comm
                     ...comments,
                     {
                         id: '1',
-                        addtime: moment(new Date()).format('yyyy-MM-DD HH:mm:ss'),
+                        addtime: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                         isOwner: false,
                         author: form.getFieldValue('name'),
                         authorUrl: form.getFieldValue('link'),

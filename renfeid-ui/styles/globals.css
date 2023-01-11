@@ -84,7 +84,7 @@ a {
     opacity: .8;
 }
 
-.nav-menu-mobile li span {
+.nav-menu-mobile li img {
     vertical-align: middle;
 }
 
@@ -112,7 +112,7 @@ a {
     opacity: 1;
 }
 
-.nav-menu li span {
+.nav-menu li img {
     vertical-align: middle;
 }
 
@@ -148,7 +148,7 @@ a {
 .renfeid_card {
     border: 1px solid rgba(0, 0, 0, .125);
     border-radius: 0.25rem;
-    padding: 1.25rem;
+    padding: 0 1.25rem 1.25rem 1.25rem;
     margin: 10px 0;
 }
 
