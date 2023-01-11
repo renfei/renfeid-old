@@ -1,4 +1,3 @@
-import useSWR from 'swr'
 import { Layout, BackTop } from 'antd'
 import React, { useState, useEffect } from 'react'
 import Navbar from './navbar'
