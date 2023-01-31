@@ -15,7 +15,7 @@
     "@ant-design/icons": "^5.0.0",
     "@ant-design/pro-layout": "^7.6.1",
     "@tinymce/tinymce-react": "^4.2.0",
-    "antd": "^5.1.4",
+    "antd": "^5.1.7",
     "cookie": "^0.5.0",
     "crypto-js": "^4.1.1",
     "env-cmd": "^10.1.0",
