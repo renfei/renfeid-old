@@ -20,7 +20,7 @@
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
-                <version>1.4.1</version>
+                <version>1.4.2</version>
                 <configuration>
                     <!--mybatis generator插件配置文件位置，默认值${basedir}/src/main/resources/generatorConfig.xml-->
                     <configurationFile>${basedir}/src/main/resources/generatorConfig.xml</configurationFile>
