@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>renfeid-bpm</module>
         <module>renfeid-cms</module>
         <module>renfeid-common</module>
         <module>renfeid-pro</module>

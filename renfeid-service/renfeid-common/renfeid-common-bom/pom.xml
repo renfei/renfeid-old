@@ -19,7 +19,6 @@
         <pagehelper.version>1.4.6</pagehelper.version>
         <mariadb-client.version>3.1.2</mariadb-client.version>
         <jjwt.version>0.11.5</jjwt.version>
-        <flowable.version>6.8.0</flowable.version>
         <sentry.version>6.14.0</sentry.version>
         <curator-recipes.version>5.4.0</curator-recipes.version>
         <commons-io.version>2.11.0</commons-io.version>
@@ -28,16 +27,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>net.renfei</groupId>
-                <artifactId>renfeid-bpm-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.renfei</groupId>
-                <artifactId>renfeid-bpm-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>net.renfei</groupId>
                 <artifactId>renfeid-cms-api</artifactId>
@@ -182,17 +171,6 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>alidns20150109</artifactId>
                 <version>3.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.flowable</groupId>
-                <artifactId>flowable-spring-boot-starter</artifactId>
-                <version>${flowable.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.mybatis</groupId>
-                        <artifactId>mybatis</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.sentry</groupId>

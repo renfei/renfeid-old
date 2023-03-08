@@ -31,11 +31,6 @@
 
         <dependency>
             <groupId>net.renfei</groupId>
-            <artifactId>renfeid-bpm-service</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.renfei</groupId>
             <artifactId>renfeid-cms-service</artifactId>
         </dependency>
 
