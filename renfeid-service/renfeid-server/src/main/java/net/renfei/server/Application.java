@@ -22,6 +22,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 启动入口
@@ -29,6 +30,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @author renfei
  */
 @EnableAsync
+@EnableScheduling
 @SpringBootApplication
 @ComponentScan(basePackages = "net.renfei.*")
 public class Application extends SpringBootServletInitializer {
