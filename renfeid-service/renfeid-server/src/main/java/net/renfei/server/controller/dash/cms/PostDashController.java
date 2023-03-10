@@ -21,14 +21,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import net.renfei.cms.api.PostService;
 import net.renfei.cms.api.constant.enums.PostStatusEnum;
 import net.renfei.cms.api.entity.Post;
-import net.renfei.cms.jobs.UpdateBlogPageRankJob;
 import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.annotation.OperationLog;
 import net.renfei.common.core.entity.OperationTypeEnum;
 import net.renfei.common.core.entity.SystemTypeEnum;
 import net.renfei.server.controller.AbstractController;
-import org.quartz.JobExecutionException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -46,12 +44,9 @@ import java.util.List;
 @Tag(name = "文章内容接口", description = "文章内容接口")
 public class PostDashController extends AbstractController {
     private final PostService postService;
-    private final UpdateBlogPageRankJob updateBlogPageRankJob;
 
-    public PostDashController(PostService postService,
-                              UpdateBlogPageRankJob updateBlogPageRankJob) {
+    public PostDashController(PostService postService) {
         this.postService = postService;
-        this.updateBlogPageRankJob = updateBlogPageRankJob;
     }
 
     @GetMapping("posts")
@@ -144,14 +139,5 @@ public class PostDashController extends AbstractController {
     @OperationLog(module = SystemTypeEnum.POSTS, desc = "删除文章内容", operation = OperationTypeEnum.DELETE)
     public APIResult deletePost(@PathVariable("id") long postId) {
         return postService.deletePost(postId);
-    }
-
-    @GetMapping("updateBlogPageRankJob")
-    @PreAuthorize("hasPermission('','cms:post:query')")
-    @Operation(summary = "更新博客文章的排名指数", tags = {"文章内容接口"})
-    @OperationLog(module = SystemTypeEnum.POSTS, desc = "更新博客文章的排名指数")
-    public APIResult<?> updateBlogPageRankJob() throws JobExecutionException {
-        updateBlogPageRankJob.execute(null);
-        return APIResult.success();
     }
 }
