@@ -19,7 +19,7 @@
         <pagehelper.version>1.4.6</pagehelper.version>
         <mariadb-client.version>3.1.2</mariadb-client.version>
         <jjwt.version>0.11.5</jjwt.version>
-        <sentry.version>6.14.0</sentry.version>
+        <sentry.version>6.19.0</sentry.version>
         <curator-recipes.version>5.4.0</curator-recipes.version>
         <commons-io.version>2.11.0</commons-io.version>
         <lang3.version>3.12.0</lang3.version>
