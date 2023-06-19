@@ -23,7 +23,7 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <spring-boot.version>2.7.9</spring-boot.version>
+        <spring-boot.version>2.7.12</spring-boot.version>
         <spring-cloud.version>2021.0.5</spring-cloud.version>
         <aws-sdk.version>2.20.74</aws-sdk.version>
         <spring.checkstyle.plugin>0.0.38</spring.checkstyle.plugin>
