@@ -14,7 +14,7 @@
 | 后端                                                                             | 前端                                                                                       |
 |--------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
 | 所在目录：[renfeid-service](./renfeid-service)                                      | 所在目录：[renfeid-ui](./renfeid-ui)                                                          |
-| 技术栈：Java8、SpringBoot、MyBatis、MariaDB、Druid、RestfulAPI、Maven                    | 技术栈： Node.js、 React、 Next.js、AntD                                                        |
+| 技术栈：Java17、SpringBoot3.x、MyBatis、MariaDB、Druid、RestfulAPI、Maven                | 技术栈： Node.js、 React、 Next.js、AntD                                                        |
 | 简要说明：尝试过SpringCloud微服务架构，但对于个人网站来说过于沉重和耗费资源，所以我用maven多模块的方式进行了拆分，将来可以改造为微服务架构。 | 简要说明：之前一直没有使用Vue/React是因为SPA对SEO不友好，但随着前端技术的完善，Next的SSR服务器端渲染已经很成熟了，本次是我第一次尝试前台也使用React。 |
 | 自我点评：采用前后端分离架构，是目前行业比较流行的结构，SpringBoot也是最新版本的依赖。                               | 自我点评：本人非前端专业，只是业余学习，很可能使用姿势不符合行业规范，前端项目仅供参考。                                             |
 
@@ -70,18 +70,18 @@ React。
 <details>
 <summary>点此展开查看详情</summary>
 
-| 工程名                                   | 描述    |
-|---------------------------------------|-------|
-| + components                          | 组件目录  |
-| &nbsp;&nbsp; + layout                 | 前台布局  |
-| &nbsp;&nbsp;&nbsp;&nbsp; - dashboard  | 后台布局  |
-| + pages                               | 页面    |
-| &nbsp;&nbsp; - api                    | API接口 |
-| &nbsp;&nbsp; - 其他                     | 页面实现  |
-| + public                              | 静态文件  |
-| + services                            | 服务    |
-| + styles                              | 样式    |
-| + utils                               | 工具    |
+| 工程名                                  | 描述    |
+|--------------------------------------|-------|
+| + components                         | 组件目录  |
+| &nbsp;&nbsp; + layout                | 前台布局  |
+| &nbsp;&nbsp;&nbsp;&nbsp; - dashboard | 后台布局  |
+| + pages                              | 页面    |
+| &nbsp;&nbsp; - api                   | API接口 |
+| &nbsp;&nbsp; - 其他                    | 页面实现  |
+| + public                             | 静态文件  |
+| + services                           | 服务    |
+| + styles                             | 样式    |
+| + utils                              | 工具    |
 
 </details>
 
