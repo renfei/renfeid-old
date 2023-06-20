@@ -22,7 +22,7 @@ import net.renfei.common.api.entity.UserSignInLog;
 import net.renfei.uaa.api.entity.UserDetail;
 import net.renfei.uaa.api.entity.*;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 认证服务

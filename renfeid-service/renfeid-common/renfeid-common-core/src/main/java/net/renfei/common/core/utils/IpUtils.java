@@ -17,7 +17,7 @@ package net.renfei.common.core.utils;
 
 import org.springframework.util.ObjectUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * IP获取工具

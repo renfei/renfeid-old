@@ -47,11 +47,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PreDestroy;
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
+import jakarta.annotation.PreDestroy;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

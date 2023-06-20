@@ -21,7 +21,7 @@ import net.renfei.common.core.entity.Comment;
 import net.renfei.common.core.entity.CommentTree;
 import net.renfei.common.core.entity.SystemTypeEnum;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

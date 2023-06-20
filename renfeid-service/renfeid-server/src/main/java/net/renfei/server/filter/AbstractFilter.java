@@ -19,7 +19,7 @@ import net.renfei.common.api.constant.APIResult;
 import net.renfei.common.api.utils.JacksonUtil;
 import org.slf4j.Logger;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;

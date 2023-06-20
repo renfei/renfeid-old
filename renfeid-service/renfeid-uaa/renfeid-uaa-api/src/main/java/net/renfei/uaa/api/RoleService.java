@@ -21,7 +21,7 @@ import net.renfei.uaa.api.entity.Authority;
 import net.renfei.uaa.api.entity.AuthorityTypeEnum;
 import net.renfei.uaa.api.entity.RoleDetail;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

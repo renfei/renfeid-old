@@ -15,7 +15,7 @@
  */
 package net.renfei.common.core.service;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 
 /**

@@ -22,9 +22,11 @@ import net.renfei.server.security.handler.AuthenticationEntryPointImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -35,8 +37,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        prePostEnabled = true,
+@EnableMethodSecurity(
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfiguration {
@@ -44,27 +45,31 @@ public class SecurityConfiguration {
     private final AuthorizationFilter authorizationFilter;
 
     public SecurityConfiguration(SystemConfig systemConfig,
-                                 AuthorizationFilter authorizationFilter    ) {
+                                 AuthorizationFilter authorizationFilter) {
         this.systemConfig = systemConfig;
         this.authorizationFilter = authorizationFilter;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable();
-        http
-                .headers()
-                .frameOptions().sameOrigin()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/_/api/**").authenticated()
-                .antMatchers("/-/api/account/**").authenticated()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .anyRequest().permitAll()
-                .and().exceptionHandling()
+        http.csrf(AbstractHttpConfigurer::disable);
+
+        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+
+        http.authorizeHttpRequests(request -> {
+            request.requestMatchers(
+                    "/_/api/**",
+                    "/-/api/account/**"
+            ).authenticated();
+            request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+            request.anyRequest().permitAll();
+        });
+
+        http.exceptionHandling(exception -> exception
                 .accessDeniedHandler(new AccessDeniedHandlerImpl())
-                .authenticationEntryPoint(new AuthenticationEntryPointImpl());
+                .authenticationEntryPoint(new AuthenticationEntryPointImpl())
+        );
+
         http.addFilterBefore(
                 authorizationFilter,
                 UsernamePasswordAuthenticationFilter.class

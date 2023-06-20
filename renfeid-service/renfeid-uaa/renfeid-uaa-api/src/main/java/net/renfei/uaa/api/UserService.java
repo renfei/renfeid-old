@@ -20,7 +20,7 @@ import net.renfei.common.api.constant.enums.SecretLevelEnum;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.uaa.api.entity.*;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

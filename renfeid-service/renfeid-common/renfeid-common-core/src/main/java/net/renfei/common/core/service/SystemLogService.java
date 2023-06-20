@@ -18,7 +18,7 @@ package net.renfei.common.core.service;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.core.entity.*;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 

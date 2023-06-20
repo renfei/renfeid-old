@@ -18,7 +18,7 @@ package net.renfei.common.search.service;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.search.entity.SearchItem;
 import net.renfei.common.search.entity.TypeEnum;
-import org.elasticsearch.index.query.QueryBuilder;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 
 import java.util.Date;
 import java.util.List;
@@ -41,5 +41,5 @@ public interface SearchService {
 
     ListData<SearchItem> search(TypeEnum type, Long originalId, String pages, String rows);
 
-    ListData<SearchItem> search(QueryBuilder queryBuilder, String pages, String rows);
+    ListData<SearchItem> search(NativeQueryBuilder queryBuilder, String pages, String rows);
 }

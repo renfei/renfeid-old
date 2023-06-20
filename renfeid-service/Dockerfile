@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 ENV TZ="Asia/Shanghai"

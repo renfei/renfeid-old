@@ -18,7 +18,7 @@ package net.renfei.pro.discuz.service;
 import net.renfei.pro.discuz.repositories.entity.DiscuzForumPostDO;
 import net.renfei.pro.discuz.model.DiscuzInfo;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

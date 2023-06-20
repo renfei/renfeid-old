@@ -32,7 +32,7 @@ import net.renfei.uaa.api.AuthorizationService;
 import net.renfei.uaa.api.entity.*;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * 认证接口

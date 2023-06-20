@@ -15,23 +15,23 @@
  */
 package net.renfei.common.search.service.impl;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import co.elastic.clients.json.JsonData;
 import net.renfei.common.api.entity.ListData;
 import net.renfei.common.api.utils.NumberUtils;
 import net.renfei.common.search.entity.SearchItem;
 import net.renfei.common.search.entity.TypeEnum;
 import net.renfei.common.search.repository.SearchRepository;
 import net.renfei.common.search.service.SearchService;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders.match;
 import static net.renfei.common.search.entity.SearchItem.INDEX_COORDINATES;
 
 /**
@@ -49,12 +50,12 @@ import static net.renfei.common.search.entity.SearchItem.INDEX_COORDINATES;
 @Service
 public class SearchServiceImpl implements SearchService {
     private final SearchRepository searchRepository;
-    private final ElasticsearchRestTemplate elasticsearchRestTemplate;
+    private final ElasticsearchTemplate elasticsearchTemplate;
 
     public SearchServiceImpl(SearchRepository searchRepository,
-                             ElasticsearchRestTemplate elasticsearchRestTemplate) {
+                             ElasticsearchTemplate elasticsearchTemplate) {
         this.searchRepository = searchRepository;
-        this.elasticsearchRestTemplate = elasticsearchRestTemplate;
+        this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
     /**
@@ -97,37 +98,42 @@ public class SearchServiceImpl implements SearchService {
      */
     @Override
     public ListData<SearchItem> search(TypeEnum type, Date startDate, Date endDate, String word, String pages, String rows) {
-        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        NativeQueryBuilder build = NativeQuery.builder();
         if (!ObjectUtils.isEmpty(word)) {
-            QueryBuilder wordBuilder = QueryBuilders.boolQuery()
-                    .should(QueryBuilders.matchQuery("title", word))
-                    .should(QueryBuilders.matchQuery("content", word));
-            queryBuilder.must(wordBuilder);
+            Query bool = QueryBuilders.bool(builder -> builder.must(
+                    match(queryAuthor -> queryAuthor.field("title").query(word)),
+                    match(queryTitle -> queryTitle.field("content").query(word))
+            ));
+            build.withQuery(bool);
         }
         if (type != null) {
             if (!TypeEnum.ALL.equals(type)) {
-                queryBuilder.must(QueryBuilders.termQuery("type", type.getName()));
+                Query query = QueryBuilders.term(builder -> builder.field("type").value(type.getName()));
+                build.withQuery(query);
             }
         }
         if (startDate != null) {
-            queryBuilder.must(QueryBuilders.rangeQuery("date").gt(startDate));
+            Query query = QueryBuilders.range(builder -> builder.field("date").gte(JsonData.of(startDate)));
+            build.withQuery(query);
         }
         if (endDate != null) {
-            queryBuilder.must(QueryBuilders.rangeQuery("date").lt(startDate));
+            Query query = QueryBuilders.range(builder -> builder.field("date").lte(JsonData.of(endDate)));
+            build.withQuery(query);
         }
-        return search(queryBuilder, pages, rows);
+        return search(build, pages, rows);
     }
 
     @Override
     public ListData<SearchItem> search(TypeEnum type, Long originalId, String pages, String rows) {
-        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termQuery("type", type.getName()))
-                .must(QueryBuilders.termQuery("originalId", originalId));
-        return search(queryBuilder, pages, rows);
+        Query bool = QueryBuilders.bool(builder -> builder.must(
+                match(queryAuthor -> queryAuthor.field("type").query(type.getName())),
+                match(queryTitle -> queryTitle.field("originalId").query(originalId))
+        ));
+        return search(NativeQuery.builder().withQuery(bool), pages, rows);
     }
 
     @Override
-    public ListData<SearchItem> search(QueryBuilder queryBuilder, String pages, String rows) {
+    public ListData<SearchItem> search(NativeQueryBuilder queryBuilder, String pages, String rows) {
         int page = NumberUtils.parseInt(pages, 1) - 1,
                 size = NumberUtils.parseInt(rows, 10);
         if (page < 0) {
@@ -136,19 +142,8 @@ public class SearchServiceImpl implements SearchService {
         if (size < 0) {
             size = 10;
         }
-        // 关键词高亮的色值
-        NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(queryBuilder)
-                //添加分页  注意页码是从0开始的
-                //pageable的实现类PageRequest的静态方法of
-                //要排序就增加参数3 Sort.Direction.ASC升  Sort.Direction.DESC降
-                .withPageable(PageRequest.of(page, size))
-                //排序整体
-                //根据字段排序fieldSort("字段名")   .order(SortOrder.ASC/DESC)
-//                .withSort(SortBuilders.fieldSort("date").order(SortOrder.DESC))
-                .build();
-        //elasticsearchRestTemplate.search方法参数一,本机查询的构造,参数二index的类,可选参数三再次声明库名(可以多个)
-        SearchHits<SearchItem> search = elasticsearchRestTemplate.search(query, SearchItem.class, IndexCoordinates.of(INDEX_COORDINATES));
+        NativeQuery query = queryBuilder.withPageable(PageRequest.of(page, size)).build();
+        SearchHits<SearchItem> search = elasticsearchTemplate.search(query, SearchItem.class, IndexCoordinates.of(INDEX_COORDINATES));
         ListData<SearchItem> searchItemListData = new ListData<>();
         searchItemListData.setTotal(search.getTotalHits());
         List<SearchItem> searchItems = new ArrayList<>();
@@ -166,7 +161,7 @@ public class SearchServiceImpl implements SearchService {
         由于我的博客数据量小，更新频率低，所以采取每天删掉索引重建的方式来同步数据
         省去了丢失的全量同步，新增的增量同步，直接每天凌晨全量导入
          */
-        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(SearchItem.class);
+        IndexOperations indexOperations = elasticsearchTemplate.indexOps(SearchItem.class);
         if (!indexOperations.exists()) {
             // 不存在索引库，创建索引库
             indexOperations.create();
@@ -181,7 +176,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public void deleteIndex() {
-        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(SearchItem.class);
+        IndexOperations indexOperations = elasticsearchTemplate.indexOps(SearchItem.class);
         if (indexOperations.exists()) {
             // 已经存在，删除
             indexOperations.delete();
