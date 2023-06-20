@@ -10,7 +10,7 @@ const DashPageHeader = (props: any) => {
         <PageHeader
             className="site-page-header"
             title={props.title}
-            breadcrumb={<Breadcrumb itemRender={itemRender} routes={props.routes} />}
+            breadcrumb={<Breadcrumb itemRender={itemRender} items={props.routes} />}
             subTitle={props.subTitle}
         />
     )
