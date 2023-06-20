@@ -250,9 +250,9 @@ export const convertToHeaders = (incomingHttpHeaders: http.IncomingHttpHeaders, 
     if (incomingHttpHeaders['trailer']) {
         headers.append('trailer', incomingHttpHeaders['trailer'])
     }
-    if (incomingHttpHeaders['transfer-encoding']) {
-        headers.append('transfer-encoding', incomingHttpHeaders['transfer-encoding'])
-    }
+    // if (incomingHttpHeaders['transfer-encoding']) {
+    //     headers.append('transfer-encoding', incomingHttpHeaders['transfer-encoding'])
+    // }
     if (incomingHttpHeaders['upgrade']) {
         headers.append('upgrade', incomingHttpHeaders['upgrade'])
     }
