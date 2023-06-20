@@ -14,7 +14,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <springdoc.version>1.7.0</springdoc.version>
-        <druid.version>1.2.16</druid.version>
+        <druid.version>1.2.18</druid.version>
         <mybatis.version>2.3.1</mybatis.version>
         <pagehelper.version>1.4.7</pagehelper.version>
         <mariadb-client.version>3.1.4</mariadb-client.version>
