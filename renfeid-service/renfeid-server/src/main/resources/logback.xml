@@ -34,20 +34,8 @@
             <pattern>%date [%thread] %-5level %logger{50}:%L - %msg%n</pattern>
         </layout>
     </appender>
-    <!-- Configure the Sentry appender, overriding the logging threshold to the WARN level -->
-    <appender name="Sentry" class="io.sentry.logback.SentryAppender">
-        <options>
-            <!-- NOTE: Replace the test DSN below with YOUR OWN DSN to see the events from this app in your Sentry project/dashboard -->
-            <dsn>https://examplePublicKey@o0.ingest.sentry.io/0</dsn>
-            <!-- Optionally change minimum Event level. Default for Events is ERROR -->
-            <!-- <minimumEventLevel>WARN</minimumEventLevel> -->
-            <!-- Optionally change minimum Breadcrumbs level. Default for Breadcrumbs is INFO -->
-            <!-- <minimumBreadcrumbLevel>DEBUG</minimumBreadcrumbLevel> -->
-        </options>
-    </appender>
     <root level="info">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
-        <appender-ref ref="Sentry" />
     </root>
 </configuration>
