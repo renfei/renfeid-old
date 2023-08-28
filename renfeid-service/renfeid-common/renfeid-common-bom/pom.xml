@@ -17,7 +17,7 @@
         <druid.version>1.2.18</druid.version>
         <mybatis.version>3.0.2</mybatis.version>
         <pagehelper.version>1.4.7</pagehelper.version>
-        <mariadb-client.version>3.1.4</mariadb-client.version>
+        <mariadb-client.version>3.2.0</mariadb-client.version>
         <jjwt.version>0.11.5</jjwt.version>
         <curator-recipes.version>5.5.0</curator-recipes.version>
         <commons-io.version>2.13.0</commons-io.version>
